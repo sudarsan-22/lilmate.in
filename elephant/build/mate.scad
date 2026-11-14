@@ -1,0 +1,1 @@
+intersection(){ import("/home/sudarsan/Documents/crazy_projects/lilmate_3D_design/elephant/build/front.stl"); import("/home/sudarsan/Documents/crazy_projects/lilmate_3D_design/elephant/build/back.stl"); }

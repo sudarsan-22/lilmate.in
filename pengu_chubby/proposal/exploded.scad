@@ -1,0 +1,2 @@
+color("white") import("/home/sudarsan/Documents/crazy_projects/lilmate_3D_design/pengu_chubby/proposal/main_body.stl");
+color("steelblue") translate([0, 28, 0]) import("/home/sudarsan/Documents/crazy_projects/lilmate_3D_design/pengu_chubby/proposal/back_lid.stl");

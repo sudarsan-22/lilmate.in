@@ -1,0 +1,11 @@
+ECHO: "y_esp=20.9511 bat_y=[-12.25,18.25] y_back=22.7982 y_sw=23.6 oled_zc=62"
+Geometries in cache: 208
+Geometry cache size in bytes: 102031760
+CGAL Polyhedrons in cache: 2
+CGAL cache size in bytes: 80357500
+Total rendering time: 0:00:07.114
+   Top level object is a 3D object (manifold):
+   Status:     NoError
+   Genus:      7
+   Vertices:   160715
+   Facets:     321454
