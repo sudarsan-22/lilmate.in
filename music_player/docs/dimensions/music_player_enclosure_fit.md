@@ -14,6 +14,6 @@ Positions: X from centre line (- left, + right), depth from the front face, heig
 | 6 | ESP32-C3 Super Mini | 18.0 x 22.3 x 4.2 | -9.0..9.0 | 40.7..63.0 | 41.0..45.2 |
 | 7 | SS-12F15 slide switch | 10.5 x 9.1 x 4.5 | 7.8..18.2 | 57.9..67.0 | 19.8..24.2 |
 | 8 | Li-Po 503450 battery | 51.0 x 34.0 x 5.0 | -25.5..25.5 | 28.5..62.5 | 1.7..6.7 |
-| 9 | Key perfboard + 4 tact switches | 54.0 x 13.0 x 8.2 | -27.0..27.0 | 7.9..20.9 | 4.3..12.4 |
+| 9 | Perfboard + 4 tact switches (6x6x5) | 54.0 x 13.0 x 8.2 | -27.0..27.0 | 7.9..20.9 | 4.3..12.4 |
 
 Enclosure = base + deck + key plate + shell + back cover (knob sticks out the right side).

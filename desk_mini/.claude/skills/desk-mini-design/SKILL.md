@@ -42,6 +42,22 @@ Cavity sizes (the Desk Mini source is an exploded STL layout, so there are no pl
 
 Full drawings (front, side, top views with the components placed): `docs/dimensions/desk_mini_enclosure_fit.png` and `docs/dimensions/desk_mini_dimensions.png`.
 
+## Component details and housing
+Each component: its size, then how the enclosure holds it (pockets, slots, clearances, stops, snaps). Sizes in mm.
+
+### 0.96" OLED module
+- Housing (bezel / display cover): cavity 27.0 x 27.4, open end at z = 6, walls 1.5, 8 crush ribs 0.3 mm (taper at the open end) hold the module without glue; the two 4.8 mm wall notches were filled. The tray (obj_1) was removed from the project.
+
+### Buzzer (round, 11.5 mm)
+- Size: diameter 11.5, about 3 high.
+- Housing: pocket diameter 11.7 (0.2 total gap), 3 deep on the 2 mm shell plate, full holder ring outer diameter 13.5 (wall 0.9), moved 10 mm away from the USB slot; six sound holes diameter 2 in a 2 x 3 grid (pitch 4 x 3.2) all inside the pocket.
+
+### Controller board and USB
+- Housing: back plate board opening 20 wide (widened from 18), U-wall and USB notch stretch with it; plate 29 x 34 x 5.
+
+### Mounting
+- Screwless: two split snap pins (shaft 2.6, head 3.5, slit 0.7) in relief wells 4.2 wide replace the M2 pilot holes; plate holes diameter 3 with a 4.4 counterbore leaving a 0.5 ledge. The board type itself is not named in the sources, so confirm its size before changing the opening.
+
 ## How to change or rebuild
 - `src/desk_mini_v2.scad` with `part = all | shell | plate | body | tray | bezel` (`all` is the exploded layout that became the final 3mf).
 - `src/desk_mini_issues.scad` is the older issue-review view.
