@@ -25,10 +25,14 @@ eps  = 0.01;
 wall      = 2.2;
 split_y   = 13;
 lip_h     = 3.0;
-lip_keep  = 0.9;
+lip_keep  = 1.4;        // lid outer skin kept at the seam (was 0.9: too thin to hold a catch) - v8
 lip_clr   = 0.12;       // tighter snap = no visible gap at the seam
 seam_ch   = 0.35;       // small matching chamfer on both seam edges (clean, even line)
-snap_h    = 0.40;
+snap_h    = 0.60;       // catch height (was 0.40) - v8 stronger lock
+snap_y0   = 0.8;        // steep holding face sits this far behind the seam plane
+snap_top  = 0.8;        // flat top of the catch
+snap_ramp = 1.2;        // gentle lead-in ramp (~27 deg): easy to push on, hard to pull off
+snap_n    = 4;          // ramp steps (smooth when printed)
 
 /* [Body: round sitting ball] */
 body_cy  = 3;
@@ -87,8 +91,11 @@ stop_zmin = wall + 0.3 + bat[2] + 0.2;   // lowest z a board stopper may reach (
 
 /* [Switch] */
 // SS-12F15 metal slide switch (ears bent down): body 10.5 x 4.5 x 5.1, lever 3 x 3, 4 high, 3.2 travel
-sw_body  = [12.1, 6];              // pocket (x, z): FINAL switch housing (same as deck buddy v7), was 11.8 x 5.2
-sw_depth = 5.1;                    // body depth (y)
+sw_body  = [12.1, 5.8];            // pocket (x, z): same as deck buddy (width 6 -> 5.8 so the locking lips work), was 11.8 x 5.2
+lock_reach = 0.6;                  // locking lip reach into the pocket per side (deck buddy; gap 5.8 - 1.2 = 4.6, 0.2 overlap on the 5 mm switch)
+lock_clear = 0.4;                  // lip underside sits this far behind the switch back
+wall_long  = 0.8;                  // the 2 walls that carry the lips are thinner so they flex (the other 2 stay 1.2)
+sw_depth = 5.0;                    // body depth (y)
 sw_lever = [3, 3, 4];              // lever x, z, height
 sw_travel= 3.2;
 sw_slot  = [sw_lever[0] + sw_travel + 0.8, sw_lever[1] + 0.6];
@@ -298,9 +305,13 @@ module face_cuts() {
 // then the ceiling follows the face and climbs at >=45 deg, so nothing behind it hangs.
 fun_st = 0.3;          // 0.3 mm steps < one line width -> prints as a smooth slope
 fun_n  = 34;
+fun_ov = 0.05;         // overlap of neighbouring funnel shells (kills the speckled holes / spikes from coincident faces)
 fun_bridge = 1.0;      // first 1 mm behind the visor floor stays flat -> the top edge prints as a clean 1 mm bridge
-fun_g  = 12;           // behind the bridge band the ceiling climbs to the forehead wall -> follows the forehead (~49 deg upright)
-function fun_rise(i) = max(0, fun_g * (i*fun_st - fun_bridge));
+fun_g  = 0;            // v9: FLAT top (same as the flat bottom ledge). Was 1 = a 45 deg climb built from stacked steps (ridged look). 0 = one flat ceiling at the visor top edge
+fun_cap = win_zc + (23 + 2*bay_clr)/2 - (head_c.z + visor_dz + visor_half[1] - 1.6);   // = glass pocket half-height (same numbers as glass_in, which is defined further down)   // ... but only up to the TOP OF THE OLED GLASS (3.45 mm), then it stays flat.
+// v8 fix: the old ceiling shot up 12 mm per 1 mm, which opened the whole forehead above the window and showed the bare PCB strip
+// (glass top z 77.1 ... pcb top z 81.75) from outside. Now the solid forehead sits right above the glass, so no board is visible.
+function fun_rise(i) = min(fun_cap, max(0, fun_g * (i*fun_st - fun_bridge)));
 module opening2d(rise) hull() { visor2d(-1.6); translate([0, rise]) visor2d(-1.6); }
 module funnel() intersection() {
     hull() {                                                                         // sides + bottom taper only
@@ -309,7 +320,7 @@ module funnel() intersection() {
         extrude_y(y_if - 0.01, 0.01) translate([-oled_win[0]/2 + 1.5, win_zc]) square([oled_win[0] - 3, 40]);
     }
     union() for (i = [0:fun_n - 1]) intersection() {                                 // 45 deg top, face-following
-        difference() { head_hull(i == 0 ? -1 : visor_rec + i*fun_st); head_hull(visor_rec + (i + 1)*fun_st); }
+        difference() { head_hull(i == 0 ? -1 : visor_rec + i*fun_st); head_hull(visor_rec + (i + 1)*fun_st + (i == fun_n - 1 ? 0 : fun_ov)); }   // shells overlap by fun_ov: no coincident faces between steps
         extrude_y(-80, 80) opening2d(fun_rise(i));
     }
     union() { head_hull(wall); zbox(-100, fun_ztop_front + 0.01); }                  // forehead keeps its full wall
@@ -317,8 +328,8 @@ module funnel() intersection() {
 }
 fun_y0         = head_c.y - head_ry + visor_rec;                       // visor floor at the face centre
 fun_ztop_front = head_c.z + visor_dz + visor_half[1] - 1.6;             // top edge of the opening
-fun_ztop_back  = fun_ztop_front + (y_if - fun_y0);                      // 45 deg
-echo(str("funnel ceiling: z ", fun_ztop_front, " at y ", fun_y0, " -> z ", fun_ztop_back, " at y ", y_if));
+fun_ztop_back  = fun_ztop_front + fun_cap;                              // capped at the glass top
+echo(str("funnel ceiling: z ", fun_ztop_front, " at y ", fun_y0, " -> capped z ", fun_ztop_back, " (glass top) before y ", y_if));
 
 // curled tuft: tall lobe + curl to the right
 module tuft() {
@@ -485,9 +496,42 @@ module oled_bay_cuts() {
 }
 
 // TTP223 pocket under the head top: follows the dome, leaves touch_t of plastic
-module touch_pocket() intersection() {
+// v9: the roof is curved (it falls ~2 mm toward the front over the 12.5 mm pocket), so the sensor now sits on a FLAT seat plane
+// tilted to the roof (tp_slope, measured: skin 1.6 at the front corners, ~2.4 mm at the middle) and is held by two flexing
+// side arms with 45 deg lead-in lips (same idea as the SPDT housing). The board is pushed UP from inside the head.
+tp_slope  = 0.136;       // seat plane rises 0.136 mm per mm toward the back (7.7 deg)
+tch_z0    = 88.4;        // seat plane z at the FRONT edge of the pocket
+tp_board  = [15, 11, 1.6];
+tp_side   = 0.2;         // clearance per side between board and arm
+tp_arm_t  = 0.65;        // arm thickness (flexes in the print-layer plane, never across the layers)
+tp_arm_h  = 2.2;         // arm height
+tp_reach  = 0.7;         // lip reach over the board edge (hold = reach - 0.2 clearance... board edge overlap 0.5)
+tp_gap_up = 0.3;         // free slit between arm top and the roof so the arm can flex
+tp_root   = 0.6;         // half length of the root block at the middle
+tp_arm_L  = 6.0;         // arm reaches this far each way from the middle
+tp_lip_L  = 2.6;         // length of the lip at the free end
+module at_tb() translate([0, touch_y, tch_z0 + touch_box[1]/2 * tp_slope]) rotate([atan(tp_slope), 0, 0]) children();
+module touch_pocket() at_tb() translate([-touch_box[0]/2, -touch_box[1]/2, -14]) cube([touch_box[0], touch_box[1], 14]);   // flat seat, board top = z 0
+module touch_fill() intersection() {        // roof material between the seat plane and the skin (never closer than touch_t to the outside)
     head_hull(touch_t);
-    translate([-touch_box[0]/2, touch_y - touch_box[1]/2, head_c.z + 10]) cube([touch_box[0], touch_box[1], 40]);
+    at_tb() translate([-touch_box[0]/2, -touch_box[1]/2, 0]) cube([touch_box[0], touch_box[1], 4]);
+}
+module touch_cradle() intersection() {
+    head_hull(touch_t + 0.1);
+    at_tb() for (sx = [-1, 1]) scale([sx, 1, 1]) {
+        xi = tp_board[0]/2 + tp_side;  xo = xi + tp_arm_t;  zt = -tp_gap_up;  zb = zt - tp_arm_h;
+        lz = -(tp_board[2] + 0.15);                       // holding face 0.15 under the board
+        // root block (fused up into the roof fill)
+        translate([xi, -tp_root, zb]) cube([tp_arm_t, 2*tp_root, 0.9 - zb]);
+        // two arms, front and back, thin plates with a free slit above them
+        for (sy = [-1, 1]) {
+            translate([xi, sy > 0 ? tp_root - 0.01 : -tp_arm_L, zb]) cube([tp_arm_t, tp_arm_L - tp_root + 0.01, tp_arm_h]);
+            // lip at the free end: flat holding face on top, 45 deg lead-in underneath
+            y0 = sy > 0 ? tp_arm_L - tp_lip_L : -tp_arm_L;
+            translate([0, y0, 0]) rotate([90, 0, 0]) mirror([0, 0, 1]) linear_extrude(tp_lip_L)
+                polygon([[xi + 0.01, lz], [xi - tp_reach, lz], [xi + 0.01, lz - tp_reach]]);
+        }
+    }
 }
 
 // 2nd TTP223 slot under the head: the sensor drops in from inside the head (through the back opening),
@@ -570,10 +614,10 @@ module lid_supports() difference() {
 
 module snap_windows2d() {
     for (sx = [-1, 1]) {
-        translate([sx * 30, head_c.z]) square([12, 10], center = true);
-        translate([sx * 24.5, 14]) square([12, 8],  center = true);
+        translate([sx * 30, head_c.z]) square([14, 16], center = true);     // v8: bigger catch areas (was 12 x 10)
+        translate([sx * 24.5, 14]) square([14, 10],  center = true);        // (was 12 x 8)
     }
-    translate([0, head_c.z + 24]) square([12, 10], center = true);
+    translate([0, head_c.z + 24]) square([14, 12], center = true);          // (was 12 x 10)
 }
 
 // ---- snap joint that FOLLOWS the curved skin (constant thickness, never pokes out) ----
@@ -595,12 +639,15 @@ module lip() union() {
         }
     }
 }
+// asymmetric catch: STEEP (90 deg) face on the seam side = holds the lid, long gentle ramp on the far side = easy to push on.
+// (v7 had a symmetric bump: it released as easily as it clicked in.)
 module lip_bumps() intersection() {
     extrude_y(-100, 200) snap_windows2d();
-    union() {
-        intersection() { half_y(split_y + 1.1, split_y + 2.3); shell_band(lip_keep + lip_clr - snap_h,     lip_keep + lip_clr + 0.2); }
-        intersection() { half_y(split_y + 0.6, split_y + 2.8); shell_band(lip_keep + lip_clr - snap_h/2,   lip_keep + lip_clr + 0.2); }
-    }
+    union() for (k = [0:snap_n-1]) let(f = (k + 1)/snap_n)
+        intersection() {
+            half_y(split_y + snap_y0, split_y + snap_y0 + snap_top + snap_ramp*(1 - f));
+            shell_band(lip_keep + lip_clr - snap_h*f, lip_keep + lip_clr + 0.2);
+        }
 }
 
 // ------------------------------------------------------------
@@ -641,7 +688,8 @@ module wing_holes() for (sx = [-1, 1]) wing_T(sx) wing_pin_cyl();
 // ------------------------------------------------------------
 // FRONT SHELL
 // ------------------------------------------------------------
-module front_shell() {
+module front_shell() { union() { front_shell_core(); touch_cradle(); } }
+module front_shell_core() {
     difference() {
         union() {
             intersection() {
@@ -655,12 +703,12 @@ module front_shell() {
             lip_bumps();
             oled_bay_walls();
             battery_ribs_front();
-            touch2_frame();
+            touch_fill();
         }
         face_cuts();
         oled_bay_cuts();
         touch_pocket();
-        touch2_pocket();
+        // side touch pad (touch2) REMOVED: the TTP223 now lives only under the head top (touch_pocket)
         seam_chamfer_front();
         translate([-5, split_y - 1.5, -1]) cube([10, 5, 2.2]);   // pry notch
     }
@@ -705,15 +753,16 @@ module switch_block() intersection() {
     union() {
         // tower: switch slides in from the open side, lever first, until the body hits the plate
         extrude_y(sw_y0, y_sw - sw_y0 + sw_plate) translate([0, sw_z]) difference() {
-            square(sw_body + [2.4, 2.4], center = true);
+            square([sw_body[0] + 2.4, sw_body[1] + 2*wall_long], center = true);
             square(sw_body, center = true);
         }
         // 45 deg wedge under the tower: it used to hang ~13 mm in the air from the back wall (printed upright)
-        let(w = sw_body[0] + 2.4, zb = sw_z - sw_body[1]/2 - 1.2, L = y_sw + sw_plate - sw_y0)
+        let(w = sw_body[0] + 2.4, zb = sw_z - sw_body[1]/2 - wall_long, L = y_sw + sw_plate - sw_y0)
             hull() {
                 translate([-w/2, sw_y0, zb]) cube([w, L, 0.2]);            // overlaps the tower floor -> fused
                 translate([-w/2, y_sw + sw_plate, zb - L]) cube([w, 0.01, 0.01]);
             }
+        switch_lips();
         // plate + sleeve out to the skin
         difference() {
             extrude_y(y_sw, 30) translate([0, sw_z]) rrect([sw_slot[0] + 6.4, sw_slot[1] + 5.4], 2.5);
@@ -722,7 +771,14 @@ module switch_block() intersection() {
     }
     outer_main();
 }
-// small retaining bumps inside the tower (hold the switch body against the plate)
+// locking lips (deck buddy): flat underside holds the switch, 45 deg ramp on top lets it slide in (fused 0.5 into the wall)
+module switch_lips() for (sz = [-1, 1]) {
+    h = sw_body[1]/2; R = lock_reach; d0 = sw_depth + lock_clear;
+    pts = [[d0, h + 0.5], [d0, h - R], [sw_house_d - R, h - R], [sw_house_d, h], [sw_house_d, h + 0.5]];
+    rotate([90, 0, 90]) linear_extrude(6, center = true)
+        polygon([for (q = pts) [y_sw - q[0], sw_z + sz * q[1]]]);
+}
+// (old) small retaining bumps inside the tower (hold the switch body against the plate)
 module switch_bumps() intersection() {
     for (sz = [-1, 1])
         translate([-3, y_sw - sw_depth - 1.6, sw_z + sz * (sw_body[1]/2) - (sz > 0 ? 0.4 : 0.5)])
@@ -813,8 +869,8 @@ module rebate() intersection() {
 }
 module dimples() intersection() {
     extrude_y(-100, 200) snap_windows2d();
-    half_y(split_y + 0.7, split_y + 2.7);
-    shell_band(lip_keep - 0.35, lip_keep + 0.1);
+    half_y(split_y + snap_y0 - 0.05, split_y + snap_y0 + snap_top + snap_ramp + 0.25);   // 0.05 play behind the holding face
+    shell_band(lip_keep - snap_h, lip_keep + 0.1);                                        // leaves lip_keep - snap_h = 0.8 of outer skin
 }
 module back_shell() difference() {
     union() {
@@ -824,7 +880,6 @@ module back_shell() difference() {
         }
         port_block();
         switch_block();
-        // switch_bumps();   // FINAL housing has NO locking edge (friction fit), same as deck buddy v7
         battery_ribs();
     }
     rebate();
@@ -847,8 +902,7 @@ module components(only = -1) {
     if (only < 0 || only == 6) color("gold") translate([-bat[0]/2 + 0.25, bat_y0 + 0.25, wall + 0.3]) cube(bat - [0.5, 0.5, 0.5]);
     if (only < 0 || only == 7) color("gray") { translate([-10.5/2, y_sw - sw_depth, sw_z - 4.5/2]) cube([10.5, sw_depth, 4.5]);
                                                  translate([-sw_lever[0]/2 - sw_travel/2, y_sw, sw_z - sw_lever[1]/2]) cube([sw_lever[0], sw_lever[2], sw_lever[1]]); }
-    if (only < 0 || only == 8) color("red") translate([-7.5, touch_y - 5.5, head_c.z + 18.5]) cube([15, 11, 1.6]);
-    if (only < 0 || only == 9) color("red") at_touch2() translate([-5.5, -7.5, -touch_t - touch2_sag - 0.05 - 1.6]) cube([11, 15, 1.6]);
+    if (only < 0 || only == 8) color("red") at_tb() translate([-tp_board[0]/2, -tp_board[1]/2, -tp_board[2]]) cube(tp_board);
 }
 // pcb fit envelope used by the head (OLED pcb + glass) must be inside the head inner
 module oled_envelope() {
@@ -874,8 +928,7 @@ else if (part == "print_wingR") wing_print(1);
 else if (part == "print_wingL") wing_print(-1);
 else if (part == "rim")         hood_rim();
 else if (part == "supports")    all_supports();
-else if (part == "check_touch2") intersection() { front_shell(); components(9); }   // must be EMPTY
 else if (part == "oled_out")    difference() { oled_envelope(); union() { head_hull(1.0); body_outer(-1.0); } }   // must be EMPTY
-else if (part == "check_front") intersection() { front_shell(); union() { components(0); components(1); for (k = [2, 4, 5, 6, 8, 9]) components(k); } }
+else if (part == "check_front") intersection() { front_shell(); union() { components(0); components(1); for (k = [2, 4, 5, 6, 8]) components(k); } }
 else if (part == "check_back")  intersection() { back_shell(); union() { for (k = [2:7]) components(k); } }
 else if (part == "check_all")   intersection() { union() { front_shell(); back_shell(); } components(); }

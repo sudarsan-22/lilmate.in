@@ -1,0 +1,41936 @@
+; HEADER_BLOCK_START
+; BambuStudio 02.08.02.61
+; model printing time: 14m 13s; total estimated time: 14m 32s
+; total layer number: 218
+; total filament length [mm] : 518.75
+; total filament volume [cm^3] : 1247.73
+; total filament weight [g] : 1.57
+; model label id: 66,77,88
+; object max height: 26.24,3.08,3.08
+; filament_density: 1.26
+; filament_diameter: 1.75
+; max_z_height: 26.24
+; filament: 1
+; support_material_on_wipe_tower: 0
+; HEADER_BLOCK_END
+
+; CONFIG_BLOCK_START
+; accel_to_decel_enable = 0
+; accel_to_decel_factor = 50%
+; activate_air_filtration = 0
+; additional_cooling_fan_speed = 70
+; additional_fan_full_speed_layer = 0
+; alternate_extra_wall = 0
+; ams_filament_load_time_ams = 0
+; ams_filament_load_time_ams_lite = 0
+; ams_filament_load_time_n3f_s = 0
+; ams_filament_unload_time_ams = 0
+; ams_filament_unload_time_ams_lite = 0
+; ams_filament_unload_time_n3f_s = 0
+; apply_scarf_seam_on_circles = 1
+; auxiliary_fan = 0
+; avoid_crossing_wall_includes_support = 0
+; bed_custom_model = 
+; bed_custom_texture = 
+; bed_exclude_area = 
+; bed_heat_soak_area = 
+; bed_temperature_formula = by_first_filament
+; before_layer_change_gcode = 
+; best_object_pos = 0.7,0.5
+; bottom_color_penetration_layers = 5
+; bottom_shell_layers = 5
+; bottom_shell_thickness = 0
+; bottom_surface_density = 100%
+; bottom_surface_pattern = monotonic
+; bridge_angle = 0
+; bridge_flow = 1
+; bridge_no_support = 0
+; bridge_speed = 30
+; brim_object_gap = 0.1
+; brim_type = auto_brim
+; brim_width = 5
+; chamber_temperatures = 0
+; change_filament_gcode = M620 S[next_extruder]A\nM204 S9000\nG1 Z{max_layer_z + 3.0} F1200\n\nG1 X70 F21000\nG1 Y245\nG1 Y265 F3000\nM400\nM106 P1 S0\nM106 P2 S0\n{if old_filament_temp > 142 && next_extruder < 255}\nM104 S[old_filament_temp]\n{endif}\nG1 X90 F3000\nG1 Y255 F4000\nG1 X100 F5000\nG1 X120 F15000\n\nG1 X20 Y50 F21000\nG1 Y-3\n{if toolchange_count == 2}\n; get travel path for change filament\nM620.1 X[travel_point_1_x] Y[travel_point_1_y] F21000 P0\nM620.1 X[travel_point_2_x] Y[travel_point_2_y] F21000 P1\nM620.1 X[travel_point_3_x] Y[travel_point_3_y] F21000 P2\n{endif}\nM620.1 E F[old_filament_e_feedrate] T{nozzle_temperature_range_high[previous_extruder]}\nT[next_extruder]\nM620.1 E F[new_filament_e_feedrate] T{nozzle_temperature_range_high[next_extruder]}\n\n{if next_extruder < 255}\nM400\n\nG92 E0\n{if flush_length_1 > 1}\n; FLUSH_START\n; always use highest temperature to flush\nM400\nM109 S[nozzle_temperature_range_high]\n{if flush_length_1 > 23.7}\nG1 E23.7 F{old_filament_e_feedrate} ; do not need pulsatile flushing for start part\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{old_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\nG1 E{(flush_length_1 - 23.7) * 0.02} F50\nG1 E{(flush_length_1 - 23.7) * 0.23} F{new_filament_e_feedrate}\n{else}\nG1 E{flush_length_1} F{old_filament_e_feedrate}\n{endif}\n; FLUSH_END\nG1 E-[old_retract_length_toolchange] F1800\nG1 E[old_retract_length_toolchange] F300\n{endif}\n\n{if flush_length_2 > 1}\n; FLUSH_START\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\nG1 E{flush_length_2 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_2 * 0.02} F50\n; FLUSH_END\nG1 E-[new_retract_length_toolchange] F1800\nG1 E[new_retract_length_toolchange] F300\n{endif}\n\n{if flush_length_3 > 1}\n; FLUSH_START\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\nG1 E{flush_length_3 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_3 * 0.02} F50\n; FLUSH_END\nG1 E-[new_retract_length_toolchange] F1800\nG1 E[new_retract_length_toolchange] F300\n{endif}\n\n{if flush_length_4 > 1}\n; FLUSH_START\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\nG1 E{flush_length_4 * 0.18} F{new_filament_e_feedrate}\nG1 E{flush_length_4 * 0.02} F50\n; FLUSH_END\n{endif}\n; FLUSH_START\nM400\nM109 S[new_filament_temp]\nG1 E2 F{new_filament_e_feedrate} ;Compensate for filament spillage during waiting temperature\n; FLUSH_END\nM400\nG92 E0\nG1 E-[new_retract_length_toolchange] F1800\nM106 P1 S255\nM400 S3\nG1 X80 F15000\nG1 X60 F15000\nG1 X80 F15000\nG1 X60 F15000; shake to put down garbage\n\nG1 X70 F5000\nG1 X90 F3000\nG1 Y255 F4000\nG1 X100 F5000\nG1 Y265 F5000\nG1 X70 F10000\nG1 X100 F5000\nG1 X70 F10000\nG1 X100 F5000\nG1 X165 F15000; wipe and shake\nG1 Y256 ; move Y to aside, prevent collision\nM400\nG1 Z{max_layer_z + 3.0} F3000\n{if layer_z <= (initial_layer_print_height + 0.001)}\nM204 S[initial_layer_acceleration]\n{else}\nM204 S[default_acceleration]\n{endif}\n{else}\nG1 X[x_after_toolchange] Y[y_after_toolchange] Z[z_after_toolchange] F12000\n{endif}\nM621 S[next_extruder]A
+; circle_compensation_manual_offset = 0
+; circle_compensation_speed = 200
+; close_additional_fan_first_x_layers = 1
+; close_fan_the_first_x_layers = 1
+; compatible_machine_expression_group = ;;
+; compatible_printers_condition = 
+; complete_print_exhaust_fan_speed = 70
+; cool_plate_temp = 35
+; cool_plate_temp_initial_layer = 35
+; cooling_filter_enabled = 0
+; cooling_perimeter_transition_distance = 10
+; cooling_slowdown_logic = uniform_cooling
+; counter_coef_1 = 0
+; counter_coef_2 = 0.008
+; counter_coef_3 = -0.041
+; counter_limit_max = 0.033
+; counter_limit_min = -0.035
+; counterbore_hole_bridging = none
+; curr_bed_type = Cool Plate
+; default_acceleration = 6000
+; default_ams_type = -1
+; default_filament_colour = ""
+; default_filament_profile = "Bambu PLA Basic @BBL A1M"
+; default_jerk = 0
+; default_nozzle_volume_type = Standard
+; default_print_profile = 0.20mm Standard @BBL A1M
+; deretraction_speed = 30
+; detect_floating_vertical_shell = 1
+; detect_narrow_internal_solid_infill = 1
+; detect_overhang_wall = 1
+; detect_thin_wall = 0
+; diameter_limit = 50
+; different_settings_to_system = ;;
+; draft_shield = disabled
+; during_print_exhaust_fan_speed = 70
+; elefant_foot_compensation = 0.15
+; embedding_wall_into_infill = 0
+; enable_arc_fitting = 1
+; enable_circle_compensation = 0
+; enable_filament_dynamic_map = 0
+; enable_height_slowdown = 0
+; enable_long_retraction_when_cut = 2
+; enable_mixed_color_sublayer = 0
+; enable_order_independent_overlap_carving = 0
+; enable_overhang_bridge_fan = 1
+; enable_overhang_speed = 1
+; enable_pre_heating = 0
+; enable_pressure_advance = 0
+; enable_prime_tower = 1
+; enable_support = 0
+; enable_support_ironing = 0
+; enable_tower_interface_features = 0
+; enable_wrapping_detection = 0
+; enforce_support_layers = 0
+; eng_plate_temp = 0
+; eng_plate_temp_initial_layer = 0
+; ensure_vertical_shell_thickness = enabled
+; exclude_object = 1
+; extruder_ams_count = 
+; extruder_clearance_dist_to_rod = 56.5
+; extruder_clearance_height_to_lid = 180
+; extruder_clearance_height_to_rod = 25
+; extruder_clearance_max_radius = 73
+; extruder_colour = #018001
+; extruder_max_nozzle_count = 1
+; extruder_nozzle_stats = 
+; extruder_offset = 0x0
+; extruder_printable_area = 
+; extruder_type = Direct Drive
+; extruder_variant_list = "Direct Drive Standard"
+; fan_cooling_layer_time = 80
+; fan_direction = undefine
+; fan_max_speed = 80
+; fan_min_speed = 60
+; farthest_point_timelapse = 0
+; filament_adaptive_volumetric_speed = 0
+; filament_adhesiveness_category = 100
+; filament_bridge_speed = 25
+; filament_change_length = 5
+; filament_change_length_nc = 10
+; filament_colour = #00AE42
+; filament_cooling_before_tower = 0
+; filament_cost = 19.99
+; filament_density = 1.26
+; filament_dev_ams_drying_ams_limitations = 1
+; filament_dev_ams_drying_heat_distortion_temperature = 45
+; filament_dev_ams_drying_temperature = 45
+; filament_dev_ams_drying_time = 12
+; filament_dev_chamber_drying_bed_temperature = 70
+; filament_dev_chamber_drying_time = 12
+; filament_dev_drying_cooling_temperature = 45
+; filament_dev_drying_softening_temperature = 50
+; filament_diameter = 1.75
+; filament_enable_overhang_speed = 1
+; filament_end_gcode = "; filament end gcode \n\n"
+; filament_extruder_compatibility = 0
+; filament_extruder_variant = "Direct Drive Standard"
+; filament_flow_ratio = 0.98
+; filament_flush_temp = 0
+; filament_flush_temp_fast = 0
+; filament_flush_volumetric_speed = 0
+; filament_ids = GFA00
+; filament_is_mixed = 0
+; filament_is_support = 0
+; filament_long_retractions_when_cut = 1
+; filament_map = 1
+; filament_map_2 = 0
+; filament_map_mode = Auto For Flush
+; filament_max_volumetric_speed = 21
+; filament_metal_stickiness = None
+; filament_minimal_purge_on_wipe_tower = 15
+; filament_mixed_components = ""
+; filament_mixed_gradient = 0
+; filament_mixed_gradient_curve = ""
+; filament_mixed_gradient_per_part = 0
+; filament_mixed_gradient_range = ""
+; filament_mixed_sublayer_ratios = ""
+; filament_notes = 
+; filament_nozzle_map = 0
+; filament_overhang_1_4_speed = 0
+; filament_overhang_2_4_speed = 50
+; filament_overhang_3_4_speed = 30
+; filament_overhang_4_4_speed = 10
+; filament_overhang_totally_speed = 10
+; filament_pre_cooling_temperature = 0
+; filament_pre_cooling_temperature_nc = 0
+; filament_preheat_temperature_delta = 0
+; filament_prime_volume = 30
+; filament_prime_volume_nc = 60
+; filament_printable = 3
+; filament_ramming_travel_time = 0
+; filament_ramming_travel_time_nc = 0
+; filament_ramming_volumetric_speed = -1
+; filament_ramming_volumetric_speed_nc = -1
+; filament_retract_length_nc = 14
+; filament_retraction_distances_when_cut = 18
+; filament_scarf_gap = 0%
+; filament_scarf_height = 10%
+; filament_scarf_length = 10
+; filament_scarf_seam_type = none
+; filament_self_index = 1
+; filament_settings_id = "Bambu PLA Basic @BBL A1M (pengu)"
+; filament_shrink = 100%
+; filament_soluble = 0
+; filament_start_gcode = "; filament start gcode\n{if  (bed_temperature[current_extruder] >55)||(bed_temperature_initial_layer[current_extruder] >55)}M106 P3 S200\n{elsif(bed_temperature[current_extruder] >50)||(bed_temperature_initial_layer[current_extruder] >50)}M106 P3 S150\n{elsif(bed_temperature[current_extruder] >45)||(bed_temperature_initial_layer[current_extruder] >45)}M106 P3 S50\n{endif}\n\n{if activate_air_filtration[current_extruder] && support_air_filtration}\nM106 P3 S{during_print_exhaust_fan_speed_num[current_extruder]} \n{endif}"
+; filament_tower_interface_pre_extrusion_dist = 10
+; filament_tower_interface_pre_extrusion_length = 0
+; filament_tower_interface_print_temp = -1
+; filament_tower_interface_purge_volume = 20
+; filament_tower_ironing_area = 4
+; filament_type = PLA
+; filament_velocity_adaptation_factor = 1
+; filament_vendor = "Bambu Lab"
+; filament_volume_map = 0
+; filename_format = {input_filename_base}_{filament_type[0]}_{print_time}.gcode
+; fill_multiline = 1
+; filter_out_gap_fill = 0
+; first_layer_print_sequence = 0
+; first_x_layer_fan_speed = 0
+; first_x_layer_part_fan_speed = 0
+; flush_into_infill = 0
+; flush_into_objects = 0
+; flush_into_support = 1
+; flush_multiplier = 1
+; flush_multiplier_fast = 1.2
+; flush_volumes_matrix = 0,280,280,280,280,0,280,280,280,280,0,280,280,280,280,0
+; flush_volumes_vector = 140,140,140,140,140,140,140,140
+; full_fan_speed_layer = 0
+; fuzzy_skin = none
+; fuzzy_skin_first_layer = 0
+; fuzzy_skin_mode = displacement
+; fuzzy_skin_noise_type = classic
+; fuzzy_skin_octaves = 4
+; fuzzy_skin_persistence = 0.5
+; fuzzy_skin_point_distance = 0.8
+; fuzzy_skin_scale = 1
+; fuzzy_skin_thickness = 0.3
+; gap_infill_speed = 350
+; gcode_add_line_number = 0
+; gcode_flavor = marlin
+; grab_length = 17.4
+; group_algo_with_time = 0
+; has_filament_switcher = 0
+; has_scarf_joint_seam = 0
+; head_wrap_detect_zone = 156x152,180x152,180x180,156x180
+; hole_coef_1 = 0
+; hole_coef_2 = -0.008
+; hole_coef_3 = 0.23415
+; hole_limit_max = 0.22
+; hole_limit_min = 0.088
+; hot_plate_temp = 60
+; hot_plate_temp_initial_layer = 60
+; hotend_cooling_rate = 2
+; hotend_heating_rate = 2
+; impact_strength_z = 13.8
+; independent_support_layer_height = 1
+; infill_combination = 0
+; infill_direction = 45
+; infill_instead_top_bottom_surfaces = 0
+; infill_jerk = 9
+; infill_lock_depth = 1
+; infill_rotate_step = 0
+; infill_shift_step = 0.4
+; infill_wall_overlap = 15%
+; inherits_group = ;"Bambu PLA Basic @BBL A1M";"Bambu Lab A1 mini 0.4 nozzle"
+; initial_layer_acceleration = 500
+; initial_layer_flow_ratio = 1
+; initial_layer_infill_speed = 105
+; initial_layer_jerk = 9
+; initial_layer_line_width = 0.5
+; initial_layer_print_height = 0.2
+; initial_layer_speed = 50
+; initial_layer_travel_acceleration = 6000
+; inner_wall_acceleration = 0
+; inner_wall_jerk = 9
+; inner_wall_line_width = 0.45
+; inner_wall_speed = 350
+; interface_shells = 0
+; interlocking_beam = 0
+; interlocking_beam_layer_count = 2
+; interlocking_beam_width = 0.8
+; interlocking_boundary_avoidance = 2
+; interlocking_depth = 2
+; interlocking_orientation = 22.5
+; internal_bridge_support_thickness = 0.8
+; internal_solid_infill_line_width = 0.42
+; internal_solid_infill_pattern = zig-zag
+; internal_solid_infill_speed = 350
+; ironing_direction = 45
+; ironing_fan_speed = -1
+; ironing_flow = 10%
+; ironing_inset = 0.21
+; ironing_pattern = zig-zag
+; ironing_spacing = 0.15
+; ironing_speed = 30
+; ironing_type = no ironing
+; is_infill_first = 0
+; layer_change_gcode = ; layer num/total_layer_count: {layer_num+1}/[total_layer_count]\n; update layer progress\nM73 L{layer_num+1}\nM991 S0 P{layer_num} ;notify layer change
+; layer_height = 0.12
+; line_width = 0.42
+; locked_skeleton_infill_pattern = zigzag
+; locked_skin_infill_pattern = crosszag
+; long_retractions_when_cut = 0
+; long_retractions_when_ec = 0
+; machine_bed_mass_Y = 0
+; machine_end_gcode = ;===== date: 20230428 =====================\nM400 ; wait for buffer to clear\nG92 E0 ; zero the extruder\nG1 E-0.8 F1800 ; retract\nG1 Z{max_layer_z + 0.5} F900 ; lower z a little\nG1 X65 Y245 F12000 ; move to safe pos \nG1 Y265 F3000\n\nG1 X65 Y245 F12000\nG1 Y265 F3000\nM140 S0 ; turn off bed\nM106 S0 ; turn off fan\nM106 P2 S0 ; turn off remote part cooling fan\nM106 P3 S0 ; turn off chamber cooling fan\n\nG1 X100 F12000 ; wipe\n; pull back filament to AMS\nM620 S255\nG1 X20 Y50 F12000\nG1 Y-3\nT255\nG1 X65 F12000\nG1 Y265\nG1 X100 F12000 ; wipe\nM621 S255\nM104 S0 ; turn off hotend\n\nM622.1 S1 ; for prev firmware, default turned on\nM1002 judge_flag timelapse_record_flag\nM622 J1\n    M400 ; wait all motion done\n    M991 S0 P-1 ;end smooth timelapse at safe pos\n    M400 S3 ;wait for last picture to be taken\nM623; end of \"timelapse_record_flag\"\n\nM400 ; wait all motion done\nM17 S\nM17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom\n{if (max_layer_z + 100.0) < 250}\n    G1 Z{max_layer_z + 100.0} F600\n    G1 Z{max_layer_z +98.0}\n{else}\n    G1 Z250 F600\n    G1 Z248\n{endif}\nM400 P100\nM17 R ; restore z current\n\nG90\nG1 X128 Y250 F3600\n\nM220 S100  ; Reset feedrate magnitude\nM201.2 K1.0 ; Reset acc magnitude\nM73.2   R1.0 ;Reset left time magnitude\nM1002 set_gcode_claim_speed_level : 0\n\nM17 X0.8 Y0.8 Z0.5 ; lower motor current to 45% power\n
+; machine_hotend_change_time = 0
+; machine_load_filament_time = 28
+; machine_max_acceleration_e = 5000,5000
+; machine_max_acceleration_extruding = 20000,20000
+; machine_max_acceleration_retracting = 5000,5000
+; machine_max_acceleration_travel = 6000,6000
+; machine_max_acceleration_x = 6000,6000
+; machine_max_acceleration_y = 6000,6000
+; machine_max_acceleration_z = 1500,1500
+; machine_max_force_Y = 0
+; machine_max_jerk_e = 3,3
+; machine_max_jerk_x = 9,9
+; machine_max_jerk_y = 9,9
+; machine_max_jerk_z = 5,5
+; machine_max_printed_mass = 0
+; machine_max_speed_e = 30,30
+; machine_max_speed_x = 500,200
+; machine_max_speed_y = 500,200
+; machine_max_speed_z = 30,30
+; machine_min_extruding_rate = 0,0
+; machine_min_travel_rate = 0,0
+; machine_pause_gcode = M400 U1
+; machine_prepare_compensation_time = 260
+; machine_start_gcode = G0 Z20 F9000\nG92 E0; G1 E-10 F1200\nG28\nM970 Q1 A10 B10 C130 K0\nM970 Q1 A10 B131 C250 K1\nM974 Q1 S1 P0\nM970 Q0 A10 B10 C130 H20 K0\nM970 Q0 A10 B131 C250 K1\nM974 Q0 S1 P0\nM220 S100 ;Reset Feedrate\nM221 S100 ;Reset Flowrate\nG29 ;Home\nG90;\nG92 E0 ;Reset Extruder \nG1 Z2.0 F3000 ;Move Z Axis up \nG1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position\nM109 S205;\nG1 X10.1 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line\nG1 X10.4 Y200.0 Z0.28 F5000.0 ;Move to side a little\nG1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line\nG92 E0 ;Reset Extruder \nG1 X110 Y110 Z2.0 F3000 ;Move Z Axis up
+; machine_switch_extruder_time = 0
+; machine_unload_filament_time = 34
+; master_extruder_id = 1
+; max_bridge_length = 0
+; max_layer_height = 0.28
+; max_travel_detour_distance = 0
+; min_bead_width = 85%
+; min_feature_size = 25%
+; min_layer_height = 0.08
+; minimum_sparse_infill_area = 15
+; mmu_segmented_region_interlocking_depth = 0
+; mmu_segmented_region_max_width = 0
+; monotonic_travel_into_wall = 0%
+; no_slow_down_for_cooling_on_outwalls = 0
+; nozzle_diameter = 0.4
+; nozzle_flush_dataset = 0
+; nozzle_height = 4.76
+; nozzle_temperature = 220
+; nozzle_temperature_initial_layer = 220
+; nozzle_temperature_range_high = 240
+; nozzle_temperature_range_low = 190
+; nozzle_type = stainless_steel
+; nozzle_volume = 92
+; nozzle_volume_type = Standard
+; only_one_wall_first_layer = 0
+; ooze_prevention = 0
+; other_layers_print_sequence = 0
+; other_layers_print_sequence_nums = 0
+; outer_wall_acceleration = 5000
+; outer_wall_jerk = 9
+; outer_wall_line_width = 0.42
+; outer_wall_speed = 200
+; overhang_1_4_speed = 60
+; overhang_2_4_speed = 30
+; overhang_3_4_speed = 10
+; overhang_4_4_speed = 10
+; overhang_fan_speed = 100
+; overhang_fan_threshold = 50%
+; overhang_threshold_participating_cooling = 95%
+; overhang_totally_speed = 10
+; override_filament_scarf_seam_setting = 0
+; override_process_overhang_speed = 0
+; physical_extruder_map = 0
+; post_process = 
+; pre_start_fan_time = 2
+; precise_outer_wall = 0
+; precise_z_height = 0
+; pressure_advance = 0.02
+; prime_tower_brim_width = 3
+; prime_tower_enable_framework = 0
+; prime_tower_extra_rib_length = 0
+; prime_tower_fillet_wall = 1
+; prime_tower_flat_ironing = 0
+; prime_tower_infill_gap = 150%
+; prime_tower_lift_height = -1
+; prime_tower_lift_speed = 90
+; prime_tower_max_speed = 90
+; prime_tower_rib_wall = 1
+; prime_tower_rib_width = 8
+; prime_tower_skip_points = 1
+; prime_tower_width = 35
+; prime_volume_mode = Default
+; print_compatible_printers = "Bambu Lab A1 mini 0.4 nozzle"
+; print_extruder_id = 1
+; print_extruder_variant = "Direct Drive Standard"
+; print_flow_ratio = 1
+; print_in_clockwise = 0
+; print_sequence = by layer
+; print_settings_id = 0.12mm Fine (lilmate retro pc)
+; printable_area = 0x0,180x0,180x180,0x180
+; printable_height = 180
+; printer_extruder_id = 1
+; printer_extruder_variant = "Direct Drive Standard"
+; printer_model = Bambu Lab A1 mini
+; printer_notes = 
+; printer_settings_id = Bambu Lab A1 mini 0.4 nozzle
+; printer_structure = i3
+; printer_technology = FFF
+; printer_variant = 0.4
+; printing_by_object_gcode = 
+; process_notes = 
+; raft_contact_distance = 0.1
+; raft_expansion = 1.5
+; raft_first_layer_density = 90%
+; raft_first_layer_expansion = -1
+; raft_layers = 0
+; reduce_crossing_wall = 0
+; reduce_fan_stop_start_freq = 1
+; reduce_infill_retraction_mode = Auto
+; required_nozzle_HRC = 3
+; resolution = 0.012
+; retract_before_wipe = 0%
+; retract_length_toolchange = 2
+; retract_lift_above = 0
+; retract_lift_below = 179
+; retract_restart_extra = 0
+; retract_restart_extra_toolchange = 0
+; retract_when_changing_layer = 1
+; retraction_distances_when_cut = 18
+; retraction_distances_when_ec = 0
+; retraction_length = 0.8
+; retraction_minimum_travel = 1
+; retraction_speed = 30
+; role_base_wipe_speed = 1
+; scan_first_layer = 0
+; scarf_angle_threshold = 155
+; seam_gap = 15%
+; seam_placement_away_from_overhangs = 0
+; seam_position = back
+; seam_slope_conditional = 1
+; seam_slope_entire_loop = 0
+; seam_slope_gap = 0
+; seam_slope_inner_walls = 1
+; seam_slope_min_length = 10
+; seam_slope_start_height = 10%
+; seam_slope_steps = 10
+; seam_slope_type = none
+; silent_mode = 0
+; single_extruder_multi_material = 1
+; skeleton_infill_density = 15%
+; skeleton_infill_line_width = 0.45
+; skin_infill_density = 15%
+; skin_infill_depth = 2
+; skin_infill_line_width = 0.45
+; skirt_distance = 2
+; skirt_height = 1
+; skirt_loops = 0
+; skirt_per_object = 1
+; slice_closing_radius = 0.049
+; slicing_mode = regular
+; slow_down_for_layer_cooling = 1
+; slow_down_layer_time = 6
+; slow_down_min_speed = 20
+; slowdown_end_acc = 100000
+; slowdown_end_height = 400
+; slowdown_end_speed = 1000
+; slowdown_start_acc = 100000
+; slowdown_start_height = 0
+; slowdown_start_speed = 1000
+; small_perimeter_speed = 50%
+; small_perimeter_threshold = 0
+; smooth_coefficient = 80
+; smooth_speed_discontinuity_area = 1
+; solid_infill_filament = 0
+; sparse_infill_acceleration = 100%
+; sparse_infill_anchor = 400%
+; sparse_infill_anchor_max = 20
+; sparse_infill_density = 15%
+; sparse_infill_filament = 0
+; sparse_infill_lattice_angle_1 = -45
+; sparse_infill_lattice_angle_2 = 45
+; sparse_infill_line_width = 0.45
+; sparse_infill_pattern = gyroid
+; sparse_infill_speed = 430
+; spiral_mode = 0
+; spiral_mode_max_xy_smoothing = 200%
+; spiral_mode_smooth = 0
+; standby_temperature_delta = -5
+; start_end_points = 30x-3,54x245
+; supertack_plate_temp = 45
+; supertack_plate_temp_initial_layer = 45
+; support_air_filtration = 0
+; support_angle = 0
+; support_base_pattern = default
+; support_base_pattern_spacing = 2.5
+; support_bottom_interface_spacing = 0.5
+; support_bottom_z_distance = 0.12
+; support_chamber_temp_control = 0
+; support_cooling_filter = 0
+; support_critical_regions_only = 0
+; support_expansion = 0
+; support_fast_purge_mode = 0
+; support_filament = 0
+; support_interface_bottom_layers = 2
+; support_interface_filament = 0
+; support_interface_loop_pattern = 0
+; support_interface_not_for_body = 1
+; support_interface_pattern = auto
+; support_interface_spacing = 0.5
+; support_interface_speed = 80
+; support_interface_top_layers = 2
+; support_ironing_direction = 0
+; support_ironing_flow = 10%
+; support_ironing_inset = 0
+; support_ironing_pattern = zig-zag
+; support_ironing_spacing = 0.15
+; support_ironing_speed = 30
+; support_line_width = 0.42
+; support_object_first_layer_gap = 0.2
+; support_object_skip_flush = 0
+; support_object_xy_distance = 0.35
+; support_on_build_plate_only = 0
+; support_remove_small_overhang = 1
+; support_speed = 150
+; support_style = default
+; support_threshold_angle = 20
+; support_top_z_distance = 0.12
+; support_type = tree(auto)
+; symmetric_infill_y_axis = 0
+; temperature_vitrification = 45
+; template_custom_gcode = 
+; textured_plate_temp = 65
+; textured_plate_temp_initial_layer = 65
+; thick_bridges = 0
+; thumbnail_size = 50x50
+; time_lapse_gcode = ;========Date 20250206========\nM622.1 S1 ; for prev firmware, default turned on\nM1002 judge_flag timelapse_record_flag\nM622 J1\n{if timelapse_type == 0} ; timelapse without wipe tower\nM971 S11 C10 O0\n{elsif timelapse_type == 1} ; timelapse with wipe tower\nG92 E0\nG1 X65 Y245 F20000 ; move to safe pos\nG17\nG2 Z{layer_z} I0.86 J0.86 P1 F20000\nG1 Y265 F3000\nM400 P300\nM971 S11 C10 O0\nG92 E0\nG1 X100 F5000\nG1 Y255 F20000\n{endif}\nM623\n
+; timelapse_type = 0
+; top_area_threshold = 200%
+; top_color_penetration_layers = 5
+; top_one_wall_type = all top
+; top_shell_layers = 6
+; top_shell_thickness = 0.6
+; top_solid_infill_flow_ratio = 1
+; top_surface_acceleration = 2000
+; top_surface_density = 100%
+; top_surface_jerk = 9
+; top_surface_line_width = 0.42
+; top_surface_pattern = monotonicline
+; top_surface_speed = 200
+; top_z_overrides_xy_distance = 0
+; travel_acceleration = 10000
+; travel_jerk = 9
+; travel_short_distance_acceleration = 250
+; travel_speed = 700
+; travel_speed_z = 0
+; tree_support_branch_angle = 45
+; tree_support_branch_diameter = 2
+; tree_support_branch_diameter_angle = 5
+; tree_support_branch_distance = 5
+; tree_support_wall_count = -1
+; upward_compatible_machine = "Bambu Lab P1S 0.4 nozzle";"Bambu Lab P1P 0.4 nozzle";"Bambu Lab X1 0.4 nozzle";"Bambu Lab X1 Carbon 0.4 nozzle";"Bambu Lab X1E 0.4 nozzle";"Bambu Lab A1 0.4 nozzle";"Bambu Lab H2D 0.4 nozzle";"Bambu Lab H2D Pro 0.4 nozzle";"Bambu Lab H2S 0.4 nozzle";"Bambu Lab P2S 0.4 nozzle";"Bambu Lab H2C 0.4 nozzle";"Bambu Lab X2D 0.4 nozzle";"Bambu Lab A2L 0.4 nozzle"
+; use_firmware_retraction = 0
+; use_relative_e_distances = 1
+; vertical_shell_speed = 80%
+; volumetric_speed_coefficients = "0 0 0 0 0 0"
+; wall_distribution_count = 1
+; wall_filament = 0
+; wall_generator = classic
+; wall_loops = 3
+; wall_sequence = inner wall/outer wall
+; wall_transition_angle = 10
+; wall_transition_filter_deviation = 25%
+; wall_transition_length = 100%
+; wipe = 1
+; wipe_distance = 2
+; wipe_speed = 80%
+; wipe_tower_no_sparse_layers = 0
+; wipe_tower_rotation_angle = 0
+; wipe_tower_x = 15
+; wipe_tower_y = 220
+; wrapping_detection_gcode = 
+; wrapping_detection_layers = 20
+; wrapping_exclude_area = 
+; xy_contour_compensation = 0
+; xy_hole_compensation = 0
+; z_direction_outwall_speed_continuous = 0
+; z_hop = 0.4
+; z_hop_types = Auto Lift
+; CONFIG_BLOCK_END
+
+; EXECUTABLE_BLOCK_START
+M73 P0 R14
+M201 X6000 Y6000 Z1500 E5000
+M203 X500 Y500 Z30 E30
+M204 P20000 R5000 T20000
+M205 X9.00 Y9.00 Z5.00 E3.00
+M106 S0
+M190 S35 ; set bed temperature and wait for it to be reached
+; FEATURE: Custom
+G0 Z20 F9000
+G92 E0; G1 E-10 F1200
+G28
+M970 Q1 A10 B10 C130 K0
+M970 Q1 A10 B131 C250 K1
+M974 Q1 S1 P0
+M970 Q0 A10 B10 C130 H20 K0
+M970 Q0 A10 B131 C250 K1
+M974 Q0 S1 P0
+M220 S100 ;Reset Feedrate
+M221 S100 ;Reset Flowrate
+G29 ;Home
+G90;
+G92 E0 ;Reset Extruder 
+G1 Z2.0 F3000 ;Move Z Axis up 
+G1 X10.1 Y20 Z0.28 F5000.0 ;Move to start position
+M109 S205;
+G1 X10.1 Y200.0 Z0.28 F1500.0 E15 ;Draw the first line
+G1 X10.4 Y200.0 Z0.28 F5000.0 ;Move to side a little
+G1 X10.4 Y20 Z0.28 F1500.0 E30 ;Draw the second line
+G92 E0 ;Reset Extruder 
+M73 P1 R14
+G1 X110 Y110 Z2.0 F3000 ;Move Z Axis up
+; MACHINE_START_GCODE_END
+; filament start gcode
+
+
+;VT0 H-1
+G90
+G21
+M83 ; use relative distances for extrusion
+M981 S1 P20000 ;open spaghetti detector
+; CHANGE_LAYER
+; Z_HEIGHT: 0.2
+; LAYER_HEIGHT: 0.2
+G1 E-.8 F1800
+; layer num/total_layer_count: 1/218
+; update layer progress
+M73 L1
+M991 S0 P0 ;notify layer change
+M106 S0
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X105.243 Y81.979 F42000
+M204 S6000
+M73 P2 R14
+G1 Z.4
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.5
+G1 F3000
+M204 S500
+G3 X105.243 Y81.02 I-.038 J-.48 E.0591
+G1 X105.318 Y81.032 E.00282
+G3 X105.302 Y81.97 I-.112 J.468 E.04843
+M204 S6000
+G1 X105.279 Y82.435 F42000
+G1 F3000
+M204 S500
+G3 X105.279 Y80.563 I-.073 J-.936 E.11533
+G1 X105.425 Y80.586 E.0055
+G3 X105.339 Y82.428 I-.219 J.913 E.09665
+M204 S6000
+G1 X105.333 Y82.892 F42000
+; FEATURE: Outer wall
+G1 F3000
+M204 S500
+G1 X105.315 Y82.891 E.00066
+G3 X105.096 Y80.106 I-.111 J-1.393 E.16363
+G3 X105.319 Y80.106 I.11 J.701 E.00835
+G3 X105.531 Y82.857 I-.115 J1.392 E.14687
+G1 X105.392 Y82.881 E.00527
+; OBJECT_ID: 66
+; WIPE_START
+G1 X105.315 Y82.891 E-.02948
+G1 X105.096 Y82.894 E-.08327
+G1 X104.879 Y82.86 E-.08343
+G1 X104.67 Y82.792 E-.08338
+G1 X104.475 Y82.693 E-.08343
+G1 X104.297 Y82.564 E-.08342
+G1 X104.142 Y82.408 E-.0834
+G1 X104.013 Y82.231 E-.08338
+G1 X103.913 Y82.035 E-.0834
+G1 X103.862 Y81.877 E-.06339
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S6000
+G1 X100.265 Y88.608 Z.6 F42000
+G1 X94.923 Y98.605 Z.6
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+G1 F3000
+M204 S500
+G1 X94.871 Y98.609 E.00193
+G1 X85.129 Y98.609 E.36289
+G3 X81.436 Y94.916 I.042 J-3.734 E.21539
+G1 X81.436 Y90.873 E.15058
+G3 X85.129 Y87.18 I3.732 J.04 E.21543
+G1 X94.871 Y87.18 E.36288
+G3 X98.564 Y90.873 I-.039 J3.732 E.21543
+G1 X98.564 Y94.916 E.15058
+G3 X95.334 Y98.575 I-3.732 J-.039 E.19813
+G1 X94.983 Y98.601 E.01312
+M204 S6000
+G1 X94.892 Y98.15 F42000
+G1 F3000
+M204 S500
+G1 X94.864 Y98.152 E.00106
+G1 X85.136 Y98.152 E.36233
+G3 X81.893 Y94.909 I.032 J-3.275 E.18923
+G1 X81.893 Y90.88 E.15003
+G3 X85.136 Y87.637 I3.273 J.03 E.18926
+G1 X94.864 Y87.637 E.36233
+G3 X98.107 Y90.88 I-.03 J3.273 E.18926
+G1 X98.107 Y94.908 E.15003
+G3 X95.275 Y98.122 I-3.273 J-.03 E.17392
+G1 X94.952 Y98.145 E.01204
+M204 S6000
+G1 X94.866 Y97.694 F42000
+; FEATURE: Outer wall
+G1 F3000
+M204 S500
+G1 X94.857 Y97.694 E.00033
+G1 X85.143 Y97.694 E.36179
+G3 X82.35 Y94.901 I.023 J-2.816 E.16307
+G1 X82.35 Y90.888 E.14948
+G3 X85.143 Y88.094 I2.814 J.021 E.1631
+G1 X94.857 Y88.094 E.36178
+G3 X97.65 Y90.888 I-.021 J2.814 E.1631
+G1 X97.65 Y94.901 E.14948
+G3 X95.397 Y97.638 I-2.814 J-.021 E.14283
+G1 X94.925 Y97.687 E.01767
+; WIPE_START
+G1 X94.857 Y97.694 E-.02619
+G1 X92.926 Y97.694 E-.73381
+; WIPE_END
+G1 E-.04 F1800
+M204 S6000
+G1 X85.313 Y98.241 Z.6 F42000
+G1 X75.021 Y98.98 Z.6
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+G1 F3000
+M204 S500
+G3 X74.314 Y98.273 I-.016 J-.691 E.04165
+G1 X74.314 Y87.316 E.40811
+G3 X75.021 Y86.609 I.691 J-.016 E.04164
+G1 X105.04 Y86.611 E1.11809
+G3 X105.686 Y87.316 I-.042 J.686 E.03938
+G1 X105.686 Y98.273 E.40811
+G3 X104.979 Y98.98 I-.691 J.016 E.04165
+G1 X75.081 Y98.98 E1.11355
+M204 S6000
+G1 X75.014 Y99.437 F42000
+G1 F3000
+M204 S500
+G3 X73.857 Y98.28 I-.007 J-1.15 E.0678
+G1 X73.857 Y87.308 E.40866
+G3 X75.014 Y86.152 I1.15 J-.007 E.0678
+G1 X105.069 Y86.154 E1.11945
+G3 X106.143 Y87.308 I-.071 J1.143 E.06475
+G1 X106.143 Y98.28 E.40866
+M73 P3 R14
+G3 X104.986 Y99.437 I-1.15 J.007 E.0678
+G1 X75.074 Y99.437 E1.11411
+M204 S6000
+G1 X75.007 Y99.894 F42000
+; FEATURE: Outer wall
+G1 F3000
+M204 S500
+G3 X73.4 Y98.288 I.002 J-1.609 E.09396
+G1 X73.4 Y87.301 E.40922
+G3 X75.007 Y85.694 I1.609 J.002 E.09396
+G1 X105.099 Y85.698 E1.12082
+G3 X106.6 Y87.301 I-.101 J1.599 E.09013
+G1 X106.6 Y98.288 E.40922
+G3 X104.993 Y99.894 I-1.609 J-.002 E.09396
+G1 X75.067 Y99.894 E1.11466
+; WIPE_START
+G1 X74.688 Y99.863 E-.14446
+G1 X74.388 Y99.772 E-.11915
+G1 X74.111 Y99.625 E-.11912
+G1 X73.869 Y99.426 E-.1192
+G1 X73.67 Y99.183 E-.11917
+G1 X73.522 Y98.907 E-.1191
+G1 X73.507 Y98.857 E-.0198
+; WIPE_END
+G1 E-.04 F1800
+M204 S6000
+G17
+G3 Z.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 1 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer1 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.971 Y98.516
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.261251
+G1 F3000
+M204 S500
+G2 X83.731 Y98.665 I4.927 J-23.119 E.01378
+; LINE_WIDTH: 0.193638
+G1 X83.86 Y98.688 E.00161
+; LINE_WIDTH: 0.152881
+G1 X83.99 Y98.708 E.00118
+; LINE_WIDTH: 0.119392
+G1 X84.116 Y98.726 E.00079
+M204 S6000
+G1 X84.055 Y98.752 F42000
+; LINE_WIDTH: 0.380973
+G1 F3000
+M204 S500
+G1 X82.976 Y98.5 E.03053
+; WIPE_START
+G1 X84.055 Y98.752 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S6000
+G1 X83.31 Y91.156 Z.6 F42000
+G1 X82.969 Y87.674 Z.6
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Bottom surface
+; LINE_WIDTH: 0.50622
+G1 F6300
+M204 S500
+G1 X82.293 Y86.997 E.03609
+G1 X81.638 Y86.997 E.02474
+G1 X82.447 Y87.807 E.04323
+G2 X82.119 Y88.134 I1.504 J1.838 E.01752
+G1 X80.982 Y86.997 E.06068
+G1 X80.327 Y86.997 E.02474
+G1 X81.826 Y88.497 E.08005
+G1 X81.57 Y88.895 E.0179
+G1 X79.672 Y86.997 E.10134
+G1 X79.017 Y86.997 E.02474
+G1 X81.355 Y89.336 E.12484
+G1 X81.188 Y89.824 E.01949
+G1 X78.361 Y86.997 E.15094
+G1 X77.706 Y86.997 E.02474
+G1 X81.08 Y90.371 E.18015
+G2 X81.047 Y90.994 I4.625 J.556 E.02355
+G1 X77.051 Y86.997 E.21338
+G1 X76.396 Y86.997 E.02474
+G1 X81.047 Y91.649 E.24837
+G1 X81.047 Y92.304 E.02474
+G1 X75.74 Y86.997 E.28335
+G1 X75.085 Y86.997 E.02474
+G1 X81.047 Y92.959 E.31834
+G1 X81.047 Y93.615 E.02474
+G1 X74.71 Y87.277 E.33836
+G1 X74.703 Y87.925 E.02445
+G1 X81.047 Y94.27 E.33876
+G1 X81.047 Y94.925 E.02474
+M73 P3 R13
+G1 X74.703 Y88.58 E.33876
+G1 X74.703 Y89.235 E.02474
+G1 X81.118 Y95.651 E.34254
+G2 X81.361 Y96.471 I6.146 J-1.376 E.0323
+G1 X81.437 Y96.625 E.00651
+G1 X74.703 Y89.891 E.35958
+G1 X74.703 Y90.546 E.02474
+G1 X82.592 Y98.435 E.42123
+G1 X82.556 Y98.592 E.00607
+G1 X82.094 Y98.592 E.01744
+G1 X74.703 Y91.201 E.39461
+G1 X74.703 Y91.856 E.02474
+G1 X81.438 Y98.592 E.35963
+G1 X80.783 Y98.592 E.02474
+G1 X74.703 Y92.511 E.32465
+G1 X74.703 Y93.167 E.02474
+G1 X80.128 Y98.592 E.28967
+M73 P4 R13
+G1 X79.473 Y98.592 E.02474
+G1 X74.703 Y93.822 E.25468
+G1 X74.703 Y94.477 E.02474
+G1 X78.818 Y98.592 E.2197
+G1 X78.162 Y98.592 E.02474
+G1 X74.703 Y95.132 E.18472
+G1 X74.703 Y95.787 E.02474
+G1 X77.507 Y98.592 E.14974
+G1 X76.852 Y98.592 E.02474
+G1 X74.703 Y96.443 E.11476
+G1 X74.703 Y97.098 E.02474
+G1 X76.197 Y98.592 E.07977
+G1 X75.541 Y98.592 E.02474
+G1 X74.703 Y97.753 E.04479
+G2 X74.711 Y98.354 I3.363 J.251 E.02271
+G2 X74.781 Y98.486 I.283 J-.063 E.00571
+G1 X75.092 Y98.798 E.01663
+; WIPE_START
+G1 X74.781 Y98.486 E-.16735
+G1 X74.711 Y98.354 E-.05683
+G1 X74.703 Y97.753 E-.22828
+G1 X75.275 Y98.325 E-.30755
+; WIPE_END
+G1 E-.04 F1800
+M204 S6000
+G1 X79.711 Y92.114 Z.6 F42000
+G1 X83.285 Y87.111 Z.6
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.485333
+G1 F3000
+M204 S500
+G1 X83.566 Y87.051 E.01035
+; LINE_WIDTH: 0.447173
+G1 X83.695 Y87.028 E.00432
+; LINE_WIDTH: 0.400238
+G1 X83.824 Y87.004 E.00382
+; LINE_WIDTH: 0.357154
+G1 X83.953 Y86.985 E.00336
+; LINE_WIDTH: 0.320209
+G1 X84.073 Y86.967 E.00272
+; LINE_WIDTH: 0.285306
+G1 X84.217 Y86.95 E.00287
+; LINE_WIDTH: 0.252136
+G1 X84.353 Y86.934 E.00234
+; LINE_WIDTH: 0.213609
+G1 X84.623 Y86.911 E.00377
+; LINE_WIDTH: 0.158757
+G1 X85.125 Y86.894 E.00473
+G1 X94.875 Y86.894 E.09204
+G1 X95.372 Y86.911 E.00469
+; LINE_WIDTH: 0.212219
+G1 X95.635 Y86.933 E.00364
+; LINE_WIDTH: 0.249167
+G1 X95.77 Y86.948 E.00229
+; LINE_WIDTH: 0.279612
+G1 X95.899 Y86.963 E.00251
+; LINE_WIDTH: 0.314567
+G1 X96.037 Y86.983 E.00307
+; LINE_WIDTH: 0.354063
+G1 X96.166 Y87.002 E.00331
+; LINE_WIDTH: 0.374999
+G1 X96.176 Y87.004 E.0003
+; LINE_WIDTH: 0.400253
+G1 X96.305 Y87.028 E.00382
+; LINE_WIDTH: 0.447198
+G1 X96.434 Y87.051 E.00432
+; LINE_WIDTH: 0.485348
+G1 X96.715 Y87.111 E.01035
+; WIPE_START
+G1 X96.434 Y87.051 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S6000
+G1 X104.063 Y86.819 Z.6 F42000
+G1 X104.906 Y86.793 Z.6
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Bottom surface
+; LINE_WIDTH: 0.51439
+G1 F6300
+M204 S500
+G1 X105.245 Y87.133 E.01846
+G3 X105.297 Y87.345 I-.285 J.182 E.00856
+G1 X105.297 Y87.852 E.01945
+G1 X104.445 Y86.999 E.04634
+G1 X103.778 Y86.999 E.02562
+G1 X105.297 Y88.518 E.08256
+G1 X105.297 Y89.185 E.02561
+G1 X103.111 Y86.999 E.11878
+G1 X102.444 Y86.999 E.02562
+G1 X105.297 Y89.852 E.155
+G1 X105.297 Y90.518 E.02561
+G1 X101.777 Y86.999 E.19123
+G1 X101.11 Y86.999 E.02562
+G1 X105.297 Y91.185 E.22745
+G1 X105.297 Y91.852 E.02561
+G1 X100.444 Y86.999 E.26367
+G1 X99.777 Y86.999 E.02562
+G1 X105.296 Y92.518 E.29989
+G1 X105.296 Y93.185 E.02561
+G1 X99.11 Y86.999 E.33611
+G1 X98.443 Y86.999 E.02562
+G1 X105.296 Y93.851 E.37233
+G1 X105.296 Y94.518 E.02561
+G1 X97.776 Y86.999 E.40856
+G1 X97.137 Y86.998 E.02457
+G1 X97.132 Y87.021 E.00088
+G1 X105.296 Y95.185 E.44356
+G1 X105.296 Y95.851 E.02561
+G1 X98.518 Y89.074 E.36823
+G3 X98.875 Y90.095 I-4.125 J2.014 E.04164
+G1 X105.296 Y96.518 E.34891
+G1 X105.296 Y97.185 E.02561
+G1 X98.946 Y90.835 E.34501
+G1 X98.947 Y91.503 E.02566
+G1 X105.295 Y97.851 E.34494
+G1 X105.295 Y98.301 E.01727
+G3 X105.238 Y98.46 I-.294 J-.016 E.00661
+G1 X98.948 Y92.17 E.34175
+G1 X98.949 Y92.838 E.02566
+G1 X104.703 Y98.592 E.3126
+G1 X104.036 Y98.592 E.02562
+G1 X98.95 Y93.506 E.27631
+G1 X98.951 Y94.174 E.02566
+G1 X103.369 Y98.592 E.24003
+G1 X102.702 Y98.592 E.02562
+G1 X98.952 Y94.842 E.20374
+G3 X98.911 Y95.468 I-9.03 J-.277 E.0241
+G1 X102.036 Y98.592 E.16974
+G1 X101.369 Y98.592 E.02562
+G1 X98.794 Y96.017 E.1399
+G1 X98.62 Y96.51 E.02007
+G1 X100.702 Y98.592 E.11314
+G1 X100.035 Y98.592 E.02562
+G1 X98.398 Y96.955 E.08893
+G1 X98.131 Y97.355 E.01847
+G1 X99.368 Y98.592 E.06721
+G1 X98.702 Y98.592 E.02562
+G1 X97.823 Y97.713 E.04775
+G3 X97.483 Y98.04 I-1.827 J-1.565 E.01815
+M73 P5 R13
+G1 X98.241 Y98.798 E.04119
+; WIPE_START
+G1 X97.483 Y98.04 E-.40739
+G1 X97.823 Y97.713 E-.1792
+G1 X98.146 Y98.036 E-.17341
+; WIPE_END
+G1 E-.04 F1800
+M204 S6000
+G1 X97.029 Y98.516 Z.6 F42000
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.265475
+G1 F3000
+M204 S500
+G1 X96.398 Y98.641 E.01167
+; LINE_WIDTH: 0.240543
+G1 X96.269 Y98.665 E.00211
+; LINE_WIDTH: 0.192841
+G1 X96.136 Y98.689 E.00165
+; LINE_WIDTH: 0.152283
+G1 X96.01 Y98.708 E.00113
+; LINE_WIDTH: 0.119369
+G1 X95.884 Y98.726 E.00079
+M204 S6000
+G1 X95.945 Y98.752 F42000
+; LINE_WIDTH: 0.381025
+G1 F3000
+M204 S500
+G1 X97.024 Y98.5 E.03053
+; OBJECT_ID: 88
+; WIPE_START
+G1 X95.945 Y98.752 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S6000
+G1 X93.41 Y91.553 Z.6 F42000
+G1 X90.038 Y81.979 Z.6
+G1 Z.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.5
+G1 F3000
+M204 S500
+G3 X90.038 Y81.02 I-.038 J-.48 E.0591
+G1 X90.113 Y81.032 E.00282
+G3 X90.097 Y81.97 I-.112 J.468 E.04843
+M204 S6000
+G1 X90.074 Y82.435 F42000
+G1 F3000
+M204 S500
+G3 X90.074 Y80.563 I-.073 J-.936 E.11533
+G1 X90.219 Y80.586 E.0055
+G3 X90.133 Y82.428 I-.219 J.913 E.09665
+M204 S6000
+G1 X90.127 Y82.892 F42000
+; FEATURE: Outer wall
+G1 F3000
+M204 S500
+G1 X90.109 Y82.891 E.00066
+G3 X89.89 Y80.106 I-.111 J-1.393 E.16363
+G3 X90.114 Y80.106 I.11 J.701 E.00835
+G3 X90.326 Y82.857 I-.115 J1.392 E.14687
+G1 X90.186 Y82.881 E.00527
+; CHANGE_LAYER
+; Z_HEIGHT: 0.32
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F3000
+G1 X90.109 Y82.891 E-.02948
+G1 X89.89 Y82.894 E-.08327
+G1 X89.673 Y82.86 E-.08343
+G1 X89.465 Y82.792 E-.08338
+G1 X89.269 Y82.693 E-.08343
+G1 X89.092 Y82.564 E-.08342
+G1 X88.936 Y82.408 E-.0834
+G1 X88.807 Y82.231 E-.08338
+G1 X88.708 Y82.035 E-.0834
+G1 X88.656 Y81.877 E-.06339
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 2/218
+; update layer progress
+M73 L2
+M991 S0 P1 ;notify layer change
+M106 S201.45
+; open powerlost recovery
+M1003 S1
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z.6 I-.027 J1.217 P1  F42000
+G1 X105.264 Y82.249 Z.6
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10972
+M204 S6000
+G3 X105.265 Y80.749 I-.059 J-.75 E.05145
+G1 X105.381 Y80.768 E.00245
+G3 X105.324 Y82.242 I-.176 J.731 E.04287
+M204 S10000
+G1 X105.302 Y82.675 F42000
+G1 F10972
+M204 S6000
+G1 X105.298 Y82.671 E.00011
+G3 X104.93 Y80.354 I-.1 J-1.172 E.07311
+G3 X105.341 Y80.332 I.276 J1.304 E.00856
+G3 X105.479 Y82.641 I-.143 J1.168 E.06779
+G1 X105.361 Y82.664 E.00251
+M204 S250
+G1 X105.366 Y83.079 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10972
+M204 S5000
+G1 X105.33 Y83.08 E.00069
+G3 X103.771 Y82.175 I-.124 J-1.58 E.03695
+G3 X105.405 Y79.927 I1.434 J-.675 E.06529
+G3 X106.64 Y80.825 I-.203 J1.578 E.03069
+G3 X105.576 Y83.041 I-1.434 J.675 E.05425
+G1 X105.425 Y83.068 E.00296
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.33 Y83.08 E-.03631
+G1 X105.081 Y83.084 E-.09462
+G1 X104.834 Y83.045 E-.09481
+G1 X104.597 Y82.968 E-.09476
+G1 X104.375 Y82.855 E-.09478
+G1 X104.173 Y82.709 E-.09473
+G1 X103.997 Y82.532 E-.09483
+G1 X103.85 Y82.33 E-.09474
+G1 X103.778 Y82.189 E-.06043
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 77
+M625
+; object ids of layer 2 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer2 end: 66,77,88
+M625
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X104.978 Y81.368
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.550842
+G1 F10972
+M204 S6000
+G1 X104.934 Y81.517 E.00399
+G1 X105.028 Y81.707 E.00545
+G1 X105.231 Y81.769 E.00544
+G1 X105.41 Y81.68 E.00513
+G1 X105.474 Y81.52 E.00441
+G1 X105.433 Y81.355 E.00437
+G1 X105.266 Y81.243 E.00516
+G1 X105.096 Y81.254 E.00439
+G1 X105.021 Y81.326 E.00268
+; OBJECT_ID: 66
+; WIPE_START
+G1 F19996.573
+G1 X105.096 Y81.254 E-.04962
+G1 X105.266 Y81.243 E-.08128
+G1 X105.433 Y81.355 E-.09567
+G1 X105.474 Y81.52 E-.08091
+G1 X105.41 Y81.68 E-.08177
+G1 X105.231 Y81.769 E-.09503
+G1 X105.028 Y81.707 E-.10077
+G1 X104.934 Y81.517 E-.10095
+G1 X104.978 Y81.368 E-.074
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.082 Y87.931 Z.72 F42000
+G1 X94.906 Y98.335 Z.72
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10972
+M204 S6000
+G1 X94.867 Y98.338 E.0008
+G1 X85.133 Y98.338 E.20192
+G3 X81.707 Y94.912 I.034 J-3.46 E.11133
+G1 X81.707 Y90.877 E.08369
+G3 X85.133 Y87.451 I3.46 J.034 E.11133
+G1 X94.867 Y87.451 E.20192
+G3 X98.293 Y90.877 I-.034 J3.46 E.11133
+G1 X98.293 Y94.912 E.08369
+G3 X95.299 Y98.307 I-3.46 J-.034 E.10234
+G1 X94.966 Y98.331 E.00694
+M204 S10000
+G1 X94.877 Y97.913 F42000
+G1 F10972
+M204 S6000
+G1 X94.86 Y97.914 E.00036
+G1 X85.14 Y97.914 E.20163
+G3 X82.131 Y94.905 I.025 J-3.034 E.09782
+G1 X82.131 Y90.884 E.0834
+G3 X85.14 Y87.875 I3.034 J.025 E.09782
+G1 X94.86 Y87.875 E.20163
+G3 X97.869 Y90.884 I-.025 J3.034 E.09782
+G1 X97.869 Y94.905 E.0834
+G3 X95.244 Y97.886 I-3.034 J-.025 E.08983
+G1 X94.937 Y97.908 E.00638
+M204 S250
+G1 X94.854 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10972
+M204 S5000
+G1 X85.146 Y97.504 E.18711
+G3 X82.54 Y94.898 I.017 J-2.623 E.07878
+G1 X82.54 Y90.891 E.07724
+G3 X85.146 Y88.284 I2.623 J.017 E.07878
+G1 X94.854 Y88.284 E.18711
+G3 X97.46 Y90.891 I-.017 J2.623 E.07878
+G1 X97.46 Y94.898 E.07724
+G3 X94.913 Y97.503 I-2.623 J-.017 E.07763
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X92.913 Y97.504 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.317 Y98.245 Z.72 F42000
+G1 X75.017 Y99.251 Z.72
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10972
+M204 S6000
+G3 X74.043 Y98.278 I-.011 J-.963 E.03181
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03181
+G1 X105.049 Y86.34 E.62295
+G3 X105.957 Y87.311 I-.051 J.957 E.03046
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.963 J.011 E.03181
+G1 X75.077 Y99.251 E.62033
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F10972
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.076 Y85.916 E.62363
+G3 X106.381 Y87.304 I-.077 J1.38 E.0436
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10972
+M204 S5000
+G1 X74.667 Y100.052 E.00646
+G3 X73.21 Y98.291 I.343 J-1.767 E.04773
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.101 Y85.508 E.58015
+G3 X106.79 Y87.298 I-.103 J1.789 E.05229
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.06 Y100.084 E.57704
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.667 Y100.052 E-.15001
+G1 X74.315 Y99.948 E-.13941
+G1 X74.006 Y99.783 E-.13333
+G1 X73.734 Y99.56 E-.13336
+G1 X73.512 Y99.289 E-.13331
+G1 X73.424 Y99.125 E-.07059
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X81.057 Y99.092 Z.72 F42000
+G1 X83.714 Y99.081 Z.72
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.422962
+G1 F10972
+M204 S6000
+G1 X83.912 Y98.883 E.00542
+G1 X83.944 Y98.489 E.00767
+G3 X83.801 Y98.432 I.147 J-.574 E.003
+G1 X83.33 Y98.903 E.01294
+G1 X82.768 Y98.903 E.01091
+G1 X83.41 Y98.262 E.01762
+G3 X83.06 Y98.05 I.902 J-1.881 E.00795
+G1 X82.206 Y98.903 E.02344
+G1 X81.645 Y98.903 E.01091
+G1 X82.736 Y97.811 E.02998
+G3 X82.441 Y97.545 I.863 J-1.255 E.00775
+G1 X81.083 Y98.903 E.0373
+G1 X80.521 Y98.903 E.01091
+G1 X82.178 Y97.246 E.04552
+G3 X81.945 Y96.918 I2.777 J-2.222 E.00783
+G1 X79.959 Y98.903 E.05453
+G1 X79.398 Y98.903 E.01091
+G1 X81.748 Y96.553 E.06455
+G3 X81.582 Y96.157 I1.421 J-.829 E.00836
+G1 X78.836 Y98.903 E.07542
+G1 X78.274 Y98.903 E.01091
+G1 X81.452 Y95.725 E.08728
+G3 X81.38 Y95.236 I3.018 J-.697 E.00962
+G1 X77.712 Y98.903 E.10072
+G1 X77.151 Y98.903 E.01091
+G1 X81.359 Y94.695 E.11557
+G1 X81.359 Y94.133 E.01091
+G1 X76.589 Y98.903 E.131
+G1 X76.027 Y98.903 E.01091
+G1 X81.359 Y93.572 E.14643
+G1 X81.359 Y93.01 E.01091
+G1 X75.465 Y98.903 E.16186
+G3 X74.919 Y98.888 I-.213 J-2.145 E.01064
+G1 X81.359 Y92.448 E.17686
+G1 X81.359 Y91.886 E.01091
+G1 X74.549 Y98.696 E.18704
+G3 X74.394 Y98.289 I.476 J-.414 E.00864
+G1 X81.359 Y91.325 E.19129
+G3 X81.366 Y90.756 I4.263 J-.23 E.01106
+G1 X74.391 Y97.73 E.19155
+G1 X74.392 Y97.168 E.01091
+G1 X81.69 Y89.87 E.20046
+M204 S10000
+G1 X74.931 Y86.517 F42000
+G1 F10972
+M204 S6000
+G1 X74.517 Y86.932 E.0114
+G2 X74.413 Y87.142 I.452 J.354 E.00459
+G2 X74.394 Y87.616 I1.472 J.296 E.00926
+G1 X75.324 Y86.686 E.02556
+G1 X75.886 Y86.686 E.01091
+G1 X74.394 Y88.178 E.04099
+G1 X74.394 Y88.74 E.01091
+G1 X76.448 Y86.686 E.05642
+G1 X77.01 Y86.686 E.01091
+G1 X74.393 Y89.302 E.07185
+G1 X74.393 Y89.864 E.01091
+G1 X77.571 Y86.686 E.08728
+G1 X78.133 Y86.686 E.01091
+G1 X74.393 Y90.426 E.10271
+G1 X74.393 Y90.988 E.01091
+G1 X78.695 Y86.686 E.11814
+G1 X79.256 Y86.686 E.01091
+G1 X74.393 Y91.55 E.13357
+G1 X74.393 Y92.111 E.01091
+G1 X79.818 Y86.686 E.149
+G1 X80.38 Y86.686 E.01091
+G1 X74.393 Y92.673 E.16443
+G1 X74.393 Y93.235 E.01091
+G1 X80.941 Y86.686 E.17987
+G1 X81.503 Y86.686 E.01091
+G1 X74.392 Y93.797 E.1953
+G1 X74.392 Y94.359 E.01091
+G1 X82.065 Y86.686 E.21073
+G1 X82.627 Y86.686 E.01091
+G1 X74.392 Y94.921 E.22616
+G1 X74.392 Y95.483 E.01091
+G1 X83.188 Y86.686 E.24159
+G1 X83.75 Y86.686 E.01091
+G1 X74.392 Y96.045 E.25702
+G1 X74.392 Y96.606 E.01091
+G1 X81.733 Y89.265 E.20163
+M73 P6 R13
+G3 X83.519 Y87.479 I3.424 J1.638 E.05
+G1 X84.312 Y86.686 E.02177
+G1 X84.873 Y86.687 E.01091
+G1 X84.377 Y87.183 E.01364
+G3 X85.011 Y87.11 I.742 J3.681 E.01241
+G1 X85.435 Y86.687 E.01164
+G1 X85.997 Y86.687 E.01091
+G1 X85.58 Y87.103 E.01145
+G1 X86.141 Y87.104 E.0109
+G1 X86.558 Y86.687 E.01146
+G1 X87.12 Y86.687 E.01091
+G1 X86.703 Y87.104 E.01147
+G1 X87.264 Y87.105 E.0109
+G1 X87.682 Y86.687 E.01148
+G1 X88.244 Y86.687 E.01091
+G1 X87.825 Y87.105 E.01149
+G1 X88.387 Y87.105 E.0109
+G1 X88.805 Y86.687 E.0115
+G1 X89.367 Y86.687 E.01091
+G1 X88.948 Y87.106 E.0115
+G1 X89.509 Y87.106 E.0109
+G1 X89.929 Y86.687 E.01151
+G1 X90.49 Y86.687 E.01091
+G1 X90.071 Y87.106 E.01152
+G1 X90.632 Y87.107 E.0109
+G1 X91.052 Y86.687 E.01153
+G1 X91.614 Y86.687 E.01091
+G1 X91.193 Y87.107 E.01154
+G1 X91.755 Y87.108 E.0109
+G1 X92.175 Y86.687 E.01155
+G1 X92.737 Y86.687 E.01091
+G1 X92.316 Y87.108 E.01156
+G1 X92.878 Y87.108 E.0109
+G1 X93.299 Y86.687 E.01157
+G1 X93.861 Y86.687 E.01091
+G1 X93.439 Y87.109 E.01158
+G1 X94 Y87.109 E.0109
+G1 X94.422 Y86.687 E.01159
+G1 X94.984 Y86.687 E.01091
+G1 X94.562 Y87.11 E.0116
+G1 X95.12 Y87.113 E.01085
+G1 X95.546 Y86.687 E.01169
+G1 X96.107 Y86.687 E.01091
+G1 X95.614 Y87.181 E.01356
+G1 X96.057 Y87.3 E.00891
+G1 X96.669 Y86.687 E.01682
+G1 X97.231 Y86.687 E.01091
+G1 X96.455 Y87.463 E.0213
+G3 X96.82 Y87.659 I-1.151 J2.577 E.00806
+G1 X97.792 Y86.687 E.0267
+G1 X98.354 Y86.687 E.01091
+G1 X97.157 Y87.885 E.03288
+G3 X97.456 Y88.148 I-1.184 J1.645 E.00774
+G1 X98.916 Y86.688 E.04011
+G1 X99.478 Y86.688 E.01091
+G1 X97.733 Y88.433 E.04793
+G3 X97.972 Y88.755 I-1.516 J1.377 E.00781
+G1 X100.039 Y86.688 E.05678
+G1 X100.601 Y86.688 E.01091
+G1 X98.186 Y89.103 E.06632
+G3 X98.367 Y89.483 I-1.352 J.878 E.00821
+G1 X101.163 Y86.688 E.07677
+G1 X101.724 Y86.688 E.01091
+G1 X98.51 Y89.902 E.08829
+G1 X98.604 Y90.37 E.00926
+G1 X102.286 Y86.688 E.10112
+G1 X102.848 Y86.688 E.01091
+G1 X98.635 Y90.901 E.1157
+G1 X98.636 Y91.461 E.01089
+G1 X103.409 Y86.688 E.13111
+G1 X103.971 Y86.688 E.01091
+G1 X98.637 Y92.022 E.14651
+G1 X98.638 Y92.583 E.01089
+G1 X104.533 Y86.688 E.16191
+G1 X105.085 Y86.698 E.01072
+G1 X98.639 Y93.144 E.17705
+G1 X98.639 Y93.705 E.01089
+G1 X105.453 Y86.892 E.18713
+G3 X105.606 Y87.3 I-.485 J.415 E.00865
+G1 X98.64 Y94.266 E.19131
+G1 X98.641 Y94.827 E.01089
+G1 X105.609 Y87.859 E.19136
+G1 X105.608 Y88.421 E.01091
+G1 X98.603 Y95.427 E.19241
+G3 X98.41 Y96.181 I-2.961 J-.355 E.01517
+G1 X105.608 Y88.983 E.19771
+G1 X105.608 Y89.545 E.01091
+G1 X96.25 Y98.903 E.25703
+G1 X96.812 Y98.903 E.01091
+G1 X105.608 Y90.107 E.24159
+G1 X105.608 Y90.669 E.01091
+G1 X97.373 Y98.903 E.22616
+G1 X97.935 Y98.903 E.01091
+G1 X105.608 Y91.23 E.21073
+G1 X105.608 Y91.792 E.01091
+G1 X98.497 Y98.903 E.1953
+G1 X99.059 Y98.903 E.01091
+G1 X105.607 Y92.354 E.17987
+G1 X105.607 Y92.916 E.01091
+G1 X99.62 Y98.903 E.16443
+G1 X100.182 Y98.903 E.01091
+G1 X105.607 Y93.478 E.149
+G1 X105.607 Y94.04 E.01091
+G1 X100.744 Y98.903 E.13357
+G1 X101.305 Y98.903 E.01091
+G1 X105.607 Y94.602 E.11814
+G1 X105.607 Y95.163 E.01091
+G1 X101.867 Y98.903 E.10271
+G1 X102.429 Y98.903 E.01091
+G1 X105.607 Y95.725 E.08728
+G1 X105.607 Y96.287 E.01091
+G1 X102.991 Y98.903 E.07184
+G1 X103.552 Y98.903 E.01091
+G1 X105.606 Y96.849 E.05641
+G1 X105.606 Y97.411 E.01091
+G1 X104.114 Y98.903 E.04098
+G1 X104.676 Y98.903 E.01091
+G1 X105.606 Y97.973 E.02555
+G1 X105.606 Y98.329 E.00692
+G3 X105.483 Y98.658 I-.615 J-.043 E.00691
+G1 X105.069 Y99.072 E.01137
+M204 S10000
+G1 X96.477 Y98.114 F42000
+G1 F10972
+M204 S6000
+G1 X95.895 Y98.696 E.01599
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518268
+G1 F10972
+M204 S6000
+G3 X94.871 Y98.794 I-.944 J-9.477 E.02068
+G1 X85.129 Y98.794 E.23459
+G1 X84.647 Y98.779 E.0116
+G3 X84.272 Y98.748 I.731 J-11.301 E.00908
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X84.647 Y98.779 E-.14324
+G1 X85.129 Y98.794 E-.18312
+G1 X86.27 Y98.794 E-.43364
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X87.974 Y91.355 Z.72 F42000
+G1 X90.059 Y82.249 Z.72
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10972
+M204 S6000
+G3 X90.059 Y80.749 I-.059 J-.75 E.05145
+G1 X90.176 Y80.768 E.00245
+G3 X90.119 Y82.242 I-.176 J.731 E.04287
+M204 S10000
+G1 X90.096 Y82.675 F42000
+G1 F10972
+M204 S6000
+G1 X90.092 Y82.671 E.00011
+G3 X89.725 Y80.354 I-.1 J-1.172 E.07311
+G3 X90.135 Y80.332 I.276 J1.304 E.00856
+G3 X90.274 Y82.641 I-.143 J1.168 E.06779
+G1 X90.155 Y82.664 E.00251
+M204 S250
+G1 X90.16 Y83.079 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10972
+M204 S5000
+G1 X90.124 Y83.08 E.00069
+G3 X88.566 Y82.175 I-.124 J-1.58 E.03695
+G3 X90.199 Y79.927 I1.434 J-.675 E.06529
+G3 X91.434 Y80.825 I-.203 J1.578 E.03069
+G3 X90.37 Y83.041 I-1.434 J.675 E.05425
+G1 X90.219 Y83.068 E.00296
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.124 Y83.08 E-.03631
+G1 X89.875 Y83.084 E-.09462
+G1 X89.629 Y83.045 E-.09481
+G1 X89.392 Y82.968 E-.09476
+G1 X89.17 Y82.855 E-.09478
+G1 X88.968 Y82.709 E-.09473
+G1 X88.791 Y82.532 E-.09483
+G1 X88.645 Y82.331 E-.09474
+G1 X88.573 Y82.189 E-.06043
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.772 Y81.368 Z.72 F42000
+G1 Z.32
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.550842
+G1 F10972
+M204 S6000
+G1 X89.728 Y81.517 E.00399
+G1 X89.823 Y81.707 E.00545
+G1 X90.026 Y81.769 E.00544
+G1 X90.204 Y81.68 E.00513
+G1 X90.269 Y81.52 E.00441
+G1 X90.228 Y81.355 E.00437
+G1 X90.061 Y81.243 E.00516
+G1 X89.89 Y81.254 E.00439
+G1 X89.815 Y81.326 E.00268
+; CHANGE_LAYER
+; Z_HEIGHT: 0.44
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F19996.573
+G1 X89.89 Y81.254 E-.04962
+G1 X90.061 Y81.243 E-.08128
+G1 X90.228 Y81.355 E-.09567
+G1 X90.269 Y81.52 E-.08091
+G1 X90.204 Y81.68 E-.08177
+G1 X90.026 Y81.769 E-.09503
+G1 X89.823 Y81.707 E-.10077
+G1 X89.728 Y81.517 E-.10095
+G1 X89.772 Y81.368 E-.074
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 3/218
+; update layer progress
+M73 L3
+M991 S0 P2 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z.72 I-.068 J1.215 P1  F42000
+G1 X105.274 Y82.241 Z.72
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10864
+M204 S6000
+G1 X105.147 Y82.249 E.00265
+G3 X105.146 Y80.749 I.049 J-.75 E.04696
+G3 X105.316 Y80.757 I.059 J.539 E.00354
+G3 X105.38 Y82.228 I-.121 J.742 E.0426
+G1 X105.334 Y82.234 E.00097
+M204 S10000
+G1 X105.304 Y82.674 F42000
+G1 F10864
+M204 S6000
+G1 X105.298 Y82.672 E.00014
+G3 X104.93 Y80.354 I-.102 J-1.172 E.07323
+G3 X105.382 Y80.338 I.269 J1.233 E.00943
+G3 X105.48 Y82.642 I-.186 J1.162 E.06686
+G1 X105.363 Y82.663 E.00245
+M204 S250
+G1 X105.369 Y83.078 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10864
+M204 S5000
+G1 X105.33 Y83.082 E.00075
+G3 X104.597 Y80.032 I-.133 J-1.581 E.08681
+G3 X105.446 Y79.934 I.594 J1.425 E.01669
+G3 X105.576 Y83.041 I-.25 J1.567 E.08386
+G1 X105.428 Y83.068 E.0029
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.33 Y83.082 E-.03745
+G1 X105.081 Y83.084 E-.09465
+G1 X104.835 Y83.045 E-.09479
+G1 X104.597 Y82.968 E-.09477
+G1 X104.493 Y82.915 E-.04471
+G1 X104.375 Y82.855 E-.05009
+G1 X104.173 Y82.709 E-.09472
+G1 X103.997 Y82.532 E-.09483
+G1 X103.85 Y82.331 E-.09473
+G1 X103.78 Y82.192 E-.05926
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 77
+M625
+; object ids of layer 3 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer3 end: 66,77,88
+M625
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X105.259 Y81.25
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.545022
+G1 F10864
+M204 S6000
+G1 X105.072 Y81.271 E.00479
+G1 X104.973 Y81.353 E.00326
+G1 X104.937 Y81.561 E.00535
+G1 X105.059 Y81.733 E.00535
+G1 X105.266 Y81.768 E.00535
+G1 X105.438 Y81.647 E.00534
+G1 X105.477 Y81.477 E.00442
+G1 X105.413 Y81.323 E.00424
+G1 X105.314 Y81.276 E.00279
+; OBJECT_ID: 66
+; WIPE_START
+G1 F20220.694
+G1 X105.413 Y81.323 E-.05181
+G1 X105.477 Y81.477 E-.07883
+G1 X105.438 Y81.647 E-.08211
+G1 X105.266 Y81.768 E-.09937
+G1 X105.059 Y81.733 E-.09938
+G1 X104.937 Y81.561 E-.0994
+G1 X104.973 Y81.353 E-.0994
+G1 X105.072 Y81.271 E-.06055
+G1 X105.259 Y81.25 E-.08915
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.304 Y87.778 Z.84 F42000
+G1 X94.907 Y98.335 Z.84
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10864
+M204 S6000
+G1 X94.867 Y98.338 E.00082
+G1 X85.133 Y98.338 E.20192
+G3 X81.707 Y94.912 I.021 J-3.447 E.11145
+G1 X81.707 Y90.877 E.08369
+G3 X85.133 Y87.451 I3.447 J.021 E.11145
+G1 X94.867 Y87.451 E.20192
+G3 X98.293 Y90.877 I-.021 J3.447 E.11145
+G1 X98.293 Y94.912 E.08369
+G3 X95.299 Y98.308 I-3.447 J-.021 E.10246
+G1 X94.967 Y98.331 E.00692
+M204 S10000
+G1 X94.878 Y97.912 F42000
+G1 F10864
+M204 S6000
+G1 X94.86 Y97.914 E.00037
+G1 X85.14 Y97.914 E.20163
+G3 X82.131 Y94.905 I.013 J-3.022 E.09792
+G1 X82.131 Y90.884 E.0834
+G3 X85.14 Y87.875 I3.022 J.013 E.09792
+G1 X94.86 Y87.875 E.20163
+G3 X97.869 Y90.884 I-.013 J3.022 E.09792
+G1 X97.869 Y94.905 E.0834
+G3 X95.244 Y97.887 I-3.022 J-.013 E.08993
+G1 X94.938 Y97.908 E.00636
+M204 S250
+G1 X94.854 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10864
+M204 S5000
+G1 X85.146 Y97.504 E.18711
+G3 X82.54 Y94.898 I.007 J-2.613 E.07886
+G1 X82.54 Y90.891 E.07724
+G3 X85.146 Y88.284 I2.613 J.007 E.07886
+G1 X94.854 Y88.284 E.18711
+G3 X97.46 Y90.891 I-.007 J2.613 E.07886
+G1 X97.46 Y94.898 E.07724
+G3 X94.913 Y97.504 I-2.613 J-.007 E.07771
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X92.913 Y97.504 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.317 Y98.245 Z.84 F42000
+G1 X75.017 Y99.251 Z.84
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10864
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.043 Y86.34 E.62281
+G3 X105.957 Y87.312 I-.044 J.957 E.0306
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.963 J.011 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F10864
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.069 Y85.916 E.62349
+G3 X106.381 Y87.304 I-.07 J1.38 E.04375
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.001 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10864
+M204 S5000
+G1 X74.675 Y100.053 E.00632
+G3 X73.21 Y98.291 I.335 J-1.768 E.04787
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.093 Y85.508 E.58
+G3 X106.79 Y87.298 I-.095 J1.789 E.05244
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.061 Y100.084 E.57703
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.675 Y100.053 E-.14725
+M73 P7 R13
+G1 X74.315 Y99.948 E-.14233
+G1 X74.006 Y99.783 E-.13331
+G1 X73.734 Y99.56 E-.13332
+G1 X73.512 Y99.289 E-.13329
+G1 X73.424 Y99.125 E-.07049
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X74.223 Y98.372 Z.84 F42000
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.423132
+G1 F10864
+M204 S6000
+G1 X74.649 Y98.789 E.01159
+G2 X75.317 Y98.903 I.518 J-1.022 E.01336
+G1 X74.391 Y97.978 E.02543
+G1 X74.392 Y97.416 E.01092
+G1 X75.879 Y98.903 E.04086
+G1 X76.441 Y98.903 E.01092
+G1 X74.392 Y96.854 E.0563
+G1 X74.392 Y96.292 E.01092
+G1 X77.003 Y98.903 E.07174
+G1 X77.565 Y98.903 E.01092
+G1 X74.392 Y95.73 E.08718
+G1 X74.392 Y95.168 E.01092
+G1 X78.127 Y98.903 E.10261
+G1 X78.689 Y98.903 E.01092
+G1 X74.392 Y94.607 E.11805
+G1 X74.392 Y94.045 E.01092
+G1 X79.251 Y98.903 E.13349
+G1 X79.813 Y98.903 E.01092
+G1 X74.392 Y93.483 E.14893
+G1 X74.393 Y92.921 E.01092
+G1 X80.375 Y98.903 E.16437
+G1 X80.937 Y98.903 E.01092
+G1 X74.393 Y92.359 E.1798
+G1 X74.393 Y91.797 E.01092
+G1 X81.499 Y98.903 E.19524
+G1 X82.061 Y98.903 E.01092
+G1 X74.393 Y91.236 E.21068
+G1 X74.393 Y90.674 E.01092
+G1 X82.623 Y98.903 E.22612
+G1 X83.185 Y98.903 E.01092
+G1 X74.393 Y90.112 E.24155
+G1 X74.393 Y89.55 E.01092
+G1 X83.747 Y98.903 E.25699
+G1 X83.91 Y98.903 E.00318
+G1 X83.94 Y98.535 E.00718
+G1 X83.858 Y98.452 E.00226
+G3 X81.592 Y96.187 I1.257 J-3.523 E.06434
+G1 X74.394 Y88.988 E.19779
+G1 X74.394 Y88.426 E.01092
+G1 X81.397 Y95.43 E.19243
+G3 X81.359 Y94.829 I8.446 J-.841 E.01169
+G1 X74.394 Y87.864 E.19137
+G1 X74.394 Y87.303 E.01092
+G1 X81.359 Y94.267 E.19137
+G1 X81.359 Y93.705 E.01092
+G1 X74.55 Y86.896 E.18709
+G3 X74.912 Y86.697 I.424 J.342 E.00825
+G1 X81.359 Y93.143 E.17712
+G1 X81.359 Y92.581 E.01092
+G1 X75.463 Y86.686 E.16199
+G1 X76.025 Y86.686 E.01092
+G1 X81.359 Y92.019 E.14655
+G1 X81.359 Y91.457 E.01092
+G1 X76.587 Y86.686 E.13111
+G1 X77.149 Y86.686 E.01092
+G1 X81.359 Y90.895 E.11566
+G3 X81.395 Y90.37 I12.871 J.632 E.01023
+G1 X77.711 Y86.686 E.10123
+G1 X78.273 Y86.686 E.01092
+G1 X81.49 Y89.903 E.08839
+G1 X81.632 Y89.483 E.00861
+G1 X78.835 Y86.686 E.07686
+G1 X79.397 Y86.686 E.01092
+G1 X81.814 Y89.103 E.0664
+G3 X82.028 Y88.755 I1.428 J.639 E.00796
+G1 X79.959 Y86.686 E.05684
+G1 X80.521 Y86.686 E.01092
+G1 X82.272 Y88.437 E.0481
+G3 X82.542 Y88.145 I1.616 J1.223 E.00774
+G1 X81.083 Y86.686 E.04007
+G1 X81.645 Y86.686 E.01092
+G1 X82.849 Y87.89 E.03307
+G3 X83.178 Y87.657 I1.345 J1.557 E.00785
+G1 X82.207 Y86.686 E.02668
+G1 X82.769 Y86.686 E.01092
+G1 X83.548 Y87.465 E.02139
+G3 X83.95 Y87.305 I.808 J1.449 E.00843
+G1 X83.331 Y86.686 E.017
+G1 X83.893 Y86.686 E.01092
+G1 X84.387 Y87.181 E.01358
+G3 X84.888 Y87.119 I.676 J3.416 E.0098
+G1 X84.455 Y86.686 E.01188
+G1 X85.017 Y86.686 E.01092
+G1 X85.434 Y87.103 E.01145
+G1 X85.997 Y87.104 E.01093
+G1 X85.579 Y86.686 E.01146
+G1 X86.141 Y86.687 E.01092
+G1 X86.559 Y87.104 E.01147
+G1 X87.121 Y87.104 E.01093
+G1 X86.703 Y86.687 E.01148
+G1 X87.265 Y86.687 E.01092
+G1 X87.684 Y87.105 E.01149
+G1 X88.246 Y87.105 E.01093
+G1 X87.827 Y86.687 E.0115
+G1 X88.389 Y86.687 E.01092
+G1 X88.808 Y87.106 E.01151
+G1 X89.371 Y87.106 E.01093
+G1 X88.951 Y86.687 E.01152
+G1 X89.513 Y86.687 E.01092
+G1 X89.933 Y87.106 E.01153
+G1 X90.496 Y87.107 E.01093
+G1 X90.076 Y86.687 E.01154
+G1 X90.638 Y86.687 E.01092
+G1 X91.058 Y87.107 E.01155
+G1 X91.62 Y87.108 E.01093
+G1 X91.2 Y86.687 E.01156
+G1 X91.762 Y86.687 E.01092
+G1 X92.183 Y87.108 E.01157
+G1 X92.745 Y87.108 E.01093
+G1 X92.324 Y86.687 E.01158
+G1 X92.886 Y86.687 E.01092
+G1 X93.307 Y87.109 E.01159
+G1 X93.87 Y87.109 E.01093
+G1 X93.448 Y86.687 E.0116
+G1 X94.01 Y86.687 E.01092
+G1 X94.432 Y87.109 E.01161
+G1 X94.994 Y87.11 E.01093
+G1 X94.572 Y86.687 E.01162
+G1 X95.134 Y86.687 E.01092
+G1 X95.639 Y87.193 E.01389
+G3 X96.494 Y87.486 I-.802 J3.735 E.01759
+G1 X95.696 Y86.687 E.02194
+G1 X96.258 Y86.687 E.01092
+G1 X105.607 Y96.036 E.25688
+G1 X105.607 Y95.474 E.01092
+G1 X96.82 Y86.687 E.24144
+G1 X97.382 Y86.687 E.01092
+G1 X105.607 Y94.912 E.226
+G1 X105.607 Y94.351 E.01092
+G1 X97.944 Y86.687 E.21056
+G1 X98.506 Y86.687 E.01092
+G1 X105.607 Y93.789 E.19512
+G1 X105.607 Y93.227 E.01092
+G1 X99.068 Y86.687 E.17968
+G1 X99.63 Y86.687 E.01092
+G1 X105.607 Y92.665 E.16424
+G1 X105.608 Y92.103 E.01092
+G1 X100.192 Y86.687 E.14881
+G1 X100.754 Y86.687 E.01092
+G1 X105.608 Y91.541 E.13337
+G1 X105.608 Y90.979 E.01092
+G1 X101.316 Y86.688 E.11793
+G1 X101.878 Y86.688 E.01092
+G1 X105.608 Y90.418 E.10249
+G1 X105.608 Y89.856 E.01092
+G1 X102.44 Y86.688 E.08705
+G1 X103.002 Y86.688 E.01092
+G1 X105.608 Y89.294 E.07161
+G1 X105.608 Y88.732 E.01092
+G1 X103.564 Y86.688 E.05617
+G1 X104.126 Y86.688 E.01092
+G1 X105.608 Y88.17 E.04074
+G1 X105.609 Y87.608 E.01092
+G1 X104.688 Y86.688 E.0253
+G1 X105.023 Y86.688 E.0065
+G3 X105.337 Y86.79 I-.055 J.703 E.00649
+G3 X105.776 Y87.214 I-1.936 J2.446 E.01188
+M204 S10000
+G1 X105.784 Y96.775 F42000
+G1 F10864
+M204 S6000
+G1 X98.272 Y89.263 E.2064
+G3 X98.552 Y90.105 I-3.948 J1.779 E.01726
+G1 X105.606 Y97.16 E.19384
+G1 X105.606 Y97.722 E.01092
+G1 X98.635 Y90.75 E.19155
+G1 X98.636 Y91.313 E.01094
+G1 X105.606 Y98.284 E.19153
+G3 X105.454 Y98.693 I-.574 J.019 E.00871
+G1 X98.636 Y91.876 E.18731
+G1 X98.637 Y92.439 E.01094
+G1 X105.09 Y98.892 E.1773
+G3 X104.54 Y98.903 I-.337 J-2.951 E.01071
+G1 X98.638 Y93.002 E.16215
+G1 X98.639 Y93.565 E.01094
+G1 X103.978 Y98.903 E.14669
+G1 X103.416 Y98.903 E.01092
+G1 X98.64 Y94.127 E.13122
+G1 X98.641 Y94.69 E.01094
+G1 X102.854 Y98.903 E.11575
+G1 X102.292 Y98.903 E.01092
+G1 X98.621 Y95.232 E.10087
+G3 X98.545 Y95.718 I-1.902 J-.048 E.00959
+G1 X101.73 Y98.903 E.08751
+G1 X101.168 Y98.903 E.01092
+G1 X98.419 Y96.154 E.07553
+G3 X98.253 Y96.55 I-1.587 J-.432 E.00837
+G1 X100.606 Y98.903 E.06465
+G1 X100.044 Y98.903 E.01092
+G1 X98.053 Y96.912 E.0547
+G3 X97.823 Y97.244 I-1.375 J-.708 E.00787
+G1 X99.482 Y98.903 E.04558
+G1 X98.92 Y98.903 E.01092
+G1 X97.56 Y97.544 E.03735
+G3 X97.265 Y97.81 I-1.16 J-.988 E.00775
+G1 X98.358 Y98.903 E.03003
+G1 X97.796 Y98.903 E.01092
+G1 X96.941 Y98.049 E.02348
+G3 X96.592 Y98.261 I-1.253 J-1.669 E.00796
+G1 X97.234 Y98.903 E.01765
+G1 X96.672 Y98.903 E.01092
+G1 X96.201 Y98.432 E.01293
+G1 X96.055 Y98.482 E.00299
+G1 X96.088 Y98.881 E.00779
+G1 X96.287 Y99.081 E.00547
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518269
+G1 F10864
+M204 S6000
+G3 X94.871 Y98.794 I-.943 J-9.47 E.02068
+G1 X85.129 Y98.794 E.23459
+G1 X84.272 Y98.748 E.02068
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X85.129 Y98.794 E-.32628
+G1 X86.27 Y98.794 E-.43373
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X87.977 Y91.355 Z.84 F42000
+G1 X90.069 Y82.241 Z.84
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10864
+M204 S6000
+G1 X89.941 Y82.249 E.00265
+G3 X89.941 Y80.749 I.049 J-.75 E.04696
+G3 X90.111 Y80.757 I.059 J.539 E.00354
+G3 X90.175 Y82.228 I-.121 J.742 E.0426
+G1 X90.128 Y82.234 E.00097
+M204 S10000
+G1 X90.099 Y82.674 F42000
+G1 F10864
+M204 S6000
+G1 X90.092 Y82.672 E.00014
+G3 X89.725 Y80.354 I-.102 J-1.172 E.07323
+G3 X90.177 Y80.338 I.269 J1.233 E.00943
+G3 X90.274 Y82.642 I-.186 J1.162 E.06686
+G1 X90.158 Y82.663 E.00245
+M204 S250
+G1 X90.163 Y83.078 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10864
+M204 S5000
+G1 X90.124 Y83.082 E.00075
+G3 X89.392 Y80.032 I-.133 J-1.581 E.08681
+G3 X90.241 Y79.934 I.594 J1.425 E.01669
+G3 X90.37 Y83.041 I-.25 J1.567 E.08386
+G1 X90.222 Y83.068 E.0029
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.124 Y83.082 E-.03745
+G1 X89.875 Y83.084 E-.09465
+G1 X89.629 Y83.045 E-.09479
+G1 X89.392 Y82.968 E-.09477
+G1 X89.287 Y82.915 E-.04471
+G1 X89.17 Y82.855 E-.05009
+G1 X88.968 Y82.709 E-.09472
+G1 X88.791 Y82.532 E-.09483
+G1 X88.645 Y82.331 E-.09473
+G1 X88.574 Y82.192 E-.05926
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.054 Y81.25 Z.84 F42000
+G1 Z.44
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.545022
+G1 F10864
+M204 S6000
+G1 X89.866 Y81.271 E.00479
+G1 X89.768 Y81.353 E.00326
+G1 X89.732 Y81.561 E.00535
+G1 X89.853 Y81.733 E.00535
+G1 X90.061 Y81.768 E.00535
+G1 X90.233 Y81.647 E.00534
+G1 X90.271 Y81.477 E.00442
+G1 X90.207 Y81.323 E.00424
+G1 X90.108 Y81.276 E.00279
+; CHANGE_LAYER
+; Z_HEIGHT: 0.56
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F20220.694
+G1 X90.207 Y81.323 E-.05181
+G1 X90.271 Y81.477 E-.07883
+G1 X90.233 Y81.647 E-.08211
+G1 X90.061 Y81.768 E-.09937
+G1 X89.853 Y81.733 E-.09938
+G1 X89.732 Y81.561 E-.0994
+G1 X89.768 Y81.353 E-.0994
+G1 X89.866 Y81.271 E-.06055
+G1 X90.054 Y81.25 E-.08915
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 4/218
+; update layer progress
+M73 L4
+M991 S0 P3 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z.84 I-.08 J1.214 P1  F42000
+G1 X105.264 Y82.247 Z.84
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10899
+M204 S6000
+G3 X104.577 Y81.087 I-.057 J-.75 E.0347
+G3 X105.358 Y80.764 I.647 J.457 E.01849
+G3 X105.834 Y81.913 I-.154 J.737 E.03036
+G3 X105.324 Y82.24 I-.627 J-.415 E.01294
+M204 S10000
+G1 X105.308 Y82.674 F42000
+G1 F10899
+M204 S6000
+G1 X105.298 Y82.672 E.0002
+G3 X104.93 Y80.354 I-.1 J-1.173 E.07316
+G3 X105.424 Y80.345 I.27 J1.239 E.01031
+G3 X105.48 Y82.642 I-.226 J1.155 E.06607
+G1 X105.367 Y82.663 E.00239
+M204 S250
+G1 X105.372 Y83.078 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10899
+M204 S5000
+G1 X105.33 Y83.082 E.0008
+G3 X104.597 Y80.032 I-.132 J-1.581 E.08678
+G3 X105.488 Y79.941 I.596 J1.432 E.01751
+G3 X105.576 Y83.042 I-.291 J1.56 E.0831
+G1 X105.431 Y83.067 E.00284
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.33 Y83.082 E-.03863
+G1 X105.081 Y83.084 E-.09466
+G1 X104.835 Y83.045 E-.09479
+G1 X104.597 Y82.968 E-.09477
+G1 X104.375 Y82.855 E-.09478
+G1 X104.173 Y82.709 E-.09473
+G1 X103.997 Y82.532 E-.09483
+G1 X103.85 Y82.331 E-.09473
+G1 X103.781 Y82.194 E-.05808
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 77
+M625
+; object ids of layer 4 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer4 end: 66,77,88
+M625
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X105.291 Y81.748
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.550652
+G1 F10899
+M204 S6000
+G1 X105.442 Y81.634 E.00483
+G1 X105.473 Y81.53 E.00281
+G1 X105.436 Y81.359 E.00449
+G1 X105.253 Y81.232 E.00571
+G1 X105.061 Y81.272 E.00504
+G1 X104.94 Y81.436 E.00522
+G1 X104.979 Y81.649 E.00555
+G1 X105.098 Y81.75 E.00399
+G1 X105.231 Y81.749 E.00344
+; OBJECT_ID: 66
+; WIPE_START
+G1 F20003.811
+G1 X105.098 Y81.75 E-.06359
+G1 X104.979 Y81.649 E-.07388
+G1 X104.94 Y81.436 E-.10269
+G1 X105.061 Y81.272 E-.09659
+G1 X105.253 Y81.232 E-.09321
+G1 X105.436 Y81.359 E-.10562
+G1 X105.473 Y81.53 E-.08314
+G1 X105.442 Y81.634 E-.05193
+G1 X105.291 Y81.748 E-.08935
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.242 Y88.217 Z.96 F42000
+G1 X94.908 Y98.335 Z.96
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10899
+M204 S6000
+M73 P8 R13
+G1 X94.867 Y98.338 E.00084
+G1 X85.133 Y98.338 E.20192
+G3 X81.707 Y94.912 I.021 J-3.447 E.11145
+G1 X81.707 Y90.877 E.08369
+G3 X85.133 Y87.451 I3.46 J.034 E.11133
+G1 X94.867 Y87.451 E.20192
+G3 X98.293 Y90.877 I-.034 J3.46 E.11133
+G1 X98.293 Y94.912 E.08369
+G3 X95.299 Y98.307 I-3.46 J-.034 E.10235
+G1 X94.967 Y98.331 E.0069
+M204 S10000
+G1 X94.879 Y97.912 F42000
+G1 F10899
+M204 S6000
+G1 X94.86 Y97.914 E.00039
+G1 X85.14 Y97.914 E.20163
+G3 X82.131 Y94.905 I.014 J-3.022 E.09792
+G1 X82.131 Y90.884 E.0834
+G3 X85.14 Y87.875 I3.034 J.025 E.09781
+G1 X94.86 Y87.875 E.20163
+G3 X97.869 Y90.884 I-.025 J3.034 E.09781
+G1 X97.869 Y94.905 E.0834
+G3 X95.244 Y97.886 I-3.034 J-.025 E.08983
+G1 X94.939 Y97.908 E.00634
+M204 S250
+G1 X94.854 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10899
+M204 S5000
+G1 X85.146 Y97.504 E.18711
+G3 X82.54 Y94.898 I.007 J-2.613 E.07886
+G1 X82.54 Y90.891 E.07724
+G3 X85.146 Y88.284 I2.623 J.017 E.07878
+G1 X94.854 Y88.284 E.18711
+G3 X97.46 Y90.891 I-.017 J2.623 E.07878
+G1 X97.46 Y94.898 E.07724
+G3 X94.913 Y97.503 I-2.623 J-.017 E.07763
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X92.913 Y97.504 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.317 Y98.245 Z.96 F42000
+G1 X75.017 Y99.251 Z.96
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10899
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.037 Y86.34 E.62268
+G3 X105.957 Y87.312 I-.038 J.957 E.03073
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.963 J.011 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F10899
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.304 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.062 Y85.916 E.62334
+G3 X106.381 Y87.304 I-.063 J1.38 E.04389
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.001 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10899
+M204 S5000
+G1 X74.651 Y100.048 E.00678
+G3 X73.21 Y98.291 I.358 J-1.763 E.04741
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.086 Y85.507 E.57986
+G3 X106.79 Y87.298 I-.087 J1.789 E.05259
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.061 Y100.084 E.57703
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.651 Y100.048 E-.15635
+G1 X74.315 Y99.948 E-.13328
+G1 X74.006 Y99.783 E-.13325
+G1 X73.734 Y99.56 E-.13336
+G1 X73.512 Y99.289 E-.13335
+G1 X73.424 Y99.125 E-.07042
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X81.057 Y99.092 Z.96 F42000
+G1 X83.714 Y99.081 Z.96
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.422962
+G1 F10899
+M204 S6000
+G1 X83.912 Y98.883 E.00542
+G1 X83.944 Y98.489 E.00767
+G3 X83.798 Y98.435 I.201 J-.765 E.00303
+G1 X83.33 Y98.903 E.01285
+G1 X82.768 Y98.903 E.01091
+G1 X83.413 Y98.258 E.01772
+G3 X83.06 Y98.049 I.614 J-1.447 E.00799
+G1 X82.206 Y98.903 E.02344
+G1 X81.645 Y98.903 E.01091
+G1 X82.733 Y97.814 E.02991
+G3 X82.445 Y97.541 I1.241 J-1.603 E.00773
+G1 X81.083 Y98.903 E.0374
+G1 X80.521 Y98.903 E.01091
+G1 X82.182 Y97.243 E.0456
+G3 X81.946 Y96.916 I1.236 J-1.139 E.00783
+G1 X79.959 Y98.903 E.05457
+G1 X79.398 Y98.903 E.01091
+G1 X81.746 Y96.554 E.06451
+G3 X81.582 Y96.157 I1.567 J-.881 E.00837
+G1 X78.836 Y98.903 E.07542
+G1 X78.274 Y98.903 E.01091
+G1 X81.452 Y95.725 E.08728
+G3 X81.38 Y95.236 I3.018 J-.697 E.00962
+G1 X77.712 Y98.903 E.10072
+G1 X77.151 Y98.903 E.01091
+G1 X81.359 Y94.695 E.11557
+G1 X81.359 Y94.133 E.01091
+G1 X76.589 Y98.903 E.131
+G1 X76.027 Y98.903 E.01091
+G1 X81.359 Y93.572 E.14643
+G1 X81.359 Y93.01 E.01091
+G1 X75.465 Y98.903 E.16186
+G3 X74.919 Y98.888 I-.213 J-2.191 E.01065
+G1 X81.359 Y92.448 E.17687
+G1 X81.359 Y91.886 E.01091
+G1 X74.549 Y98.697 E.18704
+G3 X74.394 Y98.289 I.476 J-.414 E.00864
+G1 X81.359 Y91.325 E.19128
+G3 X81.366 Y90.756 I4.256 J-.23 E.01106
+G1 X74.391 Y97.73 E.19155
+G1 X74.392 Y97.168 E.01091
+G1 X81.69 Y89.87 E.20046
+M204 S10000
+G1 X74.931 Y86.517 F42000
+G1 F10899
+M204 S6000
+G1 X74.517 Y86.932 E.0114
+G2 X74.394 Y87.272 I.499 J.372 E.00712
+G1 X74.394 Y87.616 E.00669
+G1 X75.324 Y86.686 E.02556
+G1 X75.886 Y86.686 E.01091
+G1 X74.394 Y88.178 E.04099
+G1 X74.394 Y88.74 E.01091
+G1 X76.448 Y86.686 E.05642
+G1 X77.01 Y86.686 E.01091
+G1 X74.393 Y89.302 E.07185
+G1 X74.393 Y89.864 E.01091
+G1 X77.571 Y86.686 E.08728
+G1 X78.133 Y86.686 E.01091
+G1 X74.393 Y90.426 E.10271
+G1 X74.393 Y90.988 E.01091
+G1 X78.695 Y86.686 E.11814
+G1 X79.256 Y86.686 E.01091
+G1 X74.393 Y91.55 E.13357
+G1 X74.393 Y92.111 E.01091
+G1 X79.818 Y86.686 E.14901
+G1 X80.38 Y86.686 E.01091
+G1 X74.393 Y92.673 E.16444
+G1 X74.393 Y93.235 E.01091
+G1 X80.942 Y86.686 E.17987
+G1 X81.503 Y86.686 E.01091
+G1 X74.392 Y93.797 E.1953
+G1 X74.392 Y94.359 E.01091
+G1 X82.065 Y86.686 E.21073
+G1 X82.627 Y86.686 E.01091
+G1 X74.392 Y94.921 E.22616
+G1 X74.392 Y95.483 E.01091
+G1 X83.188 Y86.686 E.24159
+G1 X83.75 Y86.686 E.01091
+G1 X74.392 Y96.044 E.25702
+G1 X74.392 Y96.606 E.01091
+G1 X81.725 Y89.273 E.20142
+G3 X83.519 Y87.479 I3.349 J1.555 E.05028
+G1 X84.312 Y86.686 E.02177
+G1 X84.873 Y86.686 E.01091
+G1 X84.377 Y87.183 E.01364
+G3 X85.011 Y87.11 I.742 J3.679 E.01241
+G1 X85.435 Y86.686 E.01165
+G1 X85.997 Y86.686 E.01091
+G1 X85.58 Y87.103 E.01145
+G1 X86.141 Y87.104 E.0109
+G1 X86.559 Y86.686 E.01146
+G1 X87.12 Y86.686 E.01091
+G1 X86.703 Y87.104 E.01147
+G1 X87.264 Y87.105 E.0109
+G1 X87.682 Y86.687 E.01148
+G1 X88.244 Y86.687 E.01091
+G1 X87.825 Y87.105 E.01149
+G1 X88.387 Y87.105 E.0109
+G1 X88.805 Y86.687 E.0115
+G1 X89.367 Y86.687 E.01091
+G1 X88.948 Y87.106 E.01151
+G1 X89.509 Y87.106 E.0109
+G1 X89.929 Y86.687 E.01152
+G1 X90.491 Y86.687 E.01091
+G1 X90.071 Y87.106 E.01153
+G1 X90.632 Y87.107 E.0109
+G1 X91.052 Y86.687 E.01154
+G1 X91.614 Y86.687 E.01091
+G1 X91.193 Y87.107 E.01155
+G1 X91.755 Y87.108 E.0109
+G1 X92.176 Y86.687 E.01156
+G1 X92.737 Y86.687 E.01091
+G1 X92.316 Y87.108 E.01157
+G1 X92.878 Y87.108 E.0109
+G1 X93.299 Y86.687 E.01158
+G1 X93.861 Y86.687 E.01091
+G1 X93.439 Y87.109 E.01159
+G1 X94 Y87.109 E.0109
+G1 X94.422 Y86.687 E.0116
+G1 X94.984 Y86.687 E.01091
+G1 X94.562 Y87.11 E.01161
+G1 X95.12 Y87.113 E.01085
+G1 X95.546 Y86.687 E.01169
+G1 X96.108 Y86.687 E.01091
+G1 X95.608 Y87.187 E.01372
+G3 X96.051 Y87.305 I-.23 J1.741 E.00893
+G1 X96.669 Y86.687 E.01698
+G1 X97.231 Y86.687 E.01091
+G1 X96.453 Y87.465 E.02137
+G3 X96.82 Y87.659 I-.554 J1.493 E.0081
+G1 X97.793 Y86.687 E.0267
+G1 X98.354 Y86.687 E.01091
+G1 X97.157 Y87.885 E.03289
+G3 X97.456 Y88.148 I-1.187 J1.648 E.00774
+G1 X98.916 Y86.687 E.04012
+G1 X99.478 Y86.687 E.01091
+G1 X97.733 Y88.433 E.04793
+G3 X97.972 Y88.755 I-1.515 J1.375 E.00781
+G1 X100.04 Y86.687 E.05679
+G1 X100.601 Y86.687 E.01091
+G1 X98.186 Y89.103 E.06633
+G3 X98.367 Y89.483 I-1.355 J.88 E.00821
+G1 X101.163 Y86.687 E.07678
+G1 X101.725 Y86.687 E.01091
+G1 X98.51 Y89.902 E.0883
+G1 X98.604 Y90.37 E.00926
+G1 X102.286 Y86.687 E.10113
+G1 X102.848 Y86.687 E.01091
+G1 X98.635 Y90.901 E.11571
+G1 X98.636 Y91.461 E.01089
+G1 X103.41 Y86.687 E.13112
+G1 X103.972 Y86.687 E.01091
+G1 X98.637 Y92.022 E.14652
+G1 X98.638 Y92.583 E.01089
+G1 X104.533 Y86.688 E.16192
+G1 X105.087 Y86.696 E.01075
+G1 X98.639 Y93.144 E.1771
+G1 X98.639 Y93.705 E.01089
+G1 X105.451 Y86.893 E.18708
+G3 X105.606 Y87.3 I-.623 J.471 E.00857
+G1 X98.64 Y94.266 E.19131
+G1 X98.641 Y94.826 E.01089
+G1 X105.609 Y87.859 E.19136
+G1 X105.608 Y88.421 E.01091
+G1 X98.603 Y95.427 E.19241
+G3 X98.41 Y96.181 I-2.962 J-.355 E.01517
+G1 X105.608 Y88.983 E.19771
+G1 X105.608 Y89.545 E.01091
+G1 X96.25 Y98.903 E.25703
+G1 X96.812 Y98.903 E.01091
+G1 X105.608 Y90.107 E.24159
+G1 X105.608 Y90.669 E.01091
+G1 X97.373 Y98.903 E.22616
+G1 X97.935 Y98.903 E.01091
+G1 X105.608 Y91.23 E.21073
+M73 P9 R13
+G1 X105.608 Y91.792 E.01091
+G1 X98.497 Y98.903 E.1953
+G1 X99.058 Y98.903 E.01091
+G1 X105.607 Y92.354 E.17987
+G1 X105.607 Y92.916 E.01091
+G1 X99.62 Y98.903 E.16444
+G1 X100.182 Y98.903 E.01091
+G1 X105.607 Y93.478 E.149
+G1 X105.607 Y94.04 E.01091
+G1 X100.744 Y98.903 E.13357
+G1 X101.305 Y98.903 E.01091
+G1 X105.607 Y94.602 E.11814
+G1 X105.607 Y95.163 E.01091
+G1 X101.867 Y98.903 E.10271
+G1 X102.429 Y98.903 E.01091
+G1 X105.607 Y95.725 E.08728
+G1 X105.607 Y96.287 E.01091
+G1 X102.991 Y98.903 E.07185
+G1 X103.552 Y98.903 E.01091
+G1 X105.606 Y96.849 E.05641
+G1 X105.606 Y97.411 E.01091
+G1 X104.114 Y98.903 E.04098
+G1 X104.676 Y98.903 E.01091
+G1 X105.606 Y97.973 E.02555
+G1 X105.606 Y98.317 E.00668
+G3 X105.483 Y98.658 I-.623 J-.032 E.00714
+G1 X105.069 Y99.072 E.01137
+M204 S10000
+G1 X96.463 Y98.129 F42000
+G1 F10899
+M204 S6000
+G1 X95.895 Y98.696 E.01559
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518269
+G1 F10899
+M204 S6000
+G3 X94.871 Y98.794 I-.943 J-9.469 E.02068
+G1 X85.129 Y98.794 E.23459
+G1 X84.272 Y98.748 E.02068
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X85.129 Y98.794 E-.32628
+G1 X86.27 Y98.794 E-.43372
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X87.974 Y91.355 Z.96 F42000
+G1 X90.059 Y82.247 Z.96
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10899
+M204 S6000
+G3 X89.372 Y81.087 I-.057 J-.75 E.0347
+G3 X90.152 Y80.764 I.647 J.457 E.01849
+G3 X90.628 Y81.913 I-.154 J.737 E.03036
+G3 X90.118 Y82.241 I-.627 J-.415 E.01294
+M204 S10000
+G1 X90.102 Y82.674 F42000
+G1 F10899
+M204 S6000
+G1 X90.092 Y82.673 E.0002
+G3 X89.725 Y80.354 I-.1 J-1.173 E.07316
+G3 X90.219 Y80.345 I.27 J1.239 E.01031
+G3 X90.274 Y82.643 I-.226 J1.155 E.06607
+G1 X90.161 Y82.663 E.00239
+M204 S250
+G1 X90.166 Y83.078 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10899
+M204 S5000
+G1 X90.124 Y83.082 E.0008
+G3 X89.392 Y80.032 I-.132 J-1.581 E.08678
+G3 X90.283 Y79.941 I.596 J1.432 E.01751
+G3 X90.37 Y83.042 I-.291 J1.56 E.0831
+G1 X90.225 Y83.067 E.00284
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.124 Y83.082 E-.03863
+G1 X89.875 Y83.084 E-.09466
+G1 X89.629 Y83.045 E-.09479
+G1 X89.392 Y82.968 E-.09477
+G1 X89.17 Y82.855 E-.09478
+G1 X88.968 Y82.709 E-.09473
+G1 X88.791 Y82.532 E-.09483
+G1 X88.645 Y82.331 E-.09473
+G1 X88.576 Y82.194 E-.05808
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.086 Y81.748 Z.96 F42000
+G1 Z.56
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.550652
+G1 F10899
+M204 S6000
+G1 X90.236 Y81.634 E.00483
+G1 X90.268 Y81.53 E.00281
+G1 X90.23 Y81.359 E.00449
+G1 X90.047 Y81.232 E.00571
+G1 X89.855 Y81.272 E.00504
+G1 X89.735 Y81.436 E.00522
+G1 X89.773 Y81.649 E.00555
+G1 X89.892 Y81.75 E.00399
+G1 X90.026 Y81.749 E.00344
+; CHANGE_LAYER
+; Z_HEIGHT: 0.68
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F20003.811
+G1 X89.892 Y81.75 E-.06359
+G1 X89.773 Y81.649 E-.07388
+G1 X89.735 Y81.436 E-.10269
+G1 X89.855 Y81.272 E-.09659
+G1 X90.047 Y81.232 E-.09321
+G1 X90.23 Y81.359 E-.10562
+G1 X90.268 Y81.53 E-.08314
+G1 X90.236 Y81.634 E-.05193
+G1 X90.086 Y81.748 E-.08935
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 5/218
+; update layer progress
+M73 L5
+M991 S0 P4 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z.96 I-.039 J1.216 P1  F42000
+G1 X105.276 Y82.241 Z.96
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10863
+M204 S6000
+G1 X105.147 Y82.249 E.00269
+G3 X105.265 Y80.749 I.059 J-.75 E.04901
+G1 X105.381 Y80.768 E.00246
+G3 X105.381 Y82.23 I-.176 J.731 E.04167
+G1 X105.336 Y82.235 E.00094
+M204 S10000
+G1 X105.311 Y82.673 F42000
+G1 F10863
+M204 S6000
+G1 X105.298 Y82.671 E.00027
+G3 X105.298 Y80.325 I-.099 J-1.173 E.08085
+G1 X105.466 Y80.351 E.00353
+G3 X105.479 Y82.641 I-.268 J1.146 E.06523
+G1 X105.37 Y82.662 E.00232
+M204 S250
+G1 X105.375 Y83.077 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10863
+M204 S5000
+G1 X105.33 Y83.083 E.00087
+G3 X104.834 Y79.955 I-.131 J-1.583 E.09162
+G3 X105.53 Y79.947 I.366 J1.694 E.0135
+G3 X105.576 Y83.043 I-.331 J1.553 E.08239
+G1 X105.434 Y83.067 E.00278
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.33 Y83.083 E-.03989
+G1 X105.081 Y83.084 E-.09469
+G1 X104.835 Y83.045 E-.09479
+G1 X104.597 Y82.968 E-.09477
+G1 X104.375 Y82.855 E-.09477
+G1 X104.173 Y82.709 E-.09476
+G1 X103.997 Y82.532 E-.09481
+G1 X103.85 Y82.331 E-.09474
+G1 X103.783 Y82.197 E-.05678
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 77
+M625
+; object ids of layer 5 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer5 end: 66,77,88
+M625
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X105.468 Y81.463
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.550672
+G1 F10863
+M204 S6000
+G1 X105.413 Y81.335 E.00359
+G1 X105.223 Y81.228 E.00559
+G1 X105.067 Y81.266 E.00412
+G1 X104.942 Y81.433 E.00534
+G1 X104.973 Y81.643 E.00545
+G1 X105.142 Y81.763 E.00533
+G1 X105.344 Y81.734 E.00524
+G1 X105.469 Y81.567 E.00534
+G1 X105.469 Y81.523 E.00113
+; OBJECT_ID: 66
+; WIPE_START
+G1 F20003.049
+G1 X105.469 Y81.567 E-.02091
+G1 X105.344 Y81.734 E-.09874
+G1 X105.142 Y81.763 E-.09676
+G1 X104.973 Y81.643 E-.09848
+G1 X104.942 Y81.433 E-.10065
+G1 X105.067 Y81.266 E-.09875
+G1 X105.223 Y81.228 E-.07621
+G1 X105.413 Y81.335 E-.10323
+G1 X105.468 Y81.463 E-.06626
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.419 Y87.933 Z1.08 F42000
+G1 X94.908 Y98.335 Z1.08
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10863
+M204 S6000
+G1 X94.867 Y98.338 E.00085
+G1 X85.133 Y98.338 E.20192
+G3 X81.707 Y94.912 I.021 J-3.447 E.11145
+G1 X81.707 Y90.877 E.08369
+G3 X85.133 Y87.451 I3.46 J.034 E.11133
+G1 X94.867 Y87.451 E.20192
+G3 X98.293 Y90.877 I-.034 J3.46 E.11133
+G1 X98.293 Y94.912 E.08369
+G3 X95.299 Y98.307 I-3.46 J-.034 E.10234
+G1 X94.968 Y98.331 E.00688
+M204 S10000
+G1 X94.88 Y97.912 F42000
+G1 F10863
+M204 S6000
+G1 X94.86 Y97.914 E.00041
+G1 X85.14 Y97.914 E.20163
+G3 X82.131 Y94.905 I.013 J-3.022 E.09792
+G1 X82.131 Y90.884 E.0834
+G3 X85.14 Y87.875 I3.034 J.025 E.09781
+G1 X94.86 Y87.875 E.20163
+G3 X97.869 Y90.884 I-.025 J3.034 E.09782
+G1 X97.869 Y94.905 E.0834
+G3 X95.244 Y97.886 I-3.034 J-.025 E.08983
+G1 X94.94 Y97.908 E.00632
+M204 S250
+G1 X94.854 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10863
+M204 S5000
+G1 X85.146 Y97.504 E.18711
+G3 X82.54 Y94.898 I.007 J-2.613 E.07886
+G1 X82.54 Y90.891 E.07724
+G3 X85.146 Y88.284 I2.623 J.017 E.07878
+G1 X94.854 Y88.284 E.18711
+G3 X97.46 Y90.891 I-.017 J2.623 E.07878
+G1 X97.46 Y94.898 E.07724
+G3 X94.913 Y97.503 I-2.623 J-.017 E.07763
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X92.913 Y97.504 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.317 Y98.245 Z1.08 F42000
+G1 X75.017 Y99.251 Z1.08
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10863
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.03 Y86.339 E.62254
+G3 X105.957 Y87.312 I-.031 J.957 E.03087
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.963 J.011 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F10863
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04534
+G1 X73.619 Y87.304 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04534
+G1 X105.054 Y85.916 E.6232
+G3 X106.381 Y87.304 I-.055 J1.381 E.04404
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.001 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10863
+M204 S5000
+G1 X74.651 Y100.048 E.00678
+G3 X73.21 Y98.291 I.358 J-1.763 E.04741
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.078 Y85.507 E.57971
+G3 X106.79 Y87.298 I-.079 J1.789 E.05273
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.061 Y100.084 E.57703
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.651 Y100.048 E-.15645
+G1 X74.315 Y99.948 E-.13329
+G1 X74.006 Y99.783 E-.13331
+G1 X73.734 Y99.56 E-.13334
+G1 X73.512 Y99.289 E-.13332
+G1 X73.425 Y99.126 E-.07028
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X74.224 Y98.375 Z1.08 F42000
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.423152
+G1 F10863
+M204 S6000
+G1 X74.578 Y98.729 E.00974
+G2 X74.726 Y98.836 I.399 J-.395 E.00357
+G2 X75.314 Y98.903 I.445 J-1.298 E.01159
+G1 X74.391 Y97.98 E.02536
+G1 X74.392 Y97.418 E.01092
+G1 X75.876 Y98.903 E.0408
+G1 X76.438 Y98.903 E.01092
+G1 X74.392 Y96.856 E.05624
+G1 X74.392 Y96.295 E.01092
+G1 X77 Y98.903 E.07168
+G1 X77.562 Y98.903 E.01092
+G1 X74.392 Y95.733 E.08712
+G1 X74.392 Y95.171 E.01092
+G1 X78.124 Y98.903 E.10256
+G1 X78.686 Y98.903 E.01092
+G1 X74.392 Y94.609 E.11799
+G1 X74.392 Y94.047 E.01092
+G1 X79.248 Y98.903 E.13343
+G1 X79.81 Y98.903 E.01092
+G1 X74.392 Y93.485 E.14887
+G1 X74.393 Y92.923 E.01092
+G1 X80.372 Y98.903 E.16431
+G1 X80.934 Y98.903 E.01092
+G1 X74.393 Y92.361 E.17975
+G1 X74.393 Y91.8 E.01092
+G1 X81.496 Y98.903 E.19519
+G1 X82.058 Y98.903 E.01092
+G1 X74.393 Y91.238 E.21063
+G1 X74.393 Y90.676 E.01092
+G1 X82.62 Y98.903 E.22607
+G1 X83.182 Y98.903 E.01092
+G1 X74.393 Y90.114 E.24151
+G1 X74.393 Y89.552 E.01092
+G1 X83.744 Y98.903 E.25695
+G1 X83.91 Y98.903 E.00321
+G1 X83.94 Y98.537 E.00714
+G1 X83.86 Y98.456 E.00221
+G3 X81.59 Y96.187 I1.274 J-3.544 E.06443
+G1 X74.394 Y88.99 E.19774
+G1 X74.394 Y88.428 E.01092
+G1 X81.397 Y95.432 E.19245
+G3 X81.359 Y94.831 I8.352 J-.84 E.0117
+G1 X74.394 Y87.866 E.19138
+G1 X74.394 Y87.305 E.01092
+G1 X81.359 Y94.269 E.19138
+G1 X81.359 Y93.707 E.01092
+G1 X74.545 Y86.893 E.18723
+G3 X74.911 Y86.697 I.452 J.404 E.00823
+G1 X81.359 Y93.145 E.17718
+G1 X81.359 Y92.583 E.01092
+G1 X75.461 Y86.686 E.16205
+G1 X76.023 Y86.686 E.01092
+G1 X81.359 Y92.021 E.14661
+G1 X81.359 Y91.459 E.01092
+G1 X76.585 Y86.686 E.13116
+G1 X77.147 Y86.686 E.01092
+G1 X81.359 Y90.897 E.11572
+G3 X81.395 Y90.372 I12.861 J.624 E.01024
+G1 X77.709 Y86.686 E.10127
+G1 X78.271 Y86.686 E.01092
+G1 X81.496 Y89.91 E.0886
+G3 X81.636 Y89.489 I1.672 J.322 E.00866
+G1 X78.833 Y86.686 E.07701
+G1 X79.395 Y86.686 E.01092
+G1 X81.811 Y89.101 E.06637
+G3 X82.027 Y88.756 I1.862 J.926 E.00794
+G1 X79.957 Y86.686 E.05688
+G1 X80.52 Y86.686 E.01092
+M73 P10 R13
+G1 X82.267 Y88.433 E.04801
+G3 X82.544 Y88.148 I1.587 J1.266 E.00773
+G1 X81.082 Y86.686 E.04018
+G1 X81.644 Y86.686 E.01092
+G1 X82.843 Y87.885 E.03295
+G3 X83.179 Y87.66 I1.328 J1.62 E.00788
+G1 X82.206 Y86.686 E.02675
+G1 X82.768 Y86.686 E.01092
+G1 X83.547 Y87.465 E.02141
+G3 X83.949 Y87.306 I.808 J1.448 E.00843
+G1 X83.33 Y86.686 E.01702
+G1 X83.892 Y86.686 E.01092
+G1 X84.386 Y87.181 E.01359
+G3 X84.886 Y87.119 I.676 J3.401 E.0098
+G1 X84.454 Y86.686 E.01189
+G1 X85.016 Y86.686 E.01092
+G1 X85.433 Y87.103 E.01146
+G1 X85.995 Y87.104 E.01093
+G1 X85.578 Y86.686 E.01147
+G1 X86.14 Y86.686 E.01092
+G1 X86.558 Y87.104 E.01148
+G1 X87.12 Y87.104 E.01093
+G1 X86.702 Y86.686 E.01149
+G1 X87.264 Y86.686 E.01092
+G1 X87.682 Y87.105 E.0115
+G1 X88.245 Y87.105 E.01093
+G1 X87.826 Y86.686 E.01151
+G1 X88.388 Y86.686 E.01092
+G1 X88.807 Y87.106 E.01152
+G1 X89.37 Y87.106 E.01093
+G1 X88.95 Y86.686 E.01153
+G1 X89.512 Y86.687 E.01092
+G1 X89.932 Y87.106 E.01154
+G1 X90.494 Y87.107 E.01093
+G1 X90.074 Y86.687 E.01155
+G1 X90.636 Y86.687 E.01092
+G1 X91.057 Y87.107 E.01156
+G1 X91.619 Y87.108 E.01093
+G1 X91.198 Y86.687 E.01157
+G1 X91.76 Y86.687 E.01092
+G1 X92.182 Y87.108 E.01158
+G1 X92.744 Y87.108 E.01093
+G1 X92.322 Y86.687 E.01159
+G1 X92.884 Y86.687 E.01092
+G1 X93.306 Y87.109 E.0116
+G1 X93.869 Y87.109 E.01093
+G1 X93.446 Y86.687 E.01161
+G1 X94.008 Y86.687 E.01092
+G1 X94.431 Y87.109 E.01162
+G1 X94.994 Y87.11 E.01093
+G1 X94.57 Y86.687 E.01163
+G1 X95.132 Y86.687 E.01092
+G1 X95.632 Y87.186 E.01371
+G3 X96.482 Y87.474 I-.668 J3.371 E.01749
+G1 X95.695 Y86.687 E.02163
+G1 X96.257 Y86.687 E.01092
+G1 X105.607 Y96.037 E.25692
+G1 X105.607 Y95.475 E.01092
+G1 X96.819 Y86.687 E.24148
+G1 X97.381 Y86.687 E.01092
+G1 X105.607 Y94.913 E.22604
+G1 X105.607 Y94.351 E.01092
+G1 X97.943 Y86.687 E.2106
+G1 X98.505 Y86.687 E.01092
+G1 X105.607 Y93.789 E.19516
+G1 X105.607 Y93.228 E.01092
+G1 X99.067 Y86.687 E.17972
+G1 X99.629 Y86.687 E.01092
+G1 X105.607 Y92.666 E.16428
+G1 X105.608 Y92.104 E.01092
+G1 X100.191 Y86.687 E.14884
+G1 X100.753 Y86.687 E.01092
+G1 X105.608 Y91.542 E.1334
+G1 X105.608 Y90.98 E.01092
+G1 X101.315 Y86.687 E.11796
+G1 X101.877 Y86.687 E.01092
+G1 X105.608 Y90.418 E.10252
+G1 X105.608 Y89.856 E.01092
+G1 X102.439 Y86.687 E.08708
+G1 X103.001 Y86.687 E.01092
+G1 X105.608 Y89.294 E.07164
+G1 X105.608 Y88.733 E.01092
+G1 X103.563 Y86.687 E.0562
+G1 X104.125 Y86.687 E.01092
+G1 X105.608 Y88.171 E.04076
+G1 X105.609 Y87.609 E.01092
+G1 X104.687 Y86.687 E.02532
+G3 X105.341 Y86.793 I.157 J1.104 E.01307
+G3 X105.776 Y87.214 I-2.122 J2.628 E.01178
+M204 S10000
+G1 X105.784 Y96.776 F42000
+G1 F10863
+M204 S6000
+G1 X98.26 Y89.252 E.20675
+G3 X98.552 Y90.106 I-3.442 J1.654 E.01758
+G1 X105.606 Y97.161 E.19384
+G1 X105.606 Y97.723 E.01092
+G1 X98.635 Y90.751 E.19156
+G1 X98.636 Y91.314 E.01094
+G1 X105.606 Y98.284 E.19154
+G3 X105.451 Y98.692 I-.564 J.019 E.00869
+G1 X98.636 Y91.877 E.18726
+G1 X98.637 Y92.44 E.01094
+G1 X105.089 Y98.892 E.17729
+G3 X104.539 Y98.903 I-.337 J-2.951 E.01072
+G1 X98.638 Y93.003 E.16213
+G1 X98.639 Y93.566 E.01094
+G1 X103.977 Y98.903 E.14667
+G1 X103.415 Y98.903 E.01092
+G1 X98.64 Y94.128 E.1312
+G1 X98.641 Y94.691 E.01094
+G1 X102.853 Y98.903 E.11573
+G1 X102.291 Y98.903 E.01092
+G1 X98.621 Y95.233 E.10085
+G3 X98.545 Y95.719 I-1.902 J-.048 E.00958
+G1 X101.729 Y98.903 E.08749
+G1 X101.167 Y98.903 E.01092
+G1 X98.419 Y96.155 E.07551
+G3 X98.253 Y96.551 I-1.588 J-.433 E.00837
+G1 X100.605 Y98.903 E.06463
+G1 X100.043 Y98.903 E.01092
+G1 X98.053 Y96.913 E.05468
+G3 X97.823 Y97.246 I-1.804 J-.999 E.00786
+G1 X99.481 Y98.903 E.04554
+G1 X98.919 Y98.903 E.01092
+G1 X97.556 Y97.541 E.03744
+G3 X97.265 Y97.812 I-1.174 J-.969 E.00775
+G1 X98.357 Y98.903 E.02999
+G1 X97.795 Y98.903 E.01092
+G1 X96.946 Y98.054 E.02332
+G1 X96.59 Y98.26 E.00799
+G1 X97.233 Y98.903 E.01767
+G1 X96.671 Y98.903 E.01092
+G1 X96.2 Y98.433 E.01293
+G1 X96.055 Y98.482 E.00297
+G1 X96.088 Y98.883 E.00782
+G1 X96.286 Y99.081 E.00543
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518269
+G1 F10863
+M204 S6000
+G3 X94.871 Y98.794 I-.943 J-9.47 E.02068
+G1 X85.129 Y98.794 E.23459
+G1 X84.647 Y98.779 E.01161
+G3 X84.272 Y98.748 I.729 J-11.277 E.00908
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X84.647 Y98.779 E-.14323
+G1 X85.129 Y98.794 E-.18315
+G1 X86.27 Y98.794 E-.43362
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X87.978 Y91.356 Z1.08 F42000
+G1 X90.07 Y82.241 Z1.08
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F10863
+M204 S6000
+G1 X89.941 Y82.249 E.00269
+G3 X90.059 Y80.749 I.059 J-.75 E.04901
+G1 X90.176 Y80.768 E.00246
+G3 X90.175 Y82.23 I-.176 J.731 E.04167
+G1 X90.13 Y82.235 E.00094
+M204 S10000
+G1 X90.105 Y82.673 F42000
+G1 F10863
+M204 S6000
+G1 X90.092 Y82.671 E.00027
+G3 X90.092 Y80.325 I-.099 J-1.173 E.08085
+G1 X90.261 Y80.351 E.00353
+G3 X90.274 Y82.641 I-.268 J1.146 E.06523
+G1 X90.164 Y82.662 E.00232
+M204 S250
+G1 X90.169 Y83.077 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F10863
+M204 S5000
+G1 X90.125 Y83.083 E.00087
+G3 X89.629 Y79.955 I-.131 J-1.583 E.09162
+G3 X90.325 Y79.947 I.366 J1.694 E.0135
+G3 X90.37 Y83.043 I-.331 J1.553 E.08239
+G1 X90.228 Y83.067 E.00278
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.125 Y83.083 E-.03989
+G1 X89.875 Y83.084 E-.09469
+G1 X89.629 Y83.045 E-.09479
+G1 X89.392 Y82.968 E-.09477
+G1 X89.17 Y82.855 E-.09477
+G1 X88.968 Y82.709 E-.09476
+G1 X88.791 Y82.532 E-.09481
+G1 X88.645 Y82.331 E-.09474
+G1 X88.577 Y82.197 E-.05678
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.262 Y81.463 Z1.08 F42000
+G1 Z.68
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.550672
+G1 F10863
+M204 S6000
+G1 X90.207 Y81.335 E.00359
+G1 X90.017 Y81.228 E.00559
+G1 X89.861 Y81.266 E.00412
+G1 X89.736 Y81.433 E.00534
+G1 X89.767 Y81.643 E.00545
+G1 X89.937 Y81.763 E.00533
+G1 X90.139 Y81.734 E.00524
+G1 X90.264 Y81.567 E.00534
+G1 X90.263 Y81.523 E.00113
+; CHANGE_LAYER
+; Z_HEIGHT: 0.8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F20003.049
+G1 X90.264 Y81.567 E-.02091
+G1 X90.139 Y81.734 E-.09874
+G1 X89.937 Y81.763 E-.09676
+G1 X89.767 Y81.643 E-.09848
+G1 X89.736 Y81.433 E-.10065
+G1 X89.861 Y81.266 E-.09875
+G1 X90.017 Y81.228 E-.07621
+G1 X90.207 Y81.335 E-.10323
+G1 X90.262 Y81.463 E-.06626
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 6/218
+; update layer progress
+M73 L6
+M991 S0 P5 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.08 I-.129 J1.21 P1  F42000
+G1 X105.378 Y83.077 Z1.08
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F6846
+M204 S5000
+G1 X105.33 Y83.081 E.00093
+G3 X105.33 Y79.916 I-.126 J-1.583 E.10103
+G1 X105.572 Y79.954 E.00472
+G3 X105.576 Y83.042 I-.368 J1.544 E.08174
+G1 X105.437 Y83.066 E.00271
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.33 Y83.081 E-.04114
+G1 X105.081 Y83.084 E-.09464
+G1 X104.835 Y83.045 E-.09478
+G1 X104.597 Y82.968 E-.09479
+G1 X104.375 Y82.855 E-.09478
+G1 X104.173 Y82.709 E-.09475
+G1 X103.997 Y82.532 E-.09479
+G1 X103.85 Y82.33 E-.09478
+G1 X103.784 Y82.2 E-.05557
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 77
+M625
+; object ids of layer 6 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer6 end: 66,77,88
+M625
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X105.232 Y82.868
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Top surface
+G1 F6846
+M204 S2000
+G1 X106.573 Y81.526 E.03657
+G1 X106.496 Y81.046
+G1 X104.751 Y82.79 E.04756
+G1 X104.388 Y82.596
+G1 X106.302 Y80.682 E.05218
+M73 P10 R12
+G1 X106.023 Y80.404
+G1 X104.109 Y82.318 E.05218
+G1 X103.915 Y81.954
+G1 X105.66 Y80.21 E.04756
+G1 X105.179 Y80.132
+G1 X103.838 Y81.474 E.03656
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.179 Y80.132 E-.72084
+G1 X105.281 Y80.149 E-.03916
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X104.816 Y80.175 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.148899
+G1 F6846
+M204 S6000
+G1 X104.67 Y80.281 E.00109
+; LINE_WIDTH: 0.181759
+G1 X104.524 Y80.387 E.00138
+; LINE_WIDTH: 0.219501
+G2 X104.093 Y80.818 I1.83 J2.261 E.00578
+; LINE_WIDTH: 0.181753
+G1 X103.987 Y80.964 E.00138
+; LINE_WIDTH: 0.148885
+G1 X103.88 Y81.11 E.00109
+; WIPE_START
+G1 F21000
+G1 X103.987 Y80.964 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X105.832 Y80.315 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.0892494
+G1 F6846
+M204 S6000
+G2 X105.695 Y80.219 I-.735 J.904 E.00052
+; WIPE_START
+G1 F21000
+G1 X105.832 Y80.315 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X106.486 Y81.01 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.0922816
+G1 F6846
+M204 S6000
+G2 X106.39 Y80.873 I-1.674 J1.069 E.00054
+; WIPE_START
+G1 F21000
+G1 X106.486 Y81.01 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X106.531 Y81.889 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.148993
+G1 F6846
+M204 S6000
+G1 X106.425 Y82.036 E.00109
+; LINE_WIDTH: 0.181865
+G1 X106.318 Y82.182 E.00138
+; LINE_WIDTH: 0.219595
+G3 X105.888 Y82.613 I-2.261 J-1.83 E.00578
+; LINE_WIDTH: 0.181871
+G1 X105.741 Y82.719 E.00138
+; LINE_WIDTH: 0.149002
+G1 X105.595 Y82.825 E.00109
+; OBJECT_ID: 66
+; WIPE_START
+G1 F21000
+G1 X105.741 Y82.719 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.391 Y88.99 Z1.2 F42000
+G1 X94.909 Y98.335 Z1.2
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F6846
+M204 S6000
+G1 X94.867 Y98.338 E.00087
+G1 X85.133 Y98.338 E.20192
+G3 X81.707 Y94.912 I.034 J-3.46 E.11133
+G1 X81.707 Y90.877 E.08369
+G3 X85.133 Y87.451 I3.46 J.034 E.11133
+G1 X94.867 Y87.451 E.20192
+G3 X98.293 Y90.877 I-.034 J3.46 E.11133
+G1 X98.293 Y94.912 E.08369
+G3 X95.299 Y98.307 I-3.46 J-.034 E.10235
+G1 X94.969 Y98.331 E.00687
+M204 S10000
+G1 X94.881 Y97.912 F42000
+G1 F6846
+M204 S6000
+G1 X94.86 Y97.914 E.00042
+G1 X85.14 Y97.914 E.20163
+G3 X82.131 Y94.905 I.025 J-3.034 E.09782
+G1 X82.131 Y90.884 E.0834
+G3 X85.14 Y87.875 I3.034 J.025 E.09782
+G1 X94.86 Y87.875 E.20163
+G3 X97.869 Y90.884 I-.025 J3.034 E.09782
+G1 X97.869 Y94.905 E.0834
+G3 X95.244 Y97.886 I-3.034 J-.025 E.08984
+G1 X94.941 Y97.908 E.0063
+M204 S250
+G1 X94.854 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F6846
+M204 S5000
+G1 X94.854 Y97.504 E0
+G1 X85.146 Y97.504 E.18711
+G3 X82.54 Y94.898 I.017 J-2.623 E.07878
+G1 X82.54 Y90.891 E.07724
+G3 X85.146 Y88.284 I2.623 J.017 E.07878
+G1 X94.854 Y88.284 E.18711
+G3 X97.46 Y90.891 I-.017 J2.623 E.07878
+G1 X97.46 Y94.898 E.07724
+G3 X95.359 Y97.452 I-2.623 J-.017 E.06898
+G1 X94.913 Y97.498 E.00863
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X94.854 Y97.504 E-.02286
+G1 X92.914 Y97.504 E-.73714
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.317 Y98.246 Z1.2 F42000
+G1 X75.017 Y99.251 Z1.2
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F6846
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.023 Y86.339 E.6224
+G3 X105.957 Y87.312 I-.024 J.957 E.03101
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.963 J.011 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+M73 P11 R12
+G1 F6846
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.047 Y85.916 E.62304
+G3 X106.381 Y87.304 I-.048 J1.381 E.04419
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.002 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F6846
+M204 S5000
+G1 X74.651 Y100.048 E.00679
+G3 X73.21 Y98.291 I.358 J-1.764 E.04741
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.07 Y85.507 E.57956
+G3 X106.79 Y87.298 I-.071 J1.79 E.05288
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.062 Y100.084 E.57702
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.651 Y100.048 E-.15658
+G1 X74.315 Y99.948 E-.13327
+G1 X74.006 Y99.783 E-.13337
+G1 X73.734 Y99.56 E-.13332
+G1 X73.511 Y99.287 E-.13404
+G1 X73.425 Y99.126 E-.06942
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X74.477 Y98.555 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F6846
+M204 S6000
+G2 X75.04 Y98.888 I.527 J-.247 E.01441
+G1 X76.044 Y98.888 E.02084
+G2 X76.81 Y97.346 I-2.399 J-2.152 E.03614
+G1 X76.84 Y96.891 E.00946
+G1 X76.56 Y96.436 E.01109
+G3 X74.656 Y95.07 I2.834 J-5.962 E.04886
+G1 X74.407 Y94.668 E.00981
+G1 X74.408 Y92.737 E.04006
+G2 X76.212 Y91.429 I-2.764 J-5.712 E.04647
+G2 X76.84 Y89.608 I-3.317 J-2.162 E.04035
+G1 X76.56 Y89.153 E.01109
+G3 X74.656 Y87.787 I2.834 J-5.962 E.04886
+G1 X74.409 Y87.388 E.00974
+G1 X74.409 Y89.085 E.0352
+M204 S10000
+G1 X81.344 Y91.5 F42000
+G1 F6846
+M204 S6000
+G2 X81.344 Y93.712 I207.127 J1.106 E.04589
+G1 X81.344 Y94.924 E.02514
+G2 X83.687 Y98.401 I3.874 J-.083 E.0919
+G3 X83.327 Y98.888 I-1.334 J-.609 E.01265
+G1 X80.354 Y98.888 E.06167
+G2 X79.854 Y97.802 I-2.695 J.583 E.02501
+G2 X77.95 Y96.436 I-4.738 J4.596 E.04886
+G1 X77.67 Y95.981 E.01109
+G3 X78.297 Y94.16 I3.945 J.341 E.04035
+G3 X80.201 Y92.794 I4.738 J4.596 E.04886
+G1 X80.481 Y92.339 E.01109
+G2 X79.854 Y90.519 I-3.945 J.341 E.04035
+G2 X77.95 Y89.153 I-4.738 J4.597 E.04886
+G1 X77.67 Y88.698 E.01109
+G1 X77.7 Y88.243 E.00946
+G3 X78.465 Y86.701 I3.164 J.61 E.03614
+G1 X81.438 Y86.701 E.06168
+G2 X82.372 Y88.243 I2.939 J-.727 E.03796
+G3 X85.45 Y87.088 I2.984 J3.276 E.06984
+G3 X85.748 Y86.701 I1.066 J.512 E.0102
+G1 X88.722 Y86.701 E.06169
+G1 X88.857 Y87.091 E.00855
+G1 X92.73 Y87.093 E.08034
+G3 X93.031 Y86.702 I1.079 J.517 E.01032
+G1 X96.005 Y86.702 E.06169
+G1 X96.224 Y87.332 E.01384
+G3 X98.155 Y89.006 I-1.477 J3.655 E.05399
+G1 X98.409 Y89.153 E.00608
+G1 X98.689 Y89.608 E.01109
+G2 X98.65 Y90.651 I2.828 J.63 E.02177
+G1 X98.656 Y94.924 E.08862
+G3 X98.345 Y96.399 I-6.633 J-.631 E.03134
+G1 X98.689 Y96.891 E.01247
+G1 X98.659 Y97.346 E.00946
+G3 X97.894 Y98.888 I-3.164 J-.61 E.03614
+G1 X102.204 Y98.888 E.0894
+G2 X101.703 Y97.802 I-2.695 J.583 E.02501
+G2 X99.799 Y96.436 I-4.738 J4.596 E.04886
+G1 X99.519 Y95.981 E.01109
+G3 X100.147 Y94.16 I3.945 J.341 E.04035
+G3 X102.051 Y92.794 I4.738 J4.596 E.04886
+G1 X102.331 Y92.339 E.01109
+G2 X101.703 Y90.519 I-3.945 J.341 E.04035
+G2 X99.799 Y89.153 I-4.738 J4.597 E.04886
+G1 X99.519 Y88.698 E.01109
+G1 X99.549 Y88.243 E.00946
+G3 X100.313 Y86.702 I3.165 J.61 E.03611
+G1 X103.288 Y86.702 E.0617
+G2 X103.788 Y87.787 I2.692 J-.583 E.02499
+G2 X105.593 Y89.096 I4.57 J-4.405 E.04648
+G1 X105.593 Y91.027 E.04006
+G1 X105.345 Y91.429 E.0098
+G3 X103.441 Y92.794 I-4.738 J-4.596 E.04886
+G1 X103.161 Y93.25 E.01109
+G2 X103.788 Y95.07 I3.945 J-.341 E.04035
+G2 X105.592 Y96.378 I4.567 J-4.402 E.04644
+G1 X105.591 Y98.313 E.04014
+G3 X105.116 Y98.874 I-.815 J-.208 E.01578
+G3 X103.532 Y98.888 I-.867 J-8.512 E.03291
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518269
+G1 F6846
+M204 S6000
+G1 X94.871 Y98.794 E.02068
+G1 X85.129 Y98.794 E.23459
+G1 X84.647 Y98.779 E.01161
+G3 X84.272 Y98.748 I.734 J-11.354 E.00908
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X84.647 Y98.779 E-.14323
+G1 X85.129 Y98.794 E-.18315
+G1 X86.27 Y98.794 E-.43362
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X88.109 Y91.387 Z1.2 F42000
+G1 X90.173 Y83.077 Z1.2
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F6846
+M204 S5000
+G1 X90.124 Y83.081 E.00093
+G3 X90.125 Y79.916 I-.126 J-1.583 E.10103
+G1 X90.366 Y79.954 E.00472
+G3 X90.37 Y83.042 I-.368 J1.544 E.08174
+G1 X90.232 Y83.066 E.00271
+M204 S10000
+G1 X90.026 Y82.868 F42000
+; FEATURE: Top surface
+G1 F6846
+M204 S2000
+G1 X91.368 Y81.526 E.03657
+G1 X91.29 Y81.046
+G1 X89.546 Y82.79 E.04756
+G1 X89.182 Y82.596
+G1 X91.096 Y80.682 E.05218
+G1 X90.818 Y80.404
+G1 X88.904 Y82.318 E.05218
+G1 X88.71 Y81.954
+G1 X90.454 Y80.21 E.04756
+G1 X89.974 Y80.132
+G1 X88.632 Y81.474 E.03656
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.974 Y80.132 E-.72084
+G1 X90.075 Y80.149 E-.03916
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.61 Y80.175 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.148899
+G1 F6846
+M204 S6000
+G1 X89.464 Y80.281 E.00109
+; LINE_WIDTH: 0.181759
+G1 X89.318 Y80.387 E.00138
+; LINE_WIDTH: 0.219501
+G2 X88.887 Y80.818 I1.83 J2.261 E.00578
+; LINE_WIDTH: 0.181753
+G1 X88.781 Y80.964 E.00138
+; LINE_WIDTH: 0.148885
+G1 X88.675 Y81.11 E.00109
+; WIPE_START
+G1 F21000
+G1 X88.781 Y80.964 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.627 Y80.315 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.0892494
+G1 F6846
+M204 S6000
+G2 X90.49 Y80.219 I-.735 J.904 E.00052
+; WIPE_START
+G1 F21000
+G1 X90.627 Y80.315 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.281 Y81.01 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.0922816
+G1 F6846
+M204 S6000
+G2 X91.185 Y80.873 I-1.674 J1.069 E.00054
+; WIPE_START
+G1 F21000
+G1 X91.281 Y81.01 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.325 Y81.889 Z1.2 F42000
+G1 Z.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.148993
+G1 F6846
+M204 S6000
+G1 X91.219 Y82.036 E.00109
+; LINE_WIDTH: 0.181865
+G1 X91.113 Y82.182 E.00138
+; LINE_WIDTH: 0.219595
+G3 X90.682 Y82.613 I-2.261 J-1.83 E.00578
+; LINE_WIDTH: 0.181871
+G1 X90.536 Y82.719 E.00138
+; LINE_WIDTH: 0.149002
+G1 X90.389 Y82.825 E.00109
+; CHANGE_LAYER
+; Z_HEIGHT: 0.92
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X90.536 Y82.719 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 7/218
+; update layer progress
+M73 L7
+M991 S0 P6 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.2 I.078 J1.214 P1  F42000
+G1 X105.216 Y81.773 Z1.2
+G1 Z.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5935
+M204 S6000
+G1 X105.184 Y81.776 E.00067
+G3 X105.23 Y81.224 I.023 J-.276 E.01805
+G1 X105.281 Y81.233 E.00107
+G3 X105.291 Y81.764 I-.074 J.267 E.01473
+G1 X105.276 Y81.766 E.00033
+M204 S250
+G1 X105.286 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5935
+M204 S5000
+G3 X105.264 Y80.814 I-.078 J-.683 E.04421
+G1 X105.393 Y80.837 E.00253
+G3 X105.346 Y82.172 I-.185 J.662 E.03534
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.152 Y82.187 E-.07393
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05132
+G1 X104.779 Y82.041 E-.05133
+G1 X104.682 Y81.947 E-.05134
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.05132
+G1 X104.521 Y81.581 E-.05132
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05132
+G1 X104.664 Y81.074 E-.05133
+G1 X104.758 Y80.976 E-.05134
+G1 X104.869 Y80.899 E-.05132
+G1 X104.914 Y80.879 E-.01881
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.119 Y87.501 Z1.32 F42000
+G1 X94.91 Y98.335 Z1.32
+G1 Z.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5935
+M204 S6000
+G1 X94.867 Y98.338 E.00089
+G1 X85.133 Y98.338 E.20192
+G3 X81.707 Y94.912 I.037 J-3.464 E.11131
+G1 X81.707 Y90.877 E.08369
+G3 X85.133 Y87.451 I3.459 J.033 E.11134
+G1 X94.867 Y87.451 E.20192
+G3 X98.293 Y90.877 I-.034 J3.46 E.11134
+G1 X98.293 Y94.912 E.08369
+G3 X95.299 Y98.307 I-3.46 J-.034 E.10235
+G1 X94.97 Y98.331 E.00685
+M204 S10000
+G1 X94.882 Y97.912 F42000
+G1 F5935
+M204 S6000
+G1 X94.86 Y97.914 E.00044
+G1 X85.14 Y97.914 E.20163
+G3 X82.131 Y94.905 I.028 J-3.037 E.09779
+G1 X82.131 Y90.884 E.0834
+G3 X85.14 Y87.875 I3.033 J.024 E.09782
+G1 X94.86 Y87.875 E.20163
+G3 X97.869 Y90.884 I-.025 J3.034 E.09782
+G1 X97.869 Y94.905 E.0834
+G3 X95.244 Y97.886 I-3.034 J-.025 E.08983
+G1 X94.941 Y97.908 E.00629
+M204 S250
+G1 X94.855 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5935
+M204 S5000
+G1 X94.854 Y97.504 E.00003
+G1 X85.146 Y97.504 E.18711
+G3 X82.54 Y94.898 I.02 J-2.626 E.07876
+G1 X82.54 Y90.891 E.07724
+G3 X85.146 Y88.284 I2.622 J.016 E.07879
+G1 X94.854 Y88.284 E.18711
+G3 X97.46 Y90.891 I-.017 J2.623 E.07878
+G1 X97.46 Y94.898 E.07724
+G3 X95.359 Y97.452 I-2.623 J-.017 E.06898
+G1 X94.915 Y97.498 E.0086
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X94.854 Y97.504 E-.02334
+G1 X92.915 Y97.504 E-.73667
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.319 Y98.246 Z1.32 F42000
+G1 X75.017 Y99.251 Z1.32
+G1 Z.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5935
+M204 S6000
+G3 X74.043 Y98.277 I-.014 J-.959 E.03185
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.959 J-.014 E.03185
+G1 X105.061 Y86.34 E.62318
+G3 X105.957 Y87.312 I-.063 J.957 E.03023
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.959 J.014 E.03185
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F5935
+M204 S6000
+G3 X73.619 Y98.284 I-.007 J-1.383 E.04538
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.383 J-.007 E.04538
+G1 X105.064 Y85.916 E.6234
+M73 P12 R12
+G3 X106.381 Y87.304 I-.068 J1.383 E.04381
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.383 J.007 E.04538
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.002 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5935
+M204 S5000
+G1 X74.7 Y100.058 E.00586
+G3 X73.21 Y98.291 I.311 J-1.774 E.04837
+G1 X73.21 Y87.298 E.2119
+G3 X73.236 Y86.994 I1.931 J.015 E.00589
+G3 X75.003 Y85.504 I1.774 J.311 E.04837
+G1 X105.071 Y85.507 E.57958
+G3 X106.79 Y87.298 I-.071 J1.789 E.05287
+G1 X106.79 Y98.291 E.2119
+G3 X106.764 Y98.595 I-1.931 J-.015 E.00589
+G3 X104.997 Y100.084 I-1.774 J-.311 E.04837
+G1 X75.062 Y100.084 E.57701
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.7 Y100.058 E-.13817
+G1 X74.7 Y100.058 E0
+G1 X74.425 Y99.989 E-.10762
+G1 X74.105 Y99.845 E-.13334
+G1 X73.91 Y99.714 E-.089
+G1 X73.654 Y99.475 E-.13331
+G1 X73.45 Y99.189 E-.13334
+G1 X73.423 Y99.129 E-.02522
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 7 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer7 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X74.473 Y98.552
+G1 Z.92
+G1 E.8 F1800
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F5935
+M204 S6000
+G2 X74.84 Y98.863 I.531 J-.254 E.01028
+G2 X76.039 Y98.888 I.699 J-4.771 E.02493
+G2 X77.255 Y96.647 I-4.748 J-4.026 E.05327
+G3 X78.165 Y96.753 I.324 J1.177 E.01949
+G3 X79.986 Y97.95 I-1.047 J3.575 E.04587
+G2 X80.528 Y98.888 I5.275 J-2.423 E.02251
+G1 X83.322 Y98.888 E.05795
+G2 X83.709 Y98.418 I-.747 J-1.01 E.01277
+G3 X82.832 Y97.915 I2.169 J-4.804 E.021
+G3 X81.344 Y94.091 I2.686 J-3.247 E.08889
+G1 X80.896 Y93.005 E.02437
+G2 X79.986 Y93.111 I-.324 J1.177 E.01949
+G2 X78.165 Y94.308 I1.047 J3.575 E.04587
+G2 X77.255 Y96.226 I7.481 J4.727 E.04413
+G3 X76.344 Y96.12 I-.324 J-1.177 E.01949
+G3 X74.407 Y94.715 I.905 J-3.286 E.05071
+G1 X74.408 Y92.514 E.04564
+G2 X76.344 Y91.281 I-1.197 J-4.015 E.04824
+G2 X77.255 Y89.363 I-7.481 J-4.727 E.04413
+G3 X78.165 Y89.469 I.324 J1.177 E.01949
+G3 X79.986 Y90.667 I-1.047 J3.575 E.04587
+G3 X80.896 Y92.584 I-7.482 J4.727 E.04413
+G1 X81.344 Y92.62 E.00931
+G1 X81.344 Y90.923 E.0352
+M204 S10000
+G1 X74.408 Y89.132 F42000
+G1 F5935
+M204 S6000
+G1 X74.409 Y87.435 E.0352
+G2 X76.344 Y88.836 I2.841 J-1.886 E.05064
+G2 X77.255 Y88.942 I.586 J-1.071 E.01949
+G3 X78.47 Y86.701 I5.965 J1.785 E.05327
+G1 X81.3 Y86.701 E.05868
+G2 X82.428 Y88.236 I3.43 J-1.339 E.03996
+G3 X85.413 Y87.088 I2.881 J3.037 E.06807
+G3 X85.753 Y86.702 I.944 J.488 E.01079
+G1 X88.583 Y86.702 E.0587
+G2 X88.782 Y87.091 I1.709 J-.631 E.00908
+G1 X92.693 Y87.093 E.08112
+G3 X93.036 Y86.702 I.954 J.49 E.01089
+G1 X95.866 Y86.702 E.05872
+G2 X96.208 Y87.344 I2.826 J-1.091 E.01511
+G2 X94.543 Y87.095 I-1.673 J5.481 E.03504
+M204 S10000
+G1 X98.621 Y86.703 F42000
+G1 F5935
+M204 S6000
+G1 X100.318 Y86.703 E.0352
+G2 X99.104 Y88.942 I4.754 J4.026 E.05322
+G3 X97.993 Y88.748 I-.248 J-1.851 E.02377
+G3 X98.634 Y90.495 I-3.749 J2.367 E.03889
+G2 X99.104 Y89.363 I-4.445 J-2.509 E.02548
+G3 X100.014 Y89.469 I.324 J1.177 E.01949
+G3 X101.835 Y90.667 I-1.047 J3.575 E.04587
+G3 X102.746 Y92.584 I-7.481 J4.727 E.04413
+G2 X103.656 Y92.478 I.324 J-1.177 E.01949
+G2 X105.593 Y91.074 I-.905 J-3.287 E.0507
+G1 X105.593 Y88.873 E.04565
+G3 X103.15 Y86.703 I.852 J-3.42 E.07048
+G1 X104.847 Y86.703 E.0352
+M204 S10000
+G1 X98.656 Y94.522 F42000
+G1 F5935
+M204 S6000
+G3 X98.422 Y96.191 I-6.049 J.005 E.03507
+G2 X99.104 Y96.226 I.383 J-.824 E.01452
+G3 X100.014 Y94.308 I8.391 J2.81 E.04413
+G3 X101.835 Y93.111 I2.867 J2.377 E.04587
+G3 X102.746 Y93.005 I.586 J1.071 E.01949
+G2 X103.656 Y94.922 I8.392 J-2.81 E.04413
+G2 X105.592 Y96.156 I3.132 J-2.78 E.04822
+G1 X105.591 Y98.327 E.04505
+G3 X104.966 Y98.888 I-.765 J-.223 E.01835
+G1 X102.378 Y98.888 E.05369
+G3 X101.835 Y97.95 I4.736 J-3.363 E.02251
+G2 X100.014 Y96.753 I-2.867 J2.378 E.04587
+G2 X99.104 Y96.647 I-.586 J1.071 E.01949
+G3 X97.888 Y98.888 I-5.964 J-1.785 E.05327
+G1 X96.191 Y98.888 E.0352
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518269
+G1 F5935
+M204 S6000
+G1 X94.871 Y98.794 E.02068
+G1 X85.129 Y98.794 E.23459
+G1 X84.647 Y98.779 E.0116
+G3 X84.272 Y98.748 I.729 J-11.279 E.00908
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X84.647 Y98.779 E-.14325
+G1 X85.129 Y98.794 E-.18311
+G1 X86.27 Y98.794 E-.43364
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X87.908 Y91.34 Z1.32 F42000
+G1 X90.01 Y81.773 Z1.32
+G1 Z.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5935
+M204 S6000
+G1 X89.978 Y81.776 E.00067
+G3 X90.025 Y81.224 I.023 J-.276 E.01805
+G1 X90.075 Y81.233 E.00107
+G3 X90.086 Y81.764 I-.074 J.267 E.01473
+G1 X90.07 Y81.766 E.00033
+M204 S250
+G1 X90.081 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5935
+M204 S5000
+G3 X90.058 Y80.814 I-.078 J-.683 E.04421
+G1 X90.187 Y80.837 E.00253
+G3 X90.14 Y82.172 I-.185 J.662 E.03534
+; CHANGE_LAYER
+; Z_HEIGHT: 1.04
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07393
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05132
+G1 X89.574 Y82.041 E-.05133
+G1 X89.476 Y81.947 E-.05134
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.05132
+G1 X89.316 Y81.581 E-.05132
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05132
+G1 X89.459 Y81.074 E-.05133
+G1 X89.553 Y80.976 E-.05134
+G1 X89.663 Y80.899 E-.05132
+G1 X89.709 Y80.879 E-.01882
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 8/218
+; update layer progress
+M73 L8
+M991 S0 P7 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.32 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z1.32
+G1 Z1.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5899
+M204 S6000
+G3 X105.227 Y81.223 I-.032 J-.275 E.01918
+G1 X105.281 Y81.233 E.00113
+G3 X105.297 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X105.286 Y82.181 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5899
+M204 S5000
+G3 X105.26 Y80.813 I-.08 J-.683 E.04421
+G1 X105.393 Y80.837 E.00261
+G3 X105.345 Y82.171 I-.187 J.661 E.03527
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.152 Y82.187 E-.07391
+G1 X105.019 Y82.163 E-.05133
+G1 X104.893 Y82.114 E-.05133
+G1 X104.779 Y82.041 E-.05133
+G1 X104.682 Y81.948 E-.05131
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05133
+G1 X104.521 Y81.581 E-.05132
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05133
+G1 X104.592 Y81.187 E-.05133
+G1 X104.664 Y81.073 E-.05133
+G1 X104.758 Y80.976 E-.05131
+G1 X104.869 Y80.899 E-.05134
+G1 X104.914 Y80.879 E-.01885
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X101.119 Y87.501 Z1.44 F42000
+G1 X94.911 Y98.335 Z1.44
+G1 Z1.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5899
+M204 S6000
+G1 X94.867 Y98.338 E.0009
+G1 X85.133 Y98.338 E.20191
+G3 X81.707 Y94.912 I.034 J-3.46 E.11134
+G1 X81.707 Y90.878 E.08368
+G3 X85.133 Y87.451 I3.46 J.034 E.11134
+G1 X94.867 Y87.451 E.20191
+G3 X98.293 Y90.877 I-.034 J3.46 E.11134
+G1 X98.293 Y94.911 E.08368
+G3 X95.299 Y98.307 I-3.46 J-.034 E.10235
+G1 X94.971 Y98.331 E.00684
+M204 S10000
+G1 X94.882 Y97.912 F42000
+G1 F5899
+M204 S6000
+G1 X94.86 Y97.914 E.00045
+G1 X85.14 Y97.914 E.20162
+G3 X82.131 Y94.905 I.025 J-3.034 E.09782
+G1 X82.131 Y90.885 E.08339
+G3 X85.14 Y87.875 I3.034 J.025 E.09782
+G1 X94.86 Y87.875 E.20162
+G3 X97.869 Y90.884 I-.025 J3.034 E.09782
+G1 X97.869 Y94.904 E.08339
+G3 X95.244 Y97.886 I-3.034 J-.025 E.08984
+G1 X94.942 Y97.908 E.00628
+M204 S250
+G1 X94.856 Y97.504 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5899
+M204 S5000
+G1 X94.854 Y97.504 E.00005
+G1 X85.147 Y97.504 E.1871
+G3 X82.54 Y94.898 I.017 J-2.623 E.07879
+G1 X82.54 Y90.891 E.07723
+G3 X85.146 Y88.284 I2.623 J.017 E.07879
+G1 X94.853 Y88.284 E.1871
+G3 X97.46 Y90.891 I-.017 J2.623 E.07879
+G1 X97.46 Y94.898 E.07723
+G3 X95.358 Y97.452 I-2.623 J-.017 E.06899
+G1 X94.916 Y97.498 E.00858
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X94.854 Y97.504 E-.02374
+G1 X92.916 Y97.504 E-.73627
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.32 Y98.246 Z1.44 F42000
+G1 X75.017 Y99.251 Z1.44
+G1 Z1.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5899
+M204 S6000
+G3 X74.043 Y98.277 I-.014 J-.959 E.03185
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.05 Y86.34 E.62295
+G1 X105.063 Y86.341 E.00027
+G3 X105.957 Y87.312 I-.065 J.956 E.0302
+G1 X105.957 Y98.278 E.22746
+G3 X104.983 Y99.251 I-.963 J.01 E.03181
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F5899
+M204 S6000
+G3 X73.619 Y98.284 I-.007 J-1.383 E.04538
+G1 X73.619 Y87.304 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.056 Y85.916 E.62324
+G3 X106.381 Y87.304 I-.063 J1.386 E.04395
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.002 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5899
+M204 S5000
+M73 P13 R12
+G1 X74.651 Y100.048 E.0068
+G3 X73.21 Y98.291 I.358 J-1.764 E.04741
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.063 Y85.507 E.57942
+G3 X106.79 Y87.298 I-.071 J1.797 E.05296
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.062 Y100.084 E.577
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X74.651 Y100.048 E-.15685
+G1 X74.315 Y99.948 E-.13327
+G1 X74.006 Y99.783 E-.13333
+G1 X73.734 Y99.56 E-.13334
+G1 X73.512 Y99.289 E-.13336
+G1 X73.425 Y99.127 E-.06985
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 8 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer8 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.361 Y97.482
+G1 Z1.04
+G1 E.8 F1800
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F5899
+M204 S6000
+G2 X83.752 Y98.428 I2.848 J-2.695 E.03516
+G3 X83.328 Y98.888 I-1.249 J-.724 E.01308
+G1 X80.633 Y98.888 E.05591
+G2 X79.531 Y97.48 I-4.843 J2.655 E.03725
+G2 X77.71 Y96.89 I-2.025 J3.145 E.04015
+G1 X77.255 Y97.186 E.01126
+G3 X76.045 Y98.888 I-6.133 J-3.077 E.04349
+G3 X74.84 Y98.863 I-.503 J-4.823 E.02506
+G3 X74.406 Y98.261 I.172 J-.582 E.01658
+G1 X74.407 Y94.798 E.07183
+G2 X76.799 Y95.982 I2.377 J-1.794 E.05741
+G1 X77.255 Y95.686 E.01126
+G3 X78.62 Y93.839 I5.898 J2.93 E.04791
+G3 X80.441 Y93.249 I2.025 J3.145 E.04015
+G1 X80.896 Y93.544 E.01126
+G1 X81.344 Y94.291 E.01806
+G1 X81.344 Y92.335 E.04057
+G1 X80.896 Y92.045 E.01107
+G2 X79.531 Y90.197 I-5.897 J2.93 E.04791
+G2 X77.71 Y89.607 I-2.025 J3.145 E.04015
+G1 X77.255 Y89.902 E.01126
+G3 X75.889 Y91.75 I-5.897 J-2.93 E.04791
+G3 X74.408 Y92.33 I-2.392 J-3.93 E.03316
+G1 X74.409 Y87.517 E.09983
+G2 X76.799 Y88.699 I2.376 J-1.797 E.05735
+G1 X77.255 Y88.403 E.01126
+G3 X78.464 Y86.701 I6.135 J3.078 E.04348
+G1 X81.16 Y86.701 E.05592
+G2 X82.262 Y88.109 I4.842 J-2.656 E.03724
+G1 X82.449 Y88.222 E.00454
+G3 X85.374 Y87.088 I2.746 J2.744 E.06698
+G3 X85.747 Y86.702 I1.057 J.646 E.01123
+G1 X88.443 Y86.702 E.05593
+G2 X88.682 Y87.091 I3.254 J-1.732 E.00947
+G1 X92.654 Y87.093 E.08238
+G3 X93.029 Y86.702 I1.069 J.65 E.01134
+G1 X95.727 Y86.702 E.05595
+G2 X96.112 Y87.304 I5.044 J-2.804 E.01482
+G3 X97.872 Y88.579 I-1.817 J4.361 E.04548
+G2 X99.104 Y88.403 I.493 J-.952 E.02755
+G3 X100.312 Y86.703 I6.14 J3.081 E.04344
+G1 X103.01 Y86.703 E.05597
+G2 X104.111 Y88.109 I4.839 J-2.655 E.0372
+G2 X105.593 Y88.689 I2.39 J-3.925 E.03318
+G1 X105.593 Y91.157 E.05119
+G3 X103.201 Y92.34 I-2.377 J-1.795 E.0574
+G1 X102.746 Y92.045 E.01126
+G2 X101.38 Y90.197 I-5.898 J2.93 E.04791
+G2 X99.559 Y89.607 I-2.025 J3.145 E.04015
+G1 X99.104 Y89.902 E.01126
+G1 X98.649 Y90.661 E.01835
+G1 X98.656 Y94.923 E.0884
+G3 X98.495 Y95.977 I-4.348 J-.127 E.02218
+G1 X98.649 Y95.982 E.0032
+G1 X99.104 Y95.686 E.01126
+G3 X100.47 Y93.839 I5.897 J2.93 E.04791
+G3 X102.29 Y93.249 I2.025 J3.145 E.04015
+G1 X102.746 Y93.544 E.01126
+G2 X104.111 Y95.392 I5.898 J-2.93 E.04791
+G2 X105.592 Y95.972 I2.395 J-3.936 E.03314
+G1 X105.591 Y98.321 E.04873
+G3 X104.966 Y98.888 I-.696 J-.139 E.01874
+G1 X102.482 Y98.888 E.05152
+G2 X101.38 Y97.48 I-4.843 J2.656 E.03725
+G2 X99.559 Y96.89 I-2.025 J3.145 E.04015
+G1 X99.104 Y97.186 E.01126
+G3 X97.894 Y98.888 I-6.134 J-3.078 E.04349
+G1 X96.197 Y98.888 E.0352
+M204 S10000
+G1 X95.728 Y98.748 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.518269
+G1 F5899
+M204 S6000
+G1 X94.871 Y98.794 E.02067
+G1 X85.13 Y98.794 E.23457
+G1 X84.647 Y98.779 E.01162
+G3 X84.272 Y98.748 I.738 J-11.401 E.00907
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X84.647 Y98.779 E-.14319
+G1 X85.13 Y98.794 E-.18343
+G1 X86.27 Y98.794 E-.43337
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X87.918 Y91.342 Z1.44 F42000
+G1 X90.032 Y81.775 Z1.44
+G1 Z1.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F5899
+M204 S6000
+G3 X90.022 Y81.223 I-.032 J-.275 E.01918
+G1 X90.075 Y81.233 E.00113
+G3 X90.091 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X90.081 Y82.181 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F5899
+M204 S5000
+G3 X90.054 Y80.813 I-.08 J-.683 E.04421
+G1 X90.187 Y80.837 E.00261
+G3 X90.14 Y82.171 I-.187 J.661 E.03527
+M106 S255
+; CHANGE_LAYER
+; Z_HEIGHT: 1.16
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07391
+G1 X89.813 Y82.163 E-.05133
+G1 X89.687 Y82.114 E-.05133
+G1 X89.573 Y82.041 E-.05133
+G1 X89.476 Y81.948 E-.05131
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05133
+G1 X89.316 Y81.581 E-.05132
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05133
+G1 X89.386 Y81.187 E-.05133
+G1 X89.459 Y81.073 E-.05133
+G1 X89.553 Y80.976 E-.05131
+G1 X89.663 Y80.899 E-.05134
+G1 X89.709 Y80.879 E-.01885
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M106 S193.8
+M625
+; layer num/total_layer_count: 9/218
+; update layer progress
+M73 L9
+M991 S0 P8 ;notify layer change
+M106 S255
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M106 S255
+M204 S10000
+G17
+G3 Z1.44 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z1.44
+G1 Z1.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G3 X105.229 Y81.223 I-.032 J-.275 E.01917
+G1 X105.281 Y81.233 E.0011
+G3 X105.297 Y81.761 I-.075 J.267 E.01458
+M204 S250
+G1 X105.286 Y82.181 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X105.125 Y80.816 I-.082 J-.682 E.04166
+G1 X105.262 Y80.814 E.00265
+G3 X105.345 Y82.171 I-.057 J.685 E.03777
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.0739
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05132
+G1 X104.779 Y82.041 E-.05131
+G1 X104.682 Y81.948 E-.05133
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.05133
+G1 X104.521 Y81.581 E-.05133
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05132
+G1 X104.664 Y81.074 E-.05131
+G1 X104.758 Y80.976 E-.05133
+G1 X104.869 Y80.899 E-.05132
+G1 X104.914 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M106 S193.8
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+M204 S10000
+G1 X98.622 Y85.199 Z1.56 F42000
+G1 X84.526 Y94.877 Z1.56
+G1 Z1.16
+G1 E.8 F1800
+; FEATURE: Overhang wall
+; LINE_WIDTH: 0.45
+G1 F600
+M204 S5000
+G3 X84.161 Y93.791 I1.876 J-1.236 E.02404
+G3 X84.157 Y92.127 I25.379 J-.897 E.03452
+G3 X86.383 Y89.901 I2.267 J.041 E.07218
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.02 J2.246 E.06968
+G3 X95.843 Y93.662 I-25.384 J.897 E.03452
+G3 X93.617 Y95.888 I-2.245 J-.019 E.07237
+G1 X86.383 Y95.888 E.15006
+G3 X84.56 Y94.927 I.02 J-2.246 E.04441
+M106 S193.8
+M106 S255
+M204 S250
+G1 X84.883 Y94.647 F42000
+G1 F600
+M204 S5000
+G3 X84.584 Y93.763 I1.519 J-1.005 E.01956
+G3 X84.581 Y92.134 I24.858 J-.869 E.0338
+G3 X86.39 Y90.325 I1.839 J.03 E.05868
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.025 I-.012 J1.822 E.05658
+G3 X95.419 Y93.655 I-24.861 J.869 E.0338
+M73 P14 R12
+G3 X93.61 Y95.464 I-1.821 J-.012 E.05883
+G1 X86.39 Y95.464 E.14977
+G3 X84.916 Y94.696 I.012 J-1.822 E.03578
+M106 S193.8
+M106 S255
+M204 S250
+G1 X85.226 Y94.425 F42000
+G1 F600
+M204 S5000
+G3 X84.993 Y93.737 I1.175 J-.782 E.01524
+G3 X84.99 Y92.141 I24.314 J-.842 E.03311
+G3 X86.396 Y90.734 I1.426 J.02 E.04565
+G1 X93.604 Y90.734 E.14949
+G3 X95.007 Y92.052 I-.005 J1.412 E.04394
+G3 X95.01 Y93.648 I-24.314 J.842 E.03311
+G3 X93.604 Y95.054 I-1.412 J-.005 E.04578
+G1 X86.396 Y95.054 E.14949
+G3 X85.261 Y94.474 I.005 J-1.412 E.02745
+M106 S193.8
+M106 S255
+; WIPE_START
+M204 S6000
+G1 X85.097 Y94.185 E-.12624
+G1 X85.038 Y94.009 E-.0703
+G1 X84.993 Y93.737 E-.10506
+G1 X84.991 Y92.53 E-.45841
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.56 I-.68 J-1.009 P1  F42000
+G1 X75.017 Y99.251 Z1.56
+G1 Z1.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+G1 F21000
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.042 Y86.34 E.62279
+G1 X105.063 Y86.341 E.00043
+G3 X105.957 Y87.312 I-.067 J.958 E.03018
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.959 J.014 E.03185
+G1 X75.077 Y99.251 E.62033
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F21000
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.049 Y85.916 E.62308
+G3 X106.381 Y87.305 I-.05 J1.381 E.04416
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.383 J.007 E.04538
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G1 X74.715 Y100.061 E.00557
+G3 X73.21 Y98.291 I.286 J-1.768 E.04872
+G1 X73.21 Y87.298 E.2119
+G3 X73.234 Y87.009 I1.938 J.015 E.00558
+G3 X75.003 Y85.504 I1.768 J.286 E.04872
+G1 X105.055 Y85.506 E.57927
+G3 X106.79 Y87.298 I-.064 J1.797 E.05311
+G1 X106.79 Y98.291 E.2119
+G3 X106.766 Y98.579 I-1.938 J-.015 E.00558
+G3 X104.997 Y100.084 I-1.776 J-.295 E.04867
+G1 X75.063 Y100.084 E.577
+; WIPE_START
+M204 S6000
+G1 X74.715 Y100.061 E-.13247
+G1 X74.715 Y100.061 E0
+G1 X74.425 Y99.989 E-.11361
+G1 X74.105 Y99.845 E-.13332
+G1 X73.91 Y99.714 E-.08897
+G1 X73.654 Y99.475 E-.13337
+G1 X73.45 Y99.189 E-.1333
+G1 X73.423 Y99.13 E-.02495
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M106 S193.8
+M625
+; object ids of layer 9 start: 66,77,88
+M624 BwAAAAAAAAA=
+M106 S255
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer9 end: 66,77,88
+M106 S193.8
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+G1 X82.336 Y97.577
+G1 Z1.16
+G1 E.8 F1800
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F24749.689
+M204 S6000
+G1 X82.415 Y97.66 E.00237
+G2 X83.733 Y98.515 I2.741 J-2.78 E.03282
+G3 X83.344 Y98.888 I-.964 J-.618 E.01129
+G1 X80.764 Y98.888 E.05351
+G1 X79.986 Y97.858 E.02678
+G2 X77.71 Y97.102 I-1.865 J1.813 E.0517
+G1 X77.255 Y97.45 E.01188
+G1 X76.344 Y98.656 E.03133
+G1 X76.061 Y98.888 E.00761
+G3 X74.84 Y98.863 I-.51 J-4.884 E.02538
+G3 X74.406 Y98.261 I.172 J-.582 E.01657
+G1 X74.407 Y94.86 E.07053
+G2 X75.434 Y95.625 I2.19 J-1.868 E.02678
+G1 X76.344 Y95.836 E.01938
+G1 X76.799 Y95.77 E.00954
+G1 X77.255 Y95.422 E.01188
+G1 X78.165 Y94.216 E.03133
+G3 X80.441 Y93.461 I1.865 J1.813 E.0517
+G3 X81.261 Y94.291 I-1.084 J1.889 E.02451
+G1 X81.261 Y92.059 E.0463
+G1 X80.896 Y91.78 E.00952
+G1 X79.986 Y90.575 E.03133
+G2 X77.71 Y89.819 I-1.865 J1.813 E.0517
+G1 X77.255 Y90.167 E.01189
+G1 X76.344 Y91.373 E.03133
+G3 X74.408 Y92.178 I-1.914 J-1.872 E.0447
+G1 X74.409 Y87.579 E.09538
+G2 X75.434 Y88.342 I2.19 J-1.874 E.02672
+G1 X76.344 Y88.553 E.01938
+G1 X76.799 Y88.487 E.00954
+G1 X77.255 Y88.139 E.01188
+G1 X78.165 Y86.933 E.03133
+G1 X78.449 Y86.701 E.0076
+G1 X81.029 Y86.701 E.05352
+G1 X81.807 Y87.731 E.02677
+G2 X82.387 Y88.157 I1.01 J-.768 E.01514
+G3 X84.372 Y87.084 I2.761 J2.735 E.04748
+G1 X84.425 Y87.074 E.00112
+G3 X85.394 Y87.005 I.891 J5.74 E.02017
+G3 X85.731 Y86.701 I.796 J.544 E.00951
+G1 X88.312 Y86.702 E.05354
+G1 X88.543 Y87.008 E.00795
+G1 X92.673 Y87.01 E.08566
+G3 X93.014 Y86.702 I.807 J.549 E.00962
+G1 X95.596 Y86.702 E.05356
+G1 X95.947 Y87.167 E.01208
+G1 X95.874 Y87.142 E.00159
+G2 X94.266 Y87.011 I-1.161 J4.327 E.03366
+M204 S10000
+G1 X95.971 Y87.416 F42000
+; FEATURE: Bridge
+; LINE_WIDTH: 0.421842
+G1 F1800
+M204 S6000
+G1 X85.117 Y87.416 E.21019
+G1 X84.698 Y87.444 E.00815
+G1 X84.491 Y87.478 E.00405
+G2 X83.549 Y87.812 I.575 J3.116 E.01944
+G1 X96.462 Y87.812 E.25007
+G1 X96.591 Y87.881 E.00283
+G1 X97.06 Y88.208 E.01107
+G1 X82.94 Y88.208 E.27343
+G1 X82.688 Y88.434 E.00657
+G3 X82.53 Y88.604 I-2.551 J-2.223 E.00449
+G1 X97.47 Y88.604 E.28933
+G1 X97.768 Y89 E.0096
+G1 X82.239 Y89 E.30073
+M73 P15 R12
+G1 X82.135 Y89.156 E.00363
+G1 X82.011 Y89.396 E.00523
+G1 X97.99 Y89.396 E.30944
+G1 X98.067 Y89.567 E.00363
+G2 X98.151 Y89.792 I5.562 J-1.929 E.00466
+G1 X94.677 Y89.792 E.06727
+G1 X94.747 Y89.818 E.00145
+G1 X95.174 Y90.084 E.00974
+G1 X95.293 Y90.188 E.00306
+G1 X98.257 Y90.188 E.0574
+G1 X98.315 Y90.584 E.00775
+G1 X95.669 Y90.584 E.05124
+G1 X95.916 Y90.98 E.00904
+G1 X98.323 Y90.98 E.04662
+G1 X98.324 Y91.376 E.00767
+G1 X96.064 Y91.376 E.04376
+G3 X96.157 Y91.773 I-.961 J.435 E.00793
+G1 X98.325 Y91.773 E.04197
+G1 X98.325 Y92.169 E.00767
+G1 X96.191 Y92.169 E.04133
+G1 X96.19 Y92.565 E.00767
+G1 X98.326 Y92.565 E.04136
+G1 X98.327 Y92.961 E.00767
+G1 X96.189 Y92.961 E.0414
+G1 X96.188 Y93.357 E.00767
+G1 X98.327 Y93.357 E.04143
+G1 X98.328 Y93.753 E.00767
+G1 X96.187 Y93.753 E.04147
+G3 X96.134 Y94.149 I-1.217 J.039 E.00777
+G1 X98.329 Y94.149 E.04251
+G1 X98.329 Y94.545 E.00767
+G1 X96.019 Y94.545 E.04475
+G3 X95.839 Y94.941 I-1.286 J-.346 E.00846
+G1 X98.328 Y94.941 E.04821
+G1 X98.302 Y95.337 E.00769
+G1 X95.562 Y95.337 E.05305
+G3 X95.127 Y95.733 I-2.418 J-2.217 E.0114
+G1 X98.224 Y95.733 E.05997
+G1 X98.099 Y96.129 E.00805
+G1 X81.9 Y96.129 E.3137
+G1 X81.827 Y95.922 E.00426
+G3 X81.774 Y95.733 I5.39 J-1.613 E.0038
+G1 X84.872 Y95.733 E.05999
+G1 X84.438 Y95.337 E.01137
+G1 X81.698 Y95.337 E.05305
+G1 X81.672 Y94.941 E.00769
+G1 X84.159 Y94.941 E.04817
+G3 X83.973 Y94.545 I1.456 J-.926 E.0085
+G1 X81.67 Y94.545 E.0446
+G1 X81.67 Y94.149 E.00767
+G1 X83.857 Y94.149 E.04235
+G1 X83.816 Y93.753 E.00771
+G1 X81.67 Y93.753 E.04156
+G1 X81.67 Y93.357 E.00767
+G1 X83.809 Y93.357 E.04141
+G1 X83.809 Y92.961 E.00767
+G1 X81.67 Y92.961 E.04141
+G1 X81.67 Y92.565 E.00767
+G1 X83.809 Y92.565 E.04141
+G1 X83.809 Y92.169 E.00767
+G1 X81.67 Y92.169 E.04141
+G1 X81.67 Y91.773 E.00767
+G1 X83.843 Y91.773 E.04208
+G3 X83.936 Y91.376 I1.057 J.039 E.00793
+G1 X81.67 Y91.376 E.04388
+G1 X81.67 Y90.98 E.00767
+G1 X84.094 Y90.98 E.04695
+G3 X84.331 Y90.584 I1.607 J.69 E.00896
+G1 X81.69 Y90.584 E.05115
+G1 X81.744 Y90.188 E.00774
+G1 X84.697 Y90.188 E.05719
+G1 X85.097 Y89.903 E.00951
+G1 X85.322 Y89.792 E.00486
+G1 X81.666 Y89.792 E.07079
+M106 S193.8
+M106 S255
+; WIPE_START
+G1 X83.666 Y89.792 E-.76
+; WIPE_END
+G1 E-.04
+M204 S10000
+G17
+G3 Z1.56 I-1.216 J.05 P1  F42000
+G1 X84.044 Y98.902 Z1.56
+G1 Z1.16
+G1 E.8 F1800
+
+M204 S6000
+G1 X95.778 Y98.902 E.22722
+G1 X95.745 Y98.506 E.0077
+G1 X84.255 Y98.506 E.22252
+G1 X84.261 Y98.433 E.00142
+G1 X84.131 Y98.228 E.0047
+G1 X83.818 Y98.11 E.00648
+G1 X96.182 Y98.11 E.23944
+G2 X96.585 Y97.912 I-2.153 J-4.885 E.00871
+G1 X96.882 Y97.714 E.0069
+G1 X83.118 Y97.714 E.26655
+G1 X82.855 Y97.511 E.00643
+G1 X82.654 Y97.318 E.00541
+G1 X97.344 Y97.318 E.2845
+G3 X97.463 Y97.194 I.993 J.832 E.00333
+G1 X97.673 Y96.922 E.00665
+G1 X82.323 Y96.922 E.29725
+G1 X82.081 Y96.526 E.00899
+G1 X98.116 Y96.526 E.31052
+M106 S193.8
+M204 S10000
+G1 X104.31 Y98.888 F42000
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F24749.689
+M204 S6000
+M73 P16 R12
+G1 X102.613 Y98.888 E.0352
+G1 X101.835 Y97.858 E.02678
+G2 X99.559 Y97.102 I-1.865 J1.813 E.0517
+G1 X99.104 Y97.45 E.01188
+G1 X98.194 Y98.656 E.03133
+G1 X97.91 Y98.888 E.00761
+G1 X96.187 Y98.888 E.03574
+G1 X96.159 Y98.55 E.00704
+G2 X98.649 Y95.77 I-1.293 J-3.662 E.08074
+G1 X99.104 Y95.422 E.01189
+G1 X100.014 Y94.216 E.03133
+G3 X102.29 Y93.461 I1.865 J1.813 E.0517
+G1 X102.746 Y93.809 E.01188
+G1 X103.656 Y95.014 E.03133
+G2 X105.592 Y95.819 I1.914 J-1.872 E.04468
+G1 X105.593 Y91.219 E.09542
+G3 X104.566 Y91.983 I-2.189 J-1.869 E.02677
+G1 X103.656 Y92.194 E.01938
+G1 X103.201 Y92.128 E.00954
+G1 X102.746 Y91.78 E.01189
+G1 X101.835 Y90.575 E.03133
+G2 X99.559 Y89.819 I-1.865 J1.813 E.0517
+G2 X98.732 Y90.659 I1.097 J1.907 E.02476
+G1 X98.701 Y90.356 E.00632
+G2 X97.903 Y88.485 I-3.824 J.527 E.0427
+G2 X99.104 Y88.139 I.334 J-1.1 E.02743
+G1 X100.014 Y86.933 E.03133
+G1 X100.296 Y86.702 E.00756
+G1 X102.879 Y86.703 E.05358
+G1 X103.656 Y87.731 E.02673
+G2 X105.593 Y88.536 I1.913 J-1.871 E.04471
+G2 X105.58 Y87.178 I-7.278 J-.605 E.02821
+G2 X105.423 Y86.883 I-.637 J.148 E.00701
+; OBJECT_ID: 88
+; WIPE_START
+G1 X105.58 Y87.178 E-.12698
+G1 X105.593 Y88.536 E-.51603
+G1 X105.291 Y88.479 E-.11699
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X98.303 Y85.409 Z1.56 F42000
+G1 X90.033 Y81.775 Z1.56
+G1 Z1.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+G1 F21000
+M204 S6000
+G3 X90.023 Y81.223 I-.032 J-.275 E.01917
+G1 X90.075 Y81.233 E.0011
+G3 X90.091 Y81.761 I-.075 J.267 E.01458
+M204 S250
+G1 X90.081 Y82.181 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.919 Y80.816 I-.082 J-.682 E.04166
+G1 X90.056 Y80.814 E.00265
+G3 X90.14 Y82.171 I-.057 J.685 E.03777
+; CHANGE_LAYER
+; Z_HEIGHT: 1.28
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.0739
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05132
+G1 X89.574 Y82.041 E-.05131
+G1 X89.476 Y81.948 E-.05133
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.05133
+G1 X89.316 Y81.581 E-.05133
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05132
+G1 X89.459 Y81.074 E-.05131
+G1 X89.553 Y80.976 E-.05133
+G1 X89.663 Y80.899 E-.05132
+G1 X89.709 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 10/218
+; update layer progress
+M73 L10
+M991 S0 P9 ;notify layer change
+M106 S201.45
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.56 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z1.56
+G1 Z1.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F14594
+M204 S6000
+G3 X105.227 Y81.223 I-.032 J-.275 E.01918
+G1 X105.281 Y81.233 E.00113
+G3 X105.297 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X105.286 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X105.125 Y80.816 I-.085 J-.682 E.04179
+G3 X105.271 Y80.815 I.075 J.368 E.00284
+G3 X105.345 Y82.17 I-.07 J.684 E.03744
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07387
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05136
+G1 X104.682 Y81.948 E-.0513
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.05134
+G1 X104.521 Y81.581 E-.05133
+G1 X104.519 Y81.446 E-.0513
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05131
+G1 X104.665 Y81.073 E-.05136
+G1 X104.758 Y80.976 E-.0513
+G1 X104.869 Y80.899 E-.05132
+G1 X104.914 Y80.879 E-.0189
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.975 Y85.672 Z1.68 F42000
+G1 X86.321 Y95.882 Z1.68
+G1 Z1.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F14594
+M204 S6000
+G1 X86.004 Y95.852 E.00659
+G3 X84.161 Y93.791 I.398 J-2.211 E.06179
+G3 X84.157 Y92.127 I25.386 J-.897 E.03452
+G3 X86.383 Y89.901 I2.254 J.028 E.07229
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.029 J2.256 E.06962
+G3 X95.843 Y93.662 I-25.461 J.896 E.03452
+G3 X93.617 Y95.888 I-2.254 J-.028 E.07229
+G1 X86.383 Y95.888 E.15006
+G1 X86.381 Y95.888 E.00005
+M204 S10000
+G1 X86.359 Y95.461 F42000
+G1 F14594
+M204 S6000
+G1 X86.077 Y95.434 E.00588
+G3 X84.584 Y93.763 I.325 J-1.792 E.05006
+G3 X84.581 Y92.134 I24.866 J-.869 E.0338
+G3 X86.39 Y90.325 I1.828 J.019 E.05877
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.026 I-.02 J1.83 E.05652
+G3 X95.419 Y93.655 I-24.894 J.869 E.0338
+G3 X93.61 Y95.464 I-1.828 J-.019 E.05877
+G1 X86.419 Y95.464 E.14917
+M204 S250
+G1 X86.396 Y95.054 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X84.993 Y93.737 I.005 J-1.412 E.04083
+G3 X84.99 Y92.141 I24.322 J-.842 E.03077
+G3 X86.396 Y90.734 I1.417 J.011 E.0425
+G1 X93.604 Y90.734 E.13892
+G3 X95.007 Y92.052 I-.011 J1.418 E.04079
+G3 X95.01 Y93.648 I-24.357 J.842 E.03076
+G3 X93.604 Y95.054 I-1.417 J-.011 E.0425
+G1 X86.456 Y95.054 E.13777
+; WIPE_START
+M204 S6000
+G1 X86.147 Y95.031 E-.11794
+G1 X85.86 Y94.947 E-.11348
+G1 X85.617 Y94.817 E-.10505
+G1 X85.403 Y94.642 E-.10504
+G1 X85.228 Y94.428 E-.10507
+G1 X85.134 Y94.265 E-.07121
+G1 X85.038 Y94.011 E-.10346
+G1 X85.022 Y93.91 E-.03875
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.68 I-.573 J-1.074 P1  F42000
+G1 X75.017 Y99.251 Z1.68
+G1 Z1.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F14594
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.311 E.22746
+G3 X75.017 Y86.338 I.963 J-.01 E.03181
+G1 X105.034 Y86.34 E.62263
+G3 X105.957 Y87.312 I-.039 J.961 E.03075
+G1 X105.957 Y98.278 E.22746
+G3 X104.983 Y99.251 I-.963 J.01 E.03181
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F14594
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.304 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.041 Y85.915 E.62291
+G3 X106.381 Y87.304 I-.047 J1.386 E.04427
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G1 X74.651 Y100.048 E.00682
+G3 X73.21 Y98.291 I.359 J-1.764 E.04741
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.048 Y85.506 E.57912
+G3 X106.79 Y87.298 I-.056 J1.797 E.05326
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57699
+; WIPE_START
+M204 S6000
+G1 X74.651 Y100.048 E-.15714
+G1 X74.315 Y99.948 E-.13328
+G1 X74.006 Y99.783 E-.13331
+G1 X73.734 Y99.56 E-.13334
+G1 X73.512 Y99.289 E-.13337
+G1 X73.425 Y99.127 E-.06957
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 10 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer10 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.271 Y98.494
+G1 Z1.28
+G1 E.8 F1800
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F14594
+M204 S6000
+G1 X80.574 Y98.494 E.0352
+G2 X78.165 Y97.153 I-2.376 J1.434 E.05986
+G2 X77.255 Y97.645 I.098 J1.269 E.02211
+G1 X76.526 Y98.494 E.02321
+G1 X75.064 Y98.494 E.03031
+G3 X74.801 Y98.242 I-.043 J-.219 E.00884
+G1 X74.801 Y95.263 E.06181
+G2 X76.799 Y95.597 I1.334 J-1.836 E.04356
+G1 X77.255 Y95.227 E.01216
+G1 X78.165 Y94.167 E.02898
+G3 X80.441 Y93.634 I1.608 J1.738 E.05071
+G3 X81.261 Y94.428 I-1.784 J2.661 E.0238
+G1 X81.261 Y91.881 E.05282
+G1 X80.896 Y91.585 E.00974
+G1 X79.986 Y90.525 E.02898
+G2 X77.71 Y89.992 I-1.608 J1.738 E.05071
+G1 X77.255 Y90.362 E.01216
+G1 X76.344 Y91.422 E.02898
+G3 X74.802 Y92.067 I-1.693 J-1.883 E.03533
+G1 X74.803 Y87.981 E.08475
+G2 X76.799 Y88.314 I1.332 J-1.837 E.04351
+G2 X77.983 Y87.095 I-2.774 J-3.88 E.03543
+G1 X81.218 Y87.095 E.0671
+G2 X82.387 Y88.157 I2.995 J-2.125 E.033
+G3 X83.234 Y87.51 I2.851 J2.858 E.02216
+G1 X83.239 Y87.508 E.00012
+G3 X83.8 Y87.252 I1.392 J2.305 E.01281
+M204 S10000
+G1 X87.028 Y87.006 F42000
+G1 F14594
+M204 S6000
+G1 X85.331 Y87.005 E.0352
+G3 X85.703 Y86.701 I1.007 J.852 E.01001
+G1 X88.156 Y86.702 E.05088
+G3 X88.426 Y87.007 I-.71 J.898 E.0085
+G1 X92.61 Y87.01 E.08678
+G3 X92.985 Y86.702 I1.022 J.862 E.01014
+G1 X91.288 Y86.702 E.0352
+M204 S10000
+G1 X94.262 Y86.718 F42000
+; Slow Down Start
+; FEATURE: Floating vertical shell
+; LINE_WIDTH: 0.365752
+G1 F1800;_EXTRUDE_SET_SPEED
+M204 S6000
+G1 X105.004 Y86.718 E.17857
+G1 X105.316 Y86.822 E.00545
+G1 X105.524 Y87.071 E.00541
+G1 X105.578 Y87.337 E.0045
+G1 X105.575 Y98.303 E.1823
+G1 X105.465 Y98.615 E.0055
+G1 X105.213 Y98.818 E.00538
+G1 X104.958 Y98.872 E.00434
+G1 X96.019 Y98.872 E.14858
+; Slow Down End
+M204 S10000
+G1 X95.959 Y98.872 F42000
+; LINE_WIDTH: 0.388647
+G1 F14594
+M204 S6000
+G1 X95.768 Y98.722 E.00433
+; LINE_WIDTH: 0.419931
+G1 X95.744 Y98.49 E.00448
+G1 X95.85 Y98.255 E.00498
+G2 X96.878 Y97.716 I-2.666 J-6.332 E.02241
+G1 X97.348 Y97.3 E.0121
+G1 X97.672 Y96.91 E.00976
+G1 X98.013 Y96.323 E.01309
+G1 X98.21 Y95.802 E.01073
+G2 X98.33 Y94.736 I-3.89 J-.976 E.02073
+G1 X98.323 Y90.674 E.07829
+G2 X96.594 Y87.883 I-3.61 J.306 E.06567
+G1 X95.905 Y87.59 E.01443
+G2 X94.985 Y87.422 I-1.321 J4.635 E.01805
+G1 X85.131 Y87.415 E.1899
+G1 X84.468 Y87.482 E.01284
+G1 X83.846 Y87.669 E.01253
+G2 X82.87 Y88.266 I1.676 J3.835 E.02211
+G2 X81.737 Y90.217 I2.47 J2.74 E.0442
+G1 X81.67 Y90.876 E.01275
+G1 X81.67 Y94.91 E.07774
+G2 X82.682 Y97.348 I3.656 J-.088 E.05205
+G2 X84.105 Y98.223 I2.757 J-2.89 E.03244
+G1 X84.225 Y98.377 E.00378
+G1 X84.255 Y98.499 E.00241
+G1 X84.231 Y98.722 E.00432
+; LINE_WIDTH: 0.391036
+G1 X84.07 Y98.871 E.00392
+G1 X84.571 Y98.842 E.00898
+; LINE_WIDTH: 0.419992
+G1 X95.42 Y98.842 E.20912
+; LINE_WIDTH: 0.406432
+G1 X95.66 Y98.855 E.00447
+; LINE_WIDTH: 0.379312
+G1 X95.9 Y98.869 E.00415
+M204 S10000
+G1 X95.37 Y98.447 F42000
+; LINE_WIDTH: 0.419992
+G1 F14594
+M204 S6000
+G1 X95.446 Y98.15 E.00592
+G1 X95.686 Y97.88 E.00695
+G2 X96.722 Y97.346 I-1.69 J-4.552 E.02253
+G1 X97.17 Y96.927 E.01182
+G2 X97.702 Y96.07 I-3.403 J-2.706 E.01948
+G1 X97.89 Y95.392 E.01355
+G1 X97.936 Y94.877 E.00998
+G1 X97.929 Y90.699 E.08051
+G1 X97.808 Y90.068 E.0124
+G1 X97.591 Y89.506 E.01161
+G1 X97.265 Y88.991 E.01175
+G1 X96.884 Y88.576 E.01086
+G1 X96.39 Y88.222 E.01172
+G1 X95.769 Y87.96 E.01299
+G2 X94.984 Y87.816 I-1.257 J4.65 E.01539
+G1 X85.151 Y87.809 E.18954
+G1 X84.546 Y87.87 E.01173
+G1 X83.99 Y88.037 E.01119
+G2 X82.477 Y89.355 I1.259 J2.973 E.03932
+G2 X82.064 Y90.896 I3.49 J1.76 E.03095
+G1 X82.064 Y94.897 E.07712
+G1 X82.133 Y95.525 E.01219
+G1 X82.298 Y96.067 E.01092
+G1 X82.592 Y96.616 E.01199
+G1 X82.966 Y97.073 E.01139
+G2 X84.352 Y97.914 I3.173 J-3.664 E.0314
+G1 X84.559 Y98.166 E.00628
+G1 X84.628 Y98.447 E.00558
+G1 X95.31 Y98.447 E.20591
+M204 S10000
+G1 X95.086 Y98.053 F42000
+; LINE_WIDTH: 0.420157
+G1 F14594
+M204 S6000
+G1 X95.196 Y97.813 E.00511
+G1 X95.474 Y97.548 E.0074
+G1 X96.109 Y97.259 E.01345
+G1 X96.507 Y97.007 E.00909
+G1 X96.874 Y96.664 E.00969
+G2 X97.504 Y95.315 I-2.324 J-1.905 E.029
+G1 X97.54 Y94.877 E.00847
+; LINE_WIDTH: 0.44782
+G1 X97.515 Y94.682 E.00406
+; LINE_WIDTH: 0.497855
+G1 X97.49 Y94.487 E.00454
+G1 X97.512 Y93.827 E.01524
+; LINE_WIDTH: 0.47534
+G2 X97.498 Y91.541 I-49.527 J-.829 E.05026
+; LINE_WIDTH: 0.477127
+G1 X97.516 Y91.146 E.00873
+; LINE_WIDTH: 0.422818
+G1 X97.535 Y90.75 E.00768
+G1 X97.43 Y90.179 E.01127
+G1 X97.234 Y89.671 E.01058
+G1 X96.943 Y89.218 E.01044
+G1 X96.585 Y88.847 E.01001
+G1 X96.15 Y88.543 E.01032
+G1 X95.633 Y88.33 E.01085
+G1 X95.047 Y88.216 E.01159
+G1 X94.427 Y88.22 E.01204
+; LINE_WIDTH: 0.469868
+G3 X93.627 Y88.234 I-.605 J-11.532 E.01737
+G1 X86.372 Y88.23 E.15754
+; LINE_WIDTH: 0.485947
+G1 X85.786 Y88.243 E.01319
+; LINE_WIDTH: 0.479542
+G1 X85.488 Y88.223 E.00664
+; LINE_WIDTH: 0.421291
+G1 X85.189 Y88.203 E.00579
+G1 X84.663 Y88.255 E.01021
+G1 X84.17 Y88.395 E.00991
+G1 X83.774 Y88.589 E.00854
+G1 X83.351 Y88.899 E.01013
+G2 X82.459 Y90.915 I1.919 J2.055 E.04382
+; LINE_WIDTH: 0.439702
+G1 X82.478 Y91.228 E.00635
+; LINE_WIDTH: 0.476843
+G3 X82.485 Y92.116 I-5.185 J.483 E.01961
+G1 X82.485 Y93.669 E.03424
+; LINE_WIDTH: 0.488805
+G1 X82.509 Y94.457 E.01785
+G1 X82.463 Y94.895 E.00997
+; LINE_WIDTH: 0.420147
+G1 X82.521 Y95.454 E.01083
+G2 X83.251 Y96.798 I2.985 J-.75 E.0298
+G2 X84.527 Y97.556 I2.761 J-3.193 E.02878
+G1 X84.832 Y97.862 E.00833
+G1 X84.916 Y98.053 E.00403
+G1 X95.026 Y98.053 E.19496
+M204 S10000
+G1 X93.877 Y96.265 F42000
+; LINE_WIDTH: 0.419992
+G1 F14594
+M204 S6000
+G1 X93.625 Y96.297 E.0049
+G1 X86.373 Y96.297 E.13977
+G1 X85.91 Y96.251 E.00897
+G1 X85.252 Y96.036 E.01335
+G1 X84.8 Y95.761 E.0102
+G1 X84.418 Y95.408 E.01002
+G1 X84.119 Y94.998 E.00978
+G1 X83.876 Y94.432 E.01187
+G1 X83.749 Y93.696 E.01441
+G1 X83.747 Y92.116 E.03044
+G1 X83.799 Y91.617 E.00967
+G1 X83.895 Y91.27 E.00695
+G1 X84.112 Y90.801 E.00996
+G1 X84.411 Y90.387 E.00984
+G3 X85.241 Y89.763 I2.184 J2.04 E.02012
+G1 X85.858 Y89.547 E.01259
+G1 X86.372 Y89.492 E.00997
+G1 X93.627 Y89.492 E.13985
+G1 X94.09 Y89.538 E.00896
+G1 X94.749 Y89.753 E.01336
+G3 X95.366 Y90.165 I-5 J8.176 E.0143
+G1 X95.71 Y90.535 E.00973
+G1 X95.981 Y90.972 E.00992
+G1 X96.197 Y91.605 E.01288
+G1 X96.253 Y92.116 E.00992
+G1 X96.248 Y93.825 E.03293
+G1 X96.16 Y94.344 E.01015
+G1 X95.973 Y94.832 E.01007
+G1 X95.609 Y95.376 E.01262
+G1 X95.233 Y95.735 E.01002
+G1 X94.902 Y95.955 E.00766
+G1 X94.315 Y96.198 E.01224
+G1 X93.936 Y96.256 E.00739
+M204 S10000
+G1 X93.93 Y96.655 F42000
+; LINE_WIDTH: 0.419992
+G1 F14594
+M204 S6000
+G1 X93.625 Y96.691 E.00593
+G1 X86.373 Y96.691 E.13977
+G1 X85.788 Y96.625 E.01135
+G1 X85.13 Y96.41 E.01335
+G1 X84.664 Y96.141 E.01037
+G3 X83.748 Y95.147 I1.88 J-2.651 E.02625
+G3 X83.442 Y94.364 I4.259 J-2.115 E.01623
+G3 X83.353 Y93.669 I5.08 J-1.004 E.01351
+G1 X83.353 Y92.116 E.02993
+G3 X83.791 Y90.571 I3.406 J.132 E.03125
+G1 X84.133 Y90.108 E.0111
+G1 X84.576 Y89.714 E.01143
+G1 X85.067 Y89.41 E.01113
+G1 X85.744 Y89.169 E.01385
+G3 X86.372 Y89.097 I.828 J4.464 E.01219
+G1 X93.627 Y89.097 E.13985
+G1 X94.212 Y89.163 E.01134
+G1 X94.867 Y89.377 E.01328
+G3 X95.654 Y89.895 I-2.513 J4.674 E.01818
+G1 X96.032 Y90.306 E.01076
+G1 X96.304 Y90.742 E.00991
+G1 X96.57 Y91.478 E.01508
+G3 X96.647 Y92.118 I-4.064 J.812 E.01244
+G1 X96.642 Y93.826 E.03291
+G1 X96.558 Y94.373 E.01066
+G1 X96.366 Y94.915 E.01109
+G1 X95.937 Y95.595 E.01551
+G1 X95.547 Y95.982 E.01058
+G1 X95.078 Y96.309 E.01103
+G1 X94.466 Y96.563 E.01276
+G1 X93.989 Y96.645 E.00933
+M204 S10000
+G1 X93.983 Y97.046 F42000
+; LINE_WIDTH: 0.420206
+G1 F14594
+M204 S6000
+M73 P17 R12
+G1 X93.625 Y97.086 E.00696
+G1 X86.373 Y97.086 E.13985
+G1 X85.665 Y97 E.01375
+G1 X85.007 Y96.785 E.01335
+G1 X84.456 Y96.476 E.01219
+G1 X83.969 Y96.068 E.01225
+G1 X83.743 Y95.827 E.00638
+G1 X83.398 Y95.328 E.01168
+G1 X83.144 Y94.736 E.01243
+; LINE_WIDTH: 0.451107
+G1 X83.073 Y94.58 E.00357
+; LINE_WIDTH: 0.482351
+G1 X83.002 Y94.424 E.00383
+G3 X82.932 Y93.669 I6.888 J-1.013 E.01693
+G1 X82.932 Y92.116 E.03466
+G1 X82.97 Y91.565 E.01233
+; LINE_WIDTH: 0.479122
+G1 X83.054 Y91.304 E.00609
+; LINE_WIDTH: 0.421707
+G3 X83.374 Y90.509 I3.986 J1.143 E.01662
+G1 X83.749 Y89.953 E.01298
+G1 X84.099 Y89.586 E.0098
+G1 X84.578 Y89.228 E.01159
+G1 X85.042 Y88.983 E.01015
+; LINE_WIDTH: 0.433217
+G1 X85.332 Y88.875 E.00618
+; LINE_WIDTH: 0.459667
+G1 X85.623 Y88.766 E.00658
+; LINE_WIDTH: 0.472988
+G1 X85.81 Y88.716 E.00423
+G1 X86.372 Y88.677 E.01232
+G1 X93.627 Y88.678 E.15864
+G1 X94.121 Y88.709 E.01083
+; LINE_WIDTH: 0.47289
+G1 X94.493 Y88.835 E.00858
+; LINE_WIDTH: 0.424013
+G3 X95.77 Y89.48 I-1.023 J3.614 E.02803
+G3 X96.697 Y90.642 I-2.457 J2.911 E.02914
+G1 X96.953 Y91.348 E.01461
+; LINE_WIDTH: 0.45484
+G1 X96.991 Y91.456 E.00241
+; LINE_WIDTH: 0.475577
+G1 X97.029 Y91.565 E.00253
+G3 X97.067 Y92.12 I-4.005 J.552 E.01223
+G1 X97.064 Y93.827 E.03755
+; LINE_WIDTH: 0.498087
+G1 X96.997 Y94.446 E.01438
+; LINE_WIDTH: 0.504751
+G1 X96.91 Y94.649 E.00516
+; LINE_WIDTH: 0.470847
+G1 X96.823 Y94.851 E.0048
+; LINE_WIDTH: 0.420998
+G1 X96.736 Y95.054 E.00426
+G1 X96.265 Y95.814 E.01729
+G1 X95.816 Y96.269 E.01234
+G1 X95.374 Y96.593 E.01058
+G1 X94.617 Y96.927 E.01599
+G1 X94.042 Y97.035 E.01131
+M204 S10000
+G1 X94.051 Y97.547 F42000
+; LINE_WIDTH: 0.601549
+G1 F14594
+M204 S6000
+G1 X93.625 Y97.569 E.01203
+G1 X86.373 Y97.569 E.20414
+G1 X85.896 Y97.55 E.01345
+M204 S10000
+G1 X84.768 Y97.176 F42000
+; LINE_WIDTH: 0.547617
+G1 F14594
+M204 S6000
+G1 X84.484 Y97.031 E.00812
+; LINE_WIDTH: 0.579787
+G1 X84.201 Y96.885 E.00862
+; LINE_WIDTH: 0.628661
+G1 X83.809 Y96.613 E.01406
+G1 X83.406 Y96.204 E.01694
+; LINE_WIDTH: 0.611037
+G1 X83.251 Y95.967 E.00809
+; LINE_WIDTH: 0.583607
+G1 X83.097 Y95.731 E.00771
+; LINE_WIDTH: 0.551347
+G1 X83.033 Y95.581 E.00418
+; LINE_WIDTH: 0.514257
+G1 X82.969 Y95.431 E.00389
+M204 S10000
+G1 X84.768 Y97.176 F42000
+; LINE_WIDTH: 0.510466
+G1 F14594
+M204 S6000
+G1 X84.883 Y97.313 E.00425
+; LINE_WIDTH: 0.468332
+G1 X84.998 Y97.45 E.00388
+; LINE_WIDTH: 0.420839
+G1 X85.18 Y97.666 E.00546
+G1 X85.498 Y97.649 E.00614
+; LINE_WIDTH: 0.460831
+G1 X85.565 Y97.629 E.0015
+; LINE_WIDTH: 0.501089
+G1 X85.633 Y97.608 E.00164
+; LINE_WIDTH: 0.541347
+G1 X85.701 Y97.588 E.00178
+; LINE_WIDTH: 0.581605
+G1 X85.768 Y97.568 E.00192
+; LINE_WIDTH: 0.621863
+G1 X85.836 Y97.548 E.00206
+; LINE_WIDTH: 0.618306
+G1 X85.734 Y97.498 E.00329
+; LINE_WIDTH: 0.570934
+G1 X85.632 Y97.447 E.00303
+; LINE_WIDTH: 0.523562
+G1 X85.53 Y97.397 E.00276
+; LINE_WIDTH: 0.47619
+G1 X85.428 Y97.347 E.0025
+; LINE_WIDTH: 0.428818
+G1 X85.327 Y97.296 E.00224
+; LINE_WIDTH: 0.426199
+G1 X85.16 Y97.261 E.00334
+; LINE_WIDTH: 0.468332
+G1 X84.993 Y97.225 E.00369
+; LINE_WIDTH: 0.510466
+G1 X84.826 Y97.189 E.00404
+M204 S10000
+G1 X82.932 Y90.457 F42000
+; LINE_WIDTH: 0.505752
+G1 F14594
+M204 S6000
+G1 X83.024 Y90.24 E.00554
+; LINE_WIDTH: 0.555712
+G1 X83.116 Y90.022 E.00611
+; LINE_WIDTH: 0.595477
+G1 X83.308 Y89.747 E.00934
+; LINE_WIDTH: 0.627624
+G1 X83.499 Y89.472 E.00987
+G1 X83.934 Y89.081 E.01721
+; LINE_WIDTH: 0.605377
+G1 X84.127 Y88.96 E.00646
+; LINE_WIDTH: 0.579387
+G1 X84.32 Y88.838 E.00617
+; LINE_WIDTH: 0.544347
+G1 X84.485 Y88.769 E.00455
+; LINE_WIDTH: 0.500257
+G1 X84.651 Y88.699 E.00416
+; WIPE_START
+G1 F16800
+G1 X84.485 Y88.769 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.68 I-1.216 J-.05 P1  F42000
+G1 X84.07 Y98.871 Z1.68
+G1 Z1.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.365752
+G1 F14594
+M204 S6000
+G1 X84.027 Y98.872 E.00071
+; Slow Down Start
+G1 F1800;_EXTRUDE_SET_SPEED
+G1 X75.051 Y98.872 E.14921
+G1 X74.741 Y98.797 E.0053
+G1 X74.522 Y98.605 E.00485
+G1 X74.422 Y98.252 E.00609
+G1 X74.425 Y87.286 E.1823
+G1 X74.518 Y86.996 E.00505
+G1 X74.75 Y86.791 E.00515
+G1 X75.035 Y86.717 E.00489
+G1 X84.92 Y86.717 E.16432
+; Slow Down End
+; WIPE_START
+G1 X82.92 Y86.717 E-.76
+; WIPE_END
+G1 E-.04
+M204 S10000
+G17
+G3 Z1.68 I-.824 J.896 P1  F42000
+G1 X94.832 Y97.672 Z1.68
+G1 Z1.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.418799
+G1 F14594
+M204 S6000
+G1 X94.965 Y97.503 E.00413
+; LINE_WIDTH: 0.467212
+G1 X95.097 Y97.333 E.00464
+; LINE_WIDTH: 0.515626
+G1 X95.23 Y97.164 E.00515
+G1 X95.045 Y97.214 E.00459
+; LINE_WIDTH: 0.467212
+G1 X94.86 Y97.263 E.00414
+; LINE_WIDTH: 0.418799
+G1 X94.675 Y97.312 E.00368
+; LINE_WIDTH: 0.380412
+G1 X94.422 Y97.357 E.00444
+; LINE_WIDTH: 0.389337
+G1 X94.36 Y97.389 E.00124
+; LINE_WIDTH: 0.435547
+G1 X94.299 Y97.42 E.00139
+; LINE_WIDTH: 0.481757
+G1 X94.237 Y97.452 E.00155
+; LINE_WIDTH: 0.527967
+G1 X94.175 Y97.484 E.00171
+; LINE_WIDTH: 0.574177
+G1 X94.113 Y97.516 E.00186
+; LINE_WIDTH: 0.620387
+G1 X94.051 Y97.547 E.00202
+; LINE_WIDTH: 0.620347
+G1 X94.127 Y97.57 E.00229
+; LINE_WIDTH: 0.574057
+G1 X94.202 Y97.594 E.00211
+; LINE_WIDTH: 0.527767
+G1 X94.277 Y97.617 E.00193
+; LINE_WIDTH: 0.481477
+G1 X94.352 Y97.64 E.00175
+; LINE_WIDTH: 0.435187
+G1 X94.428 Y97.663 E.00158
+; LINE_WIDTH: 0.382146
+G1 X94.503 Y97.686 E.00137
+G1 X94.772 Y97.674 E.00469
+M204 S10000
+G1 X97.114 Y95.196 F42000
+; LINE_WIDTH: 0.465029
+G1 F14594
+M204 S6000
+G1 X97.043 Y95.37 E.00404
+; LINE_WIDTH: 0.512862
+G1 X96.972 Y95.545 E.00448
+; LINE_WIDTH: 0.560696
+G1 X96.901 Y95.719 E.00492
+; LINE_WIDTH: 0.604882
+G1 X96.638 Y96.147 E.01424
+; LINE_WIDTH: 0.633632
+G1 X96.162 Y96.638 E.02033
+; LINE_WIDTH: 0.617177
+G1 X95.895 Y96.805 E.00911
+; LINE_WIDTH: 0.567307
+G1 X95.627 Y96.971 E.00834
+; LINE_WIDTH: 0.541102
+G1 X95.284 Y97.138 E.00962
+; WIPE_START
+G1 F16800
+G1 X95.627 Y96.971 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.68 I1.213 J-.093 P1  F42000
+G1 X94.984 Y88.596 Z1.68
+G1 Z1.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.422109
+G1 F14594
+M204 S6000
+G1 X95.149 Y88.647 E.00335
+; LINE_WIDTH: 0.462862
+G1 X95.314 Y88.698 E.00369
+; LINE_WIDTH: 0.503616
+G1 X95.479 Y88.749 E.00404
+; LINE_WIDTH: 0.540972
+G1 X95.629 Y88.829 E.00428
+; LINE_WIDTH: 0.574932
+G1 X95.779 Y88.908 E.00456
+; LINE_WIDTH: 0.608892
+G1 X95.928 Y88.988 E.00484
+; LINE_WIDTH: 0.629865
+G1 X96.311 Y89.28 E.01421
+G1 X96.752 Y89.795 E.02004
+; LINE_WIDTH: 0.586022
+G1 X96.898 Y90.062 E.00833
+M204 S10000
+G1 X98.135 Y87.096 F42000
+; FEATURE: Sparse infill
+; LINE_WIDTH: 0.45
+G1 F14594
+M204 S6000
+G1 X99.832 Y87.096 E.0352
+G1 X99.104 Y87.944 E.02317
+G3 X97.847 Y88.422 I-1.087 J-.965 E.029
+G3 X98.733 Y90.794 I-2.955 J2.455 E.05352
+G3 X99.559 Y89.992 I2.629 J1.882 E.02402
+G3 X101.835 Y90.525 I.668 J2.271 E.05071
+G1 X102.745 Y91.585 E.02898
+G1 X103.201 Y91.955 E.01216
+G2 X105.198 Y91.621 I.664 J-2.17 E.04355
+G1 X105.199 Y88.425 E.0663
+G3 X103.069 Y87.097 I.241 J-2.759 E.05405
+G1 X104.766 Y87.097 E.0352
+M204 S10000
+G1 X98.738 Y93.885 F42000
+G1 F14594
+M204 S6000
+G3 X98.673 Y95.577 I-7.644 J.555 E.03521
+G1 X99.104 Y95.227 E.01152
+G1 X100.014 Y94.167 E.02898
+G3 X102.29 Y93.634 I1.608 J1.738 E.05071
+G1 X102.745 Y94.003 E.01216
+G1 X103.656 Y95.064 E.02898
+G2 X105.197 Y95.708 I1.693 J-1.883 E.03532
+G1 X105.197 Y98.282 E.05339
+G3 X104.948 Y98.494 I-.217 J-.003 E.00767
+G1 X102.424 Y98.494 E.05236
+G2 X100.014 Y97.153 I-2.376 J1.434 E.05986
+G2 X99.104 Y97.645 I.098 J1.269 E.02211
+G1 X98.375 Y98.494 E.02321
+G1 X96.678 Y98.494 E.0352
+; OBJECT_ID: 88
+; WIPE_START
+G1 F24749.689
+G1 X98.375 Y98.494 E-.64486
+G1 X98.572 Y98.264 E-.11514
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.68 I1.081 J-.56 P1  F42000
+G1 X90.033 Y81.775 Z1.68
+G1 Z1.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+G1 F14594
+M204 S6000
+G3 X90.022 Y81.223 I-.032 J-.275 E.01918
+G1 X90.075 Y81.233 E.00113
+G3 X90.091 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X90.081 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.919 Y80.816 I-.085 J-.682 E.04179
+G3 X90.065 Y80.815 I.075 J.368 E.00284
+G3 X90.14 Y82.17 I-.07 J.684 E.03744
+M106 S255
+; CHANGE_LAYER
+; Z_HEIGHT: 1.4
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07387
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05136
+G1 X89.476 Y81.948 E-.0513
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.05134
+G1 X89.316 Y81.581 E-.05133
+G1 X89.313 Y81.446 E-.0513
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.073 E-.05136
+G1 X89.553 Y80.976 E-.0513
+G1 X89.663 Y80.899 E-.05132
+G1 X89.709 Y80.879 E-.01891
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M106 S193.8
+M625
+; layer num/total_layer_count: 11/218
+; update layer progress
+M73 L11
+M991 S0 P10 ;notify layer change
+M106 S255
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M106 S255
+M204 S10000
+G17
+G3 Z1.68 I-.07 J1.215 P1  F42000
+G1 X105.224 Y81.772 Z1.68
+G1 Z1.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G1 X105.184 Y81.776 E.00083
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.291 Y81.763 I-.075 J.267 E.01468
+G1 X105.283 Y81.764 E.00017
+M204 S250
+G1 X105.286 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X105.125 Y80.816 I-.088 J-.681 E.04189
+G3 X105.28 Y80.817 I.075 J.391 E.00302
+G3 X105.345 Y82.17 I-.082 J.682 E.03716
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07385
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05133
+G1 X104.682 Y81.948 E-.05132
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05129
+G1 X104.521 Y81.581 E-.05135
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05131
+G1 X104.664 Y81.073 E-.05133
+G1 X104.758 Y80.976 E-.05132
+G1 X104.869 Y80.899 E-.05134
+G1 X104.914 Y80.879 E-.0189
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M106 S193.8
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+M204 S10000
+G1 X98.973 Y85.67 Z1.8 F42000
+G1 X86.313 Y95.881 Z1.8
+G1 Z1.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G1 X85.962 Y95.845 E.00731
+G3 X84.161 Y93.791 I.44 J-2.203 E.0609
+G3 X84.157 Y92.127 I25.373 J-.897 E.03452
+G3 X86.383 Y89.901 I2.245 J.019 E.07237
+M73 P17 R11
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.019 J2.246 E.06969
+G3 X95.843 Y93.662 I-25.375 J.897 E.03452
+G3 X93.617 Y95.888 I-2.255 J-.028 E.07229
+G1 X86.383 Y95.888 E.15006
+G1 X86.372 Y95.887 E.00021
+M204 S10000
+G1 X86.356 Y95.46 F42000
+G1 F21000
+M204 S6000
+G1 X86.045 Y95.428 E.00648
+G3 X84.584 Y93.763 I.357 J-1.786 E.04938
+G3 X84.581 Y92.134 I24.851 J-.869 E.0338
+G3 X86.39 Y90.325 I1.821 J.012 E.05883
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.026 I-.012 J1.822 E.05658
+G3 X95.419 Y93.655 I-24.851 J.869 E.0338
+G3 X93.61 Y95.464 I-1.828 J-.019 E.05877
+G1 X86.415 Y95.464 E.14924
+M204 S250
+G1 X86.396 Y95.054 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X84.993 Y93.737 I.005 J-1.412 E.04083
+G3 X84.99 Y92.141 I24.311 J-.842 E.03077
+G3 X86.396 Y90.734 I1.412 J.005 E.04254
+G1 X93.604 Y90.734 E.13892
+G3 X95.007 Y92.052 I-.005 J1.412 E.04083
+G3 X95.01 Y93.648 I-24.311 J.842 E.03077
+G3 X93.604 Y95.054 I-1.417 J-.011 E.0425
+G1 X86.456 Y95.054 E.13777
+; WIPE_START
+M204 S6000
+G1 X86.125 Y95.027 E-.12643
+G1 X85.86 Y94.947 E-.10502
+G1 X85.617 Y94.817 E-.10505
+G1 X85.403 Y94.642 E-.10503
+G1 X85.227 Y94.428 E-.10509
+G1 X85.135 Y94.268 E-.07007
+G1 X85.038 Y94.009 E-.10503
+G1 X85.022 Y93.91 E-.03828
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.8 I-.573 J-1.074 P1  F42000
+G1 X75.017 Y99.251 Z1.8
+G1 Z1.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X105.026 Y86.339 E.62246
+G3 X105.957 Y87.312 I-.031 J.961 E.03092
+G1 X105.957 Y98.278 E.22746
+G3 X104.983 Y99.251 I-.963 J.01 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F21000
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.304 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.033 Y85.915 E.62275
+G3 X106.381 Y87.305 I-.039 J1.387 E.04444
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X73.21 Y98.291 I.006 J-1.8 E.05425
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.04 Y85.506 E.57897
+G3 X106.79 Y87.298 I-.048 J1.798 E.05342
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57698
+; WIPE_START
+M204 S6000
+G1 X74.651 Y100.05 E-.15731
+G1 X74.315 Y99.948 E-.13333
+G1 X74.006 Y99.783 E-.13335
+G1 X73.734 Y99.56 E-.13334
+G1 X73.512 Y99.289 E-.13332
+G1 X73.426 Y99.128 E-.06935
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M106 S193.8
+M625
+; object ids of layer 11 start: 66,77,88
+M624 BwAAAAAAAAA=
+M106 S255
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer11 end: 66,77,88
+M106 S193.8
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+G1 X83.836 Y99.078
+G1 Z1.4
+G1 E.8 F1800
+; FEATURE: Bridge
+; LINE_WIDTH: 0.4002
+; LAYER_HEIGHT: 0.4
+
+M204 S6000
+G1 X84.471 Y98.292 E.05179
+G1 X84.299 Y98.021 E.01647
+G1 X84.156 Y97.967 E.00786
+G1 X83.42 Y98.875 E.05991
+G1 X82.841 Y98.875 E.02968
+G1 X83.72 Y97.787 E.07167
+G3 X83.332 Y97.553 I1.001 J-2.089 E.02325
+G1 X82.262 Y98.875 E.0872
+G1 X81.683 Y98.875 E.02968
+G1 X82.977 Y97.276 E.10547
+G1 X82.94 Y97.24 E.00266
+G3 X82.663 Y96.949 I1.993 J-2.177 E.02061
+G1 X81.104 Y98.875 E.12704
+G1 X80.524 Y98.875 E.02968
+G1 X82.394 Y96.566 E.15229
+G3 X82.168 Y96.129 I3.948 J-2.319 E.0252
+G1 X79.945 Y98.875 E.18108
+G1 X79.366 Y98.875 E.02968
+G1 X82.006 Y95.614 E.21503
+G3 X81.929 Y94.993 I2.91 J-.674 E.03212
+G1 X78.787 Y98.875 E.25597
+G1 X78.208 Y98.875 E.02968
+G1 X81.923 Y94.285 E.30267
+G1 X81.923 Y93.569 E.03668
+G1 X77.629 Y98.875 E.34985
+G1 X77.049 Y98.875 E.02968
+G1 X81.923 Y92.854 E.39704
+G1 X81.923 Y92.138 E.03668
+G1 X76.47 Y98.875 E.44422
+M73 P18 R11
+G1 X75.891 Y98.875 E.02968
+G1 X81.923 Y91.422 E.4914
+G3 X81.936 Y90.691 I5.475 J-.269 E.03753
+G1 X75.312 Y98.875 E.53964
+G3 X74.773 Y98.826 I-.136 J-1.481 E.0279
+G1 X84.575 Y86.714 E.79858
+G1 X83.996 Y86.714 E.02968
+G1 X74.46 Y98.496 E.77685
+G1 X74.448 Y98.457 E.00209
+G3 X74.419 Y97.831 I2.099 J-.411 E.03222
+G1 X83.417 Y86.714 E.73302
+G1 X82.838 Y86.714 E.02968
+G1 X74.419 Y97.116 E.68582
+G1 X74.42 Y96.4 E.03669
+G1 X82.259 Y86.714 E.63863
+G1 X81.68 Y86.714 E.02968
+G1 X74.42 Y95.684 E.59143
+G1 X74.42 Y94.968 E.03669
+G1 X81.1 Y86.714 E.54424
+G1 X80.521 Y86.714 E.02968
+G1 X74.42 Y94.252 E.49705
+G1 X74.42 Y93.537 E.03669
+G1 X79.942 Y86.714 E.44985
+G1 X79.363 Y86.714 E.02968
+G1 X74.42 Y92.821 E.40266
+G1 X74.421 Y92.105 E.03669
+G1 X78.784 Y86.714 E.35546
+G1 X78.205 Y86.714 E.02968
+G1 X74.421 Y91.389 E.30827
+G1 X74.421 Y90.673 E.03669
+G1 X77.626 Y86.714 E.26107
+G1 X77.046 Y86.714 E.02968
+G1 X74.421 Y89.957 E.21388
+G1 X74.421 Y89.242 E.03669
+G1 X76.467 Y86.714 E.16668
+G1 X75.888 Y86.714 E.02968
+G1 X74.421 Y88.526 E.11949
+G1 X74.422 Y87.81 E.03669
+G1 X75.473 Y86.511 E.08564
+M106 S193.8
+M106 S255
+M204 S10000
+G1 X84.049 Y88.08 F42000
+G1 F1800
+M204 S6000
+G1 X85.125 Y86.751 E.08764
+M106 S193.8
+M106 S255
+M204 S10000
+G1 X93.43 Y87.825 F42000
+; FEATURE: Floating vertical shell
+; LINE_WIDTH: 0.419992
+; LAYER_HEIGHT: 0.12
+G1 F16800
+M204 S6000
+G2 X93.613 Y88.095 I.202 J.06 E.00719
+G1 X94.962 Y88.096 E.02601
+G1 X95.397 Y88.156 E.00847
+G1 X95.942 Y88.322 E.01098
+G1 X96.297 Y88.513 E.00777
+G1 X96.765 Y88.856 E.01119
+G1 X97.123 Y89.264 E.01046
+G1 X97.396 Y89.738 E.01054
+G1 X97.579 Y90.275 E.01094
+G1 X97.648 Y90.758 E.0094
+G3 X97.653 Y94.919 I-1046.537 J3.32 E.0802
+G1 X97.56 Y95.615 E.01354
+G1 X97.308 Y96.235 E.01291
+G1 X96.997 Y96.696 E.01072
+G1 X96.632 Y97.047 E.00975
+G1 X96.157 Y97.37 E.01108
+G1 X95.494 Y97.631 E.01374
+G1 X95.401 Y97.706 E.0023
+G1 X95.087 Y98.185 E.01104
+G1 X95.052 Y98.314 E.00257
+G1 X95.095 Y98.842 E.0102
+G1 X84.905 Y98.842 E.19642
+G1 X84.947 Y98.328 E.00993
+G1 X84.92 Y98.211 E.00231
+G1 X84.616 Y97.731 E.01095
+G1 X84.414 Y97.612 E.00451
+G1 X83.827 Y97.363 E.0123
+G1 X83.384 Y97.062 E.01031
+G3 X82.536 Y95.875 I2.039 J-2.354 E.02839
+G1 X82.429 Y95.518 E.00718
+G1 X82.345 Y94.89 E.01221
+G1 X82.345 Y90.902 E.07689
+G1 X82.399 Y90.354 E.01061
+G1 X82.559 Y89.823 E.0107
+G1 X82.821 Y89.345 E.01049
+G1 X83.18 Y88.916 E.01079
+G1 X83.585 Y88.575 E.0102
+G1 X84.086 Y88.299 E.01102
+G1 X84.577 Y88.135 E.00998
+G1 X84.688 Y88.04 E.00281
+G1 X85.125 Y87.217 E.01796
+; Slow Down Start
+G1 F1800;_EXTRUDE_SET_SPEED
+G1 X85.375 Y86.748 E.01025
+G1 X93.859 Y86.748 E.16354
+G1 X93.67 Y87.223 E.00986
+; Slow Down End
+G1 F16800
+G1 X93.452 Y87.77 E.01134
+M204 S10000
+G1 X93.064 Y87.679 F42000
+G1 F16800
+M204 S6000
+G1 X93.028 Y87.982 E.00587
+; LINE_WIDTH: 0.437796
+G1 X93.079 Y88.089 E.00239
+; LINE_WIDTH: 0.473402
+G1 X93.13 Y88.195 E.00259
+; LINE_WIDTH: 0.481917
+G1 X93.181 Y88.302 E.00264
+G1 X93.613 Y88.543 E.01102
+; LINE_WIDTH: 0.549662
+G1 X93.746 Y88.545 E.0034
+; LINE_WIDTH: 0.512376
+G1 X93.952 Y88.552 E.00492
+; LINE_WIDTH: 0.475422
+G1 X94.159 Y88.559 E.00455
+; LINE_WIDTH: 0.468735
+G2 X94.58 Y88.49 I.123 J-.569 E.00946
+; LINE_WIDTH: 0.419992
+G3 X96.099 Y88.854 I.189 J2.566 E.03059
+G1 X96.513 Y89.16 E.00993
+G3 X96.999 Y89.831 I-1.667 J1.718 E.01607
+G1 X97.202 Y90.39 E.01146
+G1 X97.254 Y90.759 E.00717
+; LINE_WIDTH: 0.442026
+G1 X97.254 Y90.81 E.00105
+; LINE_WIDTH: 0.486092
+G1 X97.254 Y90.862 E.00116
+; LINE_WIDTH: 0.477791
+G1 X97.189 Y91.571 E.01574
+; LINE_WIDTH: 0.549478
+G3 X97.203 Y93.811 I-47.228 J1.422 E.05735
+; LINE_WIDTH: 0.512451
+G1 X97.196 Y94.018 E.00495
+; LINE_WIDTH: 0.475467
+G1 X97.189 Y94.226 E.00457
+; LINE_WIDTH: 0.468086
+G2 X97.26 Y94.621 I.464 J.12 E.00896
+; LINE_WIDTH: 0.419992
+G1 X97.26 Y94.892 E.00522
+G1 X97.18 Y95.501 E.01183
+G1 X96.979 Y95.996 E.0103
+G1 X96.726 Y96.392 E.00906
+G1 X96.359 Y96.763 E.01007
+G1 X95.912 Y97.043 E.01017
+G1 X95.304 Y97.284 E.01259
+G1 X95.071 Y97.49 E.006
+G1 X94.736 Y98.003 E.01181
+G1 X94.667 Y98.448 E.00867
+G1 X85.333 Y98.448 E.17993
+G1 X85.34 Y98.36 E.00169
+G1 X85.25 Y97.996 E.00724
+G1 X84.949 Y97.52 E.01085
+G1 X84.75 Y97.328 E.00533
+G2 X84.068 Y97.042 I-11.659 J26.846 E.01425
+G1 X83.613 Y96.741 E.01052
+G1 X83.308 Y96.434 E.00834
+G1 X83.01 Y95.983 E.01041
+G1 X82.813 Y95.429 E.01133
+; LINE_WIDTH: 0.442452
+G1 X82.789 Y95.237 E.00394
+; LINE_WIDTH: 0.487372
+G1 X82.764 Y95.045 E.00437
+; LINE_WIDTH: 0.488137
+G1 X82.739 Y94.853 E.00437
+G1 X82.807 Y94.214 E.01454
+; LINE_WIDTH: 0.542293
+G3 X82.794 Y92.116 I45.283 J-1.319 E.05297
+; LINE_WIDTH: 0.511434
+G1 X82.798 Y91.935 E.0043
+; LINE_WIDTH: 0.474857
+G1 X82.803 Y91.754 E.00398
+; LINE_WIDTH: 0.475941
+G1 X82.807 Y91.573 E.00399
+G1 X82.739 Y90.983 E.01306
+; LINE_WIDTH: 0.419992
+G1 X82.783 Y90.478 E.00977
+G1 X82.881 Y90.121 E.00714
+G1 X83.129 Y89.604 E.01105
+G1 X83.44 Y89.212 E.00965
+G1 X83.909 Y88.832 E.01164
+G3 X84.858 Y88.429 I3.731 J7.469 E.01989
+G1 X85.036 Y88.225 E.00521
+G1 X85.572 Y87.218 E.02199
+; Slow Down Start
+G1 F1800;_EXTRUDE_SET_SPEED
+G1 X85.612 Y87.142 E.00165
+G1 X93.278 Y87.142 E.14776
+G1 X93.246 Y87.223 E.00167
+; Slow Down End
+G1 F16800
+G1 X93.086 Y87.624 E.00832
+; WIPE_START
+G1 X93.246 Y87.223 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.8 I-.871 J-.85 P1  F42000
+G1 X84.867 Y95.803 Z1.8
+G1 Z1.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.419992
+G1 F16800
+M204 S6000
+G1 X84.418 Y95.408 E.01152
+G1 X84.112 Y94.988 E.01002
+G3 X83.747 Y93.673 I2.542 J-1.413 E.02656
+G1 X83.747 Y92.116 E.02999
+G1 X83.801 Y91.611 E.0098
+G1 X83.929 Y91.177 E.00873
+G3 X84.488 Y90.311 I2.701 J1.129 E.01996
+G1 X84.98 Y89.911 E.01222
+G1 X85.406 Y89.685 E.0093
+G1 X85.9 Y89.539 E.00994
+G1 X86.372 Y89.492 E.00914
+G1 X93.625 Y89.492 E.1398
+G1 X94.266 Y89.577 E.01246
+G1 X94.756 Y89.756 E.01007
+G1 X95.197 Y90.026 E.00996
+G1 X95.688 Y90.509 E.01329
+G3 X96.06 Y91.15 I-8.159 J5.16 E.01428
+G1 X96.206 Y91.645 E.00994
+G1 X96.253 Y92.117 E.00915
+G1 X96.248 Y93.809 E.03262
+G1 X96.168 Y94.312 E.00982
+G1 X95.989 Y94.799 E.01
+M73 P19 R11
+G3 X95.582 Y95.407 I-6.587 J-3.971 E.0141
+G1 X95.095 Y95.835 E.01249
+G1 X94.522 Y96.125 E.01237
+G1 X93.768 Y96.293 E.0149
+G1 X86.376 Y96.297 E.14249
+G1 X85.734 Y96.212 E.01247
+G1 X85.244 Y96.033 E.01007
+G1 X84.918 Y95.834 E.00736
+M204 S10000
+G1 X84.659 Y96.138 F42000
+; LINE_WIDTH: 0.419992
+G1 F16800
+M204 S6000
+G1 X84.148 Y95.696 E.01301
+G1 X83.791 Y95.218 E.0115
+G1 X83.54 Y94.69 E.01126
+; LINE_WIDTH: 0.442452
+G1 X83.472 Y94.523 E.00369
+; LINE_WIDTH: 0.487372
+G1 X83.403 Y94.355 E.00409
+; LINE_WIDTH: 0.534574
+G1 X83.334 Y94.187 E.00451
+G1 X83.298 Y93.673 E.01283
+G1 X83.298 Y92.116 E.03871
+G1 X83.335 Y91.599 E.01289
+; LINE_WIDTH: 0.532417
+G1 X83.403 Y91.432 E.00448
+; LINE_WIDTH: 0.487447
+G1 X83.471 Y91.265 E.00408
+; LINE_WIDTH: 0.420386
+G3 X83.793 Y90.57 I5.882 J2.299 E.01478
+G1 X84.086 Y90.161 E.00971
+G1 X84.541 Y89.741 E.01194
+G1 X85.072 Y89.407 E.01212
+G1 X85.748 Y89.169 E.01383
+G3 X86.372 Y89.097 I.881 J4.95 E.01212
+G1 X92.836 Y89.097 E.12473
+; LINE_WIDTH: 0.437796
+G1 X93.095 Y89.08 E.00523
+; LINE_WIDTH: 0.473402
+G1 X93.354 Y89.062 E.00568
+; LINE_WIDTH: 0.509009
+G1 X93.613 Y89.044 E.00613
+; LINE_WIDTH: 0.549662
+G1 X94.329 Y89.111 E.01843
+; LINE_WIDTH: 0.553447
+G1 X94.359 Y89.138 E.00103
+; LINE_WIDTH: 0.515317
+G1 X94.388 Y89.165 E.00096
+; LINE_WIDTH: 0.477187
+G1 X94.418 Y89.192 E.00089
+; LINE_WIDTH: 0.420294
+G1 X94.447 Y89.219 E.00077
+G1 X94.999 Y89.438 E.01145
+G1 X95.474 Y89.741 E.01086
+G1 X95.967 Y90.23 E.0134
+G1 X96.307 Y90.779 E.01245
+; LINE_WIDTH: 0.438132
+G1 X96.459 Y91.131 E.00772
+; LINE_WIDTH: 0.474412
+G1 X96.61 Y91.482 E.0084
+; LINE_WIDTH: 0.507462
+G1 X96.637 Y91.54 E.0015
+; LINE_WIDTH: 0.531812
+G1 X96.664 Y91.598 E.00158
+G1 X96.701 Y92.116 E.01283
+G1 X96.698 Y93.81 E.04193
+; LINE_WIDTH: 0.553812
+G1 X96.634 Y94.389 E.01504
+; LINE_WIDTH: 0.557096
+G1 X96.607 Y94.414 E.00095
+; LINE_WIDTH: 0.517923
+G1 X96.581 Y94.439 E.00088
+; LINE_WIDTH: 0.478751
+G1 X96.554 Y94.464 E.00081
+; LINE_WIDTH: 0.420047
+G1 X96.527 Y94.489 E.0007
+G1 X96.348 Y94.963 E.00978
+G3 X95.842 Y95.703 I-4.421 J-2.478 E.0173
+G1 X95.355 Y96.131 E.01249
+G3 X93.768 Y96.687 I-1.955 J-3.041 E.03272
+G1 X86.376 Y96.691 E.14251
+G1 X85.681 Y96.603 E.01349
+G3 X84.71 Y96.169 I.741 J-2.965 E.02062
+M204 S10000
+G1 X85.004 Y96.897 F42000
+; LINE_WIDTH: 0.632572
+G1 F16800
+M204 S6000
+G1 X84.791 Y96.801 E.00694
+M204 S10000
+G1 X85.004 Y96.897 F42000
+; LINE_WIDTH: 0.609622
+G1 F16800
+M204 S6000
+G1 X85.074 Y97.002 E.0036
+; LINE_WIDTH: 0.567482
+G1 X85.144 Y97.107 E.00334
+; LINE_WIDTH: 0.525342
+G1 X85.213 Y97.212 E.00308
+; LINE_WIDTH: 0.483202
+G1 X85.283 Y97.317 E.00282
+; LINE_WIDTH: 0.420248
+G3 X85.597 Y97.808 I-10.423 J7.012 E.01124
+G1 X85.654 Y98.053 E.00485
+G1 X94.339 Y98.053 E.16752
+G1 X94.427 Y97.753 E.00604
+G1 X94.742 Y97.274 E.01105
+; LINE_WIDTH: 0.44192
+G1 X94.777 Y97.205 E.00157
+; LINE_WIDTH: 0.485776
+G1 X94.813 Y97.137 E.00174
+; LINE_WIDTH: 0.529632
+G1 X94.848 Y97.068 E.0019
+; LINE_WIDTH: 0.573488
+G1 X94.884 Y96.999 E.00207
+; LINE_WIDTH: 0.617344
+G1 X94.919 Y96.931 E.00224
+G1 X94.84 Y96.934 E.0023
+; LINE_WIDTH: 0.573488
+G1 X94.761 Y96.938 E.00213
+; LINE_WIDTH: 0.529632
+G1 X94.681 Y96.942 E.00196
+; LINE_WIDTH: 0.485776
+G1 X94.602 Y96.946 E.00179
+; LINE_WIDTH: 0.420186
+G1 X94.523 Y96.95 E.00153
+G3 X93.768 Y97.081 I-1.029 J-3.676 E.01479
+G1 X86.376 Y97.086 E.14257
+G1 X85.628 Y96.993 E.01452
+; LINE_WIDTH: 0.441062
+G1 X85.515 Y96.976 E.00232
+; LINE_WIDTH: 0.483202
+G1 X85.402 Y96.959 E.00256
+; LINE_WIDTH: 0.525342
+G1 X85.289 Y96.941 E.00279
+; LINE_WIDTH: 0.567482
+G1 X85.176 Y96.924 E.00303
+; LINE_WIDTH: 0.609622
+G1 X85.063 Y96.907 E.00327
+M204 S10000
+G1 X83.093 Y94.426 F42000
+; LINE_WIDTH: 0.346919
+G1 F16800
+M204 S6000
+G1 X83.112 Y95.144 E.01128
+G1 X83.226 Y95.581 E.00709
+G1 X83.472 Y96.026 E.00798
+; LINE_WIDTH: 0.386072
+G1 X83.807 Y96.406 E.00894
+G1 X84.23 Y96.71 E.00918
+G1 X84.369 Y96.756 E.00258
+; LINE_WIDTH: 0.431043
+G1 X84.443 Y96.76 E.00146
+; LINE_WIDTH: 0.476245
+G1 X84.516 Y96.764 E.00162
+; LINE_WIDTH: 0.521447
+G1 X84.59 Y96.768 E.00178
+; LINE_WIDTH: 0.566649
+G1 X84.663 Y96.772 E.00194
+; LINE_WIDTH: 0.611851
+G1 X84.736 Y96.776 E.00211
+; LINE_WIDTH: 0.612402
+G1 X84.68 Y96.715 E.00239
+; LINE_WIDTH: 0.568302
+G1 X84.623 Y96.654 E.00221
+; LINE_WIDTH: 0.524202
+G1 X84.567 Y96.593 E.00203
+; LINE_WIDTH: 0.480102
+G1 X84.51 Y96.532 E.00185
+; LINE_WIDTH: 0.436002
+G1 X84.454 Y96.471 E.00167
+; LINE_WIDTH: 0.380251
+G1 X83.89 Y95.972 E.01305
+; LINE_WIDTH: 0.350676
+G1 X83.502 Y95.425 E.01065
+G1 X83.218 Y94.836 E.01039
+G1 X83.111 Y94.483 E.00587
+M204 S10000
+G1 X83.266 Y90.525 F42000
+; LINE_WIDTH: 0.625182
+G1 F16800
+M204 S6000
+G1 X83.341 Y90.354 E.00548
+; LINE_WIDTH: 0.670722
+G1 F16279.827
+G1 X83.417 Y90.183 E.0059
+; LINE_WIDTH: 0.706127
+G1 F15432.666
+G1 X83.578 Y89.949 E.00944
+; LINE_WIDTH: 0.739034
+G1 F14720.698
+G1 X83.739 Y89.716 E.0099
+G1 X84.115 Y89.363 E.01796
+; LINE_WIDTH: 0.724819
+G1 F15020.028
+G1 X84.292 Y89.261 E.00699
+; LINE_WIDTH: 0.689552
+G1 F15818.017
+G1 X84.469 Y89.159 E.00664
+; LINE_WIDTH: 0.637536
+G1 F16800
+G3 X85.092 Y88.857 I1.823 J2.966 E.02075
+M204 S10000
+G1 X93.197 Y88.703 F42000
+; LINE_WIDTH: 0.419992
+G1 F16800
+M204 S6000
+G1 X92.893 Y88.572 E.00637
+G1 X92.637 Y88.037 E.01142
+G1 X92.697 Y87.536 E.00972
+G1 X85.849 Y87.536 E.132
+G1 X85.384 Y88.41 E.01908
+; LINE_WIDTH: 0.440434
+G1 X85.337 Y88.495 E.00196
+; LINE_WIDTH: 0.481318
+G1 X85.29 Y88.579 E.00216
+; LINE_WIDTH: 0.522202
+G1 X85.242 Y88.664 E.00235
+; LINE_WIDTH: 0.563086
+G1 X85.195 Y88.748 E.00254
+; LINE_WIDTH: 0.60397
+G1 X85.147 Y88.832 E.00274
+G1 X85.253 Y88.822 E.003
+; LINE_WIDTH: 0.563086
+G1 X85.358 Y88.811 E.00279
+; LINE_WIDTH: 0.522202
+G1 X85.464 Y88.801 E.00258
+; LINE_WIDTH: 0.481318
+G1 X85.57 Y88.79 E.00236
+; LINE_WIDTH: 0.420279
+G3 X86.372 Y88.703 I4.038 J33.43 E.01557
+G1 X93.137 Y88.703 E.13049
+M204 S10000
+G1 X92.357 Y88.313 F42000
+; LINE_WIDTH: 0.412403
+G1 F16800
+M204 S6000
+G1 X92.251 Y88.093 E.00462
+G1 X92.271 Y87.927 E.00316
+G1 X92.06 Y87.927 E.00399
+G2 X86.085 Y87.929 I-2.857 J377.78 E.11295
+G1 X85.858 Y88.356 E.00914
+G1 X86.372 Y88.313 E.00975
+G1 X92.297 Y88.313 E.112
+M204 S10000
+G1 X96.888 Y90.759 F42000
+; LINE_WIDTH: 0.370452
+G1 F16800
+M204 S6000
+G1 X96.851 Y90.497 E.00446
+G1 X96.676 Y90.005 E.00881
+G1 X96.5 Y89.722 E.00561
+G1 X96.046 Y89.263 E.01087
+G1 X95.678 Y89.035 E.00729
+G2 X94.576 Y88.876 I-.854 J2.016 E.01897
+G1 X95.192 Y89.127 E.01121
+G1 X95.713 Y89.457 E.01039
+G1 X96.233 Y89.963 E.01223
+G1 X96.624 Y90.596 E.01253
+G3 X96.888 Y91.262 I-1.912 J1.145 E.01214
+G1 X96.888 Y90.819 E.00747
+M204 S10000
+G1 X95.362 Y96.715 F42000
+; LINE_WIDTH: 0.641752
+G1 F16800
+M204 S6000
+G1 X94.973 Y96.904 E.01302
+M204 S10000
+G1 X95.362 Y96.715 F42000
+; LINE_WIDTH: 0.621745
+G1 F16800
+M204 S6000
+G1 X95.439 Y96.708 E.00225
+; LINE_WIDTH: 0.57677
+G1 X95.516 Y96.702 E.00208
+; LINE_WIDTH: 0.531795
+G1 X95.593 Y96.695 E.00191
+; LINE_WIDTH: 0.48682
+G1 X95.67 Y96.689 E.00174
+; LINE_WIDTH: 0.441845
+G1 X95.747 Y96.682 E.00157
+; LINE_WIDTH: 0.381867
+G1 X95.824 Y96.675 E.00134
+G2 X96.887 Y94.867 I-1.082 J-1.853 E.03816
+G1 X96.876 Y94.62 E.00431
+G1 X96.691 Y95.11 E.00913
+G3 X96.092 Y95.988 I-4.85 J-2.665 E.01853
+G1 X95.616 Y96.397 E.01093
+; LINE_WIDTH: 0.39687
+G1 X95.58 Y96.442 E.00105
+; LINE_WIDTH: 0.441845
+G1 X95.544 Y96.487 E.00118
+; LINE_WIDTH: 0.48682
+G1 X95.508 Y96.533 E.0013
+; LINE_WIDTH: 0.531795
+G1 X95.471 Y96.578 E.00143
+; LINE_WIDTH: 0.57677
+G1 X95.435 Y96.623 E.00156
+; LINE_WIDTH: 0.621745
+G1 X95.399 Y96.668 E.00169
+M204 S10000
+G1 X93.967 Y97.56 F42000
+; LINE_WIDTH: 0.602162
+G1 F16800
+M204 S6000
+G1 X86.376 Y97.569 E.21393
+G1 X86.088 Y97.556 E.00815
+M204 S10000
+G1 X95.303 Y98.689 F42000
+; FEATURE: Bridge
+; LINE_WIDTH: 0.41228
+; LAYER_HEIGHT: 0.4
+G1 F1800
+M204 S6000
+G1 X96.173 Y97.614 E.07524
+M106 S193.8
+M106 S255
+M204 S10000
+G1 X105.109 Y99.065 F42000
+G1 F1800
+M204 S6000
+G1 X105.494 Y98.59 E.03328
+G2 X105.578 Y98.316 I-.779 J-.391 E.01565
+G1 X105.578 Y97.75 E.03079
+G1 X104.668 Y98.875 E.07873
+G1 X104.073 Y98.875 E.03235
+G1 X105.579 Y97.015 E.13017
+G1 X105.579 Y96.28 E.03998
+G1 X103.478 Y98.875 E.1816
+G1 X102.884 Y98.875 E.03235
+G1 X105.579 Y95.545 E.23303
+G1 X105.579 Y94.81 E.03998
+G1 X102.289 Y98.875 E.28447
+G1 X101.694 Y98.875 E.03235
+G1 X105.579 Y94.075 E.3359
+G1 X105.579 Y93.34 E.03998
+G1 X101.1 Y98.875 E.38733
+G1 X100.505 Y98.875 E.03235
+G1 X105.58 Y92.605 E.43876
+G1 X105.58 Y91.87 E.03998
+G1 X99.91 Y98.875 E.4902
+G1 X99.315 Y98.875 E.03235
+G1 X105.58 Y91.135 E.54163
+G1 X105.58 Y90.4 E.03998
+G1 X98.721 Y98.875 E.59306
+G1 X98.126 Y98.875 E.03235
+G1 X105.58 Y89.665 E.6445
+G1 X105.581 Y88.93 E.03998
+G1 X97.531 Y98.875 E.69593
+G1 X96.937 Y98.875 E.03235
+G1 X105.581 Y88.195 E.74736
+G1 X105.581 Y87.46 E.03998
+G1 X96.342 Y98.875 E.79879
+G1 X95.747 Y98.875 E.03235
+G1 X105.43 Y86.911 E.83719
+G2 X104.994 Y86.715 I-.498 J.523 E.0265
+G1 X98.051 Y95.294 E.60031
+G2 X98.076 Y94.528 I-5.587 J-.569 E.04173
+G1 X104.4 Y86.715 E.5467
+G1 X103.805 Y86.715 E.03235
+G1 X98.075 Y93.795 E.49539
+G1 X98.074 Y93.061 E.03989
+G1 X103.21 Y86.715 E.44408
+G1 X102.615 Y86.715 E.03235
+G1 X98.073 Y92.328 E.39277
+G1 X98.071 Y91.595 E.03989
+G1 X102.021 Y86.715 E.34145
+M73 P20 R11
+G1 X101.426 Y86.715 E.03235
+G1 X98.07 Y90.861 E.29014
+G2 X98.003 Y90.21 I-3.223 J.006 E.03567
+G1 X100.831 Y86.715 E.24458
+G1 X100.237 Y86.715 E.03235
+G1 X97.838 Y89.678 E.20738
+G2 X97.61 Y89.225 I-3.626 J1.538 E.02762
+G1 X99.642 Y86.715 E.17566
+G1 X99.047 Y86.715 E.03235
+G1 X97.332 Y88.834 E.1483
+G2 X97.008 Y88.499 I-5.116 J4.616 E.02534
+G1 X98.453 Y86.715 E.12486
+G1 X97.858 Y86.715 E.03235
+G1 X96.641 Y88.218 E.10522
+G2 X96.236 Y87.983 I-1.397 J1.939 E.02549
+G1 X97.263 Y86.715 E.08878
+G1 X96.669 Y86.715 E.03235
+G1 X95.776 Y87.808 E.07679
+G2 X95.274 Y87.702 I-.711 J2.131 E.02792
+G1 X96.074 Y86.715 E.06913
+G1 X95.479 Y86.715 E.03235
+G1 X94.703 Y87.674 E.06714
+G1 X94.108 Y87.674 E.03233
+G1 X95.048 Y86.512 E.08128
+M106 S193.8
+; OBJECT_ID: 88
+; WIPE_START
+G1 X94.108 Y87.674 E-.56788
+G1 X94.614 Y87.674 E-.19212
+; WIPE_END
+G1 E-.04
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X90.018 Y81.772 Z1.8 F42000
+G1 Z1.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+; LAYER_HEIGHT: 0.12
+G1 F21000
+M204 S6000
+G1 X89.978 Y81.776 E.00083
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.086 Y81.763 I-.075 J.267 E.01468
+G1 X90.078 Y81.764 E.00017
+M204 S250
+G1 X90.08 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.919 Y80.816 I-.088 J-.681 E.04189
+G3 X90.074 Y80.817 I.075 J.391 E.00302
+G3 X90.14 Y82.17 I-.082 J.682 E.03716
+; CHANGE_LAYER
+; Z_HEIGHT: 1.52
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07385
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05133
+G1 X89.476 Y81.948 E-.05132
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05129
+G1 X89.316 Y81.581 E-.05135
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.073 E-.05133
+G1 X89.553 Y80.976 E-.05132
+G1 X89.663 Y80.899 E-.05134
+G1 X89.709 Y80.879 E-.0189
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 12/218
+; update layer progress
+M73 L12
+M991 S0 P11 ;notify layer change
+M106 S201.45
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.8 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z1.8
+G1 Z1.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13120
+M204 S6000
+G3 X105.227 Y81.223 I-.032 J-.275 E.01918
+G1 X105.281 Y81.233 E.00113
+G3 X105.297 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X105.286 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X105.125 Y80.816 I-.09 J-.681 E.04196
+G3 X105.289 Y80.818 I.076 J.415 E.00319
+G3 X105.345 Y82.17 I-.093 J.681 E.0369
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07384
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05134
+G1 X104.682 Y81.948 E-.05131
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.0513
+G1 X104.521 Y81.581 E-.05135
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05131
+G1 X104.664 Y81.073 E-.05134
+G1 X104.758 Y80.976 E-.05131
+G1 X104.869 Y80.899 E-.05134
+G1 X104.915 Y80.879 E-.01892
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.975 Y85.673 Z1.92 F42000
+G1 X86.325 Y95.883 Z1.92
+G1 Z1.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13120
+M204 S6000
+G1 X86.03 Y95.856 E.00614
+G3 X84.161 Y93.791 I.381 J-2.224 E.06227
+G3 X84.157 Y92.127 I25.373 J-.897 E.03452
+G3 X86.383 Y89.901 I2.245 J.019 E.07237
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.029 J2.256 E.06961
+G3 X95.843 Y93.662 I-25.373 J.897 E.03452
+G3 X93.617 Y95.888 I-2.245 J-.019 E.07237
+G1 X86.385 Y95.888 E.15002
+M204 S10000
+G1 X86.361 Y95.461 F42000
+G1 F13120
+M204 S6000
+G1 X86.1 Y95.437 E.00544
+G3 X84.584 Y93.763 I.309 J-1.803 E.05048
+G3 X84.581 Y92.134 I24.851 J-.869 E.0338
+G3 X86.39 Y90.325 I1.821 J.012 E.05883
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.026 I-.02 J1.83 E.05652
+G3 X95.419 Y93.655 I-24.851 J.869 E.0338
+G3 X93.61 Y95.464 I-1.821 J-.012 E.05883
+G1 X86.421 Y95.464 E.14912
+M204 S250
+G1 X86.396 Y95.054 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X84.993 Y93.737 I.011 J-1.418 E.04079
+G3 X84.99 Y92.141 I24.311 J-.842 E.03076
+G3 X86.396 Y90.734 I1.412 J.005 E.04254
+G1 X93.604 Y90.734 E.13892
+G3 X95.007 Y92.052 I-.011 J1.418 E.04079
+G3 X95.01 Y93.648 I-24.311 J.842 E.03076
+G3 X93.604 Y95.054 I-1.412 J-.005 E.04254
+G1 X86.456 Y95.054 E.13777
+; WIPE_START
+M204 S6000
+G1 X86.167 Y95.035 E-.11024
+G1 X85.86 Y94.947 E-.12117
+G1 X85.617 Y94.817 E-.10506
+G1 X85.403 Y94.642 E-.10502
+G1 X85.228 Y94.428 E-.10507
+G1 X85.097 Y94.184 E-.10503
+G1 X85.038 Y94.009 E-.07008
+G1 X85.022 Y93.91 E-.03833
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.92 I-.573 J-1.074 P1  F42000
+G1 X75.017 Y99.251 Z1.92
+G1 Z1.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13120
+M204 S6000
+G3 X74.043 Y98.277 I-.01 J-.963 E.03182
+G1 X74.043 Y87.311 E.22746
+G3 X75.017 Y86.338 I.963 J-.01 E.03182
+G1 X105.018 Y86.339 E.6223
+G3 X105.957 Y87.312 I-.023 J.961 E.03108
+G1 X105.957 Y98.278 E.22746
+G3 X104.983 Y99.251 I-.963 J.01 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F13120
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.025 Y85.915 E.62259
+G3 X106.381 Y87.305 I-.032 J1.387 E.0446
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X73.21 Y98.291 I.006 J-1.8 E.05425
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.032 Y85.506 E.57882
+G3 X106.79 Y87.298 I-.04 J1.798 E.05357
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57698
+; WIPE_START
+M204 S6000
+G1 X74.651 Y100.05 E-.1574
+G1 X74.315 Y99.948 E-.13325
+G1 X74.006 Y99.783 E-.13338
+G1 X73.734 Y99.56 E-.13332
+G1 X73.512 Y99.289 E-.13331
+G1 X73.426 Y99.128 E-.06935
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 12 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer12 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X75.845 Y99.081
+G1 Z1.52
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.423022
+G1 F13120
+M204 S6000
+G1 X88.24 Y86.686 E.34046
+G1 X87.678 Y86.686 E.01091
+G1 X75.461 Y98.903 E.33558
+G3 X74.915 Y98.888 I-.211 J-2.187 E.01064
+G1 X87.116 Y86.686 E.33516
+G1 X86.554 Y86.686 E.01091
+G1 X74.547 Y98.693 E.32983
+G3 X74.394 Y98.285 I.488 J-.416 E.00865
+G1 X85.992 Y86.686 E.31861
+G1 X85.43 Y86.686 E.01091
+G1 X74.391 Y97.725 E.30323
+G1 X74.392 Y97.163 E.01092
+G1 X84.869 Y86.686 E.28779
+G1 X84.307 Y86.686 E.01091
+G1 X74.392 Y96.601 E.27236
+G1 X74.392 Y96.039 E.01092
+G1 X83.745 Y86.686 E.25692
+G1 X83.183 Y86.686 E.01091
+G1 X74.392 Y95.477 E.24149
+G1 X74.392 Y94.915 E.01092
+G1 X82.621 Y86.686 E.22605
+G1 X82.06 Y86.686 E.01091
+G1 X74.392 Y94.353 E.21062
+G1 X74.392 Y93.792 E.01092
+G1 X81.498 Y86.686 E.19518
+G1 X80.936 Y86.686 E.01091
+G1 X74.393 Y93.23 E.17974
+G1 X74.393 Y92.668 E.01092
+G1 X80.374 Y86.686 E.16431
+G1 X79.812 Y86.686 E.01091
+G1 X74.393 Y92.106 E.14887
+G1 X74.393 Y91.544 E.01092
+G1 X79.251 Y86.686 E.13344
+G1 X78.689 Y86.686 E.01091
+G1 X74.393 Y90.982 E.118
+G1 X74.393 Y90.42 E.01092
+G1 X78.127 Y86.686 E.10257
+G1 X77.565 Y86.686 E.01091
+G1 X74.393 Y89.858 E.08713
+G1 X74.393 Y89.296 E.01092
+G1 X77.003 Y86.686 E.07169
+G1 X76.442 Y86.686 E.01091
+G1 X74.394 Y88.734 E.05626
+G1 X74.394 Y88.172 E.01092
+G1 X75.88 Y86.686 E.04082
+G1 X75.318 Y86.686 E.01091
+G1 X74.394 Y87.61 E.02539
+G3 X74.427 Y87.1 I1.3 J-.172 E.00999
+G3 X74.591 Y86.851 I.546 J.181 E.00585
+G1 X74.924 Y86.518 E.00916
+; WIPE_START
+G1 F21000
+G1 X74.591 Y86.851 E-.17929
+G1 X74.497 Y86.958 E-.05407
+G1 X74.427 Y87.1 E-.05999
+G1 X74.394 Y87.266 E-.06447
+G1 X74.394 Y87.61 E-.13061
+G1 X74.899 Y87.105 E-.27158
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X81.025 Y91.657 Z1.92 F42000
+G1 X91.015 Y99.081 Z1.92
+G1 Z1.52
+G1 E.8 F1800
+G1 F13120
+M204 S6000
+G1 X93.876 Y96.219 E.0786
+G3 X93.297 Y96.236 I-.413 J-4.266 E.01125
+G1 X90.63 Y98.903 E.07327
+G1 X90.068 Y98.903 E.01091
+G1 X92.736 Y96.236 E.07327
+G1 X92.174 Y96.236 E.01091
+G1 X89.506 Y98.903 E.07327
+G1 X88.945 Y98.903 E.01091
+G1 X91.612 Y96.236 E.07327
+G1 X91.05 Y96.236 E.01091
+G1 X88.383 Y98.903 E.07327
+G1 X87.821 Y98.903 E.01091
+G1 X90.488 Y96.236 E.07327
+G1 X89.927 Y96.236 E.01091
+G1 X87.259 Y98.903 E.07327
+G1 X86.697 Y98.903 E.01091
+G1 X89.365 Y96.236 E.07327
+G1 X88.803 Y96.236 E.01091
+G1 X86.136 Y98.903 E.07327
+G1 X85.574 Y98.903 E.01091
+G1 X88.241 Y96.236 E.07327
+G1 X87.679 Y96.236 E.01091
+G1 X85.012 Y98.903 E.07327
+G1 X84.45 Y98.903 E.01091
+G1 X87.117 Y96.236 E.07327
+G1 X86.556 Y96.236 E.01091
+G1 X83.888 Y98.903 E.07327
+G1 X83.326 Y98.903 E.01091
+G1 X86.023 Y96.206 E.07408
+G3 X85.576 Y96.092 I.262 J-1.956 E.00899
+G1 X82.765 Y98.903 E.07723
+M73 P21 R11
+G1 X82.203 Y98.903 E.01091
+G1 X85.18 Y95.925 E.08179
+G1 X84.834 Y95.71 E.00792
+G1 X81.641 Y98.903 E.08771
+G1 X81.079 Y98.903 E.01091
+G1 X84.542 Y95.44 E.09512
+G3 X84.29 Y95.131 I.652 J-.788 E.00781
+G1 X80.517 Y98.903 E.10362
+G1 X79.955 Y98.903 E.01091
+G1 X84.08 Y94.778 E.1133
+G3 X83.918 Y94.378 I1.131 J-.69 E.00842
+G1 X79.394 Y98.903 E.12429
+G1 X78.832 Y98.903 E.01091
+G1 X83.831 Y93.904 E.13733
+G3 X83.809 Y93.364 I2.649 J-.382 E.0105
+G1 X78.27 Y98.903 E.15214
+G1 X77.708 Y98.903 E.01091
+G1 X83.809 Y92.803 E.16757
+G1 X83.809 Y92.241 E.01091
+G1 X77.146 Y98.903 E.18301
+G1 X76.585 Y98.903 E.01091
+G1 X84.111 Y91.377 E.20675
+; WIPE_START
+G1 F21000
+G1 X82.697 Y92.791 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z1.92 I.861 J.861 P1  F42000
+G1 X85.618 Y89.87 Z1.92
+G1 Z1.52
+G1 E.8 F1800
+G1 F13120
+M204 S6000
+G1 X88.801 Y86.686 E.08745
+G1 X89.363 Y86.686 E.01091
+G1 X86.496 Y89.553 E.07875
+G1 X87.058 Y89.553 E.01091
+G1 X89.925 Y86.686 E.07875
+G1 X90.487 Y86.686 E.01091
+G1 X87.62 Y89.553 E.07875
+G1 X88.182 Y89.553 E.01091
+G1 X91.049 Y86.686 E.07875
+G1 X91.61 Y86.686 E.01091
+G1 X88.744 Y89.553 E.07874
+G1 X89.305 Y89.553 E.01091
+G1 X92.172 Y86.686 E.07874
+G1 X92.734 Y86.686 E.01091
+G1 X89.867 Y89.553 E.07874
+G1 X90.429 Y89.553 E.01091
+G1 X93.296 Y86.686 E.07874
+G1 X93.858 Y86.687 E.01091
+G1 X90.991 Y89.553 E.07874
+G1 X91.553 Y89.553 E.01091
+G1 X94.419 Y86.687 E.07874
+G1 X94.981 Y86.687 E.01091
+G1 X92.115 Y89.553 E.07874
+G1 X92.676 Y89.553 E.01091
+G1 X95.543 Y86.687 E.07874
+G1 X96.105 Y86.687 E.01091
+G1 X93.238 Y89.553 E.07874
+G3 X93.787 Y89.566 I.197 J3.195 E.01067
+G1 X96.667 Y86.687 E.0791
+G1 X97.228 Y86.687 E.01091
+G1 X94.274 Y89.641 E.08115
+G1 X94.683 Y89.794 E.00848
+G1 X97.79 Y86.687 E.08536
+G1 X98.352 Y86.687 E.01091
+G1 X95.046 Y89.993 E.09082
+G3 X95.356 Y90.244 I-.605 J1.067 E.00779
+G1 X98.914 Y86.687 E.09772
+G1 X99.476 Y86.687 E.01091
+G1 X95.628 Y90.534 E.10568
+G3 X95.855 Y90.869 I-3.63 J2.71 E.00786
+G1 X100.037 Y86.687 E.11487
+G1 X100.599 Y86.687 E.01091
+G1 X96.028 Y91.258 E.12556
+G1 X96.15 Y91.698 E.00887
+G1 X101.161 Y86.687 E.13766
+G1 X101.723 Y86.687 E.01091
+G1 X96.191 Y92.219 E.15195
+G1 X96.19 Y92.782 E.01094
+G1 X102.285 Y86.687 E.16742
+G1 X102.846 Y86.687 E.01091
+G1 X96.188 Y93.345 E.1829
+G1 X96.187 Y93.832 E.00946
+G1 X96.172 Y93.924 E.0018
+G1 X103.408 Y86.687 E.19878
+G1 X103.97 Y86.687 E.01091
+G1 X91.754 Y98.903 E.33557
+G1 X92.316 Y98.903 E.01091
+G1 X104.532 Y86.687 E.33557
+G3 X105.085 Y86.696 I.234 J2.623 E.01076
+G1 X92.877 Y98.903 E.33532
+G1 X93.439 Y98.903 E.01091
+G1 X105.45 Y86.892 E.32993
+G3 X105.606 Y87.298 I-.641 J.478 E.00856
+G1 X94.001 Y98.903 E.31877
+G1 X94.563 Y98.903 E.01091
+G1 X105.609 Y87.857 E.30341
+G1 X105.608 Y88.419 E.01092
+G1 X95.125 Y98.903 E.28798
+G1 X95.687 Y98.903 E.01091
+G1 X105.608 Y88.981 E.27254
+G1 X105.608 Y89.543 E.01092
+G1 X96.248 Y98.903 E.2571
+G1 X96.81 Y98.903 E.01091
+G1 X105.608 Y90.105 E.24167
+G1 X105.608 Y90.667 E.01092
+G1 X97.372 Y98.903 E.22623
+G1 X97.934 Y98.903 E.01091
+G1 X105.608 Y91.229 E.21079
+G1 X105.608 Y91.791 E.01092
+G1 X98.496 Y98.903 E.19536
+G1 X99.057 Y98.903 E.01091
+G1 X105.607 Y92.353 E.17992
+G1 X105.607 Y92.915 E.01092
+G1 X99.619 Y98.903 E.16449
+G1 X100.181 Y98.903 E.01091
+G1 X105.607 Y93.477 E.14905
+G1 X105.607 Y94.039 E.01092
+G1 X100.743 Y98.903 E.13361
+G1 X101.305 Y98.903 E.01091
+G1 X105.607 Y94.601 E.11818
+G1 X105.607 Y95.163 E.01092
+G1 X101.867 Y98.903 E.10274
+G1 X102.428 Y98.903 E.01091
+G1 X105.607 Y95.725 E.0873
+G1 X105.607 Y96.287 E.01092
+G1 X102.99 Y98.903 E.07187
+G1 X103.552 Y98.903 E.01091
+G1 X105.606 Y96.849 E.05643
+G1 X105.606 Y97.411 E.01092
+G1 X104.114 Y98.903 E.04099
+G1 X104.676 Y98.903 E.01091
+G1 X105.606 Y97.973 E.02556
+G1 X105.606 Y98.334 E.00702
+G3 X105.483 Y98.658 I-.676 J-.072 E.0068
+G1 X105.069 Y99.072 E.01138
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X105.483 Y98.658 E-.22259
+G1 X105.562 Y98.521 E-.05988
+G1 X105.606 Y98.334 E-.07306
+G1 X105.606 Y97.973 E-.1373
+G1 X105.109 Y98.47 E-.26717
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X99.994 Y92.805 Z1.92 F42000
+G1 X90.033 Y81.775 Z1.92
+G1 Z1.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13120
+M204 S6000
+G3 X90.022 Y81.223 I-.032 J-.275 E.01918
+G1 X90.075 Y81.233 E.00113
+G3 X90.091 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X90.08 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.919 Y80.816 I-.09 J-.681 E.04196
+G3 X90.084 Y80.818 I.076 J.415 E.00319
+G3 X90.14 Y82.17 I-.093 J.681 E.0369
+; CHANGE_LAYER
+; Z_HEIGHT: 1.64
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07384
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05134
+G1 X89.476 Y81.948 E-.05131
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.0513
+G1 X89.316 Y81.581 E-.05135
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.073 E-.05134
+G1 X89.553 Y80.976 E-.05131
+G1 X89.663 Y80.899 E-.05134
+G1 X89.709 Y80.879 E-.01892
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 13/218
+; update layer progress
+M73 L13
+M991 S0 P12 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z1.92 I-.07 J1.215 P1  F42000
+G1 X105.227 Y81.772 Z1.92
+G1 Z1.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G1 X105.184 Y81.776 E.00091
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.291 Y81.763 I-.075 J.267 E.01467
+G1 X105.287 Y81.764 E.00009
+M204 S250
+G1 X105.286 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X104.993 Y80.845 I-.087 J-.682 E.03924
+G3 X105.298 Y80.82 I.213 J.73 E.00595
+G3 X105.345 Y82.172 I-.099 J.68 E.03687
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07388
+G1 X105.019 Y82.163 E-.05135
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05134
+G1 X104.682 Y81.947 E-.05133
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.0513
+G1 X104.521 Y81.581 E-.05136
+G1 X104.519 Y81.446 E-.05129
+G1 X104.542 Y81.313 E-.05135
+G1 X104.592 Y81.187 E-.05131
+G1 X104.664 Y81.073 E-.05134
+G1 X104.758 Y80.976 E-.05133
+G1 X104.869 Y80.899 E-.05132
+G1 X104.914 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.976 Y85.673 Z2.04 F42000
+G1 X86.328 Y95.883 Z2.04
+G1 Z1.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G1 X86.043 Y95.858 E.00592
+G3 X84.161 Y93.791 I.368 J-2.226 E.06254
+G3 X84.157 Y92.127 I25.373 J-.897 E.03452
+G3 X86.383 Y89.901 I2.254 J.028 E.07229
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.029 J2.256 E.06961
+G3 X95.843 Y93.662 I-25.374 J.897 E.03452
+G3 X93.617 Y95.888 I-2.254 J-.028 E.07229
+G1 X86.387 Y95.888 E.14996
+M204 S10000
+G1 X86.363 Y95.461 F42000
+G1 F12916
+M204 S6000
+G1 X86.112 Y95.439 E.00523
+G3 X84.584 Y93.763 I.298 J-1.805 E.05072
+G3 X84.581 Y92.134 I24.851 J-.869 E.0338
+G3 X86.39 Y90.325 I1.828 J.019 E.05877
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.026 I-.02 J1.83 E.05652
+G3 X95.419 Y93.655 I-24.851 J.869 E.0338
+G3 X93.61 Y95.464 I-1.828 J-.019 E.05877
+G1 X86.423 Y95.464 E.14909
+M204 S250
+G1 X86.396 Y95.054 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X84.993 Y93.737 I.011 J-1.418 E.04079
+G3 X84.99 Y92.141 I24.311 J-.842 E.03077
+G3 X86.396 Y90.734 I1.417 J.011 E.0425
+G1 X93.604 Y90.734 E.13892
+G3 X95.007 Y92.052 I-.011 J1.418 E.04079
+G3 X95.01 Y93.648 I-24.311 J.842 E.03077
+G3 X93.604 Y95.054 I-1.417 J-.011 E.0425
+G1 X86.456 Y95.054 E.13777
+; WIPE_START
+M204 S6000
+G1 X86.177 Y95.036 E-.10638
+G1 X85.86 Y94.947 E-.12501
+G1 X85.617 Y94.817 E-.10507
+G1 X85.403 Y94.642 E-.10502
+G1 X85.228 Y94.428 E-.10506
+G1 X85.097 Y94.184 E-.10505
+G1 X85.038 Y94.009 E-.07007
+G1 X85.022 Y93.91 E-.03834
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X78.288 Y97.504 Z2.04 F42000
+G1 X75.017 Y99.251 Z2.04
+G1 Z1.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G3 X74.043 Y98.278 I-.01 J-.963 E.03181
+G1 X74.043 Y87.311 E.22747
+G3 X75.017 Y86.338 I.963 J-.01 E.03181
+G1 X105.011 Y86.339 E.62214
+G3 X105.957 Y87.311 I-.016 J.962 E.03124
+G1 X105.957 Y98.278 E.22747
+G3 X104.983 Y99.251 I-.963 J.01 E.03181
+G1 X75.077 Y99.251 E.62033
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F12916
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.017 Y85.915 E.62243
+G3 X106.381 Y87.305 I-.024 J1.387 E.04476
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X73.21 Y98.291 I.006 J-1.8 E.05425
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.024 Y85.505 E.57867
+G3 X106.79 Y87.298 I-.032 J1.798 E.05372
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57698
+; WIPE_START
+M204 S6000
+G1 X74.651 Y100.05 E-.1574
+M73 P22 R11
+G1 X74.315 Y99.948 E-.13328
+G1 X74.006 Y99.783 E-.13335
+G1 X73.734 Y99.56 E-.13327
+G1 X73.512 Y99.289 E-.13335
+G1 X73.426 Y99.128 E-.06935
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 13 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer13 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X74.223 Y98.371
+G1 Z1.64
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.423122
+G1 F12916
+M204 S6000
+G1 X74.554 Y98.701 E.00909
+G2 X74.773 Y98.857 I.444 J-.391 E.00526
+G2 X75.318 Y98.903 I.409 J-1.607 E.01067
+G1 X74.391 Y97.977 E.02546
+G1 X74.392 Y97.415 E.01092
+G1 X75.88 Y98.903 E.04089
+G1 X76.442 Y98.903 E.01092
+G1 X74.392 Y96.853 E.05633
+G1 X74.392 Y96.291 E.01092
+G1 X77.004 Y98.903 E.07177
+G1 X77.566 Y98.903 E.01092
+G1 X74.392 Y95.729 E.0872
+G1 X74.392 Y95.167 E.01092
+G1 X78.128 Y98.903 E.10264
+G1 X78.69 Y98.903 E.01092
+G1 X74.392 Y94.606 E.11808
+G1 X74.392 Y94.044 E.01092
+G1 X79.252 Y98.903 E.13351
+G1 X79.814 Y98.903 E.01092
+G1 X74.392 Y93.482 E.14895
+G1 X74.393 Y92.92 E.01092
+G1 X80.376 Y98.903 E.16439
+G1 X80.938 Y98.903 E.01092
+G1 X74.393 Y92.358 E.17982
+G1 X74.393 Y91.796 E.01092
+G1 X81.499 Y98.903 E.19526
+G1 X82.061 Y98.903 E.01092
+G1 X74.393 Y91.235 E.2107
+G1 X74.393 Y90.673 E.01092
+G1 X82.623 Y98.903 E.22613
+G1 X83.185 Y98.903 E.01092
+G1 X74.393 Y90.111 E.24157
+G1 X74.393 Y89.549 E.01092
+G1 X83.747 Y98.903 E.25701
+G1 X84.309 Y98.903 E.01092
+G1 X74.394 Y88.987 E.27245
+G1 X74.394 Y88.425 E.01092
+G1 X84.871 Y98.903 E.28788
+G1 X85.433 Y98.903 E.01092
+G1 X74.394 Y87.864 E.30332
+G1 X74.394 Y87.302 E.01092
+G1 X85.995 Y98.903 E.31876
+G1 X86.557 Y98.903 E.01092
+G1 X74.551 Y86.897 E.32988
+G1 X74.598 Y86.843 E.00139
+G3 X74.913 Y86.697 I.412 J.474 E.00684
+G1 X87.119 Y98.903 E.33537
+G1 X87.681 Y98.903 E.01092
+G1 X75.464 Y86.686 E.33568
+G1 X76.026 Y86.686 E.01092
+G1 X88.42 Y99.081 E.34056
+M204 S10000
+G1 X103.594 Y99.081 F42000
+G1 F12916
+M204 S6000
+G1 X96.144 Y91.638 E.20459
+G3 X96.191 Y92.24 I-2.87 J.529 E.01175
+G1 X102.854 Y98.903 E.18308
+G1 X102.292 Y98.903 E.01092
+G1 X96.19 Y92.8 E.16768
+G1 X96.188 Y93.361 E.01089
+G1 X101.73 Y98.903 E.15228
+G1 X101.168 Y98.903 E.01092
+G1 X96.174 Y93.909 E.13723
+G1 X96.109 Y94.303 E.00777
+G1 X96.081 Y94.378 E.00155
+G1 X100.606 Y98.903 E.12434
+G1 X100.044 Y98.903 E.01092
+G1 X95.928 Y94.787 E.1131
+G3 X95.716 Y95.137 I-1.436 J-.63 E.00797
+G1 X99.482 Y98.903 E.10349
+G1 X98.92 Y98.903 E.01092
+G1 X95.46 Y95.443 E.09507
+G3 X95.162 Y95.707 I-1.15 J-.999 E.00776
+G1 X98.358 Y98.903 E.08782
+G1 X97.797 Y98.903 E.01092
+G1 X94.82 Y95.927 E.08177
+G3 X94.432 Y96.1 I-.851 J-1.388 E.00829
+G1 X97.235 Y98.903 E.07701
+G1 X96.673 Y98.903 E.01092
+G1 X93.977 Y96.207 E.07408
+G3 X93.439 Y96.231 I-.368 J-2.191 E.01048
+G1 X96.111 Y98.903 E.07341
+G1 X95.549 Y98.903 E.01092
+G1 X92.877 Y96.232 E.0734
+G1 X92.316 Y96.232 E.01091
+G1 X94.987 Y98.903 E.07339
+G1 X94.425 Y98.903 E.01092
+G1 X91.754 Y96.232 E.07338
+G1 X91.192 Y96.233 E.01091
+G1 X93.863 Y98.903 E.07337
+G1 X93.301 Y98.903 E.01092
+G1 X90.631 Y96.233 E.07336
+G1 X90.069 Y96.233 E.01091
+G1 X92.739 Y98.903 E.07335
+G1 X92.177 Y98.903 E.01092
+G1 X89.508 Y96.234 E.07334
+G1 X88.946 Y96.234 E.01091
+G1 X91.615 Y98.903 E.07333
+G1 X91.053 Y98.903 E.01092
+G1 X88.384 Y96.235 E.07332
+G1 X87.823 Y96.235 E.01091
+G1 X90.491 Y98.903 E.07331
+G1 X89.929 Y98.903 E.01092
+G1 X87.261 Y96.235 E.0733
+G1 X86.699 Y96.236 E.01091
+G1 X89.367 Y98.903 E.07329
+G1 X88.805 Y98.903 E.01092
+G1 X85.908 Y96.006 E.07961
+; WIPE_START
+G1 F21000
+G1 X87.322 Y97.42 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.037 Y94.135 Z2.04 F42000
+G1 Z1.64
+G1 E.8 F1800
+G1 F12916
+M204 S6000
+G1 X76.588 Y86.686 E.20467
+G1 X77.15 Y86.686 E.01092
+G1 X83.809 Y93.345 E.18296
+G1 X83.809 Y92.783 E.01092
+G1 X77.712 Y86.686 E.16752
+G1 X78.274 Y86.686 E.01092
+G1 X83.809 Y92.221 E.15208
+G3 X83.85 Y91.7 I2.59 J-.056 E.01016
+G1 X78.836 Y86.686 E.13778
+G1 X79.398 Y86.686 E.01092
+G1 X83.971 Y91.259 E.12566
+G3 X84.144 Y90.87 I1.265 J.328 E.00831
+G1 X79.96 Y86.686 E.11496
+G1 X80.522 Y86.686 E.01092
+G1 X84.375 Y90.539 E.10587
+G3 X84.642 Y90.244 I1.027 J.66 E.00776
+G1 X81.084 Y86.686 E.09776
+G1 X81.646 Y86.686 E.01092
+G1 X84.96 Y90.001 E.09108
+G3 X85.316 Y89.794 I.803 J.974 E.00802
+G1 X82.208 Y86.686 E.08541
+G1 X82.77 Y86.686 E.01092
+G1 X85.733 Y89.65 E.08143
+G3 X86.214 Y89.568 I.447 J1.187 E.00953
+G1 X83.332 Y86.686 E.0792
+G1 X83.894 Y86.686 E.01092
+G1 X86.761 Y89.553 E.07877
+G1 X87.323 Y89.553 E.01092
+G1 X84.456 Y86.686 E.07877
+G1 X85.017 Y86.686 E.01092
+G1 X87.885 Y89.553 E.07877
+G1 X88.446 Y89.553 E.01092
+G1 X85.579 Y86.686 E.07877
+G1 X86.141 Y86.686 E.01092
+G1 X89.008 Y89.553 E.07877
+G1 X89.57 Y89.553 E.01092
+G1 X86.703 Y86.686 E.07877
+G1 X87.265 Y86.686 E.01092
+G1 X90.132 Y89.553 E.07877
+G1 X90.694 Y89.553 E.01092
+G1 X87.827 Y86.686 E.07877
+G1 X88.389 Y86.686 E.01092
+G1 X91.256 Y89.553 E.07877
+G1 X91.818 Y89.553 E.01092
+G1 X88.951 Y86.686 E.07877
+G1 X89.513 Y86.686 E.01092
+G1 X92.38 Y89.553 E.07877
+G1 X92.942 Y89.553 E.01092
+G1 X90.075 Y86.686 E.07877
+G1 X90.637 Y86.686 E.01092
+G1 X93.504 Y89.553 E.07877
+G3 X94.121 Y89.608 I-.033 J3.865 E.01204
+G1 X91.199 Y86.686 E.08028
+G1 X91.761 Y86.686 E.01092
+G1 X103.978 Y98.903 E.33567
+G1 X104.54 Y98.903 E.01092
+G1 X92.323 Y86.686 E.33567
+G1 X92.885 Y86.686 E.01092
+G1 X105.091 Y98.892 E.33535
+G1 X105.119 Y98.889 E.00055
+G2 X105.451 Y98.69 I-.212 J-.73 E.00761
+G1 X93.447 Y86.686 E.3298
+G1 X94.009 Y86.686 E.01092
+G1 X105.606 Y98.283 E.31863
+G1 X105.606 Y97.721 E.01092
+G1 X94.571 Y86.686 E.3032
+G1 X95.133 Y86.686 E.01092
+G1 X105.606 Y97.16 E.28776
+G1 X105.606 Y96.598 E.01092
+G1 X95.695 Y86.686 E.27232
+G1 X96.257 Y86.686 E.01092
+G1 X105.607 Y96.036 E.25688
+G1 X105.607 Y95.474 E.01092
+G1 X96.819 Y86.686 E.24145
+G1 X97.381 Y86.686 E.01092
+G1 X105.607 Y94.912 E.22601
+G1 X105.607 Y94.35 E.01092
+G1 X97.943 Y86.686 E.21057
+G1 X98.505 Y86.686 E.01092
+G1 X105.607 Y93.789 E.19514
+G1 X105.607 Y93.227 E.01092
+G1 X99.067 Y86.687 E.1797
+G1 X99.629 Y86.687 E.01092
+G1 X105.607 Y92.665 E.16426
+G1 X105.608 Y92.103 E.01092
+G1 X100.191 Y86.687 E.14882
+G1 X100.753 Y86.687 E.01092
+G1 X105.608 Y91.541 E.13339
+G1 X105.608 Y90.979 E.01092
+G1 X101.315 Y86.687 E.11795
+G1 X101.877 Y86.687 E.01092
+G1 X105.608 Y90.418 E.10251
+G1 X105.608 Y89.856 E.01092
+G1 X102.439 Y86.687 E.08707
+M73 P23 R11
+G1 X103.001 Y86.687 E.01092
+G1 X105.608 Y89.294 E.07164
+G1 X105.608 Y88.732 E.01092
+G1 X103.563 Y86.687 E.0562
+G1 X104.125 Y86.687 E.01092
+G1 X105.608 Y88.17 E.04076
+G1 X105.609 Y87.608 E.01092
+G1 X104.687 Y86.687 E.02532
+G3 X105.333 Y86.788 I.148 J1.169 E.01287
+G3 X105.776 Y87.214 I-1.858 J2.376 E.01197
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X105.333 Y86.788 E-.23379
+G1 X105.118 Y86.7 E-.08827
+G1 X104.687 Y86.687 E-.16384
+G1 X105.197 Y87.197 E-.2741
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X98.01 Y84.627 Z2.04 F42000
+G1 X90.022 Y81.772 Z2.04
+G1 Z1.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G1 X89.978 Y81.776 E.00091
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.086 Y81.763 I-.075 J.267 E.01467
+G1 X90.081 Y81.764 E.00009
+M204 S250
+G1 X90.081 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.787 Y80.845 I-.087 J-.682 E.03924
+G3 X90.093 Y80.82 I.213 J.73 E.00595
+G3 X90.14 Y82.172 I-.099 J.68 E.03687
+; CHANGE_LAYER
+; Z_HEIGHT: 1.76
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07388
+G1 X89.813 Y82.163 E-.05135
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05134
+G1 X89.476 Y81.947 E-.05133
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.0513
+G1 X89.316 Y81.581 E-.05136
+G1 X89.313 Y81.446 E-.05129
+G1 X89.337 Y81.313 E-.05135
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.073 E-.05134
+G1 X89.553 Y80.976 E-.05133
+G1 X89.663 Y80.899 E-.05132
+G1 X89.709 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 14/218
+; update layer progress
+M73 L14
+M991 S0 P13 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.04 I-.07 J1.215 P1  F42000
+G1 X105.229 Y81.772 Z2.04
+G1 Z1.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13064
+M204 S6000
+G1 X105.184 Y81.776 E.00095
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.291 Y81.763 I-.075 J.267 E.01468
+G1 X105.289 Y81.763 E.00005
+M204 S250
+G1 X105.286 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X104.993 Y80.845 I-.087 J-.682 E.03926
+G3 X105.307 Y80.822 I.211 J.716 E.00613
+G3 X105.345 Y82.171 I-.108 J.678 E.03667
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07388
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05136
+G1 X104.682 Y81.948 E-.0513
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05132
+G1 X104.521 Y81.581 E-.05134
+G1 X104.519 Y81.446 E-.0513
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05131
+G1 X104.665 Y81.073 E-.05136
+G1 X104.758 Y80.976 E-.0513
+G1 X104.869 Y80.899 E-.05134
+G1 X104.914 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.976 Y85.674 Z2.16 F42000
+G1 X86.33 Y95.884 Z2.16
+G1 Z1.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13064
+M204 S6000
+G1 X86.056 Y95.861 E.00571
+G3 X84.161 Y93.791 I.346 J-2.22 E.06288
+G3 X84.157 Y92.127 I25.377 J-.897 E.03452
+G3 X86.383 Y89.901 I2.245 J.019 E.07237
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.029 J2.256 E.06961
+G3 X95.843 Y93.662 I-25.377 J.897 E.03452
+G3 X93.617 Y95.888 I-2.254 J-.028 E.07229
+G1 X86.39 Y95.888 E.14991
+M204 S10000
+G1 X86.364 Y95.462 F42000
+G1 F13064
+M204 S6000
+G1 X86.123 Y95.442 E.00502
+G3 X84.584 Y93.763 I.279 J-1.8 E.05102
+G3 X84.581 Y92.134 I24.856 J-.869 E.0338
+G3 X86.39 Y90.325 I1.821 J.012 E.05883
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.026 I-.02 J1.83 E.05652
+G3 X95.419 Y93.655 I-24.856 J.869 E.0338
+G3 X93.61 Y95.464 I-1.828 J-.019 E.05877
+G1 X86.424 Y95.464 E.14906
+M204 S250
+G1 X86.396 Y95.054 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X84.993 Y93.737 I.005 J-1.412 E.04083
+G3 X84.99 Y92.141 I24.308 J-.842 E.03077
+G3 X86.396 Y90.734 I1.412 J.005 E.04254
+G1 X93.604 Y90.734 E.13892
+G3 X95.007 Y92.052 I-.011 J1.418 E.04079
+G3 X95.01 Y93.648 I-24.308 J.842 E.03077
+G3 X93.604 Y95.054 I-1.417 J-.011 E.0425
+G1 X86.456 Y95.054 E.13777
+; WIPE_START
+M204 S6000
+G1 X86.187 Y95.038 E-.10253
+G1 X85.86 Y94.947 E-.12886
+G1 X85.617 Y94.817 E-.10507
+G1 X85.403 Y94.642 E-.10502
+G1 X85.264 Y94.479 E-.08116
+G1 X85.097 Y94.184 E-.12881
+G1 X85.038 Y94.009 E-.07012
+G1 X85.021 Y93.91 E-.03843
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X78.289 Y97.504 Z2.16 F42000
+G1 X75.017 Y99.251 Z2.16
+G1 Z1.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13064
+M204 S6000
+G3 X74.043 Y98.277 I-.01 J-.963 E.03182
+G1 X74.043 Y87.311 E.22746
+G3 X75.017 Y86.338 I.963 J-.01 E.03182
+G1 X105.003 Y86.339 E.62197
+G3 X105.957 Y87.312 I-.008 J.962 E.03141
+G1 X105.957 Y98.278 E.22746
+G3 X104.983 Y99.251 I-.963 J.01 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F13064
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04533
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04533
+G1 X105.009 Y85.914 E.62226
+G3 X106.381 Y87.305 I-.017 J1.388 E.04493
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04533
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X73.21 Y98.291 I.006 J-1.8 E.05425
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.016 Y85.505 E.57852
+G3 X106.79 Y87.298 I-.025 J1.799 E.05387
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57698
+; WIPE_START
+M204 S6000
+G1 X74.651 Y100.05 E-.15737
+G1 X74.315 Y99.948 E-.13331
+G1 X73.99 Y99.772 E-.14034
+G1 X73.734 Y99.56 E-.12627
+G1 X73.512 Y99.289 E-.13338
+G1 X73.426 Y99.128 E-.06934
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 14 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer14 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X75.85 Y99.081
+G1 Z1.76
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.422962
+G1 F13064
+M204 S6000
+G1 X88.244 Y86.686 E.34041
+G1 X87.682 Y86.686 E.01091
+G1 X75.465 Y98.903 E.33554
+G3 X74.913 Y98.894 I-.225 J-3.083 E.01075
+G1 X87.121 Y86.686 E.33528
+G1 X86.559 Y86.686 E.01091
+G1 X74.553 Y98.692 E.32975
+G3 X74.394 Y98.289 I.405 J-.393 E.00863
+G1 X85.997 Y86.686 E.31868
+G1 X85.436 Y86.686 E.01091
+G1 X74.391 Y97.73 E.30332
+G1 X74.392 Y97.168 E.01091
+G1 X84.874 Y86.686 E.28789
+G1 X84.312 Y86.686 E.01091
+G1 X74.392 Y96.606 E.27246
+G1 X74.392 Y96.044 E.01091
+G1 X83.75 Y86.686 E.25703
+G1 X83.189 Y86.686 E.01091
+G1 X74.392 Y95.483 E.2416
+G1 X74.392 Y94.921 E.01091
+G1 X82.627 Y86.686 E.22617
+G1 X82.065 Y86.686 E.01091
+G1 X74.392 Y94.359 E.21074
+G1 X74.392 Y93.797 E.01091
+G1 X81.503 Y86.686 E.1953
+G1 X80.942 Y86.686 E.01091
+G1 X74.393 Y93.235 E.17987
+G1 X74.393 Y92.673 E.01091
+G1 X80.38 Y86.686 E.16444
+G1 X79.818 Y86.686 E.01091
+G1 X74.393 Y92.111 E.14901
+G1 X74.393 Y91.549 E.01091
+G1 X79.257 Y86.686 E.13358
+G1 X78.695 Y86.686 E.01091
+G1 X74.393 Y90.988 E.11815
+G1 X74.393 Y90.426 E.01091
+G1 X78.133 Y86.686 E.10272
+G1 X77.571 Y86.686 E.01091
+G1 X74.393 Y89.864 E.08728
+G1 X74.393 Y89.302 E.01091
+G1 X77.01 Y86.686 E.07185
+G1 X76.448 Y86.686 E.01091
+G1 X74.394 Y88.74 E.05642
+G1 X74.394 Y88.178 E.01091
+G1 X75.886 Y86.686 E.04099
+G1 X75.324 Y86.686 E.01091
+G1 X74.394 Y87.616 E.02556
+G3 X74.415 Y87.132 I1.479 J-.178 E.00946
+G3 X74.517 Y86.932 I.554 J.155 E.00438
+G1 X74.931 Y86.517 E.01139
+; WIPE_START
+G1 F21000
+G1 X74.517 Y86.932 E-.22291
+G1 X74.415 Y87.132 E-.08523
+G1 X74.394 Y87.26 E-.0495
+G1 X74.394 Y87.616 E-.13527
+G1 X74.891 Y87.119 E-.26709
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X81.021 Y91.666 Z2.16 F42000
+G1 X91.017 Y99.081 Z2.16
+G1 Z1.76
+G1 E.8 F1800
+G1 F13064
+M204 S6000
+G1 X93.88 Y96.217 E.07865
+G1 X93.304 Y96.232 E.0112
+G1 X90.632 Y98.903 E.07337
+G1 X90.071 Y98.903 E.01091
+G1 X92.742 Y96.232 E.07336
+G1 X92.18 Y96.232 E.01092
+G1 X89.509 Y98.903 E.07335
+G1 X88.947 Y98.903 E.01091
+G1 X91.617 Y96.233 E.07334
+G1 X91.055 Y96.233 E.01092
+G1 X88.385 Y98.903 E.07333
+G1 X87.824 Y98.903 E.01091
+G1 X90.493 Y96.233 E.07332
+G1 X89.931 Y96.234 E.01092
+G1 X87.262 Y98.903 E.07331
+G1 X86.7 Y98.903 E.01091
+G1 X89.369 Y96.234 E.0733
+G1 X88.807 Y96.234 E.01092
+G1 X86.138 Y98.903 E.0733
+G1 X85.577 Y98.903 E.01091
+G1 X88.245 Y96.235 E.07329
+G1 X87.683 Y96.235 E.01092
+G1 X85.015 Y98.903 E.07328
+G1 X84.453 Y98.903 E.01091
+G1 X87.121 Y96.235 E.07327
+G1 X86.559 Y96.236 E.01092
+G1 X83.891 Y98.903 E.07326
+G1 X83.33 Y98.903 E.01091
+G1 X86.025 Y96.208 E.07401
+G3 X85.579 Y96.092 I.359 J-2.299 E.00896
+G1 X82.768 Y98.903 E.07719
+G1 X82.206 Y98.903 E.01091
+G1 X85.183 Y95.927 E.08174
+G1 X84.836 Y95.711 E.00792
+G1 X81.645 Y98.903 E.08766
+G1 X81.083 Y98.903 E.01091
+G1 X84.544 Y95.442 E.09506
+G3 X84.29 Y95.134 I.659 J-.802 E.0078
+G1 X80.521 Y98.903 E.10352
+G1 X79.959 Y98.903 E.01091
+G1 X84.082 Y94.781 E.11322
+G3 X83.919 Y94.382 I1.109 J-.685 E.00841
+G1 X79.398 Y98.903 E.12418
+G1 X78.836 Y98.903 E.01091
+G1 X83.832 Y93.907 E.13721
+G3 X83.809 Y93.369 I2.649 J-.383 E.01049
+G1 X78.274 Y98.903 E.15201
+G1 X77.712 Y98.903 E.01091
+G1 X83.809 Y92.807 E.16743
+G1 X83.809 Y92.245 E.01091
+G1 X77.151 Y98.903 E.18286
+G1 X76.589 Y98.903 E.01091
+G1 X84.124 Y91.368 E.20694
+; WIPE_START
+G1 F21000
+G1 X82.709 Y92.783 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.624 Y89.868 Z2.16 F42000
+G1 Z1.76
+G1 E.8 F1800
+G1 F13064
+M204 S6000
+G1 X88.806 Y86.686 E.08739
+G1 X89.368 Y86.686 E.01091
+G1 X86.501 Y89.553 E.07874
+G1 X87.062 Y89.553 E.01091
+G1 X89.929 Y86.686 E.07874
+G1 X90.491 Y86.686 E.01091
+G1 X87.624 Y89.553 E.07874
+M73 P24 R11
+G1 X88.186 Y89.553 E.01091
+G1 X91.053 Y86.686 E.07874
+G1 X91.615 Y86.686 E.01091
+G1 X88.748 Y89.553 E.07874
+G1 X89.309 Y89.553 E.01091
+G1 X92.176 Y86.686 E.07874
+G1 X92.738 Y86.686 E.01091
+G1 X89.871 Y89.553 E.07874
+G1 X90.433 Y89.553 E.01091
+G1 X93.3 Y86.686 E.07874
+G1 X93.861 Y86.686 E.01091
+G1 X90.995 Y89.553 E.07874
+G1 X91.556 Y89.553 E.01091
+G1 X94.423 Y86.686 E.07874
+G1 X94.985 Y86.686 E.01091
+G1 X92.118 Y89.553 E.07874
+G1 X92.68 Y89.553 E.01091
+G1 X95.547 Y86.686 E.07874
+G1 X96.108 Y86.686 E.01091
+G1 X93.241 Y89.553 E.07874
+G3 X93.791 Y89.566 I.195 J3.452 E.01068
+G1 X96.67 Y86.686 E.07909
+G1 X97.232 Y86.686 E.01091
+G1 X94.276 Y89.642 E.08118
+G1 X94.685 Y89.795 E.00848
+G1 X97.794 Y86.686 E.08538
+G1 X98.355 Y86.686 E.01091
+G1 X95.047 Y89.994 E.09085
+G3 X95.358 Y90.245 I-.605 J1.065 E.00779
+G1 X98.917 Y86.686 E.09775
+G1 X99.479 Y86.686 E.01091
+G1 X95.629 Y90.536 E.10572
+G1 X95.851 Y90.876 E.00789
+G1 X100.04 Y86.686 E.11507
+G1 X100.602 Y86.686 E.01091
+G1 X96.032 Y91.256 E.12551
+G3 X96.15 Y91.7 I-2.953 J1.019 E.00893
+G1 X101.164 Y86.686 E.13771
+G1 X101.726 Y86.686 E.01091
+G1 X96.191 Y92.221 E.15201
+G1 X96.19 Y92.784 E.01094
+G1 X102.287 Y86.686 E.16747
+G1 X102.849 Y86.686 E.01091
+G1 X96.188 Y93.347 E.18294
+G1 X96.187 Y93.828 E.00933
+G1 X96.171 Y93.927 E.00195
+G1 X103.411 Y86.686 E.19885
+G1 X103.973 Y86.686 E.01091
+G1 X91.756 Y98.903 E.33553
+G1 X92.318 Y98.903 E.01091
+G1 X104.534 Y86.686 E.33553
+G3 X105.086 Y86.696 I.226 J2.782 E.01073
+G1 X92.879 Y98.903 E.33525
+G1 X93.441 Y98.903 E.01091
+G1 X105.451 Y86.893 E.32986
+G3 X105.606 Y87.3 I-.639 J.476 E.00856
+G1 X94.003 Y98.903 E.31868
+G1 X94.565 Y98.903 E.01091
+G1 X105.609 Y87.859 E.30332
+G1 X105.608 Y88.421 E.01091
+G1 X95.126 Y98.903 E.28789
+G1 X95.688 Y98.903 E.01091
+G1 X105.608 Y88.983 E.27246
+G1 X105.608 Y89.545 E.01091
+G1 X96.25 Y98.903 E.25703
+G1 X96.812 Y98.903 E.01091
+G1 X105.608 Y90.107 E.24159
+G1 X105.608 Y90.668 E.01091
+G1 X97.373 Y98.903 E.22616
+G1 X97.935 Y98.903 E.01091
+G1 X105.608 Y91.23 E.21073
+G1 X105.608 Y91.792 E.01091
+G1 X98.497 Y98.903 E.1953
+G1 X99.058 Y98.903 E.01091
+G1 X105.607 Y92.354 E.17987
+G1 X105.607 Y92.916 E.01091
+G1 X99.62 Y98.903 E.16444
+G1 X100.182 Y98.903 E.01091
+G1 X105.607 Y93.478 E.149
+M73 P24 R10
+G1 X105.607 Y94.04 E.01091
+G1 X100.744 Y98.903 E.13357
+G1 X101.305 Y98.903 E.01091
+G1 X105.607 Y94.602 E.11814
+G1 X105.607 Y95.163 E.01091
+G1 X101.867 Y98.903 E.10271
+G1 X102.429 Y98.903 E.01091
+G1 X105.607 Y95.725 E.08728
+G1 X105.607 Y96.287 E.01091
+G1 X102.991 Y98.903 E.07185
+G1 X103.552 Y98.903 E.01091
+G1 X105.606 Y96.849 E.05641
+G1 X105.606 Y97.411 E.01091
+G1 X104.114 Y98.903 E.04098
+G1 X104.676 Y98.903 E.01091
+G1 X105.606 Y97.973 E.02555
+G1 X105.606 Y98.328 E.00691
+G3 X105.483 Y98.658 I-.6 J-.036 E.00693
+G1 X105.069 Y99.072 E.01137
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X105.483 Y98.658 E-.22257
+G1 X105.565 Y98.516 E-.06207
+G1 X105.606 Y98.328 E-.07307
+G1 X105.606 Y97.973 E-.13512
+G1 X105.109 Y98.47 E-.26717
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X99.993 Y92.806 Z2.16 F42000
+G1 X90.024 Y81.772 Z2.16
+G1 Z1.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F13064
+M204 S6000
+G1 X89.978 Y81.776 E.00095
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.086 Y81.763 I-.075 J.267 E.01468
+G1 X90.083 Y81.763 E.00005
+M204 S250
+G1 X90.081 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.787 Y80.845 I-.087 J-.682 E.03926
+G3 X90.102 Y80.822 I.211 J.716 E.00613
+G3 X90.14 Y82.171 I-.108 J.678 E.03667
+; CHANGE_LAYER
+; Z_HEIGHT: 1.88
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07388
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05136
+G1 X89.476 Y81.948 E-.0513
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05131
+G1 X89.316 Y81.581 E-.05134
+G1 X89.313 Y81.446 E-.0513
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.073 E-.05136
+G1 X89.553 Y80.976 E-.0513
+G1 X89.663 Y80.899 E-.05134
+G1 X89.709 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 15/218
+; update layer progress
+M73 L15
+M991 S0 P14 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.16 I-.07 J1.215 P1  F42000
+G1 X105.231 Y81.771 Z2.16
+G1 Z1.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G1 X105.184 Y81.776 E.00099
+G3 X105.173 Y81.224 I.017 J-.276 E.0171
+G3 X105.244 Y81.226 I.031 J.181 E.00149
+G3 X105.291 Y81.762 I-.043 J.274 E.01525
+M204 S250
+G1 X105.286 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X104.993 Y80.845 I-.087 J-.681 E.03926
+G3 X105.316 Y80.823 I.21 J.708 E.0063
+G3 X105.345 Y82.171 I-.118 J.677 E.03648
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07387
+G1 X105.019 Y82.163 E-.05135
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05133
+G1 X104.682 Y81.947 E-.05134
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.0513
+G1 X104.521 Y81.581 E-.05136
+G1 X104.519 Y81.446 E-.05129
+G1 X104.542 Y81.313 E-.05135
+G1 X104.592 Y81.187 E-.05131
+G1 X104.664 Y81.073 E-.05133
+G1 X104.758 Y80.976 E-.05134
+G1 X104.869 Y80.899 E-.05132
+G1 X104.914 Y80.879 E-.01888
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.972 Y85.669 Z2.28 F42000
+G1 X86.306 Y95.88 Z2.28
+G1 Z1.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G1 X85.925 Y95.835 E.00795
+G3 X84.161 Y93.791 I.486 J-2.203 E.06005
+G3 X84.157 Y92.127 I25.38 J-.897 E.03452
+G3 X86.383 Y89.901 I2.254 J.028 E.07229
+G1 X93.617 Y89.901 E.15006
+G3 X95.839 Y91.998 I-.029 J2.256 E.06961
+G3 X95.843 Y93.662 I-25.379 J.897 E.03452
+G3 X93.617 Y95.888 I-2.245 J-.019 E.07237
+G1 X86.383 Y95.888 E.15006
+G1 X86.366 Y95.886 E.00035
+M204 S10000
+G1 X86.353 Y95.46 F42000
+G1 F12916
+M204 S6000
+G1 X86.018 Y95.421 E.00699
+G3 X84.584 Y93.763 I.392 J-1.787 E.04874
+G3 X84.581 Y92.134 I24.859 J-.869 E.0338
+G3 X86.39 Y90.325 I1.828 J.019 E.05877
+G1 X93.61 Y90.325 E.14977
+G3 X95.416 Y92.025 I-.02 J1.83 E.05652
+G3 X95.419 Y93.655 I-24.859 J.869 E.0338
+G3 X93.61 Y95.464 I-1.821 J-.012 E.05883
+G1 X86.412 Y95.464 E.1493
+M204 S250
+G1 X86.396 Y95.054 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X84.993 Y93.737 I.011 J-1.418 E.04079
+G3 X84.99 Y92.141 I24.314 J-.842 E.03077
+G3 X86.396 Y90.734 I1.417 J.011 E.0425
+G1 X93.604 Y90.734 E.13892
+G3 X95.007 Y92.052 I-.011 J1.418 E.04079
+G3 X95.01 Y93.648 I-24.314 J.842 E.03077
+G3 X93.604 Y95.054 I-1.412 J-.005 E.04254
+G1 X86.456 Y95.054 E.13777
+; WIPE_START
+M204 S6000
+G1 X86.106 Y95.023 E-.13353
+G1 X85.86 Y94.947 E-.09787
+G1 X85.617 Y94.817 E-.10502
+G1 X85.403 Y94.642 E-.10506
+G1 X85.228 Y94.428 E-.10504
+G1 X85.097 Y94.184 E-.10507
+G1 X85.038 Y94.009 E-.07007
+G1 X85.022 Y93.91 E-.03835
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X78.289 Y97.504 Z2.28 F42000
+G1 X75.017 Y99.251 Z2.28
+G1 Z1.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G3 X74.043 Y98.277 I-.011 J-.963 E.03182
+G1 X74.043 Y87.312 E.22746
+G3 X75.017 Y86.338 I.963 J-.011 E.03182
+G1 X104.995 Y86.338 E.62181
+G3 X105.957 Y87.312 I0 J.962 E.03157
+G1 X105.957 Y98.277 E.22746
+G3 X104.983 Y99.251 I-.963 J.011 E.03182
+G1 X75.077 Y99.251 E.62032
+M204 S10000
+G1 X75.01 Y99.675 F42000
+G1 F12916
+M204 S6000
+G3 X73.619 Y98.284 I-.002 J-1.389 E.04534
+G1 X73.619 Y87.305 E.22775
+G3 X75.01 Y85.914 I1.389 J-.002 E.04534
+G1 X105.002 Y85.914 E.6221
+G3 X106.381 Y87.305 I-.009 J1.388 E.04509
+G1 X106.381 Y98.284 E.22775
+G3 X104.99 Y99.675 I-1.389 J.002 E.04534
+G1 X75.07 Y99.675 E.62061
+M204 S250
+G1 X75.003 Y100.084 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X73.21 Y98.291 I.006 J-1.8 E.05425
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105.008 Y85.505 E.57837
+G3 X106.79 Y87.298 I-.017 J1.799 E.05402
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57698
+; WIPE_START
+M204 S6000
+G1 X74.651 Y100.05 E-.15736
+G1 X74.315 Y99.948 E-.1333
+G1 X73.996 Y99.776 E-.13759
+G1 X73.734 Y99.56 E-.12909
+G1 X73.512 Y99.289 E-.13337
+G1 X73.426 Y99.128 E-.0693
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 15 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer15 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X74.223 Y98.362
+G1 Z1.88
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.423052
+G1 F12916
+M204 S6000
+G2 X74.728 Y98.837 I2.235 J-1.872 E.01349
+G2 X75.325 Y98.903 I.449 J-1.319 E.01178
+G1 X74.391 Y97.969 E.02566
+G1 X74.392 Y97.407 E.01091
+G1 X75.887 Y98.903 E.04109
+G1 X76.449 Y98.903 E.01091
+G1 X74.392 Y96.846 E.05652
+G1 X74.392 Y96.284 E.01091
+G1 X77.011 Y98.903 E.07195
+G1 X77.573 Y98.903 E.01091
+G1 X74.392 Y95.722 E.08738
+G1 X74.392 Y95.16 E.01091
+G1 X78.135 Y98.903 E.10281
+G1 X78.697 Y98.903 E.01091
+G1 X74.392 Y94.599 E.11825
+G1 X74.392 Y94.037 E.01091
+G1 X79.258 Y98.903 E.13368
+G1 X79.82 Y98.903 E.01091
+G1 X74.392 Y93.475 E.14911
+G1 X74.393 Y92.914 E.01091
+G1 X80.382 Y98.903 E.16454
+G1 X80.944 Y98.903 E.01091
+G1 X74.393 Y92.352 E.17997
+G1 X74.393 Y91.79 E.01091
+G1 X81.506 Y98.903 E.1954
+G1 X82.068 Y98.903 E.01091
+G1 X74.393 Y91.228 E.21083
+G1 X74.393 Y90.667 E.01091
+G1 X82.63 Y98.903 E.22627
+M73 P25 R10
+G1 X83.191 Y98.903 E.01091
+G1 X74.393 Y90.105 E.2417
+G1 X74.393 Y89.543 E.01091
+G1 X83.753 Y98.903 E.25713
+G1 X84.315 Y98.903 E.01091
+G1 X74.394 Y88.981 E.27256
+G1 X74.394 Y88.42 E.01091
+G1 X84.877 Y98.903 E.28799
+G1 X85.439 Y98.903 E.01091
+G1 X74.394 Y87.858 E.30342
+G1 X74.394 Y87.296 E.01091
+G1 X86.001 Y98.903 E.31885
+G1 X86.563 Y98.903 E.01091
+G1 X74.556 Y86.897 E.32983
+G3 X74.918 Y86.697 I.401 J.299 E.00828
+G1 X87.125 Y98.903 E.33533
+G1 X87.686 Y98.903 E.01091
+G1 X75.469 Y86.686 E.33562
+G1 X76.031 Y86.686 E.01091
+G1 X88.426 Y99.081 E.3405
+M204 S10000
+G1 X103.596 Y99.081 F42000
+G1 F12916
+M204 S6000
+G1 X96.139 Y91.624 E.20485
+G1 X96.144 Y91.638 E.00029
+G3 X96.191 Y92.237 I-2.866 J.528 E.0117
+G1 X102.857 Y98.903 E.18312
+G1 X102.295 Y98.903 E.01091
+G1 X96.19 Y92.798 E.16772
+G1 X96.188 Y93.358 E.01089
+G1 X101.733 Y98.903 E.15232
+G1 X101.171 Y98.903 E.01091
+G1 X96.174 Y93.906 E.13727
+G3 X96.084 Y94.377 I-1.904 J-.122 E.00935
+G1 X100.609 Y98.903 E.12432
+G1 X100.048 Y98.903 E.01091
+G1 X95.928 Y94.784 E.11316
+G1 X95.714 Y95.132 E.00793
+G1 X99.486 Y98.903 E.1036
+G1 X98.924 Y98.903 E.01091
+G1 X95.464 Y95.443 E.09505
+G3 X95.167 Y95.709 I-3.701 J-3.831 E.00773
+G1 X98.362 Y98.903 E.08776
+G1 X97.8 Y98.903 E.01091
+G1 X94.823 Y95.926 E.08179
+G3 X94.43 Y96.095 I-.838 J-1.408 E.00833
+G1 X97.238 Y98.903 E.07715
+G1 X96.676 Y98.903 E.01091
+G1 X93.98 Y96.207 E.07407
+G3 X93.447 Y96.236 I-.494 J-4.151 E.01037
+G1 X96.114 Y98.903 E.07327
+G1 X95.553 Y98.903 E.01091
+G1 X92.885 Y96.236 E.07327
+G1 X92.323 Y96.236 E.01091
+G1 X94.991 Y98.903 E.07327
+G1 X94.429 Y98.903 E.01091
+G1 X91.762 Y96.236 E.07327
+G1 X91.2 Y96.236 E.01091
+G1 X93.867 Y98.903 E.07327
+G1 X93.305 Y98.903 E.01091
+G1 X90.638 Y96.236 E.07327
+G1 X90.076 Y96.236 E.01091
+G1 X92.743 Y98.903 E.07327
+G1 X92.181 Y98.903 E.01091
+G1 X89.514 Y96.236 E.07327
+G1 X88.952 Y96.236 E.01091
+G1 X91.619 Y98.903 E.07327
+G1 X91.058 Y98.903 E.01091
+G1 X88.39 Y96.236 E.07327
+G1 X87.828 Y96.236 E.01091
+G1 X90.496 Y98.903 E.07327
+G1 X89.934 Y98.903 E.01091
+G1 X87.267 Y96.236 E.07327
+G1 X86.705 Y96.236 E.01091
+G1 X89.372 Y98.903 E.07327
+G1 X88.81 Y98.903 E.01091
+G1 X85.915 Y96.008 E.07953
+; WIPE_START
+G1 F21000
+G1 X87.329 Y97.422 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.035 Y94.128 Z2.28 F42000
+G1 Z1.88
+G1 E.8 F1800
+G1 F12916
+M204 S6000
+G1 X76.593 Y86.686 E.20444
+G1 X77.155 Y86.686 E.01091
+G1 X83.812 Y93.343 E.18288
+G1 X83.81 Y92.78 E.01094
+G1 X77.717 Y86.686 E.1674
+G1 X78.278 Y86.686 E.01091
+G1 X83.809 Y92.216 E.15193
+G3 X83.853 Y91.698 I2.972 J-.009 E.01011
+G1 X78.84 Y86.686 E.1377
+G1 X79.402 Y86.686 E.01091
+G1 X83.971 Y91.254 E.1255
+G1 X84.145 Y90.867 E.00825
+G1 X79.964 Y86.686 E.11486
+G1 X80.526 Y86.686 E.01091
+G1 X84.377 Y90.537 E.10578
+G3 X84.644 Y90.242 I1.023 J.659 E.00776
+G1 X81.088 Y86.686 E.09769
+G1 X81.65 Y86.686 E.01091
+G1 X84.962 Y89.998 E.09098
+G3 X85.319 Y89.793 I.792 J.969 E.00803
+G1 X82.212 Y86.686 E.08536
+G1 X82.773 Y86.686 E.01091
+G1 X85.736 Y89.649 E.08139
+G3 X86.218 Y89.568 I.446 J1.188 E.00954
+G1 X83.335 Y86.686 E.07918
+G1 X83.897 Y86.686 E.01091
+G1 X86.764 Y89.553 E.07877
+G1 X87.326 Y89.553 E.01091
+G1 X84.459 Y86.686 E.07876
+G1 X85.021 Y86.686 E.01091
+G1 X87.888 Y89.553 E.07876
+G1 X88.45 Y89.553 E.01091
+G1 X85.583 Y86.686 E.07876
+G1 X86.145 Y86.686 E.01091
+G1 X89.012 Y89.553 E.07876
+G1 X89.574 Y89.553 E.01091
+G1 X86.707 Y86.686 E.07876
+G1 X87.268 Y86.686 E.01091
+G1 X90.136 Y89.553 E.07876
+G1 X90.697 Y89.553 E.01091
+G1 X87.83 Y86.686 E.07876
+G1 X88.392 Y86.686 E.01091
+G1 X91.259 Y89.553 E.07876
+G1 X91.821 Y89.553 E.01091
+G1 X88.954 Y86.686 E.07876
+G1 X89.516 Y86.686 E.01091
+G1 X92.383 Y89.553 E.07876
+G1 X92.945 Y89.553 E.01091
+G1 X90.078 Y86.686 E.07876
+G1 X90.64 Y86.686 E.01091
+G1 X93.507 Y89.553 E.07876
+G3 X94.122 Y89.606 I.065 J2.83 E.01202
+G1 X91.202 Y86.686 E.08023
+G1 X91.763 Y86.686 E.01091
+G1 X103.981 Y98.903 E.33562
+G1 X104.542 Y98.903 E.01091
+G1 X92.325 Y86.686 E.33562
+G1 X92.887 Y86.686 E.01091
+G1 X105.092 Y98.891 E.33529
+G2 X105.449 Y98.686 I-.053 J-.506 E.00823
+G1 X93.449 Y86.686 E.32966
+G1 X94.011 Y86.686 E.01091
+G1 X105.606 Y98.281 E.31853
+G1 X105.606 Y97.719 E.01091
+G1 X94.573 Y86.686 E.3031
+G1 X95.135 Y86.686 E.01091
+G1 X105.606 Y97.158 E.28767
+G1 X105.606 Y96.596 E.01091
+G1 X95.697 Y86.686 E.27224
+G1 X96.258 Y86.686 E.01091
+G1 X105.607 Y96.034 E.2568
+G1 X105.607 Y95.473 E.01091
+G1 X96.82 Y86.686 E.24137
+G1 X97.382 Y86.686 E.01091
+G1 X105.607 Y94.911 E.22594
+G1 X105.607 Y94.349 E.01091
+G1 X97.944 Y86.686 E.21051
+G1 X98.506 Y86.686 E.01091
+G1 X105.607 Y93.787 E.19508
+G1 X105.607 Y93.226 E.01091
+G1 X99.068 Y86.686 E.17965
+G1 X99.63 Y86.686 E.01091
+G1 X105.607 Y92.664 E.16421
+G1 X105.608 Y92.102 E.01091
+G1 X100.192 Y86.686 E.14878
+G1 X100.753 Y86.686 E.01091
+G1 X105.608 Y91.54 E.13335
+G1 X105.608 Y90.979 E.01091
+G1 X101.315 Y86.686 E.11792
+G1 X101.877 Y86.686 E.01091
+G1 X105.608 Y90.417 E.10249
+G1 X105.608 Y89.855 E.01091
+G1 X102.439 Y86.686 E.08706
+G1 X103.001 Y86.686 E.01091
+G1 X105.608 Y89.293 E.07162
+G1 X105.608 Y88.732 E.01091
+G1 X103.563 Y86.686 E.05619
+G1 X104.125 Y86.686 E.01091
+G1 X105.608 Y88.17 E.04076
+G1 X105.609 Y87.608 E.01091
+G1 X104.687 Y86.686 E.02533
+G1 X104.978 Y86.686 E.00566
+G3 X105.337 Y86.79 I-.009 J.703 E.00734
+G3 X105.776 Y87.214 I-1.931 J2.442 E.01188
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X105.337 Y86.79 E-.232
+G1 X105.117 Y86.699 E-.09054
+G1 X104.978 Y86.686 E-.05286
+G1 X104.687 Y86.686 E-.11076
+G1 X105.196 Y87.196 E-.27384
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X98.009 Y84.626 Z2.28 F42000
+G1 X90.026 Y81.771 Z2.28
+G1 Z1.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F12916
+M204 S6000
+G1 X89.978 Y81.776 E.00099
+G3 X89.967 Y81.224 I.017 J-.276 E.0171
+G3 X90.039 Y81.226 I.031 J.181 E.00149
+G3 X90.085 Y81.762 I-.043 J.274 E.01525
+M204 S250
+G1 X90.081 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.787 Y80.845 I-.087 J-.681 E.03926
+G3 X90.111 Y80.823 I.21 J.708 E.0063
+G3 X90.14 Y82.171 I-.118 J.677 E.03648
+; CHANGE_LAYER
+; Z_HEIGHT: 2
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07387
+G1 X89.813 Y82.163 E-.05135
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05133
+G1 X89.476 Y81.947 E-.05134
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.0513
+G1 X89.316 Y81.581 E-.05136
+G1 X89.313 Y81.446 E-.05129
+G1 X89.337 Y81.313 E-.05135
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.074 E-.05133
+G1 X89.553 Y80.976 E-.05134
+G1 X89.663 Y80.899 E-.05132
+G1 X89.709 Y80.879 E-.01889
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 16/218
+; update layer progress
+M73 L16
+M991 S0 P15 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.28 I-.07 J1.215 P1  F42000
+G1 X105.233 Y81.771 Z2.28
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G1 X105.184 Y81.776 E.00103
+G3 X105.173 Y81.224 I.017 J-.276 E.01711
+G3 X105.253 Y81.228 I.031 J.204 E.00168
+G3 X105.292 Y81.761 I-.052 J.272 E.01502
+M204 S250
+G1 X105.286 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X104.993 Y80.845 I-.087 J-.681 E.03926
+G3 X105.325 Y80.825 I.209 J.705 E.00648
+G3 X105.345 Y82.171 I-.127 J.675 E.0363
+; OBJECT_ID: 66
+; WIPE_START
+M204 S6000
+G1 X105.152 Y82.187 E-.07387
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05134
+G1 X104.779 Y82.041 E-.05129
+G1 X104.682 Y81.947 E-.05136
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.0513
+G1 X104.521 Y81.581 E-.05136
+G1 X104.519 Y81.446 E-.05129
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05134
+G1 X104.664 Y81.074 E-.05129
+G1 X104.758 Y80.976 E-.05136
+G1 X104.869 Y80.899 E-.05132
+G1 X104.914 Y80.879 E-.01888
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.854 Y85.518 Z2.4 F42000
+G1 X86.397 Y95.054 Z2.4
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S5000
+M73 P26 R10
+G3 X84.993 Y93.737 I.011 J-1.418 E.04079
+G3 X84.99 Y92.141 I24.28 J-.842 E.03076
+G3 X86.393 Y90.734 I1.417 J.01 E.04244
+G1 X93.603 Y90.734 E.13898
+G3 X95.007 Y92.052 I-.011 J1.418 E.04079
+G3 X95.01 Y93.648 I-24.28 J.842 E.03076
+G3 X93.604 Y95.054 I-1.417 J-.01 E.0425
+G1 X86.457 Y95.054 E.13776
+; WIPE_START
+M204 S6000
+G1 X86.207 Y95.041 E-.09492
+G1 X85.86 Y94.947 E-.13658
+G1 X85.617 Y94.817 E-.1051
+G1 X85.403 Y94.642 E-.10496
+G1 X85.281 Y94.503 E-.07015
+G1 X85.135 Y94.268 E-.10504
+G1 X85.038 Y94.01 E-.105
+G1 X85.022 Y93.91 E-.03824
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.459 Y91.243 Z2.4 F42000
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G1 X80.971 Y91.243 E.03086
+G1 X80.971 Y90.446 E.01654
+G1 X82.459 Y90.446 E.03086
+G1 X82.459 Y91.183 E.0153
+; WIPE_START
+G1 X80.971 Y91.243 E-.56576
+G1 X80.971 Y90.732 E-.19424
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X88.6 Y90.967 Z2.4 F42000
+G1 X97.541 Y91.243 Z2.4
+G1 Z2
+G1 E.8 F1800
+G1 F21000
+M204 S6000
+G1 X97.541 Y90.446 E.01654
+G1 X99.029 Y90.446 E.03086
+G1 X99.029 Y91.243 E.01654
+G1 X97.601 Y91.243 E.02961
+; WIPE_START
+G1 X97.541 Y90.446 E-.30395
+G1 X98.741 Y90.446 E-.45605
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.67 Y93.317 Z2.4 F42000
+G1 X75.003 Y100.084 Z2.4
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X73.21 Y98.291 I.006 J-1.8 E.05425
+G1 X73.21 Y87.298 E.2119
+G3 X75.003 Y85.504 I1.8 J.006 E.05425
+G1 X105 Y85.505 E.57821
+G3 X106.79 Y87.298 I-.01 J1.8 E.05417
+G1 X106.79 Y98.291 E.2119
+G3 X104.997 Y100.084 I-1.8 J-.006 E.05425
+G1 X75.063 Y100.084 E.57698
+; WIPE_START
+M204 S6000
+G1 X74.647 Y100.049 E-.15876
+G1 X74.315 Y99.948 E-.13194
+G1 X74.006 Y99.783 E-.13323
+G1 X73.734 Y99.56 E-.13346
+G1 X73.512 Y99.289 E-.13325
+G1 X73.426 Y99.128 E-.06935
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 16 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer16 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X81.183 Y90.844
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.399132
+G1 F21000
+M204 S6000
+G1 X82.247 Y90.844 E.01941
+; WIPE_START
+G1 X81.183 Y90.844 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X88.816 Y90.844 Z2.4 F42000
+G1 X97.753 Y90.844 Z2.4
+G1 Z2
+G1 E.8 F1800
+G1 F21000
+M204 S6000
+G1 X98.817 Y90.844 E.01941
+; WIPE_START
+G1 X97.753 Y90.844 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X103.601 Y95.75 Z2.4 F42000
+G1 X106.573 Y98.244 Z2.4
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Top surface
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S2000
+G1 X104.95 Y99.868 E.04426
+G1 X104.392 Y99.868
+G1 X106.573 Y97.686 E.05946
+G1 X106.573 Y97.129
+G1 X103.834 Y99.868 E.07466
+G1 X103.277 Y99.868
+G1 X106.573 Y96.571 E.08986
+G1 X106.573 Y96.014
+G1 X102.719 Y99.868 E.10505
+G1 X102.162 Y99.868
+G1 X106.573 Y95.456 E.12025
+G1 X106.573 Y94.899
+G1 X101.604 Y99.868 E.13545
+G1 X101.047 Y99.868
+G1 X106.573 Y94.341 E.15065
+G1 X106.573 Y93.784
+G1 X100.489 Y99.868 E.16585
+G1 X99.932 Y99.868
+G1 X106.573 Y93.226 E.18105
+G1 X106.573 Y92.669
+G1 X99.374 Y99.868 E.19625
+G1 X98.817 Y99.868
+G1 X106.573 Y92.111 E.21144
+G1 X106.573 Y91.554
+G1 X98.259 Y99.868 E.22664
+G1 X97.702 Y99.868
+G1 X106.573 Y90.996 E.24184
+G1 X106.573 Y90.438
+G1 X97.144 Y99.868 E.25704
+G1 X96.586 Y99.868
+G1 X106.573 Y89.881 E.27224
+G1 X106.573 Y89.323
+G1 X96.029 Y99.868 E.28744
+G1 X95.471 Y99.868
+G1 X106.573 Y88.766 E.30263
+G1 X106.573 Y88.208
+G1 X94.914 Y99.868 E.31783
+G1 X94.356 Y99.868
+G1 X106.573 Y87.651 E.33303
+G1 X106.561 Y87.105
+G1 X93.799 Y99.868 E.3479
+G1 X93.241 Y99.868
+G1 X106.442 Y86.667 E.35984
+G1 X106.233 Y86.319
+G1 X92.684 Y99.868 E.36935
+G1 X92.126 Y99.868
+G1 X105.952 Y86.042 E.37688
+G1 X105.597 Y85.839
+G1 X91.569 Y99.868 E.38241
+G1 X91.011 Y99.868
+G1 X105.149 Y85.729 E.38541
+G1 X104.6 Y85.721
+G1 X99.261 Y91.06 E.14554
+G1 X99.261 Y90.503
+G1 X104.042 Y85.721 E.13034
+G1 X103.485 Y85.721
+G1 X98.992 Y90.214 E.12246
+G1 X98.435 Y90.214
+G1 X102.927 Y85.721 E.12246
+G1 X102.37 Y85.721
+G1 X97.877 Y90.214 E.12246
+G1 X97.32 Y90.214
+G1 X101.812 Y85.721 E.12246
+; WIPE_START
+M204 S6000
+G1 X100.398 Y87.136 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X98.846 Y91.475 Z2.4 F42000
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S2000
+G1 X90.454 Y99.868 E.22878
+G1 X89.896 Y99.868
+G1 X98.288 Y91.475 E.22878
+G1 X97.731 Y91.475
+G1 X95.18 Y94.026 E.06953
+G1 X95.227 Y93.422
+G1 X97.309 Y91.339 E.05677
+G1 X97.309 Y90.782
+G1 X95.227 Y92.864 E.05677
+G1 X95.227 Y92.307
+G1 X97.309 Y90.224 E.05677
+; WIPE_START
+M204 S6000
+G1 X95.895 Y91.638 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.187 Y91.789 Z2.4 F42000
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S2000
+G1 X101.255 Y85.721 E.1654
+G1 X100.697 Y85.721
+G1 X95.036 Y91.382 E.15431
+G1 X94.807 Y91.054
+G1 X100.139 Y85.721 E.14537
+G1 X99.582 Y85.721
+G1 X94.508 Y90.795 E.1383
+M73 P27 R10
+G1 X94.137 Y90.609
+G1 X99.024 Y85.721 E.13324
+G1 X98.467 Y85.721
+G1 X93.669 Y90.52 E.1308
+G1 X93.113 Y90.518
+G1 X97.909 Y85.721 E.13075
+G1 X97.352 Y85.721
+G1 X92.556 Y90.518 E.13075
+G1 X91.998 Y90.518
+G1 X96.794 Y85.721 E.13075
+G1 X96.237 Y85.721
+G1 X91.44 Y90.518 E.13075
+G1 X90.883 Y90.518
+G1 X95.679 Y85.721 E.13075
+G1 X95.122 Y85.721
+G1 X90.325 Y90.518 E.13075
+G1 X89.768 Y90.518
+G1 X94.564 Y85.721 E.13075
+G1 X94.007 Y85.721
+G1 X89.21 Y90.518 E.13075
+G1 X88.653 Y90.518
+G1 X93.449 Y85.721 E.13075
+G1 X92.891 Y85.721
+G1 X88.095 Y90.518 E.13075
+G1 X87.538 Y90.518
+G1 X92.334 Y85.721 E.13075
+G1 X91.776 Y85.721
+G1 X86.98 Y90.518 E.13075
+G1 X86.423 Y90.518
+G1 X91.219 Y85.721 E.13075
+G1 X90.661 Y85.721
+G1 X85.712 Y90.671 E.13493
+; WIPE_START
+M204 S6000
+G1 X87.126 Y89.257 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X92.882 Y94.269 Z2.4 F42000
+G1 X93.981 Y95.226 Z2.4
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S2000
+G1 X89.338 Y99.868 E.12654
+G1 X88.781 Y99.868
+G1 X93.377 Y95.271 E.1253
+G1 X92.82 Y95.271
+G1 X88.223 Y99.868 E.1253
+G1 X87.666 Y99.868
+G1 X92.262 Y95.271 E.1253
+G1 X91.705 Y95.271
+G1 X87.108 Y99.868 E.1253
+G1 X86.551 Y99.868
+G1 X91.147 Y95.271 E.1253
+G1 X90.59 Y95.271
+G1 X85.993 Y99.868 E.1253
+G1 X85.436 Y99.868
+G1 X90.032 Y95.271 E.1253
+G1 X89.474 Y95.271
+G1 X84.878 Y99.868 E.1253
+G1 X84.321 Y99.868
+G1 X88.917 Y95.271 E.1253
+G1 X88.359 Y95.271
+G1 X83.763 Y99.868 E.1253
+G1 X83.206 Y99.868
+G1 X87.802 Y95.271 E.1253
+G1 X87.244 Y95.271
+G1 X82.648 Y99.868 E.1253
+G1 X82.09 Y99.868
+G1 X86.687 Y95.271 E.1253
+G1 X86.15 Y95.251
+G1 X81.533 Y99.868 E.12585
+G1 X80.975 Y99.868
+G1 X85.721 Y95.122 E.12936
+G1 X85.377 Y94.909
+G1 X80.418 Y99.868 E.13519
+G1 X79.86 Y99.868
+G1 X85.102 Y94.626 E.1429
+G1 X84.899 Y94.272
+G1 X79.303 Y99.868 E.15255
+G1 X78.745 Y99.868
+G1 X84.784 Y93.829 E.16462
+G1 X84.773 Y93.282
+G1 X78.188 Y99.868 E.17952
+G1 X77.63 Y99.868
+G1 X84.773 Y92.725 E.19472
+G1 X84.773 Y92.167
+G1 X77.073 Y99.868 E.20992
+G1 X76.515 Y99.868
+G1 X84.927 Y91.456 E.2293
+; WIPE_START
+M204 S6000
+G1 X83.512 Y92.87 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X88.686 Y87.259 Z2.4 F42000
+G1 X90.104 Y85.721 Z2.4
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S2000
+G1 X75.957 Y99.868 E.38563
+G1 X75.4 Y99.868
+G1 X89.546 Y85.721 E.38563
+G1 X88.989 Y85.721
+G1 X74.851 Y99.859 E.3854
+G1 X74.403 Y99.75
+G1 X82.677 Y91.475 E.22556
+G1 X82.12 Y91.475
+G1 X74.048 Y99.547 E.22003
+G1 X73.767 Y99.27
+G1 X81.562 Y91.475 E.21249
+G1 X81.005 Y91.475
+G1 X73.558 Y98.922 E.20299
+G1 X73.439 Y98.483
+G1 X80.739 Y91.183 E.19901
+G1 X80.739 Y90.626
+G1 X73.427 Y97.938 E.19934
+; WIPE_START
+M204 S6000
+G1 X74.841 Y96.524 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X81.255 Y92.387 Z2.4 F42000
+G1 X82.691 Y91.462 Z2.4
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S2000
+G1 X88.431 Y85.721 E.15648
+G1 X87.874 Y85.721
+G1 X82.691 Y90.904 E.14129
+G1 X82.691 Y90.347
+G1 X87.316 Y85.721 E.12609
+G1 X86.759 Y85.721
+G1 X82.266 Y90.214 E.12246
+G1 X81.709 Y90.214
+G1 X86.201 Y85.721 E.12246
+G1 X85.644 Y85.721
+G1 X81.151 Y90.214 E.12246
+; WIPE_START
+M204 S6000
+G1 X82.565 Y88.8 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X85.086 Y85.721 Z2.4 F42000
+G1 Z2
+G1 E.8 F1800
+G1 F12000
+M204 S2000
+G1 X73.427 Y97.38 E.31783
+G1 X73.427 Y96.823
+G1 X84.528 Y85.721 E.30263
+M73 P28 R10
+G1 X83.971 Y85.721
+G1 X73.427 Y96.265 E.28743
+G1 X73.427 Y95.708
+G1 X83.413 Y85.721 E.27223
+G1 X82.856 Y85.721
+G1 X73.427 Y95.15 E.25703
+G1 X73.427 Y94.593
+G1 X82.298 Y85.721 E.24184
+G1 X81.741 Y85.721
+G1 X73.427 Y94.035 E.22664
+G1 X73.427 Y93.478
+G1 X81.183 Y85.721 E.21144
+G1 X80.626 Y85.721
+G1 X73.427 Y92.92 E.19624
+G1 X73.427 Y92.363
+G1 X80.068 Y85.721 E.18104
+G1 X79.511 Y85.721
+G1 X73.427 Y91.805 E.16584
+G1 X73.427 Y91.248
+G1 X78.953 Y85.721 E.15064
+G1 X78.396 Y85.721
+G1 X73.427 Y90.69 E.13545
+G1 X73.427 Y90.132
+G1 X77.838 Y85.721 E.12025
+G1 X77.28 Y85.721
+G1 X73.427 Y89.575 E.10505
+G1 X73.427 Y89.017
+G1 X76.723 Y85.721 E.08985
+G1 X76.165 Y85.721
+G1 X73.427 Y88.46 E.07465
+G1 X73.427 Y87.902
+G1 X75.608 Y85.721 E.05945
+G1 X75.05 Y85.721
+G1 X73.427 Y87.345 E.04426
+; WIPE_START
+M204 S6000
+G1 X74.841 Y85.931 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X81.682 Y89.315 Z2.4 F42000
+G1 X93.677 Y95.25 Z2.4
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.0823419
+G1 F21000
+M204 S6000
+G1 X93.452 Y95.346 E.00068
+M204 S10000
+G1 X94.21 Y95.274 F42000
+; LINE_WIDTH: 0.0940142
+G1 F21000
+M204 S6000
+G1 X93.967 Y95.212 E.00084
+M204 S10000
+G1 X94.389 Y95.067 F42000
+; LINE_WIDTH: 0.0814644
+G1 F21000
+M204 S6000
+G1 X94.323 Y95.116 E.00022
+; LINE_WIDTH: 0.125926
+G3 X94.052 Y95.297 I-4.108 J-5.856 E.0016
+; WIPE_START
+G1 X94.323 Y95.116 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.253 Y94.099 Z2.4 F42000
+G1 Z2
+G1 E.8 F1800
+; LINE_WIDTH: 0.122149
+G1 F21000
+M204 S6000
+G3 X95.07 Y94.37 I-9.81 J-6.433 E.00154
+; LINE_WIDTH: 0.0811274
+G1 X95.023 Y94.433 E.00021
+M204 S10000
+G1 X95.248 Y94.094 F42000
+; LINE_WIDTH: 0.177681
+G1 F21000
+M204 S6000
+G3 X95.034 Y94.442 I-11.675 J-6.938 E.00304
+; WIPE_START
+G1 X95.248 Y94.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.205 Y92.05 Z2.4 F42000
+G1 Z2
+G1 E.8 F1800
+; LINE_WIDTH: 0.135303
+G1 F21000
+M204 S6000
+G1 X95.248 Y91.928 E.00069
+G1 X95.192 Y91.815 E.00068
+; WIPE_START
+G1 X95.248 Y91.928 E-.37645
+G1 X95.205 Y92.05 E-.38355
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X87.695 Y90.687 Z2.4 F42000
+G1 X86.347 Y90.442 Z2.4
+G1 Z2
+G1 E.8 F1800
+; LINE_WIDTH: 0.0938022
+G1 F21000
+M204 S6000
+G2 X86.142 Y90.542 I1.977 J4.297 E.00076
+M204 S10000
+G1 X85.647 Y90.606 F42000
+; LINE_WIDTH: 0.197411
+G1 F21000
+M204 S6000
+G1 X85.463 Y90.747 E.00194
+; LINE_WIDTH: 0.155337
+G1 X85.22 Y90.967 E.00208
+G1 X85.007 Y91.202 E.00201
+; LINE_WIDTH: 0.196708
+G1 X84.862 Y91.391 E.002
+; WIPE_START
+G1 X85.007 Y91.202 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X78.744 Y95.563 Z2.4 F42000
+G1 X73.638 Y99.118 Z2.4
+G1 Z2
+G1 E.8 F1800
+; LINE_WIDTH: 0.0867327
+G1 F21000
+M204 S6000
+G1 X73.646 Y99.061 E.00017
+G1 X73.58 Y98.972 E.00033
+; WIPE_START
+G1 X73.646 Y99.061 E-.50004
+G1 X73.638 Y99.118 E-.25996
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X74.242 Y91.509 Z2.4 F42000
+G1 X74.7 Y85.731 Z2.4
+G1 Z2
+G1 E.8 F1800
+; LINE_WIDTH: 0.248529
+G1 F21000
+M204 S6000
+G1 X74.349 Y85.974 E.00466
+; LINE_WIDTH: 0.280384
+G1 X74.271 Y86.032 E.00121
+; LINE_WIDTH: 0.327145
+G2 X73.737 Y86.565 I1.887 J2.421 E.01115
+; LINE_WIDTH: 0.280352
+G1 X73.679 Y86.643 E.00121
+; LINE_WIDTH: 0.248483
+G1 X73.436 Y86.994 E.00465
+; WIPE_START
+G1 X73.679 Y86.643 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X80.853 Y89.25 Z2.4 F42000
+G1 X106.564 Y98.594 Z2.4
+G1 Z2
+G1 E.8 F1800
+; LINE_WIDTH: 0.248632
+G1 F21000
+M204 S6000
+G1 X106.321 Y98.946 E.00466
+; LINE_WIDTH: 0.280485
+G1 X106.263 Y99.023 E.00121
+; LINE_WIDTH: 0.327251
+G3 X105.729 Y99.557 I-2.42 J-1.886 E.01116
+; LINE_WIDTH: 0.280483
+G1 X105.651 Y99.615 E.0012
+; LINE_WIDTH: 0.248662
+G1 X105.3 Y99.858 E.00466
+; OBJECT_ID: 88
+; WIPE_START
+G1 X105.651 Y99.615 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X100.623 Y93.873 Z2.4 F42000
+G1 X90.028 Y81.771 Z2.4
+G1 Z2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F21000
+M204 S6000
+G1 X89.978 Y81.776 E.00103
+G3 X89.967 Y81.224 I.017 J-.276 E.01711
+G3 X90.048 Y81.228 I.031 J.204 E.00168
+G3 X90.087 Y81.761 I-.052 J.272 E.01502
+M204 S250
+G1 X90.081 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F12000
+M204 S5000
+G3 X89.787 Y80.845 I-.087 J-.681 E.03926
+G3 X90.12 Y80.825 I.209 J.705 E.00648
+G3 X90.14 Y82.171 I-.127 J.675 E.0363
+; CHANGE_LAYER
+; Z_HEIGHT: 2.12
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07387
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05134
+G1 X89.574 Y82.041 E-.05129
+G1 X89.476 Y81.947 E-.05136
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.0513
+G1 X89.316 Y81.581 E-.05136
+G1 X89.313 Y81.446 E-.05129
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05134
+G1 X89.459 Y81.074 E-.05129
+G1 X89.553 Y80.976 E-.05136
+G1 X89.663 Y80.899 E-.05132
+G1 X89.709 Y80.879 E-.01888
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 17/218
+; update layer progress
+M73 L17
+M991 S0 P16 ;notify layer change
+M106 S204
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.4 I-.07 J1.215 P1  F42000
+G1 X105.235 Y81.771 Z2.4
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X105.184 Y81.775 E.00107
+G3 X105.227 Y81.223 I.012 J-.277 E.01844
+G1 X105.262 Y81.229 E.00074
+G3 X105.294 Y81.758 I-.066 J.269 E.0146
+M204 S250
+G1 X105.286 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G3 X104.993 Y80.845 I-.087 J-.682 E.03925
+G3 X105.334 Y80.827 I.209 J.705 E.00666
+G3 X105.345 Y82.171 I-.135 J.674 E.03614
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.152 Y82.187 E-.07389
+G1 X105.019 Y82.163 E-.05132
+G1 X104.893 Y82.114 E-.05133
+G1 X104.779 Y82.041 E-.05134
+G1 X104.682 Y81.948 E-.05132
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05129
+G1 X104.521 Y81.581 E-.05135
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05132
+G1 X104.592 Y81.187 E-.05133
+G1 X104.664 Y81.073 E-.05134
+G1 X104.758 Y80.976 E-.05132
+G1 X104.869 Y80.899 E-.05134
+G1 X104.914 Y80.879 E-.01886
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.039 Y84.192 Z2.52 F42000
+G1 X82.767 Y91.551 Z2.52
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.663 Y91.551 E.04362
+G1 X80.663 Y90.138 E.02931
+G1 X82.767 Y90.138 E.04362
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.239 Y91.975 E.06122
+G1 X80.239 Y89.714 E.04691
+G1 X83.191 Y89.714 E.06122
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.956 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z2.52 F42000
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X79.83 Y92.384 E.09561
+G1 X79.83 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07485
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.349 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 17 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer17 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z2.52 F42000
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.123 Y90.597 E.02863
+G1 X81.123 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02718
+; WIPE_START
+G1 F21000
+G1 X81.123 Y91.092 E-.42728
+G1 X81.123 Y90.597 E-.18788
+G1 X81.504 Y90.597 E-.14485
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.122 Y91.059 Z2.52 F42000
+G1 X97.233 Y91.551 Z2.52
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.337 Y90.138 E.04362
+G1 X99.337 Y91.551 E.02931
+G1 X97.293 Y91.551 E.04238
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.761 Y89.714 E.06122
+G1 X99.761 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05998
+; WIPE_START
+M73 P29 R10
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z2.52 F42000
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X100.17 Y89.304 E.07485
+G1 X100.17 Y92.384 E.05937
+G1 X95.27 Y92.384 E.09445
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z2.52 F42000
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.877 Y91.092 E.02863
+G1 X98.877 Y90.597 E.01195
+G1 X97.693 Y90.597 E.02863
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.877 Y90.597 E-.45008
+G1 X98.877 Y90.978 E-.14485
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.589 Y85.475 Z2.52 F42000
+G1 X90.03 Y81.771 Z2.52
+G1 Z2.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X89.978 Y81.775 E.00107
+G3 X90.022 Y81.223 I.012 J-.277 E.01844
+G1 X90.057 Y81.229 E.00074
+G3 X90.088 Y81.758 I-.066 J.269 E.0146
+M204 S250
+G1 X90.081 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G3 X89.787 Y80.845 I-.087 J-.682 E.03925
+G3 X90.129 Y80.827 I.209 J.705 E.00666
+G3 X90.14 Y82.171 I-.135 J.674 E.03614
+; CHANGE_LAYER
+; Z_HEIGHT: 2.24
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07389
+G1 X89.813 Y82.163 E-.05132
+G1 X89.687 Y82.114 E-.05133
+G1 X89.573 Y82.041 E-.05134
+G1 X89.476 Y81.948 E-.05132
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05129
+G1 X89.316 Y81.581 E-.05135
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05132
+G1 X89.386 Y81.187 E-.05133
+G1 X89.459 Y81.073 E-.05134
+G1 X89.553 Y80.976 E-.05132
+G1 X89.663 Y80.899 E-.05134
+G1 X89.709 Y80.879 E-.01887
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 18/218
+; update layer progress
+M73 L18
+M991 S0 P17 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.52 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z2.52
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G3 X105.227 Y81.223 I-.032 J-.275 E.01918
+G1 X105.281 Y81.233 E.00113
+G3 X105.297 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X105.286 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G3 X105.125 Y80.816 I-.09 J-.681 E.04196
+G3 X105.343 Y80.828 I.078 J.556 E.00425
+G3 X105.345 Y82.17 I-.148 J.671 E.03583
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.152 Y82.187 E-.07383
+G1 X105.019 Y82.163 E-.05133
+G1 X104.893 Y82.114 E-.05134
+G1 X104.779 Y82.041 E-.0513
+G1 X104.682 Y81.948 E-.05133
+G1 X104.604 Y81.837 E-.05133
+G1 X104.55 Y81.713 E-.05132
+G1 X104.521 Y81.581 E-.05135
+G1 X104.519 Y81.446 E-.0513
+G1 X104.542 Y81.313 E-.05133
+G1 X104.592 Y81.187 E-.05134
+G1 X104.664 Y81.074 E-.0513
+G1 X104.758 Y80.976 E-.05133
+G1 X104.869 Y80.899 E-.05133
+G1 X104.915 Y80.879 E-.01894
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.039 Y84.192 Z2.64 F42000
+G1 X82.767 Y91.551 Z2.64
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.703 Y91.551 E.04279
+G1 X80.703 Y90.138 E.02931
+G1 X82.767 Y90.138 E.04279
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.279 Y91.975 E.06039
+G1 X80.279 Y89.714 E.04691
+G1 X83.191 Y89.714 E.06039
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.956 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z2.64 F42000
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X79.87 Y92.384 E.09484
+G1 X79.87 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07408
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.349 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 18 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer18 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z2.64 F42000
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.163 Y90.597 E.02766
+G1 X81.163 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02621
+; WIPE_START
+G1 F21000
+G1 X81.163 Y91.092 E-.41208
+G1 X81.163 Y90.597 E-.18788
+G1 X81.584 Y90.597 E-.16005
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.202 Y91.062 Z2.64 F42000
+G1 X97.233 Y91.551 Z2.64
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.297 Y90.138 E.04279
+G1 X99.297 Y91.551 E.02931
+G1 X97.293 Y91.551 E.04155
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.721 Y89.714 E.06039
+G1 X99.721 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05915
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z2.64 F42000
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X100.13 Y89.304 E.07408
+G1 X100.13 Y92.384 E.05937
+G1 X95.27 Y92.384 E.09368
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z2.64 F42000
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.837 Y91.092 E.02766
+G1 X98.837 Y90.597 E.01195
+G1 X97.693 Y90.597 E.02766
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.837 Y90.597 E-.43488
+G1 X98.837 Y91.018 E-.16005
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.573 Y85.492 Z2.64 F42000
+G1 X90.033 Y81.775 Z2.64
+G1 Z2.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G3 X90.022 Y81.223 I-.032 J-.275 E.01918
+G1 X90.075 Y81.233 E.00113
+G3 X90.091 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X90.08 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G3 X89.919 Y80.816 I-.09 J-.681 E.04196
+G3 X90.138 Y80.828 I.078 J.556 E.00425
+G3 X90.14 Y82.17 I-.148 J.671 E.03583
+; CHANGE_LAYER
+; Z_HEIGHT: 2.36
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X89.946 Y82.187 E-.07383
+G1 X89.813 Y82.163 E-.05133
+G1 X89.687 Y82.114 E-.05134
+G1 X89.574 Y82.041 E-.0513
+G1 X89.476 Y81.948 E-.05133
+G1 X89.399 Y81.837 E-.05133
+G1 X89.345 Y81.713 E-.05132
+G1 X89.316 Y81.581 E-.05135
+G1 X89.313 Y81.446 E-.0513
+G1 X89.337 Y81.313 E-.05133
+G1 X89.386 Y81.187 E-.05134
+G1 X89.459 Y81.074 E-.0513
+G1 X89.553 Y80.976 E-.05133
+G1 X89.663 Y80.899 E-.05133
+G1 X89.709 Y80.879 E-.01894
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 19/218
+; update layer progress
+M73 L19
+M991 S0 P18 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.64 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z2.64
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G3 X105.227 Y81.223 I-.032 J-.275 E.01918
+M73 P30 R10
+G1 X105.281 Y81.233 E.00113
+G3 X105.297 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X105.29 Y82.184 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.18 E.0001
+G3 X105.125 Y80.816 I-.089 J-.681 E.04192
+G3 X105.353 Y80.83 I.079 J.58 E.00443
+G3 X105.417 Y82.15 I-.155 J.669 E.03427
+G1 X105.348 Y82.168 E.00137
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.18 E-.02393
+G1 X105.152 Y82.187 E-.05116
+G1 X105.019 Y82.163 E-.05132
+G1 X104.893 Y82.114 E-.05135
+G1 X104.779 Y82.041 E-.0513
+G1 X104.682 Y81.948 E-.05133
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05129
+G1 X104.521 Y81.581 E-.05135
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05132
+G1 X104.592 Y81.187 E-.05135
+G1 X104.664 Y81.074 E-.0513
+G1 X104.758 Y80.976 E-.05133
+G1 X104.869 Y80.899 E-.05134
+G1 X104.911 Y80.88 E-.01766
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.036 Y84.193 Z2.76 F42000
+G1 X82.767 Y91.551 Z2.76
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.743 Y91.551 E.04196
+G1 X80.743 Y90.138 E.02931
+G1 X82.767 Y90.138 E.04196
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.319 Y91.975 E.05956
+G1 X80.319 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05956
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.957 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z2.76 F42000
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X79.91 Y92.384 E.09407
+G1 X79.91 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07331
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.349 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 19 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer19 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z2.76 F42000
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.203 Y90.597 E.0267
+G1 X81.203 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02525
+; WIPE_START
+G1 F21000
+G1 X81.203 Y91.092 E-.39688
+G1 X81.203 Y90.597 E-.18788
+G1 X81.664 Y90.597 E-.17524
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.282 Y91.064 Z2.76 F42000
+G1 X97.233 Y91.551 Z2.76
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.257 Y90.138 E.04196
+G1 X99.257 Y91.551 E.02931
+G1 X97.293 Y91.551 E.04072
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.681 Y89.714 E.05956
+G1 X99.681 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05832
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z2.76 F42000
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X100.09 Y89.304 E.07331
+G1 X100.09 Y92.384 E.05937
+G1 X95.27 Y92.384 E.09291
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z2.76 F42000
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.797 Y91.092 E.0267
+G1 X98.797 Y90.597 E.01195
+G1 X97.693 Y90.597 E.0267
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.797 Y90.597 E-.41968
+G1 X98.797 Y91.058 E-.17525
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.558 Y85.509 Z2.76 F42000
+G1 X90.033 Y81.775 Z2.76
+G1 Z2.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G3 X90.022 Y81.223 I-.032 J-.275 E.01918
+G1 X90.075 Y81.233 E.00113
+G3 X90.091 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X90.084 Y82.184 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.08 Y82.18 E.0001
+G3 X89.919 Y80.816 I-.089 J-.681 E.04192
+G3 X90.147 Y80.83 I.079 J.58 E.00443
+G3 X90.211 Y82.15 I-.155 J.669 E.03427
+G1 X90.142 Y82.168 E.00137
+; CHANGE_LAYER
+; Z_HEIGHT: 2.48
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.08 Y82.18 E-.02393
+G1 X89.946 Y82.187 E-.05116
+G1 X89.813 Y82.163 E-.05132
+G1 X89.687 Y82.114 E-.05135
+G1 X89.574 Y82.041 E-.0513
+G1 X89.476 Y81.948 E-.05133
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05129
+G1 X89.316 Y81.581 E-.05135
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05132
+G1 X89.386 Y81.187 E-.05135
+G1 X89.459 Y81.074 E-.0513
+G1 X89.553 Y80.976 E-.05133
+G1 X89.663 Y80.899 E-.05134
+G1 X89.706 Y80.88 E-.01766
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 20/218
+; update layer progress
+M73 L20
+M991 S0 P19 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.76 I-.07 J1.215 P1  F42000
+G1 X105.238 Y81.775 Z2.76
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G3 X105.227 Y81.223 I-.032 J-.275 E.01918
+G1 X105.281 Y81.233 E.00113
+G3 X105.297 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X105.294 Y82.183 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.18 E.00016
+G3 X105.125 Y80.816 I-.087 J-.681 E.04186
+G3 X105.362 Y80.831 I.079 J.603 E.00461
+G3 X105.417 Y82.15 I-.163 J.667 E.03416
+G1 X105.352 Y82.167 E.00129
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.18 E-.02554
+G1 X105.152 Y82.187 E-.05117
+G1 X105.019 Y82.163 E-.05135
+G1 X104.893 Y82.114 E-.05133
+G1 X104.779 Y82.041 E-.0513
+G1 X104.682 Y81.948 E-.05134
+G1 X104.604 Y81.837 E-.05132
+G1 X104.55 Y81.713 E-.05134
+G1 X104.521 Y81.581 E-.05131
+G1 X104.519 Y81.446 E-.05131
+G1 X104.542 Y81.313 E-.05135
+G1 X104.592 Y81.187 E-.05133
+G1 X104.664 Y81.074 E-.0513
+G1 X104.758 Y80.976 E-.05134
+G1 X104.869 Y80.899 E-.05132
+G1 X104.908 Y80.882 E-.01605
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.032 Y84.195 Z2.88 F42000
+G1 X82.767 Y91.551 Z2.88
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.783 Y91.551 E.04113
+G1 X80.783 Y90.138 E.02931
+G1 X82.767 Y90.138 E.04113
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.359 Y91.975 E.05873
+G1 X80.359 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05873
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.958 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z2.88 F42000
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X79.95 Y92.384 E.09329
+G1 X79.95 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07253
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.349 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z2.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 20 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer20 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M73 P31 R10
+G1 X83.395 Y92.094
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z2.88 F42000
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.243 Y90.597 E.02573
+G1 X81.243 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02428
+; WIPE_START
+G1 F21000
+G1 X81.243 Y91.092 E-.38168
+G1 X81.243 Y90.597 E-.18788
+G1 X81.744 Y90.597 E-.19044
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.362 Y91.066 Z2.88 F42000
+G1 X97.233 Y91.551 Z2.88
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.217 Y90.138 E.04113
+G1 X99.217 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03989
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.641 Y89.714 E.05873
+G1 X99.641 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05749
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z2.88 F42000
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X100.05 Y89.304 E.07253
+G1 X100.05 Y92.384 E.05937
+G1 X95.27 Y92.384 E.09214
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+M73 P31 R9
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z2.88 F42000
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X98.757 Y91.092 E.02573
+G1 X98.757 Y90.597 E.01195
+G1 X97.693 Y90.597 E.02573
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.757 Y90.597 E-.40448
+G1 X98.757 Y91.092 E-.18787
+G1 X98.75 Y91.092 E-.00258
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.536 Y85.518 Z2.88 F42000
+G1 X90.033 Y81.775 Z2.88
+G1 Z2.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G3 X90.022 Y81.223 I-.032 J-.275 E.01918
+G1 X90.075 Y81.233 E.00113
+G3 X90.091 Y81.761 I-.075 J.267 E.01455
+M204 S250
+G1 X90.088 Y82.183 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.081 Y82.18 E.00016
+G3 X89.919 Y80.816 I-.087 J-.681 E.04186
+G3 X90.156 Y80.831 I.079 J.603 E.00461
+G3 X90.211 Y82.15 I-.163 J.667 E.03416
+G1 X90.146 Y82.167 E.00129
+; CHANGE_LAYER
+; Z_HEIGHT: 2.6
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.081 Y82.18 E-.02554
+G1 X89.946 Y82.187 E-.05117
+G1 X89.813 Y82.163 E-.05135
+G1 X89.687 Y82.114 E-.05133
+G1 X89.574 Y82.041 E-.0513
+G1 X89.476 Y81.948 E-.05134
+G1 X89.399 Y81.837 E-.05132
+G1 X89.345 Y81.713 E-.05134
+G1 X89.316 Y81.581 E-.05131
+G1 X89.313 Y81.446 E-.05131
+G1 X89.337 Y81.313 E-.05135
+G1 X89.386 Y81.187 E-.05133
+G1 X89.459 Y81.074 E-.0513
+G1 X89.553 Y80.976 E-.05134
+G1 X89.663 Y80.899 E-.05132
+G1 X89.702 Y80.882 E-.01606
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 21/218
+; update layer progress
+M73 L21
+M991 S0 P20 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z2.88 I-.069 J1.215 P1  F42000
+G1 X105.242 Y81.77 Z2.88
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X105.184 Y81.776 E.00122
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.301 Y81.759 I-.075 J.267 E.01445
+M204 S250
+G1 X105.298 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.18 E.00023
+G3 X105.125 Y80.816 I-.086 J-.682 E.0418
+G3 X105.371 Y80.833 I.08 J.627 E.00478
+G3 X105.417 Y82.151 I-.17 J.666 E.03405
+G1 X105.356 Y82.167 E.00121
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.18 E-.02711
+G1 X105.152 Y82.187 E-.05116
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05132
+G1 X104.779 Y82.041 E-.05135
+G1 X104.682 Y81.948 E-.0513
+G1 X104.604 Y81.837 E-.05133
+G1 X104.55 Y81.713 E-.05134
+G1 X104.521 Y81.581 E-.05133
+G1 X104.519 Y81.446 E-.05129
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05132
+G1 X104.665 Y81.073 E-.05135
+G1 X104.758 Y80.976 E-.0513
+G1 X104.869 Y80.899 E-.05133
+G1 X104.904 Y80.884 E-.01449
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.028 Y84.197 Z3 F42000
+G1 X82.767 Y91.551 Z3
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.823 Y91.551 E.0403
+G1 X80.823 Y90.138 E.02931
+G1 X82.767 Y90.138 E.0403
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.399 Y91.975 E.0579
+G1 X80.399 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0579
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.958 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3 F42000
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X79.99 Y92.384 E.09252
+G1 X79.99 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07176
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.349 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 21 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer21 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3 F42000
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.283 Y90.597 E.02476
+G1 X81.283 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02331
+; WIPE_START
+G1 F21000
+G1 X81.283 Y91.092 E-.36648
+G1 X81.283 Y90.597 E-.18788
+G1 X81.824 Y90.597 E-.20565
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.442 Y91.069 Z3 F42000
+G1 X97.233 Y91.551 Z3
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.177 Y90.138 E.0403
+G1 X99.177 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03906
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.601 Y89.714 E.0579
+G1 X99.601 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05666
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3 F42000
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X100.01 Y89.304 E.07176
+G1 X100.01 Y92.384 E.05937
+G1 X95.27 Y92.384 E.09137
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+M73 P32 R9
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3 F42000
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.717 Y91.092 E.02476
+G1 X98.717 Y90.597 E.01195
+G1 X97.693 Y90.597 E.02476
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.717 Y90.597 E-.38928
+G1 X98.717 Y91.092 E-.18788
+G1 X98.67 Y91.092 E-.01777
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.484 Y85.492 Z3 F42000
+G1 X90.037 Y81.77 Z3
+G1 Z2.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X89.978 Y81.776 E.00122
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.096 Y81.759 I-.075 J.267 E.01445
+M204 S250
+G1 X90.092 Y82.182 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.08 Y82.18 E.00023
+G3 X89.919 Y80.816 I-.086 J-.682 E.0418
+G3 X90.165 Y80.833 I.08 J.627 E.00478
+G3 X90.211 Y82.151 I-.17 J.666 E.03405
+G1 X90.15 Y82.167 E.00121
+; CHANGE_LAYER
+; Z_HEIGHT: 2.72
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.08 Y82.18 E-.02711
+G1 X89.946 Y82.187 E-.05116
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05132
+G1 X89.573 Y82.041 E-.05135
+G1 X89.476 Y81.948 E-.0513
+G1 X89.399 Y81.837 E-.05133
+G1 X89.345 Y81.713 E-.05134
+G1 X89.316 Y81.581 E-.05133
+G1 X89.313 Y81.446 E-.05129
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05132
+G1 X89.459 Y81.073 E-.05135
+G1 X89.553 Y80.976 E-.0513
+G1 X89.663 Y80.899 E-.05133
+G1 X89.698 Y80.884 E-.0145
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 22/218
+; update layer progress
+M73 L22
+M991 S0 P21 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3 I-.069 J1.215 P1  F42000
+G1 X105.244 Y81.77 Z3
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X105.184 Y81.776 E.00125
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.303 Y81.759 I-.075 J.267 E.01442
+M204 S250
+G1 X105.302 Y82.181 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.181 E.0003
+G3 X105.26 Y80.813 I-.087 J-.682 E.04449
+G1 X105.38 Y80.835 E.00235
+G3 X105.417 Y82.151 I-.18 J.664 E.03386
+G1 X105.36 Y82.166 E.00114
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.181 E-.02859
+G1 X105.152 Y82.187 E-.05116
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05132
+G1 X104.779 Y82.041 E-.05132
+G1 X104.682 Y81.947 E-.05133
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05131
+G1 X104.521 Y81.581 E-.05134
+G1 X104.519 Y81.446 E-.0513
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05132
+G1 X104.664 Y81.074 E-.05132
+G1 X104.758 Y80.976 E-.05133
+G1 X104.869 Y80.899 E-.05134
+G1 X104.9 Y80.885 E-.01299
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.024 Y84.198 Z3.12 F42000
+G1 X82.767 Y91.551 Z3.12
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.863 Y91.551 E.03947
+G1 X80.863 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03947
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.439 Y91.975 E.05707
+G1 X80.439 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05707
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.959 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.12 F42000
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.03 Y92.384 E.09175
+G1 X80.03 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07099
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.35 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 22 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer22 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.12 F42000
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.323 Y90.597 E.0238
+G1 X81.323 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02235
+; WIPE_START
+G1 F21000
+G1 X81.323 Y91.092 E-.35128
+G1 X81.323 Y90.597 E-.18788
+G1 X81.904 Y90.597 E-.22085
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.522 Y91.071 Z3.12 F42000
+G1 X97.233 Y91.551 Z3.12
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.137 Y90.138 E.03947
+G1 X99.137 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03823
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.561 Y89.714 E.05707
+G1 X99.561 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05583
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.12 F42000
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.97 Y89.304 E.07099
+G1 X99.97 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0906
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.12 F42000
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.677 Y91.092 E.0238
+G1 X98.677 Y90.597 E.01195
+G1 X97.693 Y90.597 E.0238
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.677 Y90.597 E-.37408
+G1 X98.677 Y91.092 E-.18788
+G1 X98.59 Y91.092 E-.03297
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.431 Y85.467 Z3.12 F42000
+G1 X90.039 Y81.77 Z3.12
+G1 Z2.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X89.978 Y81.776 E.00125
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.097 Y81.759 I-.075 J.267 E.01442
+M204 S250
+G1 X90.096 Y82.181 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.081 Y82.181 E.0003
+G3 X90.054 Y80.813 I-.087 J-.682 E.04449
+G1 X90.174 Y80.835 E.00235
+G3 X90.211 Y82.151 I-.18 J.664 E.03386
+G1 X90.154 Y82.166 E.00114
+; CHANGE_LAYER
+; Z_HEIGHT: 2.84
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.081 Y82.181 E-.02859
+G1 X89.946 Y82.187 E-.05116
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05132
+G1 X89.574 Y82.041 E-.05132
+G1 X89.476 Y81.948 E-.05133
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05131
+G1 X89.316 Y81.581 E-.05134
+G1 X89.313 Y81.446 E-.0513
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05132
+G1 X89.459 Y81.074 E-.05132
+G1 X89.553 Y80.976 E-.05133
+G1 X89.663 Y80.899 E-.05134
+G1 X89.695 Y80.885 E-.013
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 23/218
+; update layer progress
+M73 L23
+M991 S0 P22 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.12 I-.069 J1.215 P1  F42000
+G1 X105.246 Y81.77 Z3.12
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X105.184 Y81.776 E.00129
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.304 Y81.758 I-.075 J.267 E.01439
+M204 S250
+G1 X105.305 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.181 E.00037
+G3 X105.26 Y80.813 I-.08 J-.683 E.04421
+G1 X105.389 Y80.836 E.00253
+G1 X105.393 Y80.837 E.00007
+G3 X105.418 Y82.152 I-.187 J.662 E.03383
+G1 X105.364 Y82.166 E.00107
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.181 E-.03002
+G1 X105.152 Y82.187 E-.05119
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05134
+G1 X104.779 Y82.041 E-.05132
+G1 X104.682 Y81.948 E-.05132
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05132
+G1 X104.521 Y81.581 E-.05134
+G1 X104.519 Y81.446 E-.05129
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05134
+G1 X104.664 Y81.073 E-.05132
+G1 X104.758 Y80.976 E-.05132
+G1 X104.869 Y80.899 E-.05134
+G1 X104.897 Y80.887 E-.01155
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.021 Y84.2 Z3.24 F42000
+G1 X82.767 Y91.551 Z3.24
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.903 Y91.551 E.03864
+G1 X80.903 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03864
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.479 Y91.975 E.05624
+G1 X80.479 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05624
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.959 E-.76
+; WIPE_END
+M73 P33 R9
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.24 F42000
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.07 Y92.384 E.09098
+G1 X80.07 Y89.304 E.05937
+G1 X83.713 Y89.304 E.07022
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.35 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 23 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer23 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.24 F42000
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.363 Y90.597 E.02283
+G1 X81.363 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02138
+; WIPE_START
+G1 F21000
+G1 X81.363 Y91.092 E-.33608
+G1 X81.363 Y90.597 E-.18788
+G1 X81.984 Y90.597 E-.23605
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.602 Y91.074 Z3.24 F42000
+G1 X97.233 Y91.551 Z3.24
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.097 Y90.138 E.03864
+G1 X99.097 Y91.551 E.02931
+G1 X97.293 Y91.551 E.0374
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.521 Y89.714 E.05624
+G1 X99.521 Y91.975 E.04691
+G1 X96.869 Y91.975 E.055
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.24 F42000
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.93 Y89.304 E.07022
+G1 X99.93 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08983
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.24 F42000
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X98.637 Y91.092 E.02283
+G1 X98.637 Y90.597 E.01195
+G1 X97.693 Y90.597 E.02283
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.637 Y90.597 E-.35888
+G1 X98.637 Y91.092 E-.18787
+G1 X98.51 Y91.092 E-.04818
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.378 Y85.443 Z3.24 F42000
+G1 X90.04 Y81.77 Z3.24
+G1 Z2.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X89.978 Y81.776 E.00129
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.099 Y81.758 I-.075 J.267 E.01439
+M204 S250
+G1 X90.1 Y82.18 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.081 Y82.181 E.00037
+G3 X90.054 Y80.813 I-.08 J-.683 E.04421
+G1 X90.183 Y80.836 E.00253
+G1 X90.187 Y80.837 E.00007
+G3 X90.212 Y82.152 I-.187 J.662 E.03383
+G1 X90.158 Y82.166 E.00107
+; CHANGE_LAYER
+; Z_HEIGHT: 2.96
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.081 Y82.181 E-.03002
+G1 X89.946 Y82.187 E-.05119
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05134
+G1 X89.573 Y82.041 E-.05132
+G1 X89.476 Y81.948 E-.05132
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05132
+G1 X89.316 Y81.581 E-.05134
+G1 X89.313 Y81.446 E-.05129
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05134
+G1 X89.459 Y81.073 E-.05132
+G1 X89.553 Y80.976 E-.05132
+G1 X89.663 Y80.899 E-.05134
+G1 X89.691 Y80.887 E-.01155
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 24/218
+; update layer progress
+M73 L24
+M991 S0 P23 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.24 I-.069 J1.215 P1  F42000
+G1 X105.247 Y81.769 Z3.24
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X105.184 Y81.776 E.00132
+G3 X105.227 Y81.223 I.022 J-.276 E.01805
+G1 X105.281 Y81.233 E.00113
+G3 X105.306 Y81.758 I-.075 J.267 E.01436
+M204 S250
+G1 X105.309 Y82.179 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.181 E.00044
+G3 X105.26 Y80.813 I-.08 J-.683 E.04421
+G1 X105.393 Y80.837 E.0026
+G3 X105.417 Y82.152 I-.187 J.661 E.03383
+G1 X105.367 Y82.165 E.001
+; OBJECT_ID: 66
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.181 E-.03136
+G1 X105.152 Y82.187 E-.05117
+G1 X105.019 Y82.163 E-.05134
+G1 X104.893 Y82.114 E-.05132
+G1 X104.779 Y82.041 E-.05135
+G1 X104.682 Y81.948 E-.0513
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05132
+G1 X104.521 Y81.581 E-.05134
+G1 X104.519 Y81.446 E-.05128
+G1 X104.542 Y81.313 E-.05134
+G1 X104.592 Y81.187 E-.05132
+G1 X104.665 Y81.073 E-.05135
+G1 X104.758 Y80.976 E-.0513
+G1 X104.869 Y80.899 E-.05134
+G1 X104.894 Y80.888 E-.01022
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.018 Y84.201 Z3.36 F42000
+G1 X82.767 Y91.551 Z3.36
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.943 Y91.551 E.03781
+G1 X80.943 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03781
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.519 Y91.975 E.05541
+G1 X80.519 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05541
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.96 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.36 F42000
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.11 Y92.384 E.09021
+G1 X80.11 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06945
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.35 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 24 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer24 end: 66,77,88
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.36 F42000
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.403 Y90.597 E.02186
+G1 X81.403 Y91.092 E.01195
+G1 X82.247 Y91.092 E.02041
+; WIPE_START
+G1 F21000
+G1 X81.403 Y91.092 E-.32088
+G1 X81.403 Y90.597 E-.18788
+G1 X82.064 Y90.597 E-.25125
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.681 Y91.076 Z3.36 F42000
+G1 X97.233 Y91.551 Z3.36
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.057 Y90.138 E.03781
+G1 X99.057 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03657
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.481 Y89.714 E.05541
+G1 X99.481 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05417
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+M73 P34 R9
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.36 F42000
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.89 Y89.304 E.06945
+G1 X99.89 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08905
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.36 F42000
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X98.597 Y91.092 E.02186
+G1 X98.597 Y90.597 E.01195
+G1 X97.693 Y90.597 E.02186
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.597 Y90.597 E-.34368
+G1 X98.597 Y91.092 E-.18787
+G1 X98.43 Y91.092 E-.06338
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.325 Y85.418 Z3.36 F42000
+G1 X90.042 Y81.769 Z3.36
+G1 Z2.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X89.978 Y81.776 E.00132
+G3 X90.022 Y81.223 I.022 J-.276 E.01805
+G1 X90.075 Y81.233 E.00113
+G3 X90.1 Y81.758 I-.075 J.267 E.01436
+M204 S250
+G1 X90.103 Y82.179 F42000
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.081 Y82.181 E.00044
+G3 X90.054 Y80.813 I-.08 J-.683 E.04421
+G1 X90.187 Y80.837 E.0026
+G3 X90.212 Y82.152 I-.187 J.661 E.03383
+G1 X90.161 Y82.165 E.001
+; CHANGE_LAYER
+; Z_HEIGHT: 3.08
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.081 Y82.181 E-.03136
+G1 X89.946 Y82.187 E-.05117
+G1 X89.813 Y82.163 E-.05134
+G1 X89.687 Y82.114 E-.05132
+G1 X89.573 Y82.041 E-.05135
+G1 X89.476 Y81.948 E-.0513
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05132
+G1 X89.316 Y81.581 E-.05134
+G1 X89.313 Y81.446 E-.05128
+G1 X89.337 Y81.313 E-.05134
+G1 X89.386 Y81.187 E-.05132
+G1 X89.459 Y81.073 E-.05135
+G1 X89.553 Y80.976 E-.0513
+G1 X89.663 Y80.899 E-.05134
+G1 X89.688 Y80.888 E-.01022
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 25/218
+; update layer progress
+M73 L25
+M991 S0 P24 ;notify layer change
+; OBJECT_ID: 77
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.36 I-.1 J1.213 P1  F42000
+G1 X105.312 Y82.179 Z3.36
+G1 Z3.08
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X105.286 Y82.18 E.0005
+G3 X105.26 Y80.813 I-.083 J-.682 E.0443
+G1 X105.387 Y80.836 E.0025
+G3 X105.417 Y82.151 I-.184 J.662 E.03383
+G1 X105.37 Y82.163 E.00094
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X105.286 Y82.18 E-.03256
+G1 X105.152 Y82.187 E-.05115
+G1 X105.019 Y82.163 E-.05135
+G1 X104.893 Y82.114 E-.05131
+G1 X104.779 Y82.041 E-.05134
+G1 X104.682 Y81.947 E-.05132
+G1 X104.604 Y81.837 E-.05134
+G1 X104.55 Y81.713 E-.05131
+G1 X104.521 Y81.581 E-.05135
+G1 X104.519 Y81.446 E-.05128
+G1 X104.542 Y81.313 E-.05135
+G1 X104.592 Y81.187 E-.05131
+G1 X104.664 Y81.073 E-.05134
+G1 X104.758 Y80.976 E-.05132
+G1 X104.869 Y80.899 E-.05134
+G1 X104.891 Y80.889 E-.00904
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 77
+M625
+; object ids of layer 25 start: 66,77,88
+M624 BwAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer25 end: 66,77,88
+M625
+; start printing object, unique label id: 77
+M624 AgAAAAAAAAA=
+G1 X105.043 Y81.059
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Top surface
+G1 F1200
+M204 S2000
+G1 X105.646 Y81.662 E.01642
+G1 X105.368 Y81.941
+G1 X104.765 Y81.339 E.01642
+M204 S10000
+G1 X105.069 Y81.96 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.107203
+G1 F1200
+M204 S6000
+G3 X104.75 Y81.629 I.745 J-1.038 E.00184
+M204 S10000
+G1 X104.994 Y81.079 F42000
+; LINE_WIDTH: 0.0830479
+G1 F1200
+M204 S6000
+G2 X104.787 Y81.287 I.659 J.86 E.00083
+M204 S10000
+G1 X105.661 Y81.371 F42000
+; LINE_WIDTH: 0.107341
+G1 F1200
+M204 S6000
+G2 X105.343 Y81.041 I-1.063 J.706 E.00184
+; OBJECT_ID: 66
+; WIPE_START
+G1 F21000
+G1 X105.543 Y81.212 E-.4336
+G1 X105.661 Y81.371 E-.3264
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 77
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G1 X98.687 Y84.472 Z3.48 F42000
+G1 X82.767 Y91.551 Z3.48
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X80.983 Y91.551 E.03698
+G1 X80.983 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03698
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.559 Y91.975 E.05458
+G1 X80.559 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05458
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.961 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.48 F42000
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.15 Y92.384 E.08944
+G1 X80.15 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06868
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+M204 S10000
+G1 X84.585 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X84.585 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.48 F42000
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.443 Y90.597 E.0209
+G1 X81.443 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01944
+; WIPE_START
+G1 F21000
+G1 X81.443 Y91.092 E-.30568
+G1 X81.443 Y90.597 E-.18788
+G1 X82.144 Y90.597 E-.26645
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.761 Y91.079 Z3.48 F42000
+G1 X97.233 Y91.551 Z3.48
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X99.017 Y90.138 E.03698
+G1 X99.017 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03574
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.441 Y89.714 E.05458
+G1 X99.441 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05334
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.48 F42000
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.85 Y89.304 E.06868
+G1 X99.85 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08828
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.48 F42000
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.557 Y91.092 E.0209
+G1 X98.557 Y90.597 E.01195
+G1 X97.693 Y90.597 E.0209
+G1 X97.693 Y91.032 E.0105
+; OBJECT_ID: 88
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.557 Y90.597 E-.32848
+G1 X98.557 Y91.092 E-.18788
+G1 X98.35 Y91.092 E-.07857
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; start printing object, unique label id: 88
+M624 BAAAAAAAAAA=
+M204 S10000
+G1 X93.168 Y85.489 Z3.48 F42000
+G1 X90.106 Y82.179 Z3.48
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X90.08 Y82.18 E.0005
+G3 X90.054 Y80.813 I-.083 J-.682 E.0443
+G1 X90.182 Y80.836 E.0025
+G3 X90.212 Y82.151 I-.184 J.662 E.03383
+G1 X90.164 Y82.163 E.00094
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X90.08 Y82.18 E-.03256
+G1 X89.946 Y82.187 E-.05115
+G1 X89.813 Y82.163 E-.05135
+G1 X89.687 Y82.114 E-.05131
+G1 X89.573 Y82.041 E-.05134
+G1 X89.476 Y81.948 E-.05132
+G1 X89.399 Y81.837 E-.05134
+G1 X89.345 Y81.713 E-.05131
+G1 X89.316 Y81.581 E-.05135
+G1 X89.313 Y81.446 E-.05128
+G1 X89.337 Y81.313 E-.05135
+G1 X89.386 Y81.187 E-.05131
+G1 X89.459 Y81.073 E-.05134
+G1 X89.553 Y80.976 E-.05132
+G1 X89.663 Y80.899 E-.05134
+G1 X89.685 Y80.889 E-.00904
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.838 Y81.059 Z3.48 F42000
+G1 Z3.08
+G1 E.8 F1800
+; FEATURE: Top surface
+G1 F1200
+M204 S2000
+G1 X90.44 Y81.662 E.01642
+G1 X90.162 Y81.941
+G1 X89.56 Y81.339 E.01642
+M204 S10000
+G1 X89.864 Y81.96 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.107203
+G1 F1200
+M204 S6000
+G3 X89.544 Y81.629 I.745 J-1.038 E.00184
+M204 S10000
+G1 X89.788 Y81.079 F42000
+; LINE_WIDTH: 0.0830479
+G1 F1200
+M204 S6000
+G2 X89.581 Y81.287 I.659 J.86 E.00083
+M204 S10000
+G1 X90.456 Y81.371 F42000
+; LINE_WIDTH: 0.107341
+G1 F1200
+M204 S6000
+G2 X90.137 Y81.041 I-1.063 J.706 E.00184
+; CHANGE_LAYER
+; Z_HEIGHT: 3.2
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X90.337 Y81.212 E-.4336
+G1 X90.456 Y81.371 E-.3264
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 88
+M625
+; layer num/total_layer_count: 26/218
+; update layer progress
+M73 L26
+M991 S0 P25 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.48 I-.971 J-.733 P1  F42000
+G1 X82.767 Y91.551 Z3.48
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.023 Y91.551 E.03616
+G1 X81.023 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03616
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+M73 P35 R9
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.599 Y91.975 E.05375
+G1 X80.599 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05375
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.962 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.6 F42000
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.19 Y92.384 E.08867
+G1 X80.19 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06791
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.351 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 26 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer26 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.6 F42000
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.483 Y90.597 E.01993
+G1 X81.483 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01848
+; WIPE_START
+G1 F21000
+G1 X81.483 Y91.092 E-.29047
+G1 X81.483 Y90.597 E-.18787
+G1 X82.224 Y90.597 E-.28166
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.841 Y91.081 Z3.6 F42000
+G1 X97.233 Y91.551 Z3.6
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.977 Y90.138 E.03616
+G1 X98.977 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03491
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.401 Y89.714 E.05375
+G1 X99.401 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05251
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.6 F42000
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.81 Y89.304 E.06791
+G1 X99.81 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08751
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.6 F42000
+G1 Z3.2
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520152
+G1 F1200
+M204 S6000
+G1 X98.517 Y91.092 E.01993
+G1 X98.517 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01993
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 3.32
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16507
+G1 X98.517 Y90.597 E-.31327
+G1 X98.517 Y91.092 E-.18787
+G1 X98.27 Y91.092 E-.09378
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 27/218
+; update layer progress
+M73 L27
+M991 S0 P26 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.6 I-.036 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z3.6
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.063 Y91.551 E.03533
+G1 X81.063 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03533
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.639 Y91.975 E.05293
+G1 X80.639 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05293
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.962 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.72 F42000
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.23 Y92.384 E.0879
+G1 X80.23 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06714
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.351 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 27 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer27 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.72 F42000
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.523 Y90.597 E.01896
+G1 X81.523 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01751
+; WIPE_START
+G1 F21000
+G1 X81.523 Y91.092 E-.27528
+G1 X81.523 Y90.597 E-.18788
+G1 X82.304 Y90.597 E-.29685
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.921 Y91.084 Z3.72 F42000
+G1 X97.233 Y91.551 Z3.72
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.937 Y90.138 E.03533
+G1 X98.937 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03408
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.361 Y89.714 E.05293
+G1 X99.361 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05168
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.72 F42000
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.77 Y89.304 E.06714
+G1 X99.77 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08674
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+M73 P36 R9
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.72 F42000
+G1 Z3.32
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.477 Y91.092 E.01896
+G1 X98.477 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01896
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 3.44
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.477 Y90.597 E-.29808
+G1 X98.477 Y91.092 E-.18788
+G1 X98.19 Y91.092 E-.10897
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 28/218
+; update layer progress
+M73 L28
+M991 S0 P27 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.72 I-.036 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z3.72
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.103 Y91.551 E.0345
+G1 X81.103 Y90.138 E.02931
+G1 X82.767 Y90.138 E.0345
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.679 Y91.975 E.0521
+G1 X80.679 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0521
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.963 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.84 F42000
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.27 Y92.384 E.08713
+G1 X80.27 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06637
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.351 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 28 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer28 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.84 F42000
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.563 Y90.597 E.01799
+G1 X81.563 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01654
+; WIPE_START
+G1 F21000
+G1 X81.563 Y91.092 E-.26008
+G1 X81.563 Y90.597 E-.18788
+G1 X82.307 Y90.597 E-.28288
+G1 X82.307 Y90.674 E-.02917
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.927 Y91.122 Z3.84 F42000
+G1 X97.233 Y91.551 Z3.84
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.897 Y90.138 E.0345
+G1 X98.897 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03325
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.321 Y89.714 E.0521
+G1 X99.321 Y91.975 E.04691
+G1 X96.869 Y91.975 E.05085
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.84 F42000
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.73 Y89.304 E.06637
+G1 X99.73 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08597
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.84 F42000
+G1 Z3.44
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.437 Y91.092 E.01799
+G1 X98.437 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01799
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 3.56
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.437 Y90.597 E-.28288
+G1 X98.437 Y91.092 E-.18788
+G1 X98.11 Y91.092 E-.12417
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 29/218
+; update layer progress
+M73 L29
+M991 S0 P28 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.84 I-.036 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z3.84
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.143 Y91.551 E.03367
+G1 X81.143 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03367
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.719 Y91.975 E.05127
+G1 X80.719 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05127
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.964 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z3.96 F42000
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.31 Y92.384 E.08636
+G1 X80.31 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0656
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.351 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z3.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 29 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer29 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z3.96 F42000
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.603 Y90.597 E.01703
+G1 X81.603 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01558
+; WIPE_START
+G1 F21000
+G1 X81.603 Y91.092 E-.24487
+G1 X81.603 Y90.597 E-.18787
+G1 X82.307 Y90.597 E-.26767
+G1 X82.307 Y90.754 E-.05958
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.929 Y91.161 Z3.96 F42000
+G1 X97.233 Y91.551 Z3.96
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.857 Y90.138 E.03367
+G1 X98.857 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03242
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.281 Y89.714 E.05127
+G1 X99.281 Y91.975 E.04691
+M73 P37 R9
+G1 X96.869 Y91.975 E.05002
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z3.96 F42000
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.69 Y89.304 E.0656
+G1 X99.69 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0852
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z3.96 F42000
+G1 Z3.56
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X98.397 Y91.092 E.01703
+G1 X98.397 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01703
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 3.68
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16507
+G1 X98.397 Y90.597 E-.26767
+G1 X98.397 Y91.092 E-.18788
+G1 X98.03 Y91.092 E-.13938
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 30/218
+; update layer progress
+M73 L30
+M991 S0 P29 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z3.96 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z3.96
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.183 Y91.551 E.03284
+G1 X81.183 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03284
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.759 Y91.975 E.05044
+G1 X80.759 Y89.714 E.04691
+G1 X83.191 Y89.714 E.05044
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.965 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.08 F42000
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.35 Y92.384 E.08558
+G1 X80.35 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06482
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.351 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 30 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer30 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z4.08 F42000
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.643 Y90.597 E.01606
+G1 X81.643 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01461
+; WIPE_START
+G1 F21000
+G1 X81.643 Y91.092 E-.22968
+G1 X81.643 Y90.597 E-.18788
+G1 X82.307 Y90.597 E-.25248
+G1 X82.307 Y90.834 E-.08997
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.931 Y91.2 Z4.08 F42000
+G1 X97.233 Y91.551 Z4.08
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.817 Y90.138 E.03284
+G1 X98.817 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03159
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.241 Y89.714 E.05044
+G1 X99.241 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04919
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.08 F42000
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.65 Y89.304 E.06482
+G1 X99.65 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08443
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z4.08 F42000
+G1 Z3.68
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.357 Y91.092 E.01606
+G1 X98.357 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01606
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 3.8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.357 Y90.597 E-.25248
+G1 X98.357 Y91.092 E-.18788
+G1 X97.95 Y91.092 E-.15457
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 31/218
+; update layer progress
+M73 L31
+M991 S0 P30 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.08 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.08
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.223 Y91.551 E.03201
+G1 X81.223 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03201
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.799 Y91.975 E.04961
+G1 X80.799 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04961
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.965 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.2 F42000
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.39 Y92.384 E.08481
+G1 X80.39 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06405
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.352 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 31 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer31 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+M73 P38 R9
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z4.2 F42000
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.683 Y90.597 E.01509
+G1 X81.683 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01364
+; WIPE_START
+G1 F21000
+G1 X81.683 Y91.092 E-.21448
+G1 X81.683 Y90.597 E-.18788
+G1 X82.307 Y90.597 E-.23728
+G1 X82.307 Y90.914 E-.12037
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.933 Y91.239 Z4.2 F42000
+G1 X97.233 Y91.551 Z4.2
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.777 Y90.138 E.03201
+G1 X98.777 Y91.551 E.02931
+G1 X97.293 Y91.551 E.03076
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.201 Y89.714 E.04961
+G1 X99.201 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04836
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.2 F42000
+M73 P38 R8
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.61 Y89.304 E.06405
+G1 X99.61 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08366
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z4.2 F42000
+G1 Z3.8
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X98.317 Y91.092 E.01509
+G1 X98.317 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01509
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 3.92
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.317 Y90.597 E-.23728
+G1 X98.317 Y91.092 E-.18787
+G1 X97.87 Y91.092 E-.16978
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 32/218
+; update layer progress
+M73 L32
+M991 S0 P31 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.2 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.2
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.263 Y91.551 E.03118
+G1 X81.263 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03118
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.839 Y91.975 E.04878
+G1 X80.839 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04878
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.966 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.32 F42000
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.43 Y92.384 E.08404
+G1 X80.43 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06328
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.352 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 32 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer32 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z4.32 F42000
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.723 Y90.597 E.01413
+G1 X81.723 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01268
+; WIPE_START
+G1 F21000
+G1 X81.723 Y91.092 E-.19928
+G1 X81.723 Y90.597 E-.18788
+G1 X82.307 Y90.597 E-.22208
+G1 X82.307 Y90.994 E-.15077
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.934 Y91.279 Z4.32 F42000
+G1 X97.233 Y91.551 Z4.32
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.737 Y90.138 E.03118
+G1 X98.737 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02993
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.161 Y89.714 E.04878
+G1 X99.161 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04753
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.32 F42000
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.57 Y89.304 E.06328
+G1 X99.57 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08289
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z4.32 F42000
+G1 Z3.92
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.277 Y91.092 E.01413
+G1 X98.277 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01413
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 4.04
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16508
+G1 X98.277 Y90.597 E-.22208
+G1 X98.277 Y91.092 E-.18788
+G1 X97.79 Y91.092 E-.18497
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 33/218
+; update layer progress
+M73 L33
+M991 S0 P32 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.32 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.32
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.303 Y91.551 E.03035
+G1 X81.303 Y90.138 E.02931
+G1 X82.767 Y90.138 E.03035
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.879 Y91.975 E.04795
+G1 X80.879 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04795
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.967 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.44 F42000
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.47 Y92.384 E.08327
+G1 X80.47 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06251
+G1 X84.493 Y90.084 E.02126
+M73 P39 R8
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.352 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 33 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer33 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z4.44 F42000
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520157
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.763 Y90.597 E.01316
+G1 X81.763 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01171
+; WIPE_START
+G1 F21000
+G1 X81.763 Y91.092 E-.18408
+G1 X81.763 Y90.597 E-.18787
+G1 X82.307 Y90.597 E-.20688
+G1 X82.307 Y91.074 E-.18118
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.936 Y91.318 Z4.44 F42000
+G1 X97.233 Y91.551 Z4.44
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.697 Y90.138 E.03035
+G1 X98.697 Y91.551 E.02931
+G1 X97.293 Y91.551 E.0291
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.121 Y89.714 E.04795
+G1 X99.121 Y91.975 E.04691
+G1 X96.869 Y91.975 E.0467
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.44 F42000
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.53 Y89.304 E.06251
+G1 X99.53 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08211
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z4.44 F42000
+G1 Z4.04
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520152
+G1 F1200
+M204 S6000
+G1 X98.237 Y91.092 E.01316
+G1 X98.237 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01316
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 4.16
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.16507
+G1 X98.237 Y90.597 E-.20687
+G1 X98.237 Y91.092 E-.18787
+G1 X97.71 Y91.092 E-.20018
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 34/218
+; update layer progress
+M73 L34
+M991 S0 P33 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.44 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.44
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.343 Y91.551 E.02952
+G1 X81.343 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02952
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.919 Y91.975 E.04712
+G1 X80.919 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04712
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.191 Y91.968 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.56 F42000
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.51 Y92.384 E.0825
+G1 X80.51 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06174
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.352 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 34 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer34 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.307 Y91.092 Z4.56 F42000
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X82.307 Y90.597 E.01195
+G1 X81.803 Y90.597 E.01219
+G1 X81.803 Y91.092 E.01195
+G1 X82.247 Y91.092 E.01074
+; WIPE_START
+G1 F21000
+G1 X81.803 Y91.092 E-.17431
+G1 X81.803 Y90.597 E-.19392
+G1 X82.307 Y90.597 E-.19784
+G1 X82.307 Y91.092 E-.19392
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.936 Y91.326 Z4.56 F42000
+G1 X97.233 Y91.551 Z4.56
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.657 Y90.138 E.02952
+G1 X98.657 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02827
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.081 Y89.714 E.04712
+G1 X99.081 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04587
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.56 F42000
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.49 Y89.304 E.06174
+G1 X99.49 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08134
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.693 Y91.092 Z4.56 F42000
+G1 Z4.16
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.520162
+G1 F1200
+M204 S6000
+G1 X98.197 Y91.092 E.01219
+G1 X98.197 Y90.597 E.01195
+G1 X97.693 Y90.597 E.01219
+G1 X97.693 Y91.032 E.0105
+; CHANGE_LAYER
+; Z_HEIGHT: 4.28
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.693 Y90.597 E-.17039
+G1 X98.197 Y90.597 E-.19784
+G1 X98.197 Y91.092 E-.19392
+G1 X97.693 Y91.092 E-.19784
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 35/218
+; update layer progress
+M73 L35
+M991 S0 P34 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.56 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.56
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.383 Y91.551 E.02869
+G1 X81.383 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02869
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.959 Y91.975 E.04629
+G1 X80.959 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04629
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+M73 P40 R8
+G1 F21000
+G1 X81.191 Y91.969 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.68 F42000
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.55 Y92.384 E.08173
+G1 X80.55 Y89.304 E.05937
+G1 X83.713 Y89.304 E.06097
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.353 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 35 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer35 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.315 Y91.099 Z4.68 F42000
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.505162
+G1 F1200
+M204 S6000
+G1 X82.315 Y90.59 E.01194
+G1 X81.835 Y90.59 E.01124
+G1 X81.835 Y91.099 E.01194
+G1 X82.255 Y91.099 E.00983
+; WIPE_START
+G1 F21000
+G1 X81.835 Y91.099 E-.16622
+G1 X81.835 Y90.59 E-.20189
+G1 X82.315 Y90.59 E-.19
+G1 X82.315 Y91.099 E-.20189
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.944 Y91.33 Z4.68 F42000
+G1 X97.233 Y91.551 Z4.68
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.617 Y90.138 E.02869
+G1 X98.617 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02744
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.041 Y89.714 E.04629
+G1 X99.041 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04504
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.68 F42000
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.45 Y89.304 E.06097
+G1 X99.45 Y92.384 E.05937
+G1 X95.27 Y92.384 E.08057
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.685 Y91.099 Z4.68 F42000
+G1 Z4.28
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.505152
+G1 F1200
+M204 S6000
+G1 X98.165 Y91.099 E.01124
+G1 X98.165 Y90.59 E.01194
+G1 X97.685 Y90.59 E.01124
+G1 X97.685 Y91.039 E.01053
+; CHANGE_LAYER
+; Z_HEIGHT: 4.4
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.685 Y90.59 E-.17811
+G1 X98.165 Y90.59 E-.19
+G1 X98.165 Y91.099 E-.20189
+G1 X97.685 Y91.099 E-.19
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 36/218
+; update layer progress
+M73 L36
+M991 S0 P35 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.68 I-.037 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.68
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.423 Y91.551 E.02786
+G1 X81.423 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02786
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X80.999 Y91.975 E.04546
+G1 X80.999 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04546
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.192 Y91.97 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.8 F42000
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.59 Y92.384 E.08096
+G1 X80.59 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0602
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.353 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 36 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer36 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.325 Y91.109 Z4.8 F42000
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.485162
+G1 F1200
+M204 S6000
+G1 X82.325 Y90.58 E.01189
+G1 X81.865 Y90.58 E.01032
+G1 X81.865 Y91.109 E.01189
+G1 X82.265 Y91.109 E.00897
+; WIPE_START
+G1 F21000
+G1 X81.865 Y91.109 E-.15829
+G1 X81.865 Y90.58 E-.20982
+G1 X82.325 Y90.58 E-.18207
+G1 X82.325 Y91.109 E-.20982
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.954 Y91.335 Z4.8 F42000
+G1 X97.233 Y91.551 Z4.8
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.577 Y90.138 E.02786
+G1 X98.577 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02661
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X99.001 Y89.714 E.04546
+G1 X99.001 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04421
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.8 F42000
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.41 Y89.304 E.0602
+G1 X99.41 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0798
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.675 Y91.109 Z4.8 F42000
+G1 Z4.4
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.485152
+G1 F1200
+M204 S6000
+G1 X98.135 Y91.109 E.01032
+G1 X98.135 Y90.58 E.01189
+G1 X97.675 Y90.58 E.01032
+G1 X97.675 Y91.049 E.01054
+; CHANGE_LAYER
+; Z_HEIGHT: 4.52
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.675 Y90.58 E-.18603
+G1 X98.135 Y90.58 E-.18208
+G1 X98.135 Y91.109 E-.20981
+G1 X97.675 Y91.109 E-.18208
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 37/218
+; update layer progress
+M73 L37
+M991 S0 P36 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.8 I-.036 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.8
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+M73 P41 R8
+G1 F1200
+M204 S6000
+G1 X81.463 Y91.551 E.02703
+G1 X81.463 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02703
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.039 Y91.975 E.04463
+G1 X81.039 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04463
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.192 Y91.971 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z4.92 F42000
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.63 Y92.384 E.08019
+G1 X80.63 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05943
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.353 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z4.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 37 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer37 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.335 Y91.119 Z4.92 F42000
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.465162
+G1 F1200
+M204 S6000
+G1 X82.335 Y90.57 E.0118
+G1 X81.895 Y90.57 E.00944
+G1 X81.895 Y91.119 E.0118
+G1 X82.275 Y91.119 E.00815
+; WIPE_START
+G1 F21000
+G1 X81.895 Y91.119 E-.15037
+G1 X81.895 Y90.57 E-.21774
+G1 X82.335 Y90.57 E-.17415
+G1 X82.335 Y91.119 E-.21774
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.964 Y91.34 Z4.92 F42000
+G1 X97.233 Y91.551 Z4.92
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.537 Y90.138 E.02703
+G1 X98.537 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02578
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.961 Y89.714 E.04463
+G1 X98.961 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04338
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z4.92 F42000
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.37 Y89.304 E.05943
+G1 X99.37 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07903
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.665 Y91.119 Z4.92 F42000
+G1 Z4.52
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.465152
+G1 F1200
+M204 S6000
+G1 X98.105 Y91.119 E.00944
+G1 X98.105 Y90.57 E.0118
+G1 X97.665 Y90.57 E.00944
+G1 X97.665 Y91.059 E.01051
+; CHANGE_LAYER
+; Z_HEIGHT: 4.64
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.665 Y90.57 E-.19396
+G1 X98.105 Y90.57 E-.17415
+G1 X98.105 Y91.119 E-.21774
+G1 X97.665 Y91.119 E-.17415
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 38/218
+; update layer progress
+M73 L38
+M991 S0 P37 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z4.92 I-.035 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z4.92
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.503 Y91.551 E.0262
+G1 X81.503 Y90.138 E.02931
+G1 X82.767 Y90.138 E.0262
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.079 Y91.975 E.0438
+G1 X81.079 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0438
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.192 Y91.972 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.04 F42000
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.67 Y92.384 E.07942
+G1 X80.67 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05866
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.354 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 38 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer38 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.345 Y91.129 Z5.04 F42000
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.445162
+G1 F1200
+M204 S6000
+G1 X82.345 Y90.56 E.01168
+G1 X81.925 Y90.56 E.0086
+G1 X81.925 Y91.129 E.01168
+G1 X82.285 Y91.129 E.00737
+; WIPE_START
+G1 F21000
+G1 X81.925 Y91.129 E-.14244
+G1 X81.925 Y90.56 E-.22567
+G1 X82.345 Y90.56 E-.16622
+G1 X82.345 Y91.129 E-.22567
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.974 Y91.345 Z5.04 F42000
+G1 X97.233 Y91.551 Z5.04
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.497 Y90.138 E.0262
+G1 X98.497 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02495
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.921 Y89.714 E.0438
+G1 X98.921 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04255
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.04 F42000
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.33 Y89.304 E.05866
+G1 X99.33 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07826
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+M73 P42 R8
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.655 Y91.129 Z5.04 F42000
+G1 Z4.64
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.445152
+G1 F1200
+M204 S6000
+G1 X98.075 Y91.129 E.0086
+G1 X98.075 Y90.56 E.01168
+G1 X97.655 Y90.56 E.0086
+G1 X97.655 Y91.069 E.01045
+; CHANGE_LAYER
+; Z_HEIGHT: 4.76
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.655 Y90.56 E-.20189
+G1 X98.075 Y90.56 E-.16622
+G1 X98.075 Y91.129 E-.22567
+G1 X97.655 Y91.129 E-.16622
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 39/218
+; update layer progress
+M73 L39
+M991 S0 P38 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.04 I-.034 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z5.04
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.543 Y91.551 E.02537
+G1 X81.543 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02537
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.119 Y91.975 E.04297
+G1 X81.119 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04297
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.192 Y91.973 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.16 F42000
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.71 Y92.384 E.07865
+G1 X80.71 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05789
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.354 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 39 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer39 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.355 Y91.139 Z5.16 F42000
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.425162
+G1 F1200
+M204 S6000
+G1 X82.355 Y90.55 E.01151
+G1 X81.955 Y90.55 E.0078
+G1 X81.955 Y91.139 E.01151
+G1 X82.295 Y91.139 E.00663
+; WIPE_START
+G1 F21000
+G1 X81.955 Y91.139 E-.13452
+G1 X81.955 Y90.55 E-.2336
+G1 X82.355 Y90.55 E-.15829
+G1 X82.355 Y91.139 E-.2336
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.984 Y91.35 Z5.16 F42000
+G1 X97.233 Y91.551 Z5.16
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.457 Y90.138 E.02537
+G1 X98.457 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02412
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.881 Y89.714 E.04297
+G1 X98.881 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04172
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.16 F42000
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.29 Y89.304 E.05789
+G1 X99.29 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07749
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.645 Y91.139 Z5.16 F42000
+G1 Z4.76
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.425152
+G1 F1200
+M204 S6000
+G1 X98.045 Y91.139 E.0078
+G1 X98.045 Y90.55 E.01151
+G1 X97.645 Y90.55 E.0078
+G1 X97.645 Y91.079 E.01034
+; CHANGE_LAYER
+; Z_HEIGHT: 4.88
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.645 Y90.55 E-.20982
+G1 X98.045 Y90.55 E-.15829
+G1 X98.045 Y91.139 E-.2336
+G1 X97.645 Y91.139 E-.15829
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 40/218
+; update layer progress
+M73 L40
+M991 S0 P39 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.16 I-.034 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z5.16
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.583 Y91.551 E.02454
+G1 X81.583 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02454
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.159 Y91.975 E.04214
+G1 X81.159 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04214
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.192 Y91.974 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.28 F42000
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.75 Y92.384 E.07787
+G1 X80.75 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05711
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.354 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 40 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer40 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.365 Y91.149 Z5.28 F42000
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.405162
+G1 F1200
+M204 S6000
+G1 X82.365 Y90.54 E.0113
+G1 X81.985 Y90.54 E.00704
+G1 X81.985 Y91.149 E.0113
+G1 X82.305 Y91.149 E.00593
+; WIPE_START
+G1 F21000
+G1 X81.985 Y91.149 E-.12659
+G1 X81.985 Y90.54 E-.24152
+G1 X82.365 Y90.54 E-.15037
+G1 X82.365 Y91.149 E-.24152
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.994 Y91.355 Z5.28 F42000
+G1 X97.233 Y91.551 Z5.28
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.417 Y90.138 E.02454
+G1 X98.417 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02329
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.841 Y89.714 E.04214
+G1 X98.841 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04089
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.28 F42000
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.25 Y89.304 E.05711
+G1 X99.25 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07672
+M204 S10000
+M73 P43 R8
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.635 Y91.149 Z5.28 F42000
+G1 Z4.88
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.405152
+G1 F1200
+M204 S6000
+G1 X98.015 Y91.149 E.00704
+G1 X98.015 Y90.54 E.0113
+G1 X97.635 Y90.54 E.00704
+G1 X97.635 Y91.089 E.01019
+; CHANGE_LAYER
+; Z_HEIGHT: 5
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.635 Y90.54 E-.21774
+G1 X98.015 Y90.54 E-.15037
+G1 X98.015 Y91.149 E-.24152
+G1 X97.635 Y91.149 E-.15037
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 41/218
+; update layer progress
+M73 L41
+M991 S0 P40 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.28 I-.033 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z5.28
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.623 Y91.551 E.02371
+G1 X81.623 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02371
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.199 Y91.975 E.04131
+G1 X81.199 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04131
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.199 Y91.975 E-.75713
+G1 X81.199 Y91.968 E-.00287
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.4 F42000
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.79 Y92.384 E.0771
+G1 X80.79 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05634
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.354 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 41 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer41 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.375 Y91.159 Z5.4 F42000
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.385162
+G1 F1200
+M204 S6000
+G1 X82.375 Y90.53 E.01106
+G1 X82.015 Y90.53 E.00632
+G1 X82.015 Y91.159 E.01106
+G1 X82.315 Y91.159 E.00526
+; WIPE_START
+G1 F21000
+G1 X82.015 Y91.159 E-.11866
+G1 X82.015 Y90.53 E-.24945
+G1 X82.375 Y90.53 E-.14244
+G1 X82.375 Y91.159 E-.24945
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.005 Y91.36 Z5.4 F42000
+G1 X97.233 Y91.551 Z5.4
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.377 Y90.138 E.02371
+G1 X98.377 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02247
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.801 Y89.714 E.04131
+G1 X98.801 Y91.975 E.04691
+G1 X96.869 Y91.975 E.04006
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.4 F42000
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.21 Y89.304 E.05634
+G1 X99.21 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07595
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.625 Y91.159 Z5.4 F42000
+G1 Z5
+G1 E.8 F1800
+; FEATURE: Internal solid infill
+; LINE_WIDTH: 0.385152
+G1 F1200
+M204 S6000
+G1 X97.985 Y91.159 E.00632
+G1 X97.985 Y90.53 E.01106
+G1 X97.625 Y90.53 E.00632
+G1 X97.625 Y91.099 E.01001
+; CHANGE_LAYER
+; Z_HEIGHT: 5.12
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.625 Y90.53 E-.22567
+G1 X97.985 Y90.53 E-.14244
+G1 X97.985 Y91.159 E-.24945
+G1 X97.625 Y91.159 E-.14244
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 42/218
+; update layer progress
+M73 L42
+M991 S0 P41 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.4 I-.032 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z5.4
+G1 Z5.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.663 Y91.551 E.02288
+G1 X81.663 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02288
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.239 Y91.975 E.04048
+G1 X81.239 Y89.714 E.04691
+G1 X83.191 Y89.714 E.04048
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.239 Y91.975 E-.74193
+G1 X81.239 Y91.928 E-.01807
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.52 F42000
+G1 Z5.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.83 Y92.384 E.07633
+G1 X80.83 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05557
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.355 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 42 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer42 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z5.52 F42000
+G1 X97.233 Y91.551 Z5.52
+G1 Z5.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.337 Y90.138 E.02288
+G1 X98.337 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02164
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.761 Y89.714 E.04048
+G1 X98.761 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03924
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.52 F42000
+G1 Z5.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.17 Y89.304 E.05557
+G1 X99.17 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07518
+M204 S10000
+M73 P44 R8
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 5.24
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 43/218
+; update layer progress
+M73 L43
+M991 S0 P42 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.52 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z5.52
+G1 Z5.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.703 Y91.551 E.02205
+G1 X81.703 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02205
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.279 Y91.975 E.03965
+G1 X81.279 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03965
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.279 Y91.975 E-.72674
+G1 X81.279 Y91.888 E-.03326
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.64 F42000
+G1 Z5.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.87 Y92.384 E.07556
+G1 X80.87 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0548
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.355 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 43 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer43 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z5.64 F42000
+G1 X97.233 Y91.551 Z5.64
+G1 Z5.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.297 Y90.138 E.02205
+G1 X98.297 Y91.551 E.02931
+G1 X97.293 Y91.551 E.02081
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.721 Y89.714 E.03965
+G1 X98.721 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03841
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.64 F42000
+G1 Z5.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.13 Y89.304 E.0548
+G1 X99.13 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0744
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 5.36
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 44/218
+; update layer progress
+M73 L44
+M991 S0 P43 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.64 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z5.64
+G1 Z5.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.743 Y91.551 E.02122
+G1 X81.743 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02122
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.319 Y91.975 E.03882
+G1 X81.319 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03882
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.319 Y91.975 E-.71155
+G1 X81.319 Y91.848 E-.04845
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.76 F42000
+G1 Z5.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.91 Y92.384 E.07479
+G1 X80.91 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05403
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.355 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 44 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer44 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z5.76 F42000
+G1 X97.233 Y91.551 Z5.76
+G1 Z5.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.257 Y90.138 E.02122
+G1 X98.257 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01998
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.681 Y89.714 E.03882
+G1 X98.681 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03758
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.76 F42000
+G1 Z5.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.09 Y89.304 E.05403
+G1 X99.09 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07363
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 5.48
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 45/218
+; update layer progress
+M73 L45
+M991 S0 P44 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.76 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z5.76
+G1 Z5.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.783 Y91.551 E.02039
+G1 X81.783 Y90.138 E.02931
+G1 X82.767 Y90.138 E.02039
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+M73 P45 R8
+G1 F1200
+M204 S6000
+G1 X81.359 Y91.975 E.03799
+G1 X81.359 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03799
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+M73 P45 R7
+G1 F21000
+G1 X81.359 Y91.975 E-.69636
+G1 X81.359 Y91.808 E-.06364
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z5.88 F42000
+G1 Z5.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.95 Y92.384 E.07402
+G1 X80.95 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05326
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.356 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z5.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 45 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer45 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z5.88 F42000
+G1 X97.233 Y91.551 Z5.88
+G1 Z5.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.217 Y90.138 E.02039
+G1 X98.217 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01915
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.641 Y89.714 E.03799
+G1 X98.641 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03675
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z5.88 F42000
+G1 Z5.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.05 Y89.304 E.05326
+G1 X99.05 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07286
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 5.6
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 46/218
+; update layer progress
+M73 L46
+M991 S0 P45 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z5.88 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z5.88
+G1 Z5.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.823 Y91.551 E.01956
+G1 X81.823 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01956
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.399 Y91.975 E.03716
+G1 X81.399 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03716
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.399 Y91.975 E-.68116
+G1 X81.399 Y91.768 E-.07884
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6 F42000
+G1 Z5.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X80.99 Y92.384 E.07325
+G1 X80.99 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05249
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.356 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 46 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer46 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z6 F42000
+G1 X97.233 Y91.551 Z6
+G1 Z5.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.177 Y90.138 E.01956
+G1 X98.177 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01832
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.601 Y89.714 E.03716
+G1 X98.601 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03592
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6 F42000
+G1 Z5.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X99.01 Y89.304 E.05249
+G1 X99.01 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07209
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 5.72
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 47/218
+; update layer progress
+M73 L47
+M991 S0 P46 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z6
+G1 Z5.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.863 Y91.551 E.01873
+G1 X81.863 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01873
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.439 Y91.975 E.03633
+G1 X81.439 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03633
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.439 Y91.975 E-.66597
+G1 X81.439 Y91.728 E-.09403
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.12 F42000
+G1 Z5.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.03 Y92.384 E.07248
+G1 X81.03 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05172
+G1 X84.493 Y90.084 E.02126
+M73 P46 R7
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.356 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 47 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer47 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.315 Y91.339 Z6.12 F42000
+G1 Z5.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.504562
+G1 F1200
+M204 S6000
+G1 X82.315 Y90.35 E.02315
+; WIPE_START
+G1 F21000
+G1 X82.315 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.947 Y91.447 Z6.12 F42000
+G1 X97.233 Y91.551 Z6.12
+G1 Z5.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.137 Y90.138 E.01873
+G1 X98.137 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01749
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.561 Y89.714 E.03633
+G1 X98.561 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03509
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.12 F42000
+G1 Z5.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.97 Y89.304 E.05172
+G1 X98.97 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07132
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.685 Y91.339 Z6.12 F42000
+G1 Z5.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.504562
+G1 F1200
+M204 S6000
+G1 X97.685 Y90.35 E.02315
+; CHANGE_LAYER
+; Z_HEIGHT: 5.84
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.685 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 48/218
+; update layer progress
+M73 L48
+M991 S0 P47 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.12 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.12
+G1 Z5.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.903 Y91.551 E.0179
+G1 X81.903 Y90.138 E.02931
+G1 X82.767 Y90.138 E.0179
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.479 Y91.975 E.0355
+G1 X81.479 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0355
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.479 Y91.975 E-.65078
+G1 X81.479 Y91.688 E-.10922
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.24 F42000
+G1 Z5.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.07 Y92.384 E.07171
+G1 X81.07 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05095
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.357 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 48 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer48 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.335 Y91.339 Z6.24 F42000
+G1 Z5.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.464562
+G1 F1200
+M204 S6000
+G1 X82.335 Y90.35 E.02121
+; WIPE_START
+G1 F21000
+G1 X82.335 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.967 Y91.448 Z6.24 F42000
+G1 X97.233 Y91.551 Z6.24
+G1 Z5.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.097 Y90.138 E.0179
+G1 X98.097 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01666
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.521 Y89.714 E.0355
+G1 X98.521 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03426
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.24 F42000
+G1 Z5.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.93 Y89.304 E.05095
+G1 X98.93 Y92.384 E.05937
+G1 X95.27 Y92.384 E.07055
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.665 Y91.339 Z6.24 F42000
+G1 Z5.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.464562
+G1 F1200
+M204 S6000
+G1 X97.665 Y90.35 E.02121
+; CHANGE_LAYER
+; Z_HEIGHT: 5.96
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.665 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 49/218
+; update layer progress
+M73 L49
+M991 S0 P48 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.24 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.24
+G1 Z5.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.943 Y91.551 E.01707
+G1 X81.943 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01707
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.519 Y91.975 E.03467
+G1 X81.519 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03467
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.519 Y91.975 E-.63559
+G1 X81.519 Y91.648 E-.12441
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.36 F42000
+G1 Z5.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.11 Y92.384 E.07093
+G1 X81.11 Y89.304 E.05937
+G1 X83.713 Y89.304 E.05018
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+M73 P47 R7
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.357 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 49 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer49 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z5.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.355 Y91.339 Z6.36 F42000
+G1 Z5.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.424562
+G1 F1200
+M204 S6000
+G1 X82.355 Y90.35 E.01928
+; WIPE_START
+G1 F21000
+G1 X82.355 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X89.987 Y91.448 Z6.36 F42000
+G1 X97.233 Y91.551 Z6.36
+G1 Z5.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.057 Y90.138 E.01707
+G1 X98.057 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01583
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.481 Y89.714 E.03467
+G1 X98.481 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03343
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.36 F42000
+G1 Z5.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.89 Y89.304 E.05018
+G1 X98.89 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06978
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.645 Y91.339 Z6.36 F42000
+G1 Z5.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.424562
+G1 F1200
+M204 S6000
+G1 X97.645 Y90.35 E.01928
+; CHANGE_LAYER
+; Z_HEIGHT: 6.08
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.645 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 50/218
+; update layer progress
+M73 L50
+M991 S0 P49 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.36 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.36
+G1 Z6.08
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X81.983 Y91.551 E.01624
+G1 X81.983 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01624
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.559 Y91.975 E.03384
+G1 X81.559 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03384
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.559 Y91.975 E-.6204
+G1 X81.559 Y91.608 E-.1396
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.48 F42000
+G1 Z6.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.15 Y92.384 E.07016
+G1 X81.15 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0494
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.357 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 50 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer50 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.375 Y91.339 Z6.48 F42000
+G1 Z6.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.384562
+G1 F1200
+M204 S6000
+G1 X82.375 Y90.35 E.01735
+; WIPE_START
+G1 F21000
+G1 X82.375 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.007 Y91.448 Z6.48 F42000
+G1 X97.233 Y91.551 Z6.48
+G1 Z6.08
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X98.017 Y90.138 E.01624
+G1 X98.017 Y91.551 E.02931
+G1 X97.293 Y91.551 E.015
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.441 Y89.714 E.03384
+G1 X98.441 Y91.975 E.04691
+G1 X96.869 Y91.975 E.0326
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.48 F42000
+G1 Z6.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.85 Y89.304 E.0494
+G1 X98.85 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06901
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.625 Y91.339 Z6.48 F42000
+G1 Z6.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.384562
+G1 F1200
+M204 S6000
+G1 X97.625 Y90.35 E.01735
+; CHANGE_LAYER
+; Z_HEIGHT: 6.2
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.625 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 51/218
+; update layer progress
+M73 L51
+M991 S0 P50 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.48 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.48
+G1 Z6.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.023 Y91.551 E.01541
+G1 X82.023 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01541
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.599 Y91.975 E.03301
+G1 X81.599 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03301
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.599 Y91.975 E-.60521
+G1 X81.599 Y91.568 E-.15479
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.6 F42000
+G1 Z6.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.19 Y92.384 E.06939
+G1 X81.19 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04863
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 51 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer51 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.395 Y91.339 Z6.6 F42000
+G1 Z6.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.344562
+G1 F1200
+M204 S6000
+G1 X82.395 Y90.35 E.01541
+; WIPE_START
+M73 P48 R7
+G1 F21000
+G1 X82.395 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.027 Y91.448 Z6.6 F42000
+G1 X97.233 Y91.551 Z6.6
+G1 Z6.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.977 Y90.138 E.01541
+G1 X97.977 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01417
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.401 Y89.714 E.03301
+G1 X98.401 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03177
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.6 F42000
+G1 Z6.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.81 Y89.304 E.04863
+G1 X98.81 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06824
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.605 Y91.339 Z6.6 F42000
+G1 Z6.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.344562
+G1 F1200
+M204 S6000
+G1 X97.605 Y90.35 E.01541
+; CHANGE_LAYER
+; Z_HEIGHT: 6.32
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.605 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 52/218
+; update layer progress
+M73 L52
+M991 S0 P51 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.6 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.6
+G1 Z6.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.063 Y91.551 E.01458
+G1 X82.063 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01458
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.639 Y91.975 E.03218
+G1 X81.639 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03218
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.639 Y91.975 E-.59002
+G1 X81.639 Y91.528 E-.16998
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.72 F42000
+G1 Z6.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.23 Y92.384 E.06862
+G1 X81.23 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04786
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 52 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer52 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.415 Y91.339 Z6.72 F42000
+G1 Z6.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.304562
+G1 F1200
+M204 S6000
+G1 X82.415 Y90.35 E.01348
+; WIPE_START
+G1 F21000
+G1 X82.415 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.047 Y91.448 Z6.72 F42000
+G1 X97.233 Y91.551 Z6.72
+G1 Z6.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.937 Y90.138 E.01458
+G1 X97.937 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01334
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.361 Y89.714 E.03218
+G1 X98.361 Y91.975 E.04691
+G1 X96.869 Y91.975 E.03094
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.72 F42000
+G1 Z6.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.77 Y89.304 E.04786
+G1 X98.77 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06747
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.585 Y91.339 Z6.72 F42000
+G1 Z6.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.304562
+G1 F1200
+M204 S6000
+G1 X97.585 Y90.35 E.01348
+; CHANGE_LAYER
+; Z_HEIGHT: 6.44
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.585 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 53/218
+; update layer progress
+M73 L53
+M991 S0 P52 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.72 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.72
+G1 Z6.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.103 Y91.551 E.01375
+G1 X82.103 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01375
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.679 Y91.975 E.03135
+G1 X81.679 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03135
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.679 Y91.975 E-.57484
+G1 X81.679 Y91.488 E-.18516
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.84 F42000
+G1 Z6.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.27 Y92.384 E.06785
+G1 X81.27 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04709
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.359 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 53 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer53 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.435 Y91.339 Z6.84 F42000
+G1 Z6.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.264562
+G1 F1200
+M204 S6000
+G1 X82.435 Y90.35 E.01155
+; WIPE_START
+G1 F21000
+G1 X82.435 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.067 Y91.448 Z6.84 F42000
+G1 X97.233 Y91.551 Z6.84
+G1 Z6.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.897 Y90.138 E.01375
+G1 X97.897 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01251
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.321 Y89.714 E.03135
+G1 X98.321 Y91.975 E.04691
+M73 P49 R7
+G1 X96.869 Y91.975 E.03011
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.84 F42000
+G1 Z6.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.73 Y89.304 E.04709
+G1 X98.73 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06669
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.565 Y91.339 Z6.84 F42000
+G1 Z6.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.264562
+G1 F1200
+M204 S6000
+G1 X97.565 Y90.35 E.01155
+; CHANGE_LAYER
+; Z_HEIGHT: 6.56
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.565 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 54/218
+; update layer progress
+M73 L54
+M991 S0 P53 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.84 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.84
+G1 Z6.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.143 Y91.551 E.01292
+G1 X82.143 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01292
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.719 Y91.975 E.03052
+G1 X81.719 Y89.714 E.04691
+G1 X83.191 Y89.714 E.03052
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.719 Y91.975 E-.55965
+G1 X81.719 Y91.448 E-.20035
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z6.96 F42000
+G1 Z6.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.31 Y92.384 E.06708
+G1 X81.31 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04632
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.359 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z6.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 54 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer54 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.455 Y91.339 Z6.96 F42000
+G1 Z6.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.224562
+G1 F1200
+M204 S6000
+G1 X82.455 Y90.35 E.00961
+; WIPE_START
+G1 F21000
+G1 X82.455 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.087 Y91.448 Z6.96 F42000
+G1 X97.233 Y91.551 Z6.96
+G1 Z6.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.857 Y90.138 E.01292
+G1 X97.857 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01168
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.281 Y89.714 E.03052
+G1 X98.281 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02928
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z6.96 F42000
+G1 Z6.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.69 Y89.304 E.04632
+G1 X98.69 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06592
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.545 Y91.339 Z6.96 F42000
+G1 Z6.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.224562
+G1 F1200
+M204 S6000
+G1 X97.545 Y90.35 E.00961
+; CHANGE_LAYER
+; Z_HEIGHT: 6.68
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.545 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 55/218
+; update layer progress
+M73 L55
+M991 S0 P54 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z6.96 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z6.96
+G1 Z6.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.183 Y91.551 E.01209
+G1 X82.183 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01209
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.759 Y91.975 E.02969
+G1 X81.759 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02969
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.759 Y91.975 E-.54446
+G1 X81.759 Y91.408 E-.21554
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.08 F42000
+G1 Z6.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.35 Y92.384 E.06631
+G1 X81.35 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04555
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.359 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 55 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer55 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.475 Y91.339 Z7.08 F42000
+G1 Z6.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.184562
+G1 F1200
+M204 S6000
+G1 X82.475 Y90.35 E.00768
+; WIPE_START
+G1 F21000
+G1 X82.475 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.107 Y91.449 Z7.08 F42000
+G1 X97.233 Y91.551 Z7.08
+G1 Z6.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.817 Y90.138 E.01209
+G1 X97.817 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01085
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.241 Y89.714 E.02969
+G1 X98.241 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02845
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.08 F42000
+G1 Z6.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.65 Y89.304 E.04555
+M73 P50 R7
+G1 X98.65 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06515
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.525 Y91.339 Z7.08 F42000
+G1 Z6.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.184562
+G1 F1200
+M204 S6000
+G1 X97.525 Y90.35 E.00768
+; CHANGE_LAYER
+; Z_HEIGHT: 6.8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.525 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 56/218
+; update layer progress
+M73 L56
+M991 S0 P55 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.08 I-.017 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z7.08
+G1 Z6.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.223 Y91.551 E.01126
+G1 X82.223 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01126
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.799 Y91.975 E.02886
+G1 X81.799 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02886
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.799 Y91.975 E-.52927
+G1 X81.799 Y91.368 E-.23073
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.2 F42000
+G1 Z6.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.39 Y92.384 E.06554
+G1 X81.39 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04478
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.36 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 56 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer56 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.495 Y91.339 Z7.2 F42000
+G1 Z6.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.144562
+G1 F1200
+M204 S6000
+G1 X82.495 Y90.35 E.00574
+; WIPE_START
+G1 F21000
+G1 X82.495 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.127 Y91.449 Z7.2 F42000
+G1 X97.233 Y91.551 Z7.2
+G1 Z6.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.777 Y90.138 E.01126
+G1 X97.777 Y91.551 E.02931
+G1 X97.293 Y91.551 E.01002
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.201 Y89.714 E.02886
+G1 X98.201 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02762
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.2 F42000
+G1 Z6.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.61 Y89.304 E.04478
+G1 X98.61 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06438
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.505 Y91.339 Z7.2 F42000
+G1 Z6.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.144562
+G1 F1200
+M204 S6000
+G1 X97.505 Y90.35 E.00574
+; CHANGE_LAYER
+; Z_HEIGHT: 6.92
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.505 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 57/218
+; update layer progress
+M73 L57
+M991 S0 P56 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.2 I-.018 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z7.2
+G1 Z6.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.263 Y91.551 E.01043
+G1 X82.263 Y90.138 E.02931
+G1 X82.767 Y90.138 E.01043
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.839 Y91.975 E.02803
+G1 X81.839 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02803
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.839 Y91.975 E-.51409
+G1 X81.839 Y91.328 E-.24591
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.32 F42000
+G1 Z6.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.43 Y92.384 E.06477
+G1 X81.43 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04401
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.36 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 57 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer57 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z6.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.515 Y91.339 Z7.32 F42000
+G1 Z6.92
+G1 E.8 F1800
+; LINE_WIDTH: 0.104562
+G1 F1200
+M204 S6000
+G1 X82.515 Y90.35 E.00381
+; WIPE_START
+G1 F21000
+G1 X82.515 Y91.339 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.147 Y91.449 Z7.32 F42000
+G1 X97.233 Y91.551 Z7.32
+G1 Z6.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.737 Y90.138 E.01043
+G1 X97.737 Y91.551 E.02931
+G1 X97.293 Y91.551 E.00919
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.161 Y89.714 E.02803
+G1 X98.161 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02679
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.32 F42000
+G1 Z6.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.57 Y89.304 E.04401
+G1 X98.57 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06361
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.485 Y91.339 Z7.32 F42000
+G1 Z6.92
+G1 E.8 F1800
+; LINE_WIDTH: 0.104562
+G1 F1200
+M204 S6000
+G1 X97.485 Y90.35 E.00381
+; CHANGE_LAYER
+; Z_HEIGHT: 7.04
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.485 Y91.339 E-.76
+; WIPE_END
+M73 P51 R7
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 58/218
+; update layer progress
+M73 L58
+M991 S0 P57 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.32 I-.018 J-1.217 P1  F42000
+G1 X82.767 Y91.551 Z7.32
+G1 Z7.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.303 Y91.551 E.0096
+G1 X82.303 Y90.138 E.02931
+G1 X82.767 Y90.138 E.0096
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.879 Y91.975 E.0272
+G1 X81.879 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0272
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.879 Y91.975 E-.4989
+G1 X81.879 Y91.288 E-.2611
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.44 F42000
+G1 Z7.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.47 Y92.384 E.064
+G1 X81.47 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04324
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.361 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 58 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer58 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z7.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z7.44 F42000
+G1 X97.233 Y91.551 Z7.44
+G1 Z7.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.697 Y90.138 E.0096
+G1 X97.697 Y91.551 E.02931
+G1 X97.293 Y91.551 E.00836
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.121 Y89.714 E.0272
+G1 X98.121 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02596
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.44 F42000
+G1 Z7.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.53 Y89.304 E.04324
+G1 X98.53 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06284
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 7.16
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 59/218
+; update layer progress
+M73 L59
+M991 S0 P58 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.44 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z7.44
+G1 Z7.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.343 Y91.551 E.00878
+G1 X82.343 Y90.138 E.02931
+G1 X82.767 Y90.138 E.00878
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.919 Y91.975 E.02637
+G1 X81.919 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02637
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.919 Y91.975 E-.48372
+G1 X81.919 Y91.248 E-.27628
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.56 F42000
+G1 Z7.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.51 Y92.384 E.06322
+G1 X81.51 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04246
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.361 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 59 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer59 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z7.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z7.56 F42000
+G1 X97.233 Y91.551 Z7.56
+G1 Z7.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.657 Y90.138 E.00878
+G1 X97.657 Y91.551 E.02931
+G1 X97.293 Y91.551 E.00753
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.081 Y89.714 E.02637
+G1 X98.081 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02513
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.56 F42000
+G1 Z7.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.49 Y89.304 E.04246
+G1 X98.49 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06207
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 7.28
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 60/218
+; update layer progress
+M73 L60
+M991 S0 P59 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.56 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z7.56
+G1 Z7.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.383 Y91.551 E.00795
+G1 X82.383 Y90.138 E.02931
+G1 X82.767 Y90.138 E.00795
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.959 Y91.975 E.02554
+G1 X81.959 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02554
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.959 Y91.975 E-.46854
+M73 P51 R6
+G1 X81.959 Y91.208 E-.29146
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.68 F42000
+G1 Z7.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.55 Y92.384 E.06245
+G1 X81.55 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04169
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+M73 P52 R6
+G1 X82.79 Y92.361 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 60 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer60 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z7.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z7.68 F42000
+G1 X97.233 Y91.551 Z7.68
+G1 Z7.28
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.617 Y90.138 E.00795
+G1 X97.617 Y91.551 E.02931
+G1 X97.293 Y91.551 E.0067
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.041 Y89.714 E.02554
+G1 X98.041 Y91.975 E.04691
+G1 X96.869 Y91.975 E.0243
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.68 F42000
+G1 Z7.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.45 Y89.304 E.04169
+G1 X98.45 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0613
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 7.4
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 61/218
+; update layer progress
+M73 L61
+M991 S0 P60 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.68 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z7.68
+G1 Z7.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.423 Y91.551 E.00712
+G1 X82.423 Y90.138 E.02931
+G1 X82.767 Y90.138 E.00712
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X81.999 Y91.975 E.02472
+G1 X81.999 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02472
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X81.999 Y91.975 E-.45336
+G1 X81.999 Y91.168 E-.30664
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.8 F42000
+G1 Z7.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.59 Y92.384 E.06168
+G1 X81.59 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04092
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.362 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 61 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer61 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z7.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z7.8 F42000
+G1 X97.233 Y91.551 Z7.8
+G1 Z7.4
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.577 Y90.138 E.00712
+G1 X97.577 Y91.551 E.02931
+G1 X97.293 Y91.551 E.00587
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X98.001 Y89.714 E.02472
+G1 X98.001 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02347
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.8 F42000
+G1 Z7.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.41 Y89.304 E.04092
+G1 X98.41 Y92.384 E.05937
+G1 X95.27 Y92.384 E.06053
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 7.52
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 62/218
+; update layer progress
+M73 L62
+M991 S0 P61 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.8 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z7.8
+G1 Z7.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.463 Y91.551 E.00629
+G1 X82.463 Y90.138 E.02931
+G1 X82.767 Y90.138 E.00629
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X82.039 Y91.975 E.02389
+G1 X82.039 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02389
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.039 Y91.975 E-.43818
+G1 X82.039 Y91.128 E-.32182
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z7.92 F42000
+G1 Z7.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.63 Y92.384 E.06091
+G1 X81.63 Y89.304 E.05937
+G1 X83.713 Y89.304 E.04015
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.362 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z7.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 62 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer62 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z7.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z7.92 F42000
+G1 X97.233 Y91.551 Z7.92
+G1 Z7.52
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.537 Y90.138 E.00629
+G1 X97.537 Y91.551 E.02931
+G1 X97.293 Y91.551 E.00504
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.961 Y89.714 E.02389
+G1 X97.961 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02264
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z7.92 F42000
+G1 Z7.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.37 Y89.304 E.04015
+G1 X98.37 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05975
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+M73 P53 R6
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 7.64
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 63/218
+; update layer progress
+M73 L63
+M991 S0 P62 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z7.92 I.052 J-1.216 P1  F42000
+G1 X82.767 Y91.551 Z7.92
+G1 Z7.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.503 Y91.551 E.00546
+G1 X82.503 Y90.138 E.02931
+G1 X82.767 Y90.138 E.00546
+G1 X82.767 Y91.491 E.02807
+M204 S10000
+G1 X83.191 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X82.079 Y91.975 E.02306
+G1 X82.079 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02306
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.079 Y91.975 E-.423
+G1 X82.079 Y91.088 E-.337
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.04 F42000
+G1 Z7.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.67 Y92.384 E.06014
+G1 X81.67 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03938
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.363 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 63 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer63 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z7.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.022 Y91.795 Z8.04 F42000
+G1 X97.233 Y91.551 Z8.04
+G1 Z7.64
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X97.233 Y90.138 E.02931
+G1 X97.497 Y90.138 E.00546
+G1 X97.497 Y91.551 E.02931
+G1 X97.293 Y91.551 E.00421
+M204 S10000
+G1 X96.809 Y91.975 F42000
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.921 Y89.714 E.02306
+G1 X97.921 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02181
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.04 F42000
+G1 Z7.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.33 Y89.304 E.03938
+G1 X98.33 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05898
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 7.76
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 64/218
+; update layer progress
+M73 L64
+M991 S0 P63 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.04 I.012 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.04
+G1 Z7.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.119 Y91.975 E.02223
+G1 X82.119 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02223
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.119 Y91.975 E-.40782
+G1 X82.119 Y91.048 E-.35218
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.16 F42000
+G1 Z7.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.71 Y92.384 E.05937
+G1 X81.71 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03861
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.363 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 64 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer64 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.655 Y91.763
+G1 Z7.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.673042
+G1 F1200
+M204 S6000
+G1 X82.655 Y89.926 E.05815
+; WIPE_START
+G1 F16221.478
+G1 X82.655 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.16 F42000
+G1 Z7.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.16 F42000
+G1 X96.809 Y91.975 Z8.16
+G1 Z7.76
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.881 Y89.714 E.02223
+G1 X97.881 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02098
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.16 F42000
+G1 Z7.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.29 Y89.304 E.03861
+G1 X98.29 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05821
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.345 Y91.763 F42000
+; LINE_WIDTH: 0.673042
+G1 F1200
+M204 S6000
+G1 X97.345 Y89.926 E.05815
+; CHANGE_LAYER
+; Z_HEIGHT: 7.88
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F16221.478
+G1 X97.345 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 65/218
+; update layer progress
+M73 L65
+M991 S0 P64 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.16 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.16
+G1 Z7.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.159 Y91.975 E.0214
+G1 X82.159 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0214
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.159 Y91.975 E-.39265
+G1 X82.159 Y91.008 E-.36735
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.28 F42000
+G1 Z7.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.75 Y92.384 E.0586
+G1 X81.75 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03784
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.364 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 65 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer65 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.675 Y91.763
+G1 Z7.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.633042
+G1 F1200
+M204 S6000
+G1 X82.675 Y89.926 E.05455
+; WIPE_START
+M73 P54 R6
+G1 F17289.928
+G1 X82.675 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.28 F42000
+G1 Z7.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.28 F42000
+G1 X96.809 Y91.975 Z8.28
+G1 Z7.88
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.841 Y89.714 E.0214
+G1 X97.841 Y91.975 E.04691
+G1 X96.869 Y91.975 E.02015
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.28 F42000
+G1 Z7.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.25 Y89.304 E.03784
+G1 X98.25 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05744
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.325 Y91.763 F42000
+; LINE_WIDTH: 0.633042
+G1 F1200
+M204 S6000
+G1 X97.325 Y89.926 E.05455
+; CHANGE_LAYER
+; Z_HEIGHT: 8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F17289.928
+G1 X97.325 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 66/218
+; update layer progress
+M73 L66
+M991 S0 P65 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.28 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.28
+G1 Z8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.199 Y91.975 E.02057
+G1 X82.199 Y89.714 E.04691
+G1 X83.191 Y89.714 E.02057
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.199 Y91.975 E-.37747
+G1 X82.199 Y90.969 E-.38253
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.4 F42000
+G1 Z8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.79 Y92.384 E.05783
+G1 X81.79 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03707
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.364 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 66 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer66 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.695 Y91.763
+G1 Z8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.593042
+G1 F1200
+M204 S6000
+G1 X82.695 Y89.926 E.05096
+; WIPE_START
+G1 F18509.052
+G1 X82.695 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.4 F42000
+G1 Z8
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.4 F42000
+G1 X96.809 Y91.975 Z8.4
+G1 Z8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.801 Y89.714 E.02057
+G1 X97.801 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01932
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.4 F42000
+G1 Z8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.21 Y89.304 E.03707
+G1 X98.21 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05667
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.305 Y91.763 F42000
+; LINE_WIDTH: 0.593042
+G1 F1200
+M204 S6000
+G1 X97.305 Y89.926 E.05096
+; CHANGE_LAYER
+; Z_HEIGHT: 8.12
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F18509.052
+G1 X97.305 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 67/218
+; update layer progress
+M73 L67
+M991 S0 P66 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.4 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.4
+G1 Z8.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.239 Y91.975 E.01974
+G1 X82.239 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01974
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.239 Y91.975 E-.3623
+G1 X82.239 Y90.929 E-.3977
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.52 F42000
+G1 Z8.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.83 Y92.384 E.05706
+G1 X81.83 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0363
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.365 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 67 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer67 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.715 Y91.763
+G1 Z8.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.553042
+G1 F1200
+M204 S6000
+G1 X82.715 Y89.926 E.04737
+; WIPE_START
+G1 F19913.141
+G1 X82.715 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.52 F42000
+G1 Z8.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.52 F42000
+G1 X96.809 Y91.975 Z8.52
+G1 Z8.12
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.761 Y89.714 E.01974
+G1 X97.761 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01849
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.52 F42000
+G1 Z8.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.17 Y89.304 E.0363
+G1 X98.17 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0559
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.285 Y91.763 F42000
+; LINE_WIDTH: 0.553042
+G1 F1200
+M204 S6000
+G1 X97.285 Y89.926 E.04737
+; CHANGE_LAYER
+; Z_HEIGHT: 8.24
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F19913.141
+G1 X97.285 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 68/218
+; update layer progress
+M73 L68
+M991 S0 P67 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.52 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.52
+G1 Z8.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+M73 P55 R6
+G1 F1200
+M204 S6000
+G1 X82.279 Y91.975 E.01891
+G1 X82.279 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01891
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.279 Y91.975 E-.34713
+G1 X82.279 Y90.889 E-.41287
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.64 F42000
+G1 Z8.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.87 Y92.384 E.05629
+G1 X81.87 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03553
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.366 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 68 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer68 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.735 Y91.763
+G1 Z8.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.513042
+G1 F1200
+M204 S6000
+G1 X82.735 Y89.926 E.04377
+; WIPE_START
+G1 F21000
+G1 X82.735 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.64 F42000
+G1 Z8.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.64 F42000
+G1 X96.809 Y91.975 Z8.64
+G1 Z8.24
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.721 Y89.714 E.01891
+G1 X97.721 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01766
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.64 F42000
+G1 Z8.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.13 Y89.304 E.03553
+G1 X98.13 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05513
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.265 Y91.763 F42000
+; LINE_WIDTH: 0.513042
+G1 F1200
+M204 S6000
+G1 X97.265 Y89.926 E.04377
+; CHANGE_LAYER
+; Z_HEIGHT: 8.36
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.265 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 69/218
+; update layer progress
+M73 L69
+M991 S0 P68 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.64 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.64
+G1 Z8.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.319 Y91.975 E.01808
+G1 X82.319 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01808
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.319 Y91.975 E-.33197
+G1 X82.319 Y90.849 E-.42803
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.76 F42000
+G1 Z8.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.91 Y92.384 E.05551
+G1 X81.91 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03475
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.366 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 69 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer69 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.755 Y91.763
+G1 Z8.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.473042
+G1 F1200
+M204 S6000
+G1 X82.755 Y89.926 E.04018
+; WIPE_START
+G1 F21000
+G1 X82.755 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.76 F42000
+G1 Z8.36
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.76 F42000
+G1 X96.809 Y91.975 Z8.76
+G1 Z8.36
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.681 Y89.714 E.01808
+G1 X97.681 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01683
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.76 F42000
+G1 Z8.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.09 Y89.304 E.03475
+G1 X98.09 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05436
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.245 Y91.763 F42000
+; LINE_WIDTH: 0.473042
+G1 F1200
+M204 S6000
+G1 X97.245 Y89.926 E.04018
+; CHANGE_LAYER
+; Z_HEIGHT: 8.48
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.245 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 70/218
+; update layer progress
+M73 L70
+M991 S0 P69 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.76 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.76
+G1 Z8.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.359 Y91.975 E.01725
+G1 X82.359 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01725
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.359 Y91.975 E-.3168
+G1 X82.359 Y90.809 E-.4432
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z8.88 F42000
+G1 Z8.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.95 Y92.384 E.05474
+G1 X81.95 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03398
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.367 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z8.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 70 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer70 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.775 Y91.763
+G1 Z8.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.433042
+G1 F1200
+M204 S6000
+G1 X82.775 Y89.926 E.03659
+; WIPE_START
+G1 F21000
+G1 X82.775 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z8.88 F42000
+G1 Z8.48
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z8.88 F42000
+G1 X96.809 Y91.975 Z8.88
+G1 Z8.48
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.641 Y89.714 E.01725
+G1 X97.641 Y91.975 E.04691
+G1 X96.869 Y91.975 E.016
+; WIPE_START
+G1 F21000
+M73 P56 R6
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z8.88 F42000
+G1 Z8.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.05 Y89.304 E.03398
+G1 X98.05 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05359
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.225 Y91.763 F42000
+; LINE_WIDTH: 0.433042
+G1 F1200
+M204 S6000
+G1 X97.225 Y89.926 E.03659
+; CHANGE_LAYER
+; Z_HEIGHT: 8.6
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X97.225 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 71/218
+; update layer progress
+M73 L71
+M991 S0 P70 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z8.88 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z8.88
+G1 Z8.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.399 Y91.975 E.01642
+G1 X82.399 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01642
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.399 Y91.975 E-.30165
+G1 X82.399 Y90.769 E-.45835
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9 F42000
+G1 Z8.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X81.99 Y92.384 E.05397
+G1 X81.99 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03321
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.367 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 71 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer71 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.795 Y91.763
+G1 Z8.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.393042
+G1 F1200
+M204 S6000
+G1 X82.795 Y89.926 E.03299
+; WIPE_START
+G1 F21000
+G1 X82.795 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9 F42000
+G1 Z8.6
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9 F42000
+G1 X96.809 Y91.975 Z9
+G1 Z8.6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.601 Y89.714 E.01642
+G1 X97.601 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01517
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9 F42000
+G1 Z8.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X98.01 Y89.304 E.03321
+G1 X98.01 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05282
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.205 Y91.763 F42000
+; LINE_WIDTH: 0.393042
+G1 F1200
+M204 S6000
+G1 X97.205 Y89.926 E.03299
+; CHANGE_LAYER
+; Z_HEIGHT: 8.72
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.205 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 72/218
+; update layer progress
+M73 L72
+M991 S0 P71 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9
+G1 Z8.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.439 Y91.975 E.01559
+G1 X82.439 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01559
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.439 Y91.975 E-.28649
+G1 X82.439 Y90.729 E-.47351
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.12 F42000
+G1 Z8.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.03 Y92.384 E.0532
+G1 X82.03 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03244
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.368 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 72 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer72 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.815 Y91.763
+G1 Z8.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.353042
+G1 F1200
+M204 S6000
+G1 X82.815 Y89.926 E.0294
+; WIPE_START
+G1 F21000
+G1 X82.815 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.12 F42000
+G1 Z8.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.12 F42000
+G1 X96.809 Y91.975 Z9.12
+G1 Z8.72
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.561 Y89.714 E.01559
+G1 X97.561 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01434
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.12 F42000
+G1 Z8.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.97 Y89.304 E.03244
+G1 X97.97 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05204
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.185 Y91.763 F42000
+; LINE_WIDTH: 0.353042
+G1 F1200
+M204 S6000
+G1 X97.185 Y89.926 E.0294
+; CHANGE_LAYER
+; Z_HEIGHT: 8.84
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.185 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 73/218
+; update layer progress
+M73 L73
+M991 S0 P72 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.12 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.12
+G1 Z8.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.479 Y91.975 E.01476
+G1 X82.479 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01476
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.479 Y91.975 E-.27134
+G1 X82.479 Y90.689 E-.48866
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.24 F42000
+G1 Z8.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.07 Y92.384 E.05243
+G1 X82.07 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03167
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+M73 P57 R6
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.79 Y92.369 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 73 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer73 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.835 Y91.763
+G1 Z8.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.313042
+G1 F1200
+M204 S6000
+G1 X82.835 Y89.926 E.02581
+; WIPE_START
+G1 F21000
+G1 X82.835 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.24 F42000
+G1 Z8.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.24 F42000
+G1 X96.809 Y91.975 Z9.24
+G1 Z8.84
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.521 Y89.714 E.01476
+G1 X97.521 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01351
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.24 F42000
+G1 Z8.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.93 Y89.304 E.03167
+G1 X97.93 Y92.384 E.05937
+G1 X95.27 Y92.384 E.05127
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.165 Y91.763 F42000
+; LINE_WIDTH: 0.313042
+G1 F1200
+M204 S6000
+G1 X97.165 Y89.926 E.02581
+; CHANGE_LAYER
+; Z_HEIGHT: 8.96
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.165 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 74/218
+; update layer progress
+M73 L74
+M991 S0 P73 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.24 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.24
+G1 Z8.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.519 Y91.975 E.01393
+G1 X82.519 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01393
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.519 Y91.975 E-.2562
+G1 X82.519 Y90.649 E-.5038
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.36 F42000
+G1 Z8.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.11 Y92.384 E.05166
+G1 X82.11 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0309
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.369 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 74 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer74 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.855 Y91.763
+G1 Z8.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.273042
+G1 F1200
+M204 S6000
+G1 X82.855 Y89.926 E.02221
+; WIPE_START
+G1 F21000
+G1 X82.855 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.36 F42000
+G1 Z8.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.36 F42000
+G1 X96.809 Y91.975 Z9.36
+G1 Z8.96
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.481 Y89.714 E.01393
+G1 X97.481 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01268
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.36 F42000
+G1 Z8.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.89 Y89.304 E.0309
+G1 X97.89 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0505
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.145 Y91.763 F42000
+; LINE_WIDTH: 0.273042
+G1 F1200
+M204 S6000
+G1 X97.145 Y89.926 E.02221
+; CHANGE_LAYER
+; Z_HEIGHT: 9.08
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.145 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 75/218
+; update layer progress
+M73 L75
+M991 S0 P74 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.36 I-.018 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.36
+G1 Z9.08
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.559 Y91.975 E.0131
+G1 X82.559 Y89.714 E.04691
+G1 X83.191 Y89.714 E.0131
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.559 Y91.975 E-.24106
+G1 X82.559 Y90.61 E-.51894
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.48 F42000
+G1 Z9.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.15 Y92.384 E.05089
+G1 X82.15 Y89.304 E.05937
+G1 X83.713 Y89.304 E.03013
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.37 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 75 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer75 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.875 Y91.763
+G1 Z9.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.233042
+G1 F1200
+M204 S6000
+G1 X82.875 Y89.926 E.01862
+; WIPE_START
+G1 F21000
+G1 X82.875 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.48 F42000
+G1 Z9.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.48 F42000
+G1 X96.809 Y91.975 Z9.48
+G1 Z9.08
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.441 Y89.714 E.0131
+G1 X97.441 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01185
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.48 F42000
+G1 Z9.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.85 Y89.304 E.03013
+G1 X97.85 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04973
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.125 Y91.763 F42000
+; LINE_WIDTH: 0.233042
+G1 F1200
+M204 S6000
+G1 X97.125 Y89.926 E.01862
+; CHANGE_LAYER
+; Z_HEIGHT: 9.2
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.125 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 76/218
+; update layer progress
+M73 L76
+M991 S0 P75 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.48 I-.019 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.48
+G1 Z9.2
+M73 P58 R6
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.599 Y91.975 E.01227
+G1 X82.599 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01227
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.599 Y91.975 E-.22594
+G1 X82.599 Y90.57 E-.53406
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.6 F42000
+G1 Z9.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.19 Y92.384 E.05012
+G1 X82.19 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02936
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.371 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 76 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer76 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.895 Y91.763
+G1 Z9.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.193042
+G1 F1200
+M204 S6000
+G1 X82.895 Y89.926 E.01503
+; WIPE_START
+G1 F21000
+G1 X82.895 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.6 F42000
+G1 Z9.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.6 F42000
+G1 X96.809 Y91.975 Z9.6
+G1 Z9.2
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.401 Y89.714 E.01227
+G1 X97.401 Y91.975 E.04691
+G1 X96.869 Y91.975 E.01103
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.6 F42000
+G1 Z9.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.81 Y89.304 E.02936
+G1 X97.81 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04896
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.105 Y91.763 F42000
+; LINE_WIDTH: 0.193042
+G1 F1200
+M204 S6000
+G1 X97.105 Y89.926 E.01503
+; CHANGE_LAYER
+; Z_HEIGHT: 9.32
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.105 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 77/218
+; update layer progress
+M73 L77
+M991 S0 P76 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.6 I-.019 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.6
+G1 Z9.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.639 Y91.975 E.01144
+G1 X82.639 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01144
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.639 Y91.975 E-.21082
+G1 X82.639 Y90.53 E-.54918
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.72 F42000
+G1 Z9.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.23 Y92.384 E.04935
+G1 X82.23 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02859
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.371 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 77 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer77 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.915 Y91.763
+G1 Z9.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.153042
+G1 F1200
+M204 S6000
+G1 X82.915 Y89.926 E.01143
+; WIPE_START
+G1 F21000
+G1 X82.915 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.72 F42000
+G1 Z9.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.72 F42000
+G1 X96.809 Y91.975 Z9.72
+G1 Z9.32
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.361 Y89.714 E.01144
+G1 X97.361 Y91.975 E.04691
+G1 X96.869 Y91.975 E.0102
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.72 F42000
+G1 Z9.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.77 Y89.304 E.02859
+G1 X97.77 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04819
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.085 Y91.763 F42000
+; LINE_WIDTH: 0.153042
+G1 F1200
+M204 S6000
+G1 X97.085 Y89.926 E.01143
+; CHANGE_LAYER
+; Z_HEIGHT: 9.44
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X97.085 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 78/218
+; update layer progress
+M73 L78
+M991 S0 P77 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.72 I-.019 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.72
+G1 Z9.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.679 Y91.975 E.01061
+G1 X82.679 Y89.714 E.04691
+G1 X83.191 Y89.714 E.01061
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.679 Y91.975 E-.19571
+G1 X82.679 Y90.49 E-.56429
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.84 F42000
+G1 Z9.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+M73 P58 R5
+G1 F1200
+M204 S5000
+G1 X82.27 Y92.384 E.04858
+G1 X82.27 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02782
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.372 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 78 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer78 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X82.935 Y91.763
+G1 Z9.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.113042
+G1 F1200
+M204 S6000
+G1 X82.935 Y89.926 E.00784
+; WIPE_START
+G1 F21000
+G1 X82.935 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.395 Y92.094 Z9.84 F42000
+G1 Z9.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.84 F42000
+G1 X96.809 Y91.975 Z9.84
+G1 Z9.44
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.321 Y89.714 E.01061
+G1 X97.321 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00937
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.84 F42000
+G1 Z9.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+M73 P59 R5
+G1 X96.287 Y89.304 E.02126
+G1 X97.73 Y89.304 E.02782
+G1 X97.73 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04742
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+M204 S10000
+G1 X97.065 Y91.763 F42000
+; LINE_WIDTH: 0.113042
+G1 F1200
+M204 S6000
+G1 X97.065 Y89.926 E.00784
+; CHANGE_LAYER
+; Z_HEIGHT: 9.56
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X97.065 Y91.763 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 79/218
+; update layer progress
+M73 L79
+M991 S0 P78 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.84 I-.019 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.84
+G1 Z9.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.719 Y91.975 E.00978
+G1 X82.719 Y89.714 E.04691
+G1 X83.191 Y89.714 E.00978
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.719 Y91.975 E-.18063
+G1 X82.719 Y90.451 E-.57937
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z9.96 F42000
+G1 Z9.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.31 Y92.384 E.0478
+G1 X82.31 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02704
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.373 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z9.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 79 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer79 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z9.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z9.96 F42000
+G1 X96.809 Y91.975 Z9.96
+G1 Z9.56
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.281 Y89.714 E.00978
+G1 X97.281 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00854
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z9.96 F42000
+G1 Z9.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.69 Y89.304 E.02704
+G1 X97.69 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04665
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 9.68
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 80/218
+; update layer progress
+M73 L80
+M991 S0 P79 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z9.96 I.012 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z9.96
+G1 Z9.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.759 Y91.975 E.00895
+G1 X82.759 Y89.714 E.04691
+G1 X83.191 Y89.714 E.00895
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.759 Y91.975 E-.16556
+G1 X82.759 Y90.411 E-.59444
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z10.08 F42000
+G1 Z9.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.35 Y92.384 E.04703
+G1 X82.35 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02627
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.374 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 80 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer80 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z9.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z10.08 F42000
+G1 X96.809 Y91.975 Z10.08
+G1 Z9.68
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.241 Y89.714 E.00895
+G1 X97.241 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00771
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z10.08 F42000
+G1 Z9.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.65 Y89.304 E.02627
+G1 X97.65 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04588
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 9.8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 81/218
+; update layer progress
+M73 L81
+M991 S0 P80 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.08 I.012 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z10.08
+G1 Z9.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.799 Y91.975 E.00812
+G1 X82.799 Y89.714 E.04691
+G1 X83.191 Y89.714 E.00812
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.799 Y91.975 E-.15052
+G1 X82.799 Y90.371 E-.60948
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z10.2 F42000
+G1 Z9.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.39 Y92.384 E.04626
+G1 X82.39 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0255
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.374 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 81 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer81 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z9.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z10.2 F42000
+G1 X96.809 Y91.975 Z10.2
+G1 Z9.8
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.201 Y89.714 E.00812
+G1 X97.201 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00688
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z10.2 F42000
+G1 Z9.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.61 Y89.304 E.0255
+M73 P60 R5
+G1 X97.61 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04511
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 9.92
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 82/218
+; update layer progress
+M73 L82
+M991 S0 P81 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.2 I.012 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z10.2
+G1 Z9.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.839 Y91.975 E.00729
+G1 X82.839 Y89.714 E.04691
+G1 X83.191 Y89.714 E.00729
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.839 Y91.975 E-.13551
+G1 X82.839 Y90.332 E-.62449
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z10.32 F42000
+G1 Z9.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.43 Y92.384 E.04549
+G1 X82.43 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02473
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.375 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 82 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer82 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z9.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z10.32 F42000
+G1 X96.809 Y91.975 Z10.32
+G1 Z9.92
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.161 Y89.714 E.00729
+G1 X97.161 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00605
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z10.32 F42000
+G1 Z9.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.57 Y89.304 E.02473
+G1 X97.57 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04433
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 10.04
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 83/218
+; update layer progress
+M73 L83
+M991 S0 P82 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.32 I.012 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z10.32
+G1 Z10.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.879 Y91.975 E.00646
+G1 X82.879 Y89.714 E.04691
+G1 X83.191 Y89.714 E.00646
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.879 Y91.975 E-.12056
+G1 X82.879 Y90.292 E-.63944
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z10.44 F42000
+G1 Z10.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.47 Y92.384 E.04472
+G1 X82.47 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02396
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.376 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 83 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer83 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z10.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z10.44 F42000
+G1 X96.809 Y91.975 Z10.44
+G1 Z10.04
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.121 Y89.714 E.00646
+G1 X97.121 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00522
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z10.44 F42000
+G1 Z10.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.53 Y89.304 E.02396
+G1 X97.53 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04356
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 10.16
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 84/218
+; update layer progress
+M73 L84
+M991 S0 P83 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.44 I.012 J-1.217 P1  F42000
+G1 X83.191 Y91.975 Z10.44
+G1 Z10.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X82.919 Y91.975 E.00563
+G1 X82.919 Y89.714 E.04691
+G1 X83.191 Y89.714 E.00563
+G1 X83.191 Y91.915 E.04567
+; WIPE_START
+G1 F21000
+G1 X82.919 Y91.975 E-.10567
+G1 X82.919 Y90.253 E-.65433
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.79 Y92.384 Z10.56 F42000
+G1 Z10.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.51 Y92.384 E.04395
+G1 X82.51 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02319
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.377 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 84 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer84 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.395 Y92.094
+G1 Z10.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X84.585 Y92.094 E.00993
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.028 Y92.027 Z10.56 F42000
+G1 X96.809 Y91.975 Z10.56
+G1 Z10.16
+G1 E.8 F1800
+; FEATURE: Inner wall
+; LINE_WIDTH: 0.45
+G1 F1200
+M204 S6000
+G1 X96.809 Y89.714 E.04691
+G1 X97.081 Y89.714 E.00563
+G1 X97.081 Y91.975 E.04691
+G1 X96.869 Y91.975 E.00439
+; WIPE_START
+G1 F21000
+G1 X96.816 Y89.976 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X95.21 Y92.384 Z10.56 F42000
+G1 Z10.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.49 Y89.304 E.02319
+G1 X97.49 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04279
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00993
+; CHANGE_LAYER
+; Z_HEIGHT: 10.28
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+M73 P61 R5
+G1 F21000
+G1 X95.415 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 85/218
+; update layer progress
+M73 L85
+M991 S0 P84 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.56 I-.033 J-1.217 P1  F42000
+G1 X84.79 Y92.384 Z10.56
+G1 Z10.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.55 Y92.384 E.04318
+G1 X82.55 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02242
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.378 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 85 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer85 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.075 Y92.18
+G1 Z10.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.6661
+G1 F1200
+M204 S6000
+G1 X83.075 Y89.88 E.07201
+G1 X83.077 Y89.831 E.00152
+G1 X83.13 Y89.808 E.00181
+; LINE_WIDTH: 0.601777
+G1 X83.183 Y89.786 E.00163
+; LINE_WIDTH: 0.556167
+G1 X83.236 Y89.763 E.0015
+; LINE_WIDTH: 0.510557
+G1 X83.289 Y89.74 E.00137
+; LINE_WIDTH: 0.464947
+G1 X83.342 Y89.717 E.00124
+; LINE_WIDTH: 0.419337
+G1 X83.395 Y89.694 E.00111
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.755 Y91.774 Z10.68 F42000
+G1 Z10.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X82.915 Y91.854 E.0028
+; LINE_WIDTH: 0.303257
+G1 X83.075 Y91.934 E.00243
+; LINE_WIDTH: 0.260567
+G1 X83.235 Y92.014 E.00206
+; LINE_WIDTH: 0.217877
+G1 X83.395 Y92.094 E.00168
+; LINE_WIDTH: 0.196522
+G1 X84.585 Y92.094 E.00994
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.026 Y92.282 Z10.68 F42000
+G1 X95.21 Y92.384 Z10.68
+G1 Z10.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.45 Y89.304 E.02242
+G1 X97.45 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04202
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199313
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.0101
+G1 X96.765 Y92.014 E.00152
+; LINE_WIDTH: 0.260555
+G1 X96.925 Y91.934 E.00206
+; LINE_WIDTH: 0.30325
+G1 X97.085 Y91.854 E.00243
+; LINE_WIDTH: 0.345945
+G1 X97.245 Y91.774 E.0028
+M204 S10000
+G1 X96.925 Y92.18 F42000
+; LINE_WIDTH: 0.66656
+G1 F1200
+M204 S6000
+G1 X96.923 Y89.831 E.07358
+; LINE_WIDTH: 0.647401
+G1 X96.87 Y89.808 E.00176
+; LINE_WIDTH: 0.601785
+G1 X96.817 Y89.786 E.00163
+; LINE_WIDTH: 0.556169
+G1 X96.764 Y89.763 E.0015
+; LINE_WIDTH: 0.510553
+G1 X96.711 Y89.74 E.00137
+; LINE_WIDTH: 0.464936
+G1 X96.658 Y89.717 E.00124
+; LINE_WIDTH: 0.39929
+G1 X96.605 Y89.694 E.00106
+G1 X96.186 Y89.694 E.00764
+; CHANGE_LAYER
+; Z_HEIGHT: 10.4
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.66775
+G1 X96.658 Y89.717 E-.09225
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 86/218
+; update layer progress
+M73 L86
+M991 S0 P85 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.68 I-.267 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z10.68
+G1 Z10.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.59 Y92.384 E.04241
+G1 X82.59 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02165
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.379 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 86 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer86 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.095 Y92.18
+G1 Z10.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.626195
+G1 F1200
+M204 S6000
+G1 X83.095 Y89.88 E.06752
+G1 X83.099 Y89.813 E.00196
+G1 X83.158 Y89.789 E.00188
+; LINE_WIDTH: 0.562712
+G1 X83.217 Y89.766 E.00168
+; LINE_WIDTH: 0.515232
+G1 X83.277 Y89.742 E.00153
+; LINE_WIDTH: 0.467752
+G1 X83.336 Y89.718 E.00138
+; LINE_WIDTH: 0.420272
+G1 X83.395 Y89.694 E.00123
+; LINE_WIDTH: 0.396512
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.795 Y91.794 Z10.8 F42000
+G1 Z10.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X82.945 Y91.869 E.00263
+; LINE_WIDTH: 0.303257
+G1 X83.095 Y91.944 E.00228
+; LINE_WIDTH: 0.260567
+G1 X83.245 Y92.019 E.00193
+; LINE_WIDTH: 0.217877
+G1 X83.395 Y92.094 E.00158
+; LINE_WIDTH: 0.196512
+G1 X84.585 Y92.094 E.00994
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.026 Y92.282 Z10.8 F42000
+G1 X95.21 Y92.384 Z10.8
+G1 Z10.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.41 Y89.304 E.02165
+G1 X97.41 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04125
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.19917
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.01009
+G1 X96.755 Y92.019 E.00142
+; LINE_WIDTH: 0.260555
+G1 X96.905 Y91.944 E.00193
+; LINE_WIDTH: 0.30325
+G1 X97.055 Y91.869 E.00228
+; LINE_WIDTH: 0.345945
+G1 X97.205 Y91.794 E.00263
+M204 S10000
+G1 X96.905 Y92.18 F42000
+; LINE_WIDTH: 0.626627
+G1 F1200
+M204 S6000
+G1 X96.901 Y89.813 E.06953
+; LINE_WIDTH: 0.610174
+G1 X96.842 Y89.789 E.00183
+; LINE_WIDTH: 0.562694
+G1 X96.783 Y89.766 E.00168
+; LINE_WIDTH: 0.515213
+G1 X96.723 Y89.742 E.00153
+; LINE_WIDTH: 0.467733
+G1 X96.664 Y89.718 E.00138
+; LINE_WIDTH: 0.399676
+G1 X96.605 Y89.694 E.00117
+G1 X96.186 Y89.694 E.00765
+; CHANGE_LAYER
+; Z_HEIGHT: 10.52
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.65927
+G1 X96.664 Y89.718 E-.10073
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 87/218
+; update layer progress
+M73 L87
+M991 S0 P86 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.8 I-.267 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z10.8
+G1 Z10.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.63 Y92.384 E.04164
+G1 X82.63 Y89.304 E.05937
+G1 X83.713 Y89.304 E.02088
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.38 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z10.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 87 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer87 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.115 Y92.18
+G1 Z10.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.586557
+G1 F1200
+M204 S6000
+G1 X83.115 Y89.88 E.06306
+G1 X83.121 Y89.796 E.00231
+G1 X83.176 Y89.775 E.0016
+; LINE_WIDTH: 0.538352
+G1 X83.231 Y89.755 E.00146
+; LINE_WIDTH: 0.497832
+G1 X83.286 Y89.735 E.00135
+; LINE_WIDTH: 0.457312
+G1 X83.341 Y89.715 E.00123
+; LINE_WIDTH: 0.416792
+G1 X83.395 Y89.694 E.00112
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.835 Y91.814 Z10.92 F42000
+G1 Z10.52
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X82.975 Y91.884 E.00245
+; LINE_WIDTH: 0.303257
+G1 X83.115 Y91.954 E.00213
+; LINE_WIDTH: 0.260567
+G1 X83.255 Y92.024 E.0018
+; LINE_WIDTH: 0.217877
+G1 X83.395 Y92.094 E.00147
+; LINE_WIDTH: 0.196522
+G1 X84.585 Y92.094 E.00994
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.026 Y92.282 Z10.92 F42000
+G1 X95.21 Y92.384 Z10.92
+G1 Z10.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.37 Y89.304 E.02088
+G1 X97.37 Y92.384 E.05937
+G1 X95.27 Y92.384 E.04048
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199005
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.01008
+G1 X96.745 Y92.024 E.00133
+; LINE_WIDTH: 0.260555
+G1 X96.885 Y91.954 E.0018
+; LINE_WIDTH: 0.30325
+G1 X97.025 Y91.884 E.00213
+; LINE_WIDTH: 0.345945
+G1 X97.165 Y91.814 E.00245
+M204 S10000
+G1 X96.885 Y92.18 F42000
+; LINE_WIDTH: 0.586745
+G1 F1200
+M204 S6000
+G1 X96.879 Y89.796 E.06539
+; LINE_WIDTH: 0.578864
+G1 X96.824 Y89.775 E.00158
+; LINE_WIDTH: 0.538342
+G1 X96.769 Y89.755 E.00146
+; LINE_WIDTH: 0.497819
+G1 X96.714 Y89.735 E.00135
+; LINE_WIDTH: 0.457296
+G1 X96.659 Y89.715 E.00123
+; LINE_WIDTH: 0.399005
+G1 X96.605 Y89.694 E.00107
+G1 X96.186 Y89.694 E.00763
+; CHANGE_LAYER
+; Z_HEIGHT: 10.64
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.66683
+G1 X96.659 Y89.715 E-.09317
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 88/218
+; update layer progress
+M73 L88
+M991 S0 P87 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z10.92 I-.267 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z10.92
+G1 Z10.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.67 Y92.384 E.04086
+G1 X82.67 Y89.304 E.05937
+G1 X83.713 Y89.304 E.0201
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.381 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 88 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer88 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.135 Y92.18
+G1 Z10.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.546875
+G1 F1200
+M204 S6000
+G1 X83.135 Y89.88 E.0586
+G1 X83.145 Y89.779 E.00258
+G1 X83.207 Y89.758 E.00169
+; LINE_WIDTH: 0.502432
+G1 X83.27 Y89.737 E.00154
+; LINE_WIDTH: 0.460072
+G1 X83.333 Y89.716 E.0014
+; LINE_WIDTH: 0.417712
+G1 X83.395 Y89.694 E.00127
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.875 Y91.834 Z11.04 F42000
+G1 Z10.64
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.005 Y91.899 E.00228
+; LINE_WIDTH: 0.303257
+G1 X83.135 Y91.964 E.00197
+; LINE_WIDTH: 0.260567
+G1 X83.265 Y92.029 E.00167
+; LINE_WIDTH: 0.217877
+M73 P62 R5
+G1 X83.395 Y92.094 E.00137
+; LINE_WIDTH: 0.196522
+G1 X84.585 Y92.094 E.00994
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.026 Y92.282 Z11.04 F42000
+G1 X95.21 Y92.384 Z11.04
+G1 Z10.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.33 Y89.304 E.0201
+G1 X97.33 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03971
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198848
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.01007
+G1 X96.735 Y92.029 E.00123
+; LINE_WIDTH: 0.260555
+G1 X96.865 Y91.964 E.00167
+; LINE_WIDTH: 0.30325
+G1 X96.995 Y91.899 E.00197
+; LINE_WIDTH: 0.345945
+G1 X97.125 Y91.834 E.00228
+M204 S10000
+G1 X96.865 Y92.18 F42000
+; LINE_WIDTH: 0.546932
+G1 F1200
+M204 S6000
+G1 X96.855 Y89.779 E.06117
+; LINE_WIDTH: 0.544801
+G1 X96.793 Y89.758 E.00168
+; LINE_WIDTH: 0.502433
+G1 X96.73 Y89.737 E.00154
+; LINE_WIDTH: 0.460065
+G1 X96.667 Y89.716 E.0014
+; LINE_WIDTH: 0.399414
+G1 X96.605 Y89.694 E.00121
+G1 X96.186 Y89.694 E.00764
+; CHANGE_LAYER
+; Z_HEIGHT: 10.76
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.65622
+G1 X96.667 Y89.716 E-.10378
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 89/218
+; update layer progress
+M73 L89
+M991 S0 P88 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.04 I-.267 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.04
+G1 Z10.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.71 Y92.384 E.04009
+G1 X82.71 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01933
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.382 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 89 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer89 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.155 Y92.18
+G1 Z10.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.507345
+G1 F1200
+M204 S6000
+G1 X83.155 Y89.88 E.05416
+G1 X83.169 Y89.764 E.00276
+G1 X83.245 Y89.741 E.00186
+; LINE_WIDTH: 0.465602
+G1 X83.32 Y89.717 E.0017
+; LINE_WIDTH: 0.419556
+G1 X83.395 Y89.694 E.00152
+; LINE_WIDTH: 0.396512
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.915 Y91.854 Z11.16 F42000
+G1 Z10.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.035 Y91.914 E.0021
+; LINE_WIDTH: 0.303257
+G1 X83.155 Y91.974 E.00182
+; LINE_WIDTH: 0.260567
+G1 X83.275 Y92.034 E.00154
+; LINE_WIDTH: 0.217877
+G1 X83.395 Y92.094 E.00126
+; LINE_WIDTH: 0.196522
+G1 X84.585 Y92.094 E.00994
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.026 Y92.282 Z11.16 F42000
+G1 X95.21 Y92.384 Z11.16
+G1 Z10.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.29 Y89.304 E.01933
+G1 X97.29 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03894
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198687
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.01006
+G1 X96.725 Y92.034 E.00114
+; LINE_WIDTH: 0.260555
+G1 X96.845 Y91.974 E.00154
+; LINE_WIDTH: 0.30325
+G1 X96.965 Y91.914 E.00182
+; LINE_WIDTH: 0.345945
+G1 X97.085 Y91.854 E.0021
+M204 S10000
+G1 X96.845 Y92.18 F42000
+; LINE_WIDTH: 0.507204
+G1 F1200
+M204 S6000
+G1 X96.845 Y89.88 E.05414
+G1 X96.831 Y89.764 E.00276
+; LINE_WIDTH: 0.511627
+G1 X96.755 Y89.741 E.00187
+; LINE_WIDTH: 0.465581
+G1 X96.68 Y89.717 E.0017
+; LINE_WIDTH: 0.400181
+G1 X96.605 Y89.694 E.00144
+G1 X96.186 Y89.694 E.00766
+; CHANGE_LAYER
+; Z_HEIGHT: 10.88
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.63943
+G1 X96.68 Y89.717 E-.12057
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 90/218
+; update layer progress
+M73 L90
+M991 S0 P89 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.16 I-.266 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.16
+G1 Z10.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.75 Y92.384 E.03932
+G1 X82.75 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01856
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.383 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 90 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer90 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.175 Y92.18
+G1 Z10.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.468127
+G1 F1200
+M204 S6000
+G1 X83.175 Y89.88 E.04975
+G1 X83.194 Y89.749 E.00286
+G1 X83.261 Y89.731 E.0015
+; LINE_WIDTH: 0.450972
+G1 X83.328 Y89.713 E.00144
+; LINE_WIDTH: 0.414679
+G1 X83.395 Y89.694 E.00132
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X82.955 Y91.874 Z11.28 F42000
+G1 Z10.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.065 Y91.929 E.00193
+; LINE_WIDTH: 0.303257
+G1 X83.175 Y91.984 E.00167
+; LINE_WIDTH: 0.260567
+G1 X83.285 Y92.039 E.00141
+; LINE_WIDTH: 0.217877
+G1 X83.395 Y92.094 E.00116
+; LINE_WIDTH: 0.196522
+G1 X84.585 Y92.094 E.00994
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.026 Y92.282 Z11.28 F42000
+G1 X95.21 Y92.384 Z11.28
+G1 Z10.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.25 Y89.304 E.01856
+G1 X97.25 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03817
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198524
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.01005
+G1 X96.715 Y92.039 E.00104
+; LINE_WIDTH: 0.260555
+G1 X96.825 Y91.984 E.00141
+; LINE_WIDTH: 0.30325
+G1 X96.935 Y91.929 E.00167
+; LINE_WIDTH: 0.345945
+G1 X97.045 Y91.874 E.00193
+M204 S10000
+G1 X96.825 Y92.18 F42000
+; LINE_WIDTH: 0.46758
+G1 F1200
+M204 S6000
+G1 X96.825 Y89.88 E.04968
+G1 X96.806 Y89.749 E.00286
+; LINE_WIDTH: 0.487275
+G1 X96.739 Y89.731 E.00157
+; LINE_WIDTH: 0.45097
+G1 X96.672 Y89.713 E.00144
+; LINE_WIDTH: 0.399104
+G1 X96.605 Y89.694 E.00127
+G1 X96.186 Y89.694 E.00763
+; CHANGE_LAYER
+; Z_HEIGHT: 11
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.65185
+G1 X96.672 Y89.713 E-.10815
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 91/218
+; update layer progress
+M73 L91
+M991 S0 P90 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.28 I-.267 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.28
+G1 Z11
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.79 Y92.384 E.03855
+G1 X82.79 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01779
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.791 Y92.384 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 91 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer91 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.195 Y91.979
+G1 Z11
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.426522
+G1 F1200
+M204 S6000
+G1 X83.195 Y89.88 E.04114
+; LINE_WIDTH: 0.454619
+G1 X83.221 Y89.735 E.00308
+G1 X83.308 Y89.715 E.00188
+; LINE_WIDTH: 0.417032
+G1 X83.395 Y89.694 E.00171
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.195 Y91.979 Z11.4 F42000
+G1 Z11
+G1 E.8 F1800
+; LINE_WIDTH: 0.411707
+G1 F1200
+M204 S6000
+G1 X83.21 Y91.994 E.0004
+; LINE_WIDTH: 0.382097
+G1 X83.225 Y92.009 E.00036
+; LINE_WIDTH: 0.345947
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197336
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z11.4 F42000
+G1 X95.21 Y92.384 Z11.4
+G1 Z11
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.21 Y89.304 E.01779
+G1 X97.21 Y92.384 E.05937
+G1 X95.27 Y92.384 E.0374
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197355
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.382102
+G1 X96.79 Y91.994 E.00036
+; LINE_WIDTH: 0.411722
+G1 X96.805 Y91.979 E.0004
+; LINE_WIDTH: 0.426522
+G1 X96.805 Y89.88 E.04114
+; LINE_WIDTH: 0.454611
+G1 X96.779 Y89.735 E.00308
+G1 X96.692 Y89.715 E.00188
+; LINE_WIDTH: 0.417019
+G1 X96.605 Y89.694 E.00171
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.12
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 92/218
+; update layer progress
+M73 L92
+M991 S0 P91 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.4 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.4
+G1 Z11.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+M73 P63 R5
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 92 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer92 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z11.52 F42000
+G1 Z11.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z11.52 F42000
+G1 X95.21 Y92.384 Z11.52
+G1 Z11.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.24
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 93/218
+; update layer progress
+M73 L93
+M991 S0 P92 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.52 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.52
+G1 Z11.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 93 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer93 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z11.64 F42000
+G1 Z11.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z11.64 F42000
+G1 X95.21 Y92.384 Z11.64
+G1 Z11.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.36
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 94/218
+; update layer progress
+M73 L94
+M991 S0 P93 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.64 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.64
+G1 Z11.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 94 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer94 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z11.76 F42000
+G1 Z11.36
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z11.76 F42000
+G1 X95.21 Y92.384 Z11.76
+G1 Z11.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.48
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 95/218
+; update layer progress
+M73 L95
+M991 S0 P94 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.76 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.76
+G1 Z11.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z11.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 95 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer95 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z11.88 F42000
+G1 Z11.48
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z11.88 F42000
+G1 X95.21 Y92.384 Z11.88
+G1 Z11.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+M73 P64 R5
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.6
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 96/218
+; update layer progress
+M73 L96
+M991 S0 P95 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z11.88 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z11.88
+G1 Z11.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 96 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer96 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12 F42000
+G1 Z11.6
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12 F42000
+G1 X95.21 Y92.384 Z12
+G1 Z11.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.72
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 97/218
+; update layer progress
+M73 L97
+M991 S0 P96 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12
+G1 Z11.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 97 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer97 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.12 F42000
+G1 Z11.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.12 F42000
+G1 X95.21 Y92.384 Z12.12
+G1 Z11.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.84
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 98/218
+; update layer progress
+M73 L98
+M991 S0 P97 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.12 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.12
+G1 Z11.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 98 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer98 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.24 F42000
+G1 Z11.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.24 F42000
+G1 X95.21 Y92.384 Z12.24
+G1 Z11.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 11.96
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 99/218
+; update layer progress
+M73 L99
+M991 S0 P98 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.24 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.24
+G1 Z11.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 99 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer99 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z11.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.36 F42000
+G1 Z11.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.36 F42000
+G1 X95.21 Y92.384 Z12.36
+G1 Z11.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+M73 P65 R5
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.08
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 100/218
+; update layer progress
+M73 L100
+M991 S0 P99 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.36 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.36
+G1 Z12.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 100 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer100 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.48 F42000
+G1 Z12.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.48 F42000
+G1 X95.21 Y92.384 Z12.48
+G1 Z12.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.2
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 101/218
+; update layer progress
+M73 L101
+M991 S0 P100 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.48 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.48
+G1 Z12.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 101 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer101 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.6 F42000
+G1 Z12.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.6 F42000
+G1 X95.21 Y92.384 Z12.6
+G1 Z12.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.32
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 102/218
+; update layer progress
+M73 L102
+M991 S0 P101 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.6 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.6
+G1 Z12.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+M73 P65 R4
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 102 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer102 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.72 F42000
+G1 Z12.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.72 F42000
+G1 X95.21 Y92.384 Z12.72
+G1 Z12.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.44
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 103/218
+; update layer progress
+M73 L103
+M991 S0 P102 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.72 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.72
+G1 Z12.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 103 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer103 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+M73 P66 R4
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.84 F42000
+G1 Z12.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.84 F42000
+G1 X95.21 Y92.384 Z12.84
+G1 Z12.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.56
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 104/218
+; update layer progress
+M73 L104
+M991 S0 P103 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.84 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.84
+G1 Z12.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z12.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 104 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer104 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z12.96 F42000
+G1 Z12.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z12.96 F42000
+G1 X95.21 Y92.384 Z12.96
+G1 Z12.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.68
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 105/218
+; update layer progress
+M73 L105
+M991 S0 P104 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z12.96 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z12.96
+G1 Z12.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 105 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer105 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.08 F42000
+G1 Z12.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.08 F42000
+G1 X95.21 Y92.384 Z13.08
+G1 Z12.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 106/218
+; update layer progress
+M73 L106
+M991 S0 P105 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.08 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.08
+G1 Z12.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 106 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer106 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.2 F42000
+G1 Z12.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.2 F42000
+G1 X95.21 Y92.384 Z13.2
+G1 Z12.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 12.92
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 107/218
+; update layer progress
+M73 L107
+M991 S0 P106 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.2 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.2
+G1 Z12.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+M73 P67 R4
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 107 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer107 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z12.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.32 F42000
+G1 Z12.92
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.32 F42000
+G1 X95.21 Y92.384 Z13.32
+G1 Z12.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.04
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 108/218
+; update layer progress
+M73 L108
+M991 S0 P107 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.32 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.32
+G1 Z13.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 108 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer108 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.44 F42000
+G1 Z13.04
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.44 F42000
+G1 X95.21 Y92.384 Z13.44
+G1 Z13.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.16
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 109/218
+; update layer progress
+M73 L109
+M991 S0 P108 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.44 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.44
+G1 Z13.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 109 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer109 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.56 F42000
+G1 Z13.16
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.56 F42000
+G1 X95.21 Y92.384 Z13.56
+G1 Z13.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.28
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 110/218
+; update layer progress
+M73 L110
+M991 S0 P109 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.56 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.56
+G1 Z13.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 110 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer110 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.68 F42000
+G1 Z13.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.68 F42000
+G1 X95.21 Y92.384 Z13.68
+G1 Z13.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+M73 P68 R4
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.4
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 111/218
+; update layer progress
+M73 L111
+M991 S0 P110 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.68 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.68
+G1 Z13.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 111 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer111 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.8 F42000
+G1 Z13.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.8 F42000
+G1 X95.21 Y92.384 Z13.8
+G1 Z13.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.52
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 112/218
+; update layer progress
+M73 L112
+M991 S0 P111 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.8 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.8
+G1 Z13.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z13.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 112 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer112 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z13.92 F42000
+G1 Z13.52
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z13.92 F42000
+G1 X95.21 Y92.384 Z13.92
+G1 Z13.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.64
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 113/218
+; update layer progress
+M73 L113
+M991 S0 P112 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z13.92 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z13.92
+G1 Z13.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 113 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer113 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.04 F42000
+G1 Z13.64
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.04 F42000
+G1 X95.21 Y92.384 Z14.04
+G1 Z13.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.76
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 114/218
+; update layer progress
+M73 L114
+M991 S0 P113 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.04 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.04
+G1 Z13.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 114 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer114 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.16 F42000
+G1 Z13.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.16 F42000
+G1 X95.21 Y92.384 Z14.16
+G1 Z13.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+M73 P69 R4
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 13.88
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 115/218
+; update layer progress
+M73 L115
+M991 S0 P114 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.16 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.16
+G1 Z13.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 115 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer115 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z13.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.28 F42000
+G1 Z13.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.28 F42000
+G1 X95.21 Y92.384 Z14.28
+G1 Z13.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 116/218
+; update layer progress
+M73 L116
+M991 S0 P115 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.28 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.28
+G1 Z14
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 116 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer116 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.4 F42000
+G1 Z14
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.4 F42000
+G1 X95.21 Y92.384 Z14.4
+G1 Z14
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.12
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 117/218
+; update layer progress
+M73 L117
+M991 S0 P116 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.4 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.4
+G1 Z14.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 117 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer117 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.52 F42000
+G1 Z14.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.52 F42000
+G1 X95.21 Y92.384 Z14.52
+G1 Z14.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.24
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 118/218
+; update layer progress
+M73 L118
+M991 S0 P117 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.52 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.52
+G1 Z14.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 118 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer118 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.24
+M73 P70 R4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.64 F42000
+G1 Z14.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.64 F42000
+G1 X95.21 Y92.384 Z14.64
+G1 Z14.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.36
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 119/218
+; update layer progress
+M73 L119
+M991 S0 P118 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.64 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.64
+G1 Z14.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 119 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer119 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.76 F42000
+G1 Z14.36
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.76 F42000
+G1 X95.21 Y92.384 Z14.76
+G1 Z14.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.48
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 120/218
+; update layer progress
+M73 L120
+M991 S0 P119 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.76 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.76
+G1 Z14.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z14.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 120 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer120 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z14.88 F42000
+G1 Z14.48
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z14.88 F42000
+G1 X95.21 Y92.384 Z14.88
+G1 Z14.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.6
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 121/218
+; update layer progress
+M73 L121
+M991 S0 P120 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z14.88 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z14.88
+G1 Z14.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 121 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer121 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15 F42000
+G1 Z14.6
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15 F42000
+G1 X95.21 Y92.384 Z15
+G1 Z14.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.72
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 122/218
+; update layer progress
+M73 L122
+M991 S0 P121 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15
+G1 Z14.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+M73 P71 R4
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 122 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer122 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.12 F42000
+G1 Z14.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.12 F42000
+G1 X95.21 Y92.384 Z15.12
+G1 Z14.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.84
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 123/218
+; update layer progress
+M73 L123
+M991 S0 P122 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.12 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.12
+G1 Z14.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 123 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer123 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.24 F42000
+G1 Z14.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.24 F42000
+G1 X95.21 Y92.384 Z15.24
+G1 Z14.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 14.96
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 124/218
+; update layer progress
+M73 L124
+M991 S0 P123 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.24 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.24
+G1 Z14.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 124 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer124 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z14.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.36 F42000
+G1 Z14.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.36 F42000
+G1 X95.21 Y92.384 Z15.36
+G1 Z14.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.08
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 125/218
+; update layer progress
+M73 L125
+M991 S0 P124 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.36 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.36
+G1 Z15.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 125 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer125 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.48 F42000
+G1 Z15.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.48 F42000
+G1 X95.21 Y92.384 Z15.48
+G1 Z15.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+M73 P72 R4
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.2
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 126/218
+; update layer progress
+M73 L126
+M991 S0 P125 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.48 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.48
+G1 Z15.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 126 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer126 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.6 F42000
+G1 Z15.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.6 F42000
+G1 X95.21 Y92.384 Z15.6
+G1 Z15.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.32
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 127/218
+; update layer progress
+M73 L127
+M991 S0 P126 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.6 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.6
+G1 Z15.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 127 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer127 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.72 F42000
+G1 Z15.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.72 F42000
+G1 X95.21 Y92.384 Z15.72
+G1 Z15.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+M73 P72 R3
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.44
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 128/218
+; update layer progress
+M73 L128
+M991 S0 P127 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.72 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.72
+G1 Z15.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 128 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer128 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.84 F42000
+G1 Z15.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.84 F42000
+G1 X95.21 Y92.384 Z15.84
+G1 Z15.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.56
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 129/218
+; update layer progress
+M73 L129
+M991 S0 P128 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.84 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.84
+G1 Z15.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z15.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 129 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer129 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z15.96 F42000
+G1 Z15.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z15.96 F42000
+G1 X95.21 Y92.384 Z15.96
+G1 Z15.56
+M73 P73 R3
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.68
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 130/218
+; update layer progress
+M73 L130
+M991 S0 P129 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z15.96 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z15.96
+G1 Z15.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 130 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer130 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.08 F42000
+G1 Z15.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.08 F42000
+G1 X95.21 Y92.384 Z16.08
+G1 Z15.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.8
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 131/218
+; update layer progress
+M73 L131
+M991 S0 P130 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.08 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.08
+G1 Z15.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 131 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer131 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.2 F42000
+G1 Z15.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.2 F42000
+G1 X95.21 Y92.384 Z16.2
+G1 Z15.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 15.92
+; LAYER_HEIGHT: 0.12
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 132/218
+; update layer progress
+M73 L132
+M991 S0 P131 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.2 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.2
+G1 Z15.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 132 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer132 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z15.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.32 F42000
+G1 Z15.92
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.32 F42000
+G1 X95.21 Y92.384 Z16.32
+G1 Z15.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.04
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 133/218
+; update layer progress
+M73 L133
+M991 S0 P132 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.32 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.32
+G1 Z16.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+M73 P74 R3
+G3 Z16.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 133 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer133 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.44 F42000
+G1 Z16.04
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.44 F42000
+G1 X95.21 Y92.384 Z16.44
+G1 Z16.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.16
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 134/218
+; update layer progress
+M73 L134
+M991 S0 P133 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.44 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.44
+G1 Z16.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 134 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer134 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.56 F42000
+G1 Z16.16
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.56 F42000
+G1 X95.21 Y92.384 Z16.56
+G1 Z16.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.28
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 135/218
+; update layer progress
+M73 L135
+M991 S0 P134 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.56 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.56
+G1 Z16.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 135 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer135 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.68 F42000
+G1 Z16.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.68 F42000
+G1 X95.21 Y92.384 Z16.68
+G1 Z16.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.4
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 136/218
+; update layer progress
+M73 L136
+M991 S0 P135 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.68 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.68
+G1 Z16.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 136 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer136 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.8 F42000
+G1 Z16.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.8 F42000
+G1 X95.21 Y92.384 Z16.8
+G1 Z16.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.52
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 137/218
+; update layer progress
+M73 L137
+M991 S0 P136 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.8 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.8
+G1 Z16.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+M73 P75 R3
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z16.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 137 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer137 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z16.92 F42000
+G1 Z16.52
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z16.92 F42000
+G1 X95.21 Y92.384 Z16.92
+G1 Z16.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.64
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 138/218
+; update layer progress
+M73 L138
+M991 S0 P137 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z16.92 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z16.92
+G1 Z16.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 138 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer138 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.04 F42000
+G1 Z16.64
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.04 F42000
+G1 X95.21 Y92.384 Z17.04
+G1 Z16.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.76
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 139/218
+; update layer progress
+M73 L139
+M991 S0 P138 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.04 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.04
+G1 Z16.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 139 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer139 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.16 F42000
+G1 Z16.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.16 F42000
+G1 X95.21 Y92.384 Z17.16
+G1 Z16.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 16.88
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 140/218
+; update layer progress
+M73 L140
+M991 S0 P139 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.16 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.16
+G1 Z16.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 140 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer140 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z16.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.28 F42000
+G1 Z16.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.28 F42000
+G1 X95.21 Y92.384 Z17.28
+G1 Z16.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+M73 P76 R3
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 141/218
+; update layer progress
+M73 L141
+M991 S0 P140 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.28 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.28
+G1 Z17
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 141 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer141 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.4 F42000
+G1 Z17
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.4 F42000
+G1 X95.21 Y92.384 Z17.4
+G1 Z17
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.12
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 142/218
+; update layer progress
+M73 L142
+M991 S0 P141 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.4 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.4
+G1 Z17.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 142 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer142 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.52 F42000
+G1 Z17.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.52 F42000
+G1 X95.21 Y92.384 Z17.52
+G1 Z17.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.24
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 143/218
+; update layer progress
+M73 L143
+M991 S0 P142 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.52 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.52
+G1 Z17.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 143 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer143 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.64 F42000
+G1 Z17.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.64 F42000
+G1 X95.21 Y92.384 Z17.64
+G1 Z17.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.36
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 144/218
+; update layer progress
+M73 L144
+M991 S0 P143 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.64 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.64
+G1 Z17.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 144 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer144 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.76 F42000
+G1 Z17.36
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+M73 P77 R3
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.76 F42000
+G1 X95.21 Y92.384 Z17.76
+G1 Z17.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.48
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 145/218
+; update layer progress
+M73 L145
+M991 S0 P144 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.76 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.76
+G1 Z17.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z17.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 145 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer145 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z17.88 F42000
+G1 Z17.48
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z17.88 F42000
+G1 X95.21 Y92.384 Z17.88
+G1 Z17.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.6
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 146/218
+; update layer progress
+M73 L146
+M991 S0 P145 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z17.88 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z17.88
+G1 Z17.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 146 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer146 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18 F42000
+G1 Z17.6
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18 F42000
+G1 X95.21 Y92.384 Z18
+G1 Z17.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.72
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 147/218
+; update layer progress
+M73 L147
+M991 S0 P146 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18
+G1 Z17.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 147 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer147 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.12 F42000
+G1 Z17.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.12 F42000
+G1 X95.21 Y92.384 Z18.12
+G1 Z17.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.84
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 148/218
+; update layer progress
+M73 L148
+M991 S0 P147 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.12 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.12
+G1 Z17.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+M73 P78 R3
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 148 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer148 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.24 F42000
+G1 Z17.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.24 F42000
+G1 X95.21 Y92.384 Z18.24
+G1 Z17.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 17.96
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 149/218
+; update layer progress
+M73 L149
+M991 S0 P148 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.24 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.24
+G1 Z17.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 149 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer149 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z17.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.36 F42000
+G1 Z17.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.36 F42000
+G1 X95.21 Y92.384 Z18.36
+G1 Z17.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.08
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 150/218
+; update layer progress
+M73 L150
+M991 S0 P149 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.36 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.36
+G1 Z18.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 150 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer150 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.48 F42000
+G1 Z18.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.48 F42000
+G1 X95.21 Y92.384 Z18.48
+G1 Z18.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.2
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 151/218
+; update layer progress
+M73 L151
+M991 S0 P150 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.48 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.48
+G1 Z18.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 151 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer151 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.6 F42000
+G1 Z18.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.6 F42000
+G1 X95.21 Y92.384 Z18.6
+G1 Z18.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.32
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 152/218
+; update layer progress
+M73 L152
+M991 S0 P151 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.6 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.6
+G1 Z18.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+M73 P79 R3
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 152 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer152 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.72 F42000
+G1 Z18.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.72 F42000
+G1 X95.21 Y92.384 Z18.72
+G1 Z18.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.44
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 153/218
+; update layer progress
+M73 L153
+M991 S0 P152 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.72 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.72
+G1 Z18.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 153 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer153 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.84 F42000
+G1 Z18.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.84 F42000
+G1 X95.21 Y92.384 Z18.84
+G1 Z18.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+M73 P79 R2
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.56
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 154/218
+; update layer progress
+M73 L154
+M991 S0 P153 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.84 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.84
+G1 Z18.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z18.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 154 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer154 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z18.96 F42000
+G1 Z18.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z18.96 F42000
+G1 X95.21 Y92.384 Z18.96
+G1 Z18.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.68
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 155/218
+; update layer progress
+M73 L155
+M991 S0 P154 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z18.96 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z18.96
+G1 Z18.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 155 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer155 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.08 F42000
+G1 Z18.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.08 F42000
+G1 X95.21 Y92.384 Z19.08
+G1 Z18.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+M73 P80 R2
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.8
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 156/218
+; update layer progress
+M73 L156
+M991 S0 P155 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.08 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.08
+G1 Z18.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 156 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer156 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.2 F42000
+G1 Z18.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.2 F42000
+G1 X95.21 Y92.384 Z19.2
+G1 Z18.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 18.92
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 157/218
+; update layer progress
+M73 L157
+M991 S0 P156 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.2 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.2
+G1 Z18.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 157 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer157 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z18.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.32 F42000
+G1 Z18.92
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.32 F42000
+G1 X95.21 Y92.384 Z19.32
+G1 Z18.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.04
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 158/218
+; update layer progress
+M73 L158
+M991 S0 P157 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.32 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.32
+G1 Z19.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 158 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer158 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.44 F42000
+G1 Z19.04
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.44 F42000
+G1 X95.21 Y92.384 Z19.44
+G1 Z19.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.16
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 159/218
+; update layer progress
+M73 L159
+M991 S0 P158 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.44 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.44
+G1 Z19.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 159 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer159 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.56 F42000
+G1 Z19.16
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+M73 P81 R2
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.56 F42000
+G1 X95.21 Y92.384 Z19.56
+G1 Z19.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.28
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 160/218
+; update layer progress
+M73 L160
+M991 S0 P159 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.56 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.56
+G1 Z19.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 160 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer160 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.68 F42000
+G1 Z19.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.68 F42000
+G1 X95.21 Y92.384 Z19.68
+G1 Z19.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.4
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 161/218
+; update layer progress
+M73 L161
+M991 S0 P160 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.68 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.68
+G1 Z19.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 161 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer161 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.8 F42000
+G1 Z19.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.8 F42000
+G1 X95.21 Y92.384 Z19.8
+G1 Z19.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.52
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 162/218
+; update layer progress
+M73 L162
+M991 S0 P161 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.8 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.8
+G1 Z19.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z19.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 162 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer162 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z19.92 F42000
+G1 Z19.52
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z19.92 F42000
+G1 X95.21 Y92.384 Z19.92
+G1 Z19.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.64
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 163/218
+; update layer progress
+M73 L163
+M991 S0 P162 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z19.92 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z19.92
+G1 Z19.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+M73 P82 R2
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 163 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer163 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.04 F42000
+G1 Z19.64
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.04 F42000
+G1 X95.21 Y92.384 Z20.04
+G1 Z19.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.76
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 164/218
+; update layer progress
+M73 L164
+M991 S0 P163 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.04 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.04
+G1 Z19.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 164 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer164 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.16 F42000
+G1 Z19.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.16 F42000
+G1 X95.21 Y92.384 Z20.16
+G1 Z19.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 19.88
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 165/218
+; update layer progress
+M73 L165
+M991 S0 P164 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.16 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.16
+G1 Z19.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 165 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer165 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z19.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.28 F42000
+G1 Z19.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.28 F42000
+G1 X95.21 Y92.384 Z20.28
+G1 Z19.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 166/218
+; update layer progress
+M73 L166
+M991 S0 P165 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.28 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.28
+G1 Z20
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 166 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer166 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.4 F42000
+G1 Z20
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.4 F42000
+G1 X95.21 Y92.384 Z20.4
+G1 Z20
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.12
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 167/218
+; update layer progress
+M73 L167
+M991 S0 P166 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.4 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.4
+G1 Z20.12
+M73 P83 R2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 167 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer167 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.52 F42000
+G1 Z20.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.52 F42000
+G1 X95.21 Y92.384 Z20.52
+G1 Z20.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.24
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 168/218
+; update layer progress
+M73 L168
+M991 S0 P167 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.52 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.52
+G1 Z20.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 168 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer168 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.64 F42000
+G1 Z20.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.64 F42000
+G1 X95.21 Y92.384 Z20.64
+G1 Z20.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.36
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 169/218
+; update layer progress
+M73 L169
+M991 S0 P168 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.64 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.64
+G1 Z20.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 169 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer169 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.76 F42000
+G1 Z20.36
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.76 F42000
+G1 X95.21 Y92.384 Z20.76
+G1 Z20.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.48
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 170/218
+; update layer progress
+M73 L170
+M991 S0 P169 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.76 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.76
+G1 Z20.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z20.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 170 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer170 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z20.88 F42000
+G1 Z20.48
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z20.88 F42000
+G1 X95.21 Y92.384 Z20.88
+G1 Z20.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+M73 P84 R2
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.6
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 171/218
+; update layer progress
+M73 L171
+M991 S0 P170 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z20.88 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z20.88
+G1 Z20.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 171 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer171 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21 F42000
+G1 Z20.6
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21 F42000
+G1 X95.21 Y92.384 Z21
+G1 Z20.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.72
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 172/218
+; update layer progress
+M73 L172
+M991 S0 P171 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21
+G1 Z20.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 172 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer172 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.12 F42000
+G1 Z20.72
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.12 F42000
+G1 X95.21 Y92.384 Z21.12
+G1 Z20.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.84
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 173/218
+; update layer progress
+M73 L173
+M991 S0 P172 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.12 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.12
+G1 Z20.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 173 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer173 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.24 F42000
+G1 Z20.84
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.24 F42000
+G1 X95.21 Y92.384 Z21.24
+G1 Z20.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 20.96
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 174/218
+; update layer progress
+M73 L174
+M991 S0 P173 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.24 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.24
+G1 Z20.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 174 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer174 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z20.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.36 F42000
+G1 Z20.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+M73 P85 R2
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.36 F42000
+G1 X95.21 Y92.384 Z21.36
+G1 Z20.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.08
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 175/218
+; update layer progress
+M73 L175
+M991 S0 P174 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.36 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.36
+G1 Z21.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 175 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer175 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.48 F42000
+G1 Z21.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.48 F42000
+G1 X95.21 Y92.384 Z21.48
+G1 Z21.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.2
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 176/218
+; update layer progress
+M73 L176
+M991 S0 P175 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.48 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.48
+G1 Z21.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 176 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer176 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.6 F42000
+G1 Z21.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.6 F42000
+G1 X95.21 Y92.384 Z21.6
+G1 Z21.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.32
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 177/218
+; update layer progress
+M73 L177
+M991 S0 P176 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.6 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.6
+G1 Z21.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 177 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer177 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.72 F42000
+G1 Z21.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.72 F42000
+G1 X95.21 Y92.384 Z21.72
+G1 Z21.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.44
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 178/218
+; update layer progress
+M73 L178
+M991 S0 P177 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.72 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.72
+G1 Z21.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+M73 P86 R2
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 178 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer178 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.84 F42000
+G1 Z21.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.84 F42000
+G1 X95.21 Y92.384 Z21.84
+G1 Z21.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.56
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 179/218
+; update layer progress
+M73 L179
+M991 S0 P178 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.84 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.84
+G1 Z21.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z21.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 179 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer179 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.56
+M73 P86 R1
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z21.96 F42000
+G1 Z21.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z21.96 F42000
+G1 X95.21 Y92.384 Z21.96
+G1 Z21.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.68
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 180/218
+; update layer progress
+M73 L180
+M991 S0 P179 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z21.96 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z21.96
+G1 Z21.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 180 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer180 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.08 F42000
+G1 Z21.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.08 F42000
+G1 X95.21 Y92.384 Z22.08
+G1 Z21.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.8
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 181/218
+; update layer progress
+M73 L181
+M991 S0 P180 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.08 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.08
+G1 Z21.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 181 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer181 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.2 F42000
+G1 Z21.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.2 F42000
+G1 X95.21 Y92.384 Z22.2
+G1 Z21.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 21.92
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+M73 P87 R1
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 182/218
+; update layer progress
+M73 L182
+M991 S0 P181 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.2 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.2
+G1 Z21.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 182 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer182 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z21.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.32 F42000
+G1 Z21.92
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.32 F42000
+G1 X95.21 Y92.384 Z22.32
+G1 Z21.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.04
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 183/218
+; update layer progress
+M73 L183
+M991 S0 P182 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.32 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.32
+G1 Z22.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 183 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer183 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.44 F42000
+G1 Z22.04
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.44 F42000
+G1 X95.21 Y92.384 Z22.44
+G1 Z22.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.16
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 184/218
+; update layer progress
+M73 L184
+M991 S0 P183 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.44 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.44
+G1 Z22.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 184 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer184 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.56 F42000
+G1 Z22.16
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.56 F42000
+G1 X95.21 Y92.384 Z22.56
+G1 Z22.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.28
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 185/218
+; update layer progress
+M73 L185
+M991 S0 P184 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.56 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.56
+G1 Z22.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 185 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer185 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.68 F42000
+G1 Z22.28
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.68 F42000
+G1 X95.21 Y92.384 Z22.68
+G1 Z22.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+M73 P88 R1
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.4
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 186/218
+; update layer progress
+M73 L186
+M991 S0 P185 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.68 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.68
+G1 Z22.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 186 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer186 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.8 F42000
+G1 Z22.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.8 F42000
+G1 X95.21 Y92.384 Z22.8
+G1 Z22.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.52
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 187/218
+; update layer progress
+M73 L187
+M991 S0 P186 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.8 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.8
+G1 Z22.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z22.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 187 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer187 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z22.92 F42000
+G1 Z22.52
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z22.92 F42000
+G1 X95.21 Y92.384 Z22.92
+G1 Z22.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.64
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 188/218
+; update layer progress
+M73 L188
+M991 S0 P187 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z22.92 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z22.92
+G1 Z22.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 188 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer188 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.04 F42000
+G1 Z22.64
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.04 F42000
+G1 X95.21 Y92.384 Z23.04
+G1 Z22.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.76
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 189/218
+; update layer progress
+M73 L189
+M991 S0 P188 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.04 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z23.04
+G1 Z22.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 189 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer189 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+M73 P89 R1
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.16 F42000
+G1 Z22.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.16 F42000
+G1 X95.21 Y92.384 Z23.16
+G1 Z22.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 22.88
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 190/218
+; update layer progress
+M73 L190
+M991 S0 P189 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.16 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z23.16
+G1 Z22.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 190 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer190 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z22.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.28 F42000
+G1 Z22.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.28 F42000
+G1 X95.21 Y92.384 Z23.28
+G1 Z22.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 191/218
+; update layer progress
+M73 L191
+M991 S0 P190 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.28 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z23.28
+G1 Z23
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 191 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer191 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z23
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.4 F42000
+G1 Z23
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.4 F42000
+G1 X95.21 Y92.384 Z23.4
+G1 Z23
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.12
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 192/218
+; update layer progress
+M73 L192
+M991 S0 P191 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.4 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z23.4
+G1 Z23.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 192 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer192 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z23.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.52 F42000
+G1 Z23.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.52 F42000
+G1 X95.21 Y92.384 Z23.52
+G1 Z23.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.24
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 193/218
+; update layer progress
+M73 L193
+M991 S0 P192 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.52 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z23.52
+G1 Z23.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+M73 P90 R1
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 193 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer193 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z23.24
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.64 F42000
+G1 Z23.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.64 F42000
+G1 X95.21 Y92.384 Z23.64
+G1 Z23.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.36
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 194/218
+; update layer progress
+M73 L194
+M991 S0 P193 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.64 I-.27 J-1.187 P1  F42000
+G1 X84.79 Y92.384 Z23.64
+G1 Z23.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.03817
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.79 Y91.804 E.02294
+G1 X84.79 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.75275
+G1 X82.81 Y92.365 E-.00725
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.76 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 194 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer194 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z23.36
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z23.76 F42000
+G1 Z23.36
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.197346
+G1 X83.395 Y92.094 E.0004
+G1 X84.585 Y92.094 E.00998
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.73069
+G1 X83.353 Y92.073 E-.02931
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X90.983 Y92.273 Z23.76 F42000
+G1 X95.21 Y92.384 Z23.76
+G1 Z23.36
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.21 Y91.804 E.01118
+G1 X96.4 Y91.804 E.02294
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.27 Y92.384 E.03701
+M204 S10000
+G1 X95.415 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197345
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00998
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+M106 S255
+; CHANGE_LAYER
+; Z_HEIGHT: 23.48
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M106 S204
+M625
+; layer num/total_layer_count: 195/218
+; update layer progress
+M73 L195
+M991 S0 P194 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+M204 S10000
+G17
+G3 Z23.76 I-1.15 J-.398 P1  F42000
+G1 X95.675 Y92.384 Z23.76
+G1 Z23.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.675 Y91.804 E.01118
+G1 X96.4 Y91.804 E.01398
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X95.735 Y92.384 E.02805
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X95.675 Y91.804 E-.22158
+G1 X96.4 Y91.804 E-.27558
+G1 X96.4 Y91.113 E-.26284
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.88 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M106 S204
+M625
+; object ids of layer 195 start: 66
+M624 AQAAAAAAAAA=
+M106 S255
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer195 end: 66
+M106 S204
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+G1 X96.775 Y92.009
+G1 Z23.48
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X96.775 Y92.009 Z23.88 F42000
+G1 Z23.48
+G1 E.8 F1800
+; LINE_WIDTH: 0.345945
+G1 F1200
+M204 S6000
+G1 X96.733 Y92.03 E.00075
+; LINE_WIDTH: 0.30325
+G1 X96.69 Y92.052 E.00065
+; LINE_WIDTH: 0.260555
+G1 X96.647 Y92.073 E.00055
+; LINE_WIDTH: 0.19784
+G1 X96.605 Y92.094 E.0004
+G1 X95.879 Y92.094 E.0061
+; WIPE_START
+G1 F21000
+G1 X96.605 Y92.094 E-.71307
+G1 X96.647 Y92.073 E-.04693
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.88 I-.162 J-1.206 P1  F42000
+G1 X94.325 Y92.384 Z23.88
+G1 Z23.48
+G1 E.8 F1800
+; FEATURE: Overhang wall
+; LINE_WIDTH: 0.45
+G1 F600
+M204 S5000
+G1 X93.61 Y92.384 E.01484
+G1 X93.61 Y91.804 E.01203
+G1 X94.325 Y91.804 E.01484
+G1 X94.325 Y92.324 E.01079
+M106 S204
+M106 S255
+; WIPE_START
+M204 S6000
+G1 X93.61 Y92.384 E-.27274
+G1 X93.61 Y91.804 E-.2204
+G1 X94.312 Y91.804 E-.26685
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.88 I-.082 J-1.214 P1  F42000
+G1 X85.675 Y92.384 Z23.88
+G1 Z23.48
+G1 E.8 F1800
+G1 F600
+M204 S5000
+G1 X85.675 Y91.804 E.01203
+G1 X86.39 Y91.804 E.01484
+G1 X86.39 Y92.384 E.01203
+G1 X85.735 Y92.384 E.01359
+M106 S204
+; WIPE_START
+M204 S6000
+G1 X85.675 Y91.804 E-.22158
+G1 X86.39 Y91.804 E-.27179
+G1 X86.39 Y92.384 E-.2204
+G1 X86.268 Y92.384 E-.04623
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z23.88 I0 J-1.217 P1  F42000
+G1 X84.325 Y92.384 Z23.88
+G1 Z23.48
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02921
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.325 Y91.804 E.01398
+G1 X84.325 Y92.324 E.01002
+M204 S10000
+G1 X84.121 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197841
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0061
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.6
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 196/218
+; update layer progress
+M73 L196
+M991 S0 P195 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z23.88 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z23.88
+G1 Z23.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.853 Y92.384 E.02578
+G1 X95.853 Y91.804 E.01118
+G1 X96.4 Y91.804 E.01055
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X95.853 Y92.384 E-.50871
+G1 X95.853 Y91.804 E-.2204
+G1 X95.934 Y91.804 E-.03089
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 196 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer196 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.057 Y92.094
+G1 Z23.6
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198234
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00462
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+M73 P91 R1
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24 I-.899 J-.821 P1  F42000
+G1 X94.147 Y92.384 Z24
+G1 Z23.6
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.01036
+G1 X93.61 Y91.804 E.01118
+G1 X94.147 Y91.804 E.01036
+G1 X94.147 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.61 Y92.384 E-.20546
+G1 X93.61 Y91.804 E-.2204
+G1 X94.147 Y91.804 E-.20419
+G1 X94.147 Y92.146 E-.12994
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24 I-.037 J-1.216 P1  F42000
+G1 X86.39 Y92.384 Z24
+G1 Z23.6
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X85.853 Y92.384 E.01036
+G1 X85.853 Y91.804 E.01118
+G1 X86.39 Y91.804 E.01036
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X85.853 Y92.384 E-.20546
+G1 X85.853 Y91.804 E-.2204
+G1 X86.39 Y91.804 E-.20419
+G1 X86.39 Y92.146 E-.12994
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24 I-.128 J-1.21 P1  F42000
+G1 X84.147 Y92.384 Z24
+G1 Z23.6
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02578
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.147 Y91.804 E.01055
+G1 X84.147 Y92.324 E.01002
+M204 S10000
+G1 X83.943 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198235
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00462
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.72
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 197/218
+; update layer progress
+M73 L197
+M991 S0 P196 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z24
+G1 Z23.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X95.972 Y92.384 E.02347
+G1 X95.972 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00825
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X95.972 Y92.384 E-.46334
+G1 X95.972 Y91.804 E-.2204
+G1 X96.173 Y91.804 E-.07626
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.12 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 197 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer197 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.177 Y92.094
+G1 Z23.72
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198664
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00362
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.12 I-.879 J-.842 P1  F42000
+G1 X94.028 Y92.384 Z24.12
+G1 Z23.72
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00805
+G1 X93.61 Y91.804 E.01118
+G1 X94.028 Y91.804 E.00805
+G1 X94.028 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.61 Y92.384 E-.16537
+G1 X93.61 Y91.804 E-.22722
+G1 X94.028 Y91.804 E-.16369
+G1 X94.028 Y92.324 E-.20372
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.12 I-.01 J-1.217 P1  F42000
+G1 X86.39 Y92.384 Z24.12
+G1 Z23.72
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X85.972 Y92.384 E.00805
+G1 X85.972 Y91.804 E.01118
+G1 X86.39 Y91.804 E.00805
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X85.972 Y92.384 E-.16537
+G1 X85.972 Y91.804 E-.22722
+G1 X86.39 Y91.804 E-.16369
+G1 X86.39 Y92.324 E-.20372
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.12 I-.031 J-1.217 P1  F42000
+G1 X84.028 Y92.384 Z24.12
+G1 Z23.72
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02347
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X84.028 Y91.804 E.00825
+G1 X84.028 Y92.324 E.01002
+M204 S10000
+G1 X83.823 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198665
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00362
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.84
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 198/218
+; update layer progress
+M73 L198
+M991 S0 P197 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.12 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z24.12
+G1 Z23.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.06 Y92.384 E.02177
+G1 X96.06 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00654
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.06 Y92.384 E-.42983
+G1 X96.06 Y91.804 E-.2204
+G1 X96.349 Y91.804 E-.10977
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.24 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 198 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer198 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.265 Y92.094
+G1 Z23.84
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199152
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00288
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406278
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.24 I-.865 J-.857 P1  F42000
+G1 X93.94 Y92.384 Z24.24
+G1 Z23.84
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00635
+G1 X93.61 Y91.804 E.01118
+G1 X93.94 Y91.804 E.00635
+G1 X93.94 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.61 Y92.384 E-.14427
+G1 X93.61 Y91.804 E-.24982
+G1 X93.94 Y91.804 E-.14193
+G1 X93.94 Y92.324 E-.22398
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.24 I-.01 J-1.217 P1  F42000
+G1 X86.39 Y92.384 Z24.24
+G1 Z23.84
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X86.06 Y92.384 E.00635
+G1 X86.06 Y91.804 E.01118
+G1 X86.39 Y91.804 E.00635
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.06 Y92.384 E-.14427
+G1 X86.06 Y91.804 E-.24982
+G1 X86.39 Y91.804 E-.14193
+G1 X86.39 Y92.324 E-.22398
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.24 I-.03 J-1.217 P1  F42000
+G1 X83.94 Y92.384 Z24.24
+G1 Z23.84
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02177
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.94 Y91.804 E.00654
+G1 X83.94 Y92.324 E.01002
+M204 S10000
+G1 X83.735 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199154
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00288
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406258
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 23.96
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 199/218
+; update layer progress
+M73 L199
+M991 S0 P198 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.24 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z24.24
+G1 Z23.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.125 Y92.384 E.02054
+G1 X96.125 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00531
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.125 Y92.384 E-.40549
+G1 X96.125 Y91.804 E-.2204
+G1 X96.4 Y91.804 E-.10464
+G1 X96.4 Y91.727 E-.02946
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.36 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 199 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer199 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.329 Y92.094
+G1 Z23.96
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199674
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00234
+G1 X96.647 Y92.073 E.00041
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.897 Y92.406 Z24.36 F42000
+G1 Z23.96
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.0053
+G1 X93.588 Y91.783 E.01069
+G1 X93.897 Y91.783 E.0053
+G1 X93.897 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.13207
+G1 X93.588 Y91.783 E-.26174
+G1 X93.897 Y91.783 E-.12964
+G1 X93.897 Y92.346 E-.23655
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z24.36 F42000
+G1 Z23.96
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X86.103 Y92.406 E.0053
+G1 X86.103 Y91.783 E.01069
+G1 X86.412 Y91.783 E.0053
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.103 Y92.406 E-.13207
+G1 X86.103 Y91.783 E-.26174
+G1 X86.412 Y91.783 E-.12964
+G1 X86.412 Y92.346 E-.23655
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.875 Y92.384 Z24.36 F42000
+G1 Z23.96
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02054
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+M73 P92 R1
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.875 Y91.804 E.00531
+G1 X83.875 Y92.324 E.01002
+M204 S10000
+G1 X83.671 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199677
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00234
+G1 X83.353 Y92.073 E.00041
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 24.08
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 200/218
+; update layer progress
+M73 L200
+M991 S0 P199 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.36 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z24.36
+G1 Z24.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.165 Y92.384 E.01976
+G1 X96.165 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00453
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.165 Y92.384 E-.39016
+G1 X96.165 Y91.804 E-.2204
+G1 X96.4 Y91.804 E-.08929
+G1 X96.4 Y91.646 E-.06015
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.48 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 200 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer200 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.37 Y92.094
+G1 Z24.08
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.200125
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.002
+G1 X96.647 Y92.073 E.00041
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.857 Y92.406 Z24.48 F42000
+G1 Z24.08
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.0046
+G1 X93.588 Y91.783 E.01069
+G1 X93.857 Y91.783 E.0046
+G1 X93.857 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.12079
+G1 X93.588 Y91.783 E-.27384
+G1 X93.857 Y91.783 E-.11788
+G1 X93.857 Y92.346 E-.24748
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z24.48 F42000
+G1 Z24.08
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X86.143 Y92.406 E.0046
+G1 X86.143 Y91.783 E.01069
+G1 X86.412 Y91.783 E.0046
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.143 Y92.406 E-.12079
+G1 X86.143 Y91.783 E-.27384
+G1 X86.412 Y91.783 E-.11788
+G1 X86.412 Y92.346 E-.24748
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.835 Y92.384 Z24.48 F42000
+G1 Z24.08
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.01976
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.835 Y91.804 E.00453
+G1 X83.835 Y92.324 E.01002
+M204 S10000
+G1 X83.63 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.200128
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.002
+G1 X83.353 Y92.073 E.00041
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 24.2
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 201/218
+; update layer progress
+M73 L201
+M991 S0 P200 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.48 I-1.203 J.184 P1  F42000
+G1 X83.806 Y92.384 Z24.48
+G1 Z24.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.01919
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.806 Y91.804 E.00397
+G1 X83.806 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.37908
+G1 X82.81 Y91.382 E-.38092
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.6 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 201 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer201 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z24.2
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z24.6 F42000
+G1 Z24.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.200543
+G1 X83.395 Y92.094 E.00041
+G1 X83.601 Y92.094 E.00176
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.61691
+G1 X83.353 Y92.073 E-.14309
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z24.6 F42000
+G1 Z24.2
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X86.173 Y92.406 E.0041
+G1 X86.173 Y91.783 E.01069
+G1 X86.412 Y91.783 E.0041
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.173 Y92.406 E-.11204
+G1 X86.173 Y91.783 E-.28328
+G1 X86.412 Y91.783 E-.10867
+G1 X86.412 Y92.346 E-.25601
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.827 Y92.406 Z24.6 F42000
+G1 Z24.2
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.0041
+G1 X93.588 Y91.783 E.01069
+G1 X93.827 Y91.783 E.0041
+G1 X93.827 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.11204
+G1 X93.588 Y91.783 E-.28328
+G1 X93.827 Y91.783 E-.10867
+G1 X93.827 Y92.346 E-.25601
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.19 Y92.384 Z24.6 F42000
+G1 Z24.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.194 Y92.384 E.01919
+G1 X96.194 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00397
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+M204 S10000
+G1 X96.775 Y92.009 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X96.775 Y92.009 Z24.6 F42000
+G1 Z24.2
+G1 E.8 F1800
+; LINE_WIDTH: 0.345945
+G1 F1200
+M204 S6000
+G1 X96.733 Y92.03 E.00075
+; LINE_WIDTH: 0.30325
+G1 X96.69 Y92.052 E.00065
+; LINE_WIDTH: 0.260555
+G1 X96.647 Y92.073 E.00055
+; LINE_WIDTH: 0.20054
+G1 X96.605 Y92.094 E.00041
+G1 X96.399 Y92.094 E.00176
+; CHANGE_LAYER
+; Z_HEIGHT: 24.32
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y92.094 E-.61691
+G1 X96.647 Y92.073 E-.14309
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 202/218
+; update layer progress
+M73 L202
+M991 S0 P201 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.6 I-.029 J-1.217 P1  F42000
+G1 X83.794 Y92.384 Z24.6
+G1 Z24.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.01897
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.794 Y91.804 E.00374
+G1 X83.794 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.3746
+G1 X82.81 Y91.37 E-.3854
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.72 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 202 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer202 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z24.32
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z24.72 F42000
+G1 Z24.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.20074
+G1 X83.395 Y92.094 E.00041
+G1 X83.589 Y92.094 E.00166
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.60991
+G1 X83.353 Y92.073 E-.15009
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z24.72 F42000
+G1 Z24.32
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X86.184 Y92.406 E.0039
+G1 X86.184 Y91.783 E.01069
+G1 X86.412 Y91.783 E.0039
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.184 Y92.406 E-.10834
+G1 X86.184 Y91.783 E-.28727
+G1 X86.412 Y91.783 E-.10476
+G1 X86.412 Y92.346 E-.25962
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.816 Y92.406 Z24.72 F42000
+G1 Z24.32
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.0039
+G1 X93.588 Y91.783 E.01069
+G1 X93.816 Y91.783 E.0039
+G1 X93.816 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.10834
+G1 X93.588 Y91.783 E-.28727
+G1 X93.816 Y91.783 E-.10476
+G1 X93.816 Y92.346 E-.25962
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.19 Y92.384 Z24.72 F42000
+G1 Z24.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.206 Y92.384 E.01897
+G1 X96.206 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00374
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+M204 S10000
+G1 X96.775 Y92.009 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X96.775 Y92.009 Z24.72 F42000
+G1 Z24.32
+G1 E.8 F1800
+; LINE_WIDTH: 0.345945
+G1 F1200
+M204 S6000
+G1 X96.733 Y92.03 E.00075
+; LINE_WIDTH: 0.30325
+G1 X96.69 Y92.052 E.00065
+; LINE_WIDTH: 0.260555
+G1 X96.647 Y92.073 E.00055
+; LINE_WIDTH: 0.200736
+G1 X96.605 Y92.094 E.00041
+G1 X96.411 Y92.094 E.00166
+; CHANGE_LAYER
+; Z_HEIGHT: 24.44
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y92.094 E-.60991
+G1 X96.647 Y92.073 E-.15009
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 203/218
+; update layer progress
+M73 L203
+M991 S0 P202 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.72 I-.029 J-1.217 P1  F42000
+G1 X83.798 Y92.384 Z24.72
+G1 Z24.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.01904
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+M73 P93 R1
+G1 X83.6 Y91.804 E.03315
+G1 X83.798 Y91.804 E.00381
+G1 X83.798 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.37609
+G1 X82.81 Y91.374 E-.38391
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.84 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 203 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer203 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z24.44
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z24.84 F42000
+G1 Z24.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.200672
+G1 X83.395 Y92.094 E.00041
+G1 X83.593 Y92.094 E.00169
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.61232
+G1 X83.353 Y92.073 E-.14768
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z24.84 F42000
+G1 Z24.44
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X86.18 Y92.406 E.00397
+G1 X86.18 Y91.783 E.01069
+G1 X86.412 Y91.783 E.00397
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.18 Y92.406 E-.10959
+G1 X86.18 Y91.783 E-.28593
+G1 X86.412 Y91.783 E-.10607
+G1 X86.412 Y92.346 E-.25841
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.82 Y92.406 Z24.84 F42000
+G1 Z24.44
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.00397
+G1 X93.588 Y91.783 E.01069
+G1 X93.82 Y91.783 E.00397
+G1 X93.82 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.10959
+G1 X93.588 Y91.783 E-.28593
+G1 X93.82 Y91.783 E-.10607
+G1 X93.82 Y92.346 E-.25841
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.19 Y92.384 Z24.84 F42000
+G1 Z24.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.202 Y92.384 E.01904
+G1 X96.202 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00381
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+M73 P93 R0
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+M204 S10000
+G1 X96.775 Y92.009 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X96.775 Y92.009 Z24.84 F42000
+G1 Z24.44
+G1 E.8 F1800
+; LINE_WIDTH: 0.345945
+G1 F1200
+M204 S6000
+G1 X96.733 Y92.03 E.00075
+; LINE_WIDTH: 0.30325
+G1 X96.69 Y92.052 E.00065
+; LINE_WIDTH: 0.260555
+G1 X96.647 Y92.073 E.00055
+; LINE_WIDTH: 0.200669
+G1 X96.605 Y92.094 E.00041
+G1 X96.407 Y92.094 E.00169
+; CHANGE_LAYER
+; Z_HEIGHT: 24.56
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y92.094 E-.61232
+G1 X96.647 Y92.073 E-.14768
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 204/218
+; update layer progress
+M73 L204
+M991 S0 P203 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z24.84 I-.03 J-1.217 P1  F42000
+G1 X83.811 Y92.384 Z24.84
+G1 Z24.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.01929
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.811 Y91.804 E.00406
+G1 X83.811 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X82.81 Y92.384 E-.38095
+G1 X82.81 Y91.387 E-.37905
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z24.96 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 204 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer204 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.225 Y92.009
+G1 Z24.56
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.225 Y92.009 Z24.96 F42000
+G1 Z24.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.345947
+G1 F1200
+M204 S6000
+G1 X83.267 Y92.03 E.00075
+; LINE_WIDTH: 0.303257
+G1 X83.31 Y92.052 E.00065
+; LINE_WIDTH: 0.260567
+G1 X83.353 Y92.073 E.00055
+; LINE_WIDTH: 0.200466
+G1 X83.395 Y92.094 E.00041
+G1 X83.606 Y92.094 E.0018
+; WIPE_START
+G1 F21000
+G1 X83.395 Y92.094 E-.61964
+G1 X83.353 Y92.073 E-.14036
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z24.96 F42000
+G1 Z24.56
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X86.168 Y92.406 E.00419
+G1 X86.168 Y91.783 E.01069
+G1 X86.412 Y91.783 E.00419
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.168 Y92.406 E-.11356
+G1 X86.168 Y91.783 E-.28164
+G1 X86.412 Y91.783 E-.11027
+G1 X86.412 Y92.346 E-.25453
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.832 Y92.406 Z24.96 F42000
+G1 Z24.56
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.00419
+G1 X93.588 Y91.783 E.01069
+G1 X93.832 Y91.783 E.00419
+G1 X93.832 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.11356
+G1 X93.588 Y91.783 E-.28164
+G1 X93.832 Y91.783 E-.11027
+G1 X93.832 Y92.346 E-.25453
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X97.19 Y92.384 Z24.96 F42000
+G1 Z24.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.189 Y92.384 E.01929
+G1 X96.189 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00406
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+M204 S10000
+G1 X96.775 Y92.009 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.406268
+G1 F1200
+M204 S6000
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X96.775 Y92.009 Z24.96 F42000
+G1 Z24.56
+G1 E.8 F1800
+; LINE_WIDTH: 0.345945
+G1 F1200
+M204 S6000
+G1 X96.733 Y92.03 E.00075
+; LINE_WIDTH: 0.30325
+G1 X96.69 Y92.052 E.00065
+; LINE_WIDTH: 0.260555
+G1 X96.647 Y92.073 E.00055
+; LINE_WIDTH: 0.200463
+G1 X96.605 Y92.094 E.00041
+G1 X96.394 Y92.094 E.0018
+; CHANGE_LAYER
+; Z_HEIGHT: 24.68
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y92.094 E-.61964
+G1 X96.647 Y92.073 E-.14036
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 205/218
+; update layer progress
+M73 L205
+M991 S0 P204 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S250
+M204 S10000
+G17
+G3 Z24.96 I-.606 J1.056 P1  F42000
+G1 X97.19 Y92.384 Z24.96
+M204 S10000
+G1 Z24.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.153 Y92.384 E.01999
+G1 X96.153 Y91.804 E.01118
+G1 X96.4 Y91.804 E.00476
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.153 Y92.384 E-.39477
+G1 X96.153 Y91.804 E-.2204
+G1 X96.4 Y91.804 E-.0939
+G1 X96.4 Y91.67 E-.05093
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.08 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 205 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer205 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.358 Y92.094
+G1 Z24.68
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199976
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.0021
+G1 X96.647 Y92.073 E.00041
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.869 Y92.406 Z25.08 F42000
+G1 Z24.68
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.00481
+G1 X93.588 Y91.783 E.01069
+G1 X93.869 Y91.783 E.00481
+G1 X93.869 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X93.588 Y92.406 E-.12428
+G1 X93.588 Y91.783 E-.27009
+G1 X93.869 Y91.783 E-.12153
+G1 X93.869 Y92.346 E-.2441
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z25.08 F42000
+G1 Z24.68
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X86.131 Y92.406 E.00481
+G1 X86.131 Y91.783 E.01069
+G1 X86.412 Y91.783 E.00481
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.131 Y92.406 E-.12428
+G1 X86.131 Y91.783 E-.27009
+G1 X86.412 Y91.783 E-.12153
+G1 X86.412 Y92.346 E-.2441
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.847 Y92.384 Z25.08 F42000
+G1 Z24.68
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.01999
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.847 Y91.804 E.00476
+G1 X83.847 Y92.324 E.01002
+M204 S10000
+G1 X83.642 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199979
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0021
+G1 X83.353 Y92.073 E.00041
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 24.8
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 206/218
+; update layer progress
+M73 L206
+M991 S0 P205 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.08 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z25.08
+G1 Z24.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.512 Y92.384 E.01307
+G1 X96.112 Y92.384 E.00771
+G1 X96.103 Y92.384 E.00017
+G1 X96.103 Y91.804 E.01118
+G1 X96.112 Y91.804 E.00017
+G1 X96.4 Y91.804 E.00555
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.512 Y92.384 E-.25869
+G1 X96.112 Y92.384 E-.152
+G1 X96.103 Y92.384 E-.00329
+G1 X96.103 Y91.804 E-.2204
+G1 X96.112 Y91.804 E-.00329
+G1 X96.4 Y91.804 E-.10948
+G1 X96.4 Y91.771 E-.01285
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.2 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 206 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer206 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.308 Y92.094
+G1 Z24.8
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199478
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00252
+G1 X96.647 Y92.073 E.00041
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.908 Y92.406 Z25.2 F42000
+G1 Z24.8
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.376624
+G1 F1200
+M204 S5000
+G1 X93.588 Y92.406 E.00548
+G1 X93.588 Y91.783 E.01069
+G1 X93.908 Y91.783 E.00548
+G1 X93.918 Y91.783 E.00019
+G1 X93.918 Y92.357 E.00985
+; WIPE_START
+G1 F9480
+M204 S6000
+G1 X93.588 Y92.406 E-.13627
+G1 X93.588 Y91.783 E-.25451
+G1 X93.908 Y91.783 E-.13037
+G1 X93.918 Y91.783 E-.00442
+G1 X93.918 Y92.357 E-.23443
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.412 Y92.406 Z25.2 F42000
+G1 Z24.8
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X86.092 Y92.406 E.00548
+G1 X86.082 Y92.406 E.00019
+G1 X86.082 Y91.783 E.01069
+G1 X86.092 Y91.783 E.00019
+G1 X86.412 Y91.783 E.00548
+M73 P94 R0
+G1 X86.412 Y92.346 E.00966
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.092 Y92.406 E-.13329
+G1 X86.082 Y92.406 E-.00444
+G1 X86.082 Y91.783 E-.25573
+G1 X86.092 Y91.783 E-.00444
+G1 X86.412 Y91.783 E-.13099
+G1 X86.412 Y92.346 E-.23111
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.888 Y92.384 Z25.2 F42000
+G1 Z24.8
+G1 E.8 F1800
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02078
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X83.888 Y91.804 E.00555
+G1 X83.897 Y91.804 E.00017
+G1 X83.897 Y92.333 E.01019
+M204 S10000
+G1 X83.692 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199481
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00252
+G1 X83.353 Y92.073 E.00041
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 24.92
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 207/218
+; update layer progress
+M73 L207
+M991 S0 P206 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.2 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z25.2
+G1 Z24.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.462 Y92.384 E.01403
+G1 X96.062 Y92.384 E.00771
+G1 X96.038 Y92.384 E.00047
+G1 X96.038 Y91.804 E.01118
+G1 X96.062 Y91.804 E.00047
+G1 X96.4 Y91.804 E.00651
+G1 X96.4 Y91.404 E.00771
+G1 X96.4 Y90.084 E.02544
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.462 Y92.384 E-.27749
+G1 X96.062 Y92.384 E-.152
+G1 X96.038 Y92.384 E-.00928
+G1 X96.038 Y91.804 E-.2204
+G1 X96.062 Y91.804 E-.00928
+G1 X96.303 Y91.804 E-.09155
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.32 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 207 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer207 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.242 Y92.094
+G1 Z24.92
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199007
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00307
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X93.938 Y92.384 Z25.32 F42000
+G1 Z24.92
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00632
+G1 X93.61 Y91.804 E.01118
+G1 X93.938 Y91.804 E.00632
+G1 X93.962 Y91.804 E.00047
+G1 X93.962 Y92.349 E.01049
+; WIPE_START
+G1 F6960
+M204 S6000
+G1 X93.61 Y92.384 E-.14696
+G1 X93.61 Y91.804 E-.2408
+G1 X93.938 Y91.804 E-.13607
+G1 X93.962 Y91.804 E-.01014
+G1 X93.962 Y92.349 E-.22603
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.39 Y92.384 Z25.32 F42000
+G1 Z24.92
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X86.062 Y92.384 E.00632
+G1 X86.038 Y92.384 E.00047
+G1 X86.038 Y91.804 E.01118
+G1 X86.062 Y91.804 E.00047
+G1 X86.39 Y91.804 E.00632
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X86.062 Y92.384 E-.13992
+G1 X86.038 Y92.384 E-.01025
+G1 X86.038 Y91.804 E-.24356
+G1 X86.062 Y91.804 E-.01025
+G1 X86.39 Y91.804 E-.13764
+G1 X86.39 Y92.324 E-.21837
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.938 Y92.384 Z25.32 F42000
+G1 Z24.92
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02174
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.404 E.02544
+G1 X83.6 Y91.804 E.00771
+G1 X83.938 Y91.804 E.00651
+G1 X83.962 Y91.804 E.00047
+G1 X83.962 Y92.349 E.01049
+M204 S10000
+G1 X83.758 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.199009
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00307
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.04
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 208/218
+; update layer progress
+M73 L208
+M991 S0 P207 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.32 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z25.32
+G1 Z25.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.797 Y92.384 E.00758
+G1 X96.397 Y92.384 E.00771
+G1 X95.997 Y92.384 E.00771
+G1 X95.939 Y92.384 E.00111
+G1 X95.939 Y91.804 E.01118
+G1 X95.997 Y91.804 E.00111
+G1 X96.4 Y91.804 E.00777
+G1 X96.4 Y91.404 E.00771
+G1 X96.4 Y90.084 E.02544
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.797 Y92.384 E-.15114
+G1 X96.397 Y92.384 E-.152
+G1 X95.997 Y92.384 E-.152
+G1 X95.939 Y92.384 E-.02184
+G1 X95.939 Y91.804 E-.2204
+G1 X95.997 Y91.804 E-.02184
+G1 X96.104 Y91.804 E-.04077
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.44 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 208 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer208 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.144 Y92.094
+G1 Z25.04
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198525
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00389
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X94.003 Y92.384 Z25.44 F42000
+G1 Z25.04
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00758
+G1 X93.61 Y91.804 E.01118
+G1 X94.003 Y91.804 E.00758
+G1 X94.061 Y91.804 E.00111
+G1 X94.061 Y92.382 E.01113
+; WIPE_START
+G1 F3060
+M204 S6000
+G1 X93.61 Y92.384 E-.17125
+G1 X93.61 Y91.804 E-.2204
+G1 X94.003 Y91.804 E-.1494
+G1 X94.061 Y91.804 E-.02185
+G1 X94.061 Y92.323 E-.19709
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.428 Y92.384 Z25.44 F42000
+G1 X86.39 Y92.384 Z25.44
+G1 Z25.04
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X85.997 Y92.384 E.00758
+G1 X85.939 Y92.384 E.00111
+G1 X85.939 Y91.804 E.01118
+G1 X85.997 Y91.804 E.00111
+G1 X86.39 Y91.804 E.00758
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X85.997 Y92.384 E-.15113
+G1 X85.939 Y92.384 E-.02185
+G1 X85.939 Y91.804 E-.2204
+G1 X85.997 Y91.804 E-.02185
+G1 X86.39 Y91.804 E-.1494
+G1 X86.39 Y92.319 E-.19537
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.003 Y92.384 Z25.44 F42000
+G1 Z25.04
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.023
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.404 E.02544
+G1 X83.6 Y91.804 E.00771
+G1 X84.003 Y91.804 E.00777
+G1 X84.061 Y91.804 E.00111
+G1 X84.061 Y92.382 E.01113
+M204 S10000
+G1 X83.856 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198527
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00389
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.16
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 209/218
+; update layer progress
+M73 L209
+M991 S0 P208 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.44 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z25.44
+G1 Z25.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.698 Y92.384 E.00948
+G1 X96.298 Y92.384 E.00771
+G1 X95.898 Y92.384 E.00771
+G1 X95.804 Y92.384 E.00182
+G1 X95.804 Y91.804 E.01118
+G1 X95.898 Y91.804 E.00182
+G1 X96.4 Y91.804 E.00967
+G1 X96.4 Y91.404 E.00771
+G1 X96.4 Y90.084 E.02544
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.698 Y92.384 E-.18822
+G1 X96.298 Y92.384 E-.152
+G1 X95.898 Y92.384 E-.152
+G1 X95.804 Y92.384 E-.03588
+G1 X95.804 Y91.804 E-.2204
+G1 X95.834 Y91.804 E-.0115
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.56 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 209 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer209 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X96.009 Y92.094
+G1 Z25.16
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198104
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00502
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X94.102 Y92.384 Z25.56 F42000
+G1 Z25.16
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00948
+G1 X93.61 Y91.804 E.01118
+G1 X94.102 Y91.804 E.00948
+G1 X94.196 Y91.804 E.00182
+G1 X94.196 Y92.384 E.01118
+G1 X94.162 Y92.384 E.00066
+; WIPE_START
+G1 F2008.158
+M204 S6000
+G1 X93.61 Y92.384 E-.20963
+G1 X93.61 Y91.804 E-.2204
+G1 X94.102 Y91.804 E-.18683
+G1 X94.196 Y91.804 E-.03589
+G1 X94.196 Y92.087 E-.10726
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.569 Y92.378 Z25.56 F42000
+G1 X86.39 Y92.384 Z25.56
+G1 Z25.16
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X85.898 Y92.384 E.00948
+G1 X85.804 Y92.384 E.00182
+G1 X85.804 Y91.804 E.01118
+G1 X85.898 Y91.804 E.00182
+G1 X86.39 Y91.804 E.00948
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X85.898 Y92.384 E-.18821
+G1 X85.804 Y92.384 E-.03589
+G1 X85.804 Y91.804 E-.2204
+G1 X85.898 Y91.804 E-.03589
+G1 X86.39 Y91.804 E-.18683
+G1 X86.39 Y92.049 E-.09278
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.102 Y92.384 Z25.56 F42000
+G1 Z25.16
+G1 E.8 F1800
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.0249
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.404 E.02544
+G1 X83.6 Y91.804 E.00771
+G1 X84.102 Y91.804 E.00967
+G1 X84.196 Y91.804 E.00182
+G1 X84.196 Y92.384 E.01118
+G1 X84.162 Y92.384 E.00066
+M204 S10000
+G1 X83.991 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.198105
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00502
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.28
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 210/218
+; update layer progress
+M73 L210
+M991 S0 P209 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.56 I-.233 J1.194 P1  F42000
+G1 X97.19 Y92.384 Z25.56
+G1 Z25.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X96.963 Y92.384 E.00438
+G1 X96.563 Y92.384 E.00771
+G1 X96.163 Y92.384 E.00771
+G1 X95.763 Y92.384 E.00771
+G1 X95.6 Y92.384 E.00314
+G1 F960
+G1 X95.6 Y91.804 E.01118
+G1 F1200
+G1 X95.763 Y91.804 E.00314
+M73 P95 R0
+G1 X96.163 Y91.804 E.00771
+G1 X96.4 Y91.804 E.00457
+G1 X96.4 Y91.404 E.00771
+G1 X96.4 Y90.084 E.02544
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.324 E.05821
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X96.963 Y92.384 E-.08926
+G1 X96.563 Y92.384 E-.152
+G1 X96.163 Y92.384 E-.152
+G1 X95.763 Y92.384 E-.152
+G1 X95.6 Y92.384 E-.06193
+G1 X95.6 Y91.982 E-.15281
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.68 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 210 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer210 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X95.805 Y92.094
+G1 Z25.28
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197723
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.00673
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X94.237 Y92.384 Z25.68 F42000
+G1 Z25.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.01209
+G1 X93.61 Y91.804 E.01118
+G1 X93.837 Y91.804 E.00438
+G1 X94.237 Y91.804 E.00771
+G1 X94.4 Y91.804 E.00314
+G1 F960
+G1 X94.4 Y92.384 E.01118
+G1 F1200
+G1 X94.297 Y92.384 E.00199
+M204 S10000
+G1 X94.195 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X93.815 Y92.094 E.00318
+; WIPE_START
+G1 F21000
+G1 X94.195 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X86.568 Y92.378 Z25.68 F42000
+G1 X86.39 Y92.384 Z25.68
+G1 Z25.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X86.163 Y92.384 E.00438
+G1 X85.763 Y92.384 E.00771
+G1 X85.6 Y92.384 E.00314
+G1 F960
+G1 X85.6 Y91.804 E.01118
+G1 F1200
+G1 X85.763 Y91.804 E.00314
+G1 X86.163 Y91.804 E.00771
+G1 X86.39 Y91.804 E.00438
+G1 X86.39 Y92.324 E.01002
+M204 S10000
+G1 X86.185 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196522
+G1 F1200
+M204 S6000
+G1 X85.805 Y92.094 E.00318
+; WIPE_START
+G1 F21000
+G1 X86.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X84.237 Y92.384 Z25.68 F42000
+G1 Z25.28
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.02751
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.404 E.02544
+G1 X83.6 Y91.804 E.00771
+G1 X83.837 Y91.804 E.00457
+G1 X84.237 Y91.804 E.00771
+G1 X84.4 Y91.804 E.00314
+G1 F960
+G1 X84.4 Y92.384 E.01118
+G1 F1200
+G1 X84.297 Y92.384 E.00199
+M204 S10000
+G1 X84.195 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.197724
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.00673
+G1 X83.353 Y92.073 E.0004
+; LINE_WIDTH: 0.260567
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+M106 S255
+; CHANGE_LAYER
+; Z_HEIGHT: 25.4
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M106 S204
+M625
+; layer num/total_layer_count: 211/218
+; update layer progress
+M73 L211
+M991 S0 P210 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+M204 S10000
+G17
+G3 Z25.68 I-.813 J.905 P1  F42000
+G1 X86.39 Y92.384 Z25.68
+G1 Z25.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X85.959 Y92.384 E.00831
+G1 X85.559 Y92.384 E.00771
+G1 F600
+G1 X85.19 Y92.384 E.00711
+M106 S204
+M106 S255
+; FEATURE: Overhang wall
+; LINE_WIDTH: 0.45
+G1 F1800
+G1 X84.81 Y92.384 E.00788
+M106 S204
+M106 S255
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F600
+G1 X84.441 Y92.384 E.00711
+M106 S204
+M106 S255
+G1 F1200
+G1 X84.041 Y92.384 E.00771
+G1 X83.641 Y92.384 E.00771
+G1 X83.241 Y92.384 E.00771
+G1 X82.81 Y92.384 E.00831
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.404 E.02544
+G1 X83.6 Y91.804 E.00771
+G1 X84.041 Y91.804 E.0085
+G1 X84.441 Y91.804 E.00771
+G1 F600
+G1 X84.81 Y91.804 E.00711
+M106 S204
+M106 S255
+; FEATURE: Overhang wall
+; LINE_WIDTH: 0.45
+G1 F1800
+G1 X85.19 Y91.804 E.00788
+M106 S204
+M106 S255
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F600
+G1 X85.559 Y91.804 E.00711
+M106 S204
+M106 S255
+G1 F1200
+G1 X85.959 Y91.804 E.00771
+G1 X86.39 Y91.804 E.00831
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X85.959 Y92.384 E-.16538
+G1 X85.559 Y92.384 E-.152
+G1 X85.19 Y92.384 E-.14022
+G1 X84.81 Y92.384 E-.14435
+G1 X84.441 Y92.384 E-.14022
+G1 X84.394 Y92.384 E-.01782
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.8 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M106 S204
+M625
+; object ids of layer 211 start: 66
+M624 AQAAAAAAAAA=
+M106 S255
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer211 end: 66
+M106 S204
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M106 S255
+G1 X83.353 Y92.073
+G1 Z25.4
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z25.8 F42000
+G1 Z25.4
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.815 Y92.317 Z25.8 F42000
+G1 X94.146 Y92.384 Z25.8
+G1 Z25.4
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.01033
+G1 X93.61 Y91.804 E.01118
+G1 X94.041 Y91.804 E.00831
+G1 X94.441 Y91.804 E.00771
+G1 F600
+G1 X94.81 Y91.804 E.00711
+M106 S204
+M106 S255
+; FEATURE: Overhang wall
+; LINE_WIDTH: 0.45
+G1 F1800
+G1 X95.19 Y91.804 E.00788
+M106 S204
+M106 S255
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F600
+G1 X95.559 Y91.804 E.00711
+M106 S204
+M106 S255
+G1 F1200
+G1 X95.959 Y91.804 E.00771
+G1 X96.4 Y91.804 E.0085
+G1 X96.4 Y91.404 E.00771
+G1 X96.4 Y90.084 E.02544
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X96.759 Y92.384 E.00831
+G1 X96.359 Y92.384 E.00771
+G1 X95.959 Y92.384 E.00771
+G1 X95.559 Y92.384 E.00771
+G1 F600
+G1 X95.19 Y92.384 E.00711
+M106 S204
+M106 S255
+; FEATURE: Overhang wall
+; LINE_WIDTH: 0.45
+G1 F1800
+G1 X94.81 Y92.384 E.00788
+M106 S204
+M106 S255
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F600
+G1 X94.441 Y92.384 E.00711
+M106 S204
+G1 F1200
+G1 X94.206 Y92.384 E.00453
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.52
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 212/218
+; update layer progress
+M73 L212
+M991 S0 P211 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.8 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z25.8
+G1 Z25.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z25.92 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 212 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer212 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z25.52
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z25.92 F42000
+G1 Z25.52
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.815 Y92.317 Z25.92 F42000
+G1 X94.113 Y92.384 Z25.92
+G1 Z25.52
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.0097
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X94.173 Y92.384 E.05815
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.64
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 213/218
+; update layer progress
+M73 L213
+M991 S0 P212 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z25.92 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z25.92
+G1 Z25.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+M73 P96 R0
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.04 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 213 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer213 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z25.64
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z26.04 F42000
+G1 Z25.64
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.815 Y92.318 Z26.04 F42000
+G1 X94.081 Y92.384 Z26.04
+G1 Z25.64
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00908
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X94.141 Y92.384 E.05877
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.76
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 214/218
+; update layer progress
+M73 L214
+M991 S0 P213 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z26.04 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z26.04
+G1 Z25.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.16 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 214 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer214 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z25.76
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z26.16 F42000
+G1 Z25.76
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.815 Y92.319 Z26.16 F42000
+G1 X94.05 Y92.384 Z26.16
+G1 Z25.76
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00849
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X94.11 Y92.384 E.05936
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 25.88
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 215/218
+; update layer progress
+M73 L215
+M991 S0 P214 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z26.16 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z26.16
+G1 Z25.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.28 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 215 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer215 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z25.88
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z26.28 F42000
+G1 Z25.88
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.815 Y92.319 Z26.28 F42000
+G1 X94.02 Y92.384 Z26.28
+G1 Z25.88
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00791
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X94.08 Y92.384 E.05994
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 26
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 216/218
+; update layer progress
+M73 L216
+M991 S0 P215 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z26.28 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z26.28
+G1 Z26
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+M73 P97 R0
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.4 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 216 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer216 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z26
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z26.4 F42000
+G1 Z26
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.814 Y92.32 Z26.4 F42000
+G1 X93.992 Y92.384 Z26.4
+G1 Z26
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00736
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X94.052 Y92.384 E.06049
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 26.12
+; LAYER_HEIGHT: 0.120001
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 217/218
+; update layer progress
+M73 L217
+M991 S0 P216 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z26.4 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z26.4
+G1 Z26.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.52 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 217 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer217 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z26.12
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z26.52 F42000
+G1 Z26.12
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.814 Y92.321 Z26.52 F42000
+G1 X93.965 Y92.384 Z26.52
+G1 Z26.12
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00684
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X94.025 Y92.384 E.06102
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; CHANGE_LAYER
+; Z_HEIGHT: 26.24
+; LAYER_HEIGHT: 0.119999
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+; stop printing object, unique label id: 66
+M625
+; layer num/total_layer_count: 218/218
+; update layer progress
+M73 L218
+M991 S0 P217 ;notify layer change
+; OBJECT_ID: 66
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+M204 S10000
+G17
+G3 Z26.52 I-.31 J-1.177 P1  F42000
+G1 X86.39 Y92.384 Z26.52
+G1 Z26.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X82.81 Y92.384 E.06901
+G1 X82.81 Y89.304 E.05937
+G1 X83.713 Y89.304 E.01741
+G1 X84.493 Y90.084 E.02126
+G1 X83.6 Y90.084 E.01721
+G1 X83.6 Y91.804 E.03315
+G1 X86.39 Y91.804 E.05378
+G1 X86.39 Y92.324 E.01002
+; WIPE_START
+G1 F12000
+M204 S6000
+G1 X84.39 Y92.358 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+; object ids of layer 218 start: 66
+M624 AQAAAAAAAAA=
+;========Date 20250206========
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+ ; timelapse without wipe tower
+M971 S11 C10 O0
+
+M623
+
+; object ids of this layer218 end: 66
+M625
+; start printing object, unique label id: 66
+M624 AQAAAAAAAAA=
+G1 X83.353 Y92.073
+G1 Z26.24
+M73 P98 R0
+G1 E.8 F1800
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.260567
+G1 F1200
+M204 S6000
+G1 X83.31 Y92.052 E.00055
+; LINE_WIDTH: 0.303257
+G1 X83.267 Y92.03 E.00065
+; LINE_WIDTH: 0.345947
+G1 X83.225 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X83.205 Y91.989 E.00052
+G1 X83.205 Y89.88 E.03925
+; LINE_WIDTH: 0.440628
+G1 X83.235 Y89.729 E.00311
+G1 X83.315 Y89.712 E.00167
+; LINE_WIDTH: 0.413922
+G1 X83.395 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X83.814 Y89.694 E.00758
+; WIPE_START
+G1 F21000
+G1 X83.395 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X83.353 Y92.073 Z26.64 F42000
+G1 Z26.24
+G1 E.8 F1800
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X83.395 Y92.094 E.0004
+G1 X86.185 Y92.094 E.02334
+; WIPE_START
+G1 F21000
+G1 X84.185 Y92.094 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G1 X91.814 Y92.321 Z26.64 F42000
+G1 X93.939 Y92.384 Z26.64
+G1 Z26.24
+G1 E.8 F1800
+; FEATURE: Outer wall
+; LINE_WIDTH: 0.42
+G1 F1200
+M204 S5000
+G1 X93.61 Y92.384 E.00634
+G1 X93.61 Y91.804 E.01118
+G1 X96.4 Y91.804 E.05378
+G1 X96.4 Y90.084 E.03315
+G1 X95.507 Y90.084 E.01721
+G1 X96.287 Y89.304 E.02126
+G1 X97.19 Y89.304 E.01741
+G1 X97.19 Y92.384 E.05937
+G1 X93.999 Y92.384 E.06151
+M204 S10000
+G1 X93.815 Y92.094 F42000
+; FEATURE: Gap infill
+; LINE_WIDTH: 0.196881
+G1 F1200
+M204 S6000
+G1 X96.605 Y92.094 E.02334
+G1 X96.647 Y92.073 E.0004
+; LINE_WIDTH: 0.260555
+G1 X96.69 Y92.052 E.00055
+; LINE_WIDTH: 0.30325
+G1 X96.733 Y92.03 E.00065
+; LINE_WIDTH: 0.345945
+G1 X96.775 Y92.009 E.00075
+; LINE_WIDTH: 0.406268
+G1 X96.795 Y91.989 E.00052
+G1 X96.795 Y89.88 E.03925
+; LINE_WIDTH: 0.440621
+G1 X96.765 Y89.729 E.00311
+G1 X96.685 Y89.712 E.00167
+; LINE_WIDTH: 0.413905
+G1 X96.605 Y89.694 E.00156
+; LINE_WIDTH: 0.396522
+G1 X96.186 Y89.694 E.00758
+; close powerlost recovery
+M1003 S0
+; WIPE_START
+G1 F21000
+G1 X96.605 Y89.694 E-.76
+; WIPE_END
+G1 E-.04 F1800
+M204 S10000
+G17
+G3 Z26.64 I1.217 J0 P1  F42000
+; stop printing object, unique label id: 66
+M625
+M106 S0
+M981 S0 P20000 ; close spaghetti detector
+; FEATURE: Custom
+; MACHINE_END_GCODE_START
+; filament end gcode 
+
+;===== date: 20230428 =====================
+M400 ; wait for buffer to clear
+G92 E0 ; zero the extruder
+G1 E-0.8 F1800 ; retract
+G1 Z26.74 F900 ; lower z a little
+G1 X65 Y245 F12000 ; move to safe pos 
+G1 Y265 F3000
+
+G1 X65 Y245 F12000
+G1 Y265 F3000
+M140 S0 ; turn off bed
+M106 S0 ; turn off fan
+M106 P2 S0 ; turn off remote part cooling fan
+M106 P3 S0 ; turn off chamber cooling fan
+
+G1 X100 F12000 ; wipe
+; pull back filament to AMS
+M620 S255
+G1 X20 Y50 F12000
+G1 Y-3
+T255
+G1 X65 F12000
+G1 Y265
+G1 X100 F12000 ; wipe
+M621 S255
+M104 S0 ; turn off hotend
+
+M622.1 S1 ; for prev firmware, default turned on
+M1002 judge_flag timelapse_record_flag
+M622 J1
+    M400 ; wait all motion done
+    M991 S0 P-1 ;end smooth timelapse at safe pos
+    M400 S3 ;wait for last picture to be taken
+M623; end of "timelapse_record_flag"
+
+M400 ; wait all motion done
+M17 S
+M17 Z0.4 ; lower z motor current to reduce impact if there is something in the bottom
+
+    G1 Z126.24 F600
+    G1 Z124.24
+
+M400 P100
+M17 R ; restore z current
+
+G90
+G1 X128 Y250 F3600
+
+M220 S100  ; Reset feedrate magnitude
+M201.2 K1.0 ; Reset acc magnitude
+M73.2   R1.0 ;Reset left time magnitude
+M1002 set_gcode_claim_speed_level : 0
+
+M17 X0.8 Y0.8 Z0.5 ; lower motor current to 45% power
+M73 P100 R0
+; EXECUTABLE_BLOCK_END
+
