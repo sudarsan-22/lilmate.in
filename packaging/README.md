@@ -12,3 +12,13 @@ Each product lies face up on a cradle cut from stacked 1.5 mm layers (outline of
 Desk Mini's assembled size (47 x 45 x 38) is an estimate: measure it before cutting. Dielines are a first pass: make a paper mock-up before cutting corrugate.
 
 Files: `<product>/<product>_box.png` (dieline + closed box + open top view), `<product>/<product>_box.md`, `box_system_overview.png`.
+
+## Cutting template (hand cutting)
+`packaging/template/box_template.scad` is the parametric source (one frame per panel, joined by bow-tie keys; the gap between frames is the score line).
+`packaging/template/build_template.sh <product> <Lo> <Wo> <Ho>` exports the tiles and slices the print file. Per product see `packaging/<product>/template/` (`CUTTING_GUIDE.md`, tile STLs, `*_BOX_TEMPLATE_FINAL.gcode.3mf`, 1:1 paper dieline PDF).
+
+| Product | Plates | Print time | PLA |
+|---|---|---|---|
+| Deck Buddy | 4 | about 3 h 17 min | 101 g |
+| Desk Mini | 2 | about 2 h 25 min | 71 g |
+| Elephant | 6 | about 4 h 07 min | 129 g |
