@@ -3,7 +3,7 @@
 //  B  back plate (obj_4)  + RED pins marking the 2 screw holes that the self-lock will replace
 //  C  cover shell (obj_3) + NEW buzzer holder (ring) + dummy buzzer
 // All numbers are mm. Original STLs are untouched; only the buzzer ring is new.
-O = "/home/sudarsan/Documents/crazy_projects/lilmate_3D_design/desk_mini/original/";
+O = "/home/sudarsan/Documents/crazy_projects/lilmate_3D_design/desk_mini/reference/original/";
 $fn = 64;
 part = "all";   // all | shell_only
 

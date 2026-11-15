@@ -1,7 +1,7 @@
 // ============================================================
 // Project : lilmate OFFICE DESK BUDDY (retro-Mac monitor, 15 deg slanted screen, 4 keys + volume knob)
 // Basis   : music_player v2 body, YX6300/jack removed (BLE media remote), buzzer added, wider 4-key base
-// Look    : reference/look_reference_retro_pc.png; proposal/design_proposal.md (confirmed 2026-11-15)
+// Look    : reference/look_reference_retro_pc.png; docs/design_proposal.md (confirmed 2026-11-15)
 // Printer : Bambu Lab A1 mini (180 x 180 x 180), PLA
 // Closure : snap-fit everywhere (no screws)
 //
@@ -113,10 +113,10 @@ tp_sr     = 1.0;           // shelf 1.0 under the edge
 tp_clr    = 0.2;           // 0.2 mm per side -> slot = board width + 0.4 = 12.4 (measured from elephant/output/tests/stopper_test_new.stl: 17.4 for the 17 mm board)
 slot_zclr = 0.3;        // clearance above the board under the lip
 slot_len  = 22;         // ESP32 slot: 22 mm deep (elephant). Its USB-C end is closed, so the board only needs to be held, not stopped
-pin_d     = 1.0;        // TP4056 lock pins (4): vertical Ø1.0 pins through the board's 4 mounting holes into sockets in blocks under the board
-pin_hole  = 1.15;       // socket diameter
-pin_head  = 2.0;        // pin head diameter (clears the lip: the head sits between the lips)
-tp_len    = tp_off + tp_pcb[1] + 0.3;       // TP4056 slot length from the plate: ends 0.3 past the board front edge
+pin_d     = 1.5;        // TP4056 lock pins (4): vertical Ø1.0 pins through the board's 4 mounting holes into sockets in blocks under the board
+pin_hole  = 1.65;       // socket diameter
+pin_head  = 2.5;        // pin head diameter (clears the lip: the head sits between the lips)
+tp_len    = tp_off + tp_pcb[1] + 2.3;       // TP4056 slot length from the plate: ends 0.3 past the board front edge
 lip_reach_b = 1.0;      // lip over the board edge
 guide_t   = 1.2;        // side guide wall thickness
 
@@ -159,7 +159,7 @@ sw_leg  = 3.0;                 // leg length below the body (trim longer legs to
 sw_trav = 0.25;                // typical actuation travel
 /* [Switch carrier] one printed strip, switches snap in from below (lips on 2 long flexible tongues per switch) */
 c_gap   = 1.5;                 // clearance around the switch body, each side: 0.5 + 1.0 (user 2026-11-15: the switch did not go in) -> pocket 14.0
-c_pocket= sw_b[0] + 2*c_gap;   // pocket 14.0
+c_pocket= [13.0, 12.0];        // pocket (u, v) - user 2026-11-15: 13 x 12
 c_tw    = 1.2;                 // long (v) wall thickness
 c_end   = 1.2;                 // end (u) wall thickness
 c_led   = 0.8;                 // support ledge thickness (carries the keypress: the body is pushed DOWN onto it)
@@ -167,7 +167,7 @@ c_tab_w = 4.0;                 // ledge tab width, one at the middle of each of 
 c_tab_r = 3.5;                 // ledge tab reach from the wall -> 2.0 under the body edge when centred, never less than 0.5 at the worst shift
 c_roof  = 0.4;                 // body top sits this far below the carrier rim (so the button stands 0.6 proud). NO lock lips, NO roof tabs: the switch just drops in from the top
 c_h     = c_led + sw_b[2] + c_roof;            // 4.5 carrier thickness
-pb      = [3*kpitch + c_pocket + 2*c_end, c_pocket + 2*c_tw, c_h];   // carrier outline (u, v, thickness) = 64.4 x 16.4 x 4.5
+pb      = [3*kpitch + c_pocket[0] + 2*c_end, c_pocket[1] + 2*c_tw, c_h];   // carrier outline (u, v, thickness) = 64.4 x 16.4 x 4.5
 kgap    = 1.5;                 // gap between the plate underside and the carrier top (keycap flange + travel live here)
 
 /* [Snap fit] */
@@ -328,11 +328,11 @@ fr_t     = 1.5;       // frame end wall thickness (was 1.2)
 fr_reach = 1.0;       // hook reach under the carrier end (was 0.6)
 fr_hh    = 0.4;       // hook tip thickness; the underside is a 45 deg lead-in, so the root is fr_reach + fr_hh thick
 fr_stop  = 1.2;       // stop ledge reach over the carrier top (was 0.8) and thickness 1.0 (was 0.8)
-module carrier_frame(L, u0 = 0) translate([u0, 0, 0]) for (sx = [-1, 1]) {
+module carrier_frame(L, u0 = 0, ext = 0) translate([u0, 0, 0]) for (sx = [-1, 1]) {
     xo = L/2 + 0.2;
     zh = pb_top - pb[2] - 0.05;                                   // hook top face: 0.05 under the carrier bottom
     mirror([sx < 0 ? 1 : 0, 0, 0]) {
-        xbox(xo, xo + fr_t, kv - pb[1]/2, kv + pb[1]/2, zh - fr_reach - fr_hh - 0.3, -kt + eps);
+        xbox(xo, xo + fr_t, kv - pb[1]/2, kv + pb[1]/2, zh - fr_reach - fr_hh - 0.3 - ext, -kt + eps);
         xbox(xo - fr_stop, xo + eps, kv - pb[1]/2, kv + pb[1]/2, pb_top, pb_top + 1.0);               // stop
         hull() {                                                                                        // hook: flat holding face on top, 45 deg lead-in below
             xbox(xo - fr_reach, xo - fr_reach + eps, kv - pb[1]/2, kv + pb[1]/2, zh - fr_hh, zh);
@@ -352,9 +352,9 @@ module keyplate() kframe() keyplate_local();
 // against the roof tabs at the u ends, so the keypress load goes into the roof, not into the lips.
 // ------------------------------------------------------------
 module carrier_pocket_cuts() for (u = key_u) translate([u, 0, 0])
-    translate([-c_pocket/2, -c_pocket/2, -1]) cube([c_pocket, c_pocket, c_h + 2]);        // pocket: through hole (open top for the switch, open bottom for the legs); the 4 ledge tabs are added back below
+    translate([-c_pocket[0]/2, -c_pocket[1]/2, -1]) cube([c_pocket[0], c_pocket[1], c_h + 2]);        // pocket: through hole (open top for the switch, open bottom for the legs); the 4 ledge tabs are added back below
 module carrier_tabs() for (u = key_u) translate([u, 0, 0]) for (r = [0, 180]) rotate([0, 0, r])      // 2 ledge tabs only: the front and back (long) walls, as chosen; the short end walls have none
-    translate([-c_tab_w/2, c_pocket/2 - c_tab_r, 0]) cube([c_tab_w, c_tab_r + eps, c_led]);   // ledge tab (flush with the carrier bottom, fused to the wall)
+    translate([-c_tab_w/2, c_pocket[1]/2 - c_tab_r, 0]) cube([c_tab_w, c_tab_r + eps, c_led]);   // ledge tab (flush with the carrier bottom, fused to the wall)
 module carrier_local() {
     difference() { translate([-pb[0]/2, -pb[1]/2, 0]) cube([pb[0], pb[1], c_h]); carrier_pocket_cuts(); }
     carrier_tabs();
@@ -701,7 +701,7 @@ module coupon_carrier() translate([-8, 0, 0]) intersection() { carrier_local(); 
 module coupon_plate_local() difference() {
     union() {
         translate([8, kv, -kt]) linear_extrude(kt) rrect([24, 22], 2);
-        carrier_frame(cp_L, 8);
+        carrier_frame(cp_L, 8, 2);      // test patch: posts 2 mm longer (9.55 -> 11.55)
         for (u = [0, 16], sv = [-1, 1]) xbox(u - 1.0, u + 1.0, kv + sv*(pb[1]/2 + 0.1) - (sv < 0 ? 0.7 : 0), kv + sv*(pb[1]/2 + 0.1) + (sv > 0 ? 0.7 : 0), pb_top - 2.0, -kt + eps);
     }
     translate([8, kv, -kt - 1]) linear_extrude(kt + 2) rrect([kcap + 0.4, kcap + 0.4], 2.2);

@@ -37,5 +37,5 @@ for i, k in enumerate((10, 11, 12)):
         d.text((x0 + 40, y + 124 + j * 42), l, font=fr(30), fill=INK)
     d.text((x0 + 40, y + 124 + 5 * 42 + 14), ports, font=fr(22), fill=GREY)
     d.text((x0 + 40, y + 124 + 5 * 42 + 46), "parts: " + extra, font=fb(22), fill=GREY)
-out = f"{base}/../proposal/music_player_concepts_round4.png"
+out = f"{base}/../docs/music_player_concepts_round4.png"
 S.save(out); print(out, S.size)

@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/skills/build-final-3mf/scripts/on_stop.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,6 +1,6 @@
 // ============================================================
 // Project : lilmate MUSIC PLAYER "Tiny Retro PC" (concept L, approved 2026-11-14)
-// Look    : proposal/look4.scad (design = 12), previews/r4_12_front.png
+// Look    : docs/look4.scad (design = 12), previews/r4_12_front.png
 // Printer : Bambu Lab A1 mini (180 x 180 x 180), PLA
 // Closure : snap-fit everywhere (no screws)
 //
