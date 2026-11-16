@@ -38,7 +38,7 @@ snap_n    = 4;          // ramp steps (smooth when printed)
 // v10: the snap (3 failed prints) is replaced by 4 x M2 x 10 pan-head screws, lid -> body. Lip + rebate stay as the locator only.
 screw_on     = true;
 snap_on      = !screw_on;               // snap bumps + dimples (off when screws are used)
-scr_pts      = [[-23, 60], [23, 60], [-18, 14], [18, 14]];   // screw axes (x, z), all parallel to Y
+scr_pts      = [[-23, 72], [23, 72], [-18, 14], [18, 14]];   // screw axes (x, z), all parallel to Y
 scr_boss_d   = 7.6;                     // boss outside diameter
 scr_body_len = 8;                       // body boss length behind the seam
 scr_reach    = 6;                       // the boss grows this far sideways into the wall (45 deg underside, prints upright)
@@ -518,7 +518,7 @@ tp_slope  = 0.136;       // seat plane rises 0.136 mm per mm toward the back (7.
 tch_z0    = 88.4;        // seat plane z at the FRONT edge of the pocket
 tp_board  = [15, 11, 1.6];
 tp_side   = 0.2;         // clearance per side between board and arm
-tp_arm_t  = 0.65;        // arm thickness (flexes in the print-layer plane, never across the layers)
+tp_arm_t  = 1.2;         // arm thickness (v10: was 0.65, the thin arms broke off with the tree supports). Flexes in the print-layer plane, never across the layers
 tp_arm_h  = 2.2;         // arm height
 tp_reach  = 0.7;         // lip reach over the board edge (hold = reach - 0.2 clearance... board edge overlap 0.5)
 tp_gap_up = 0.3;         // free slit between arm top and the roof so the arm can flex
@@ -912,7 +912,7 @@ module screw_front_cuts() if (screw_on) for (p = scr_pts)
 module screw_lid() if (screw_on) for (p = scr_pts) intersection() {
     extrude_y(split_y + scr_gap, 40) scr_boss2d(p);
     union() {
-        intersection() { half_y(split_y, split_y + lip_h + 0.3); inner_solid(wall + 0.65); }
+        intersection() { half_y(split_y, split_y + lip_h + 0.3); inner_solid(p[1] > lip_thick_z - 1 ? lip_keep + lip_clr + lip_t + lip_h + 0.5 : wall + 0.65); }   // above z 64 the lid rebate is cut deeper (thick lip root)
         half_y(split_y + lip_h + 0.3 - eps, 200);
     }
     outer_main();
