@@ -73,7 +73,7 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - The tray (obj_1) was removed from the project on request.
 
 ## Firmware and hardware
-- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `soldering_sop.png` (wiring and soldering steps, wire cut list; regenerate with the solder-sop skill), `datasheets/`.
 - `firmware/`: sketch folder `firmware/desk_mini/desk_mini.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
 - A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
 

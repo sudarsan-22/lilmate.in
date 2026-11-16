@@ -84,7 +84,7 @@ Battery: not modelled in these sources.
 - No battery is modelled in these sources; confirm its place before adding one.
 
 ## Firmware and hardware
-- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `soldering_sop.png` (wiring and soldering steps, wire cut list; regenerate with the solder-sop skill), `datasheets/`.
 - `firmware/`: sketch folder `firmware/deck_buddy/deck_buddy.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
 - A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
 
