@@ -11,8 +11,8 @@ plate_t = 2;
 move_x  = -10;                       // "up" in the slicer view = away from the USB slot = -x
 holes_x = [359.9, 363.9];  holes_y = [-102.4, -108.8, -115.1];  hole_d = 2;
 bz_c    = [362.9 + move_x, -108.95];
-bz_d = 11.5; bz_gap = 0.2; bz_h = 3;           // buzzer 11.5, pocket 11.7 (0.2 total gap)
-ring_od = 13.5;                                  // holder outer diameter (user: 1.35 cm)
+bz_d = 11.5; bz_gap = 1.7; bz_h = 5;           // buzzer 11.5, pocket 13.2 (inner +1.5), ring height 5 (+2)
+ring_od = 15.0;                                  // holder outer diameter (wall kept 0.9)
 ring_wall = (ring_od - (bz_d + bz_gap)) / 2;     // = 0.9
 
 module shell_v2() {
