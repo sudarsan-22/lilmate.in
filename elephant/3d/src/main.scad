@@ -925,6 +925,21 @@ module screw_lid_cuts() if (screw_on) for (p = scr_pts) {
 }
 echo(str("screw pocket floors y: ", [for (p = scr_pts) scr_floor(p)], "  outer y at axis: ", [for (p = scr_pts) scr_yout(p[0], p[1])]));
 
+// ------------------------------------------------------------
+// LID TEXT: raised "lil.mate" on the back of the head, above the power switch (v11)
+// ------------------------------------------------------------
+lid_text_on = true;
+lid_text    = "lil.mate";
+lid_text_z  = 72;       // centre height (the switch housing tops out at z 65.5)
+lid_text_h  = 4.2;      // letter height
+lid_text_rel= 0.6;      // how far the letters stand out of the skin
+module lid_text2d() mirror([1, 0, 0]) text(lid_text, size = lid_text_h, font = "DejaVu Sans:style=Bold", halign = "center", valign = "center");   // mirrored: it is read from behind
+module lid_text() if (lid_text_on) intersection() {
+    extrude_y(18, 16) translate([0, lid_text_z]) lid_text2d();
+    difference() { union() { head_hull(-lid_text_rel); body_outer(lid_text_rel); } inner_solid(0.4); }   // skin shell: 0.4 sunk into the wall, lid_text_rel out
+    half_y(split_y, 200);
+}
+
 module back_shell() difference() {
     union() {
         intersection() {
@@ -935,6 +950,7 @@ module back_shell() difference() {
         switch_block();
         battery_ribs();
         screw_lid();
+        lid_text();
     }
     rebate();
     if (snap_on) dimples();
