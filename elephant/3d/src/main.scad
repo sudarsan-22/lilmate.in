@@ -82,6 +82,7 @@ y_if        = -19.3;    // OLED glass front plane (solved for the round head; pc
 bay_clr     = 0.6;      // OLED pcb clearance per side (was 0.25: too tight)
 bay_depth   = 3.5;      // holder depth behind the pcb (short = easy to fit)
 bay_wall    = 1.4;
+bay_peak    = true;     // 45 deg peaked top above the OLED slot (the slash lines at the top corners); false = flat top
 bay_wedge   = true;     // 45 deg support wedge under the holder floor (was needed for modelled supports; the slicer now makes the supports)
 
 /* [ESP32-C3 Mini + TP4056] */
@@ -496,7 +497,7 @@ module oled_bay_cuts() {
     extrude_y(pcb_front_y, split_y + lip_h + 1 - pcb_front_y) translate([0, oled_zc]) square(bay_in, center = true);
     // ...with a 45 deg peaked top inside the head, so nothing above it is a flat ceiling in mid-air
     // (the flat top of this channel left a 10 x 31 mm unsupported slab -> the spaghetti failure)
-    intersection() {
+    if (bay_peak) intersection() {
         extrude_y(pcb_front_y, split_y + lip_h + 1 - pcb_front_y) translate([0, oled_zc])
             polygon([[-bay_in[0]/2, bay_in[1]/2 - 0.01], [bay_in[0]/2, bay_in[1]/2 - 0.01], [0, bay_in[1]/2 + bay_in[0]/2]]);
         head_hull(wall);                                   // never cut into the outer skin
