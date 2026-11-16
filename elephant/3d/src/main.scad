@@ -82,6 +82,7 @@ y_if        = -19.3;    // OLED glass front plane (solved for the round head; pc
 bay_clr     = 0.6;      // OLED pcb clearance per side (was 0.25: too tight)
 bay_depth   = 3.5;      // holder depth behind the pcb (short = easy to fit)
 bay_wall    = 1.4;
+bay_wedge   = true;     // 45 deg support wedge under the holder floor (was needed for modelled supports; the slicer now makes the supports)
 
 /* [ESP32-C3 Mini + TP4056] */
 // [length (y, slides in), width (x), thickness]  - measured by the user 2026-11-14
@@ -473,7 +474,7 @@ module oled_bay_walls() {
         outer_main();
     }
     // 45 deg wedge under the holder floor: it grows up from the chin instead of bridging in mid-air
-    intersection() {
+    if (bay_wedge) intersection() {
         hull() {
             translate([-(bay_in[0]/2 + bay_wall), y_if, oled_zc - bay_in[1]/2 - bay_wall]) cube([bay_in[0] + 2*bay_wall, bay_end - y_if, bay_wall]);
             translate([-(bay_in[0]/2 + bay_wall), y_if, oled_zc - bay_in[1]/2 - bay_wall - (bay_end - y_if)]) cube([bay_in[0] + 2*bay_wall, 0.01, 0.01]);
