@@ -34,6 +34,21 @@ snap_top  = 0.8;        // flat top of the catch
 snap_ramp = 1.2;        // gentle lead-in ramp (~27 deg): easy to push on, hard to pull off
 snap_n    = 4;          // ramp steps (smooth when printed)
 
+/* [Screw fit] */
+// v10: the snap (3 failed prints) is replaced by 4 x M2 x 10 pan-head screws, lid -> body. Lip + rebate stay as the locator only.
+screw_on     = true;
+snap_on      = !screw_on;               // snap bumps + dimples (off when screws are used)
+scr_pts      = [[-23, 60], [23, 60], [-18, 14], [18, 14]];   // screw axes (x, z), all parallel to Y
+scr_boss_d   = 7.6;                     // boss outside diameter
+scr_body_len = 8;                       // body boss length behind the seam
+scr_reach    = 6;                       // the boss grows this far sideways into the wall (45 deg underside, prints upright)
+scr_pilot    = 1.8;                     // pilot hole in the body boss: M2 self-tapping into PLA
+scr_pilot_len= 7.2;                     // pilot depth (the 10 mm screw ends 5.8-6.4 behind the seam)
+scr_clear    = 2.4;                     // clearance hole in the lid
+scr_head_d   = 4.6;                     // head pocket in the lid skin
+scr_head_h   = 1.3;                     // pocket depth at its low (outer) edge = M2 pan head height
+scr_gap      = 0.1;                     // lid boss stops this far behind the seam plane
+
 /* [Body: round sitting ball] */
 body_cy  = 3;
 body_R   = 26.5;
@@ -700,13 +715,15 @@ module front_shell_core() {
                 half_y(-200, split_y);
             }
             lip();
-            lip_bumps();
+            if (snap_on) lip_bumps();
+            screw_front();
             oled_bay_walls();
             battery_ribs_front();
             touch_fill();
         }
         face_cuts();
         oled_bay_cuts();
+        screw_front_cuts();
         touch_pocket();
         // side touch pad (touch2) REMOVED: the TTP223 now lives only under the head top (touch_pocket)
         seam_chamfer_front();
@@ -872,6 +889,40 @@ module dimples() intersection() {
     half_y(split_y + snap_y0 - 0.05, split_y + snap_y0 + snap_top + snap_ramp + 0.25);   // 0.05 play behind the holding face
     shell_band(lip_keep - snap_h, lip_keep + 0.1);                                        // leaves lip_keep - snap_h = 0.8 of outer skin
 }
+// ------------------------------------------------------------
+// SCREW FIT: 4 bosses in the body (pilot holes) + 4 bosses in the lid (clearance hole + head pocket)
+// ------------------------------------------------------------
+function scr_sx(p) = p[0] < 0 ? -1 : 1;
+// outer skin y at (x, z) on the back (head above z 40, body below)
+function scr_yout(x, z) = z > 40 ? -head_y(x, z) : body_cy + body_sy * sqrt(max(0, pow(body_r(z), 2) - x*x));
+function scr_floor(p) = scr_yout(p[0] + scr_sx(p) * scr_head_d/2, p[1]) - scr_head_h;   // pocket floor y: the outer edge keeps scr_head_h of rim
+module scr_boss2d(p) hull() {
+    sx = scr_sx(p);
+    translate([p[0], p[1]]) circle(d = scr_boss_d, $fn = 48);
+    translate([p[0] + sx*scr_reach, p[1]]) circle(d = scr_boss_d, $fn = 48);
+    translate([p[0] + sx*scr_reach, p[1] - scr_reach]) circle(d = scr_boss_d, $fn = 48);   // 45 deg underside
+}
+module screw_front() if (screw_on) for (p = scr_pts) intersection() {
+    extrude_y(split_y - scr_body_len, scr_body_len) scr_boss2d(p);
+    outer_main();
+}
+module screw_front_cuts() if (screw_on) for (p = scr_pts)
+    extrude_y(split_y - scr_pilot_len, scr_pilot_len + 1) translate([p[0], p[1]]) circle(d = scr_pilot, $fn = 24);
+// lid boss: inside the front lip ring where the lip slides (offset >= wall + 0.65), full to the skin behind the rebate
+module screw_lid() if (screw_on) for (p = scr_pts) intersection() {
+    extrude_y(split_y + scr_gap, 40) scr_boss2d(p);
+    union() {
+        intersection() { half_y(split_y, split_y + lip_h + 0.3); inner_solid(wall + 0.65); }
+        half_y(split_y + lip_h + 0.3 - eps, 200);
+    }
+    outer_main();
+}
+module screw_lid_cuts() if (screw_on) for (p = scr_pts) {
+    extrude_y(split_y - 1, 60) translate([p[0], p[1]]) circle(d = scr_clear, $fn = 24);
+    extrude_y(scr_floor(p), 60) translate([p[0], p[1]]) circle(d = scr_head_d, $fn = 32);
+}
+echo(str("screw pocket floors y: ", [for (p = scr_pts) scr_floor(p)], "  outer y at axis: ", [for (p = scr_pts) scr_yout(p[0], p[1])]));
+
 module back_shell() difference() {
     union() {
         intersection() {
@@ -881,9 +932,11 @@ module back_shell() difference() {
         port_block();
         switch_block();
         battery_ribs();
+        screw_lid();
     }
     rebate();
-    dimples();
+    if (snap_on) dimples();
+    screw_lid_cuts();
     seam_chamfer_back();
     port_cuts();
     switch_cuts();
@@ -931,4 +984,5 @@ else if (part == "supports")    all_supports();
 else if (part == "oled_out")    difference() { oled_envelope(); union() { head_hull(1.0); body_outer(-1.0); } }   // must be EMPTY
 else if (part == "check_front") intersection() { front_shell(); union() { components(0); components(1); for (k = [2, 4, 5, 6, 8]) components(k); } }
 else if (part == "check_back")  intersection() { back_shell(); union() { for (k = [2:7]) components(k); } }
+else if (part == "check_parts") intersection() { front_shell(); back_shell(); }   // front and lid must not overlap: must be EMPTY
 else if (part == "check_all")   intersection() { union() { front_shell(); back_shell(); } components(); }

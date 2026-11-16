@@ -33,7 +33,7 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 
 ### TP4056 USB-C charger
 - Size: PCB 17 W x 27 L x 1, USB-C plug zone 9 x 7.3 x 3.3.
-- Housing: same slot rules as the ESP32, board at z 11-12; its front stopper is 22 mm in from the opening, so the 27 mm board sticks 5 mm into the lid. Its USB-C is the only exposed port, centred on the back.
+- Housing: same slot rules as the ESP32, board at z 11-12; v10: its front stopper is 27 mm in from the opening, so the board ends flush with the body opening (like Pengu) and the lid niche is 7.25 mm deep (guide plate 1.2 with the 9.6 x 3.9 hole). Its USB-C is the only exposed port, centred on the back.
 
 ### Li-Po 502030 battery (about 300 mAh)
 - Size: 20.0 x 30.0 x 5.0 modelled (real cell about 20 x 30 x 5).
@@ -47,3 +47,5 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Size: 15 x 11 x 1.6.
 - Housing: flat seat 17 x 12.5 under the head top, cradle arms hold the board with the holding face 0.15 under it, skin over the pad kept at 1.6. (The second jaw pad is defined in the source but not used.)
 
+### Lid screws (M2 x 10, 4 pcs)
+- Housing: bosses OD 7.6 at (x, z) (+-23, 60) and (+-18, 14); body pilot hole 1.8 x 7.2, lid clearance hole 2.4, head pocket 4.6 (see `docs/elephant_screw_fit_FINAL.png`).

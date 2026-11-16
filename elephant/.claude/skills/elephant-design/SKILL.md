@@ -13,7 +13,7 @@ Project folder: `elephant/` (layout: `3d/` = CAD, print files and archive; `firm
 - `3d/print/ELLIE_V3_FINAL.gcode.3mf`
 - Plate contents: ellie_v3_body_upright_NO_SUPPORT, ellie_v3_lid_upright_NO_SUPPORT (supports come from the slicer, not the model)
 - Print settings read from the file: 0.12 mm layers (first 0.2), 3 walls, 15% gyroid, 5 top / 5 bottom shells, tree(auto) supports ON, brim outer only, PLA 220 C / bed 60 C (Textured PEI), outer wall 60 mm/s, process "ellie v3 bambu supports", Bambu Lab A1 mini, 0.4 nozzle
-- Estimated: about 6 h 53 min, 87 g
+- Estimated: about 7 h 23 min, 91 g (screw fit v10 rebuild)
 
 ## Dimensions
 Assembled enclosure: **W 105.8 x D 65.7 x H 92.2** mm.
@@ -80,7 +80,8 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 
 ## Design rules and gotchas
 - Axes: X left-right, -Y front (face), +Y back, Z up; the body splits from the lid at Y = 13.
-- Snap closure: front lip + bumps into back rebate + dimples (snap_h 0.6, lip_clr 0.12). Do not tighten it without a coupon print.
+- Closure (v10): 4 x M2 x 10 pan-head self-tapping screws, lid -> body (`screw_on = true`). Axes (x, z): (+-23, 60) head sides, (+-18, 14) lower body sides, all along Y. Body bosses OD 7.6, pilot hole 1.8 x 7.2 deep; lid bosses with 2.4 clearance hole and a 4.6 head pocket (floor `scr_floor`, 1.3 rim at the outer edge). The front lip + rebate (lip_clr 0.12) only align the lid; snap bumps/dimples are off (`snap_on = !screw_on`, the old snap failed in 3 prints). Check `part=check_parts` is empty of volume (only the seam plane touches).
+- USB-C (v10): `tp_stop_depth = 27`, the TP4056 ends flush with the body opening, niche in the lid 7.25 mm deep (was 2.25). Test coupon: `docs/usb_port_test.scad`, `3d/print/tests/TEST_usb_port.gcode.3mf` (printed, fits).
 - Boards (ESP 18x22x1, TP4056 17x27x1) slide in from the back opening into slots; ports sit flush with the opening.
 - Battery lies in the floor bay 20.5 x 30.5 x 5.5; older `main_before_*` copies are in `3d/archive/src/`.
 
