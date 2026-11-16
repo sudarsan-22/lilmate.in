@@ -22,6 +22,8 @@ The script reads component positions from `<project>/hardware/components.md` (wi
 - Other GPIOs: Elephant/Pengu touch on GPIO2 (from `minimo_bear.ino`); Music Player map from `docs/components_L_retro_pc.md`; Office Buddy and Desk Mini are proposed. Each sheet carries a yellow CHECK banner saying which numbers are unconfirmed.
 - To change a pin: edit `product()` in `make_sop.py` (and `hardware/pinout.md`), then regenerate. Never leave the SOP and `pinout.md` disagreeing.
 
+- TP4056 board pad order (user photo 2026-11-16, USB-C up): OUT-, B-, B+, OUT+ left to right along the bottom edge; battery on the middle pair. The Elephant step images use this layout; the overview sheets show the pads only as logical pins.
+
 ## Rules for the sheet
 - Solder with the battery disconnected until the power test (step 3), and verify polarity with a multimeter.
 - Keep GND/3V3 as splices, one wire each to the ESP32 pad (the module has few power pads).

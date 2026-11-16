@@ -38,18 +38,22 @@ def marker(d,p,n,dx=0,dy=0):
     x,y=p[0]+dx,p[1]+dy;d.ellipse([x-17,y-17,x+17,y+17],fill=(255,210,0),outline=BLK,width=3);d.text((x-d.textlength(str(n),font=F(20,True))/2,y-13),str(n),fill=BLK,font=F(20,True))
 # ---------------- boards ----------------
 def tp(d,x,y,s=15,hl=()):
+    """Blue TP4056 Type-C board as in the user's photo: 2 mounting holes top corners, LEDs on the right, pads along the bottom: OUT-, B-, B+, OUT+ (left to right, USB-C at top)."""
     w,h=17*s,27*s
-    d.rounded_rectangle([x,y,x+w,y+h],radius=8,fill=PCB,outline=(10,70,40),width=3)
-    d.rounded_rectangle([x+w*0.28,y-s*1.2,x+w*0.72,y+s*3.8],radius=6,fill=SIL,outline=(110,110,110),width=3);d.text((x+w/2-d.textlength('USB-C',font=F(14,True))/2,y+s*0.6),'USB-C',fill=BLK,font=F(14,True))
-    d.rectangle([x+s*1.6,y+s*5.6,x+s*3.6,y+s*6.6],fill=(220,40,40));d.rectangle([x+s*13.4,y+s*5.6,x+s*15.4,y+s*6.6],fill=(60,160,230))
-    d.text((x+s*1.2,y+s*6.9),'CHRG',fill='white',font=F(11));d.text((x+s*12.8,y+s*6.9),'DONE',fill='white',font=F(11))
-    d.rectangle([x+s*4,y+s*9,x+s*13,y+s*13],fill=(25,25,25));d.text((x+s*5,y+s*10.3),'TP4056',fill=(210,210,210),font=F(15,True))
-    d.rectangle([x+s*4,y+s*15,x+s*8,y+s*17],fill=(25,25,25));d.rectangle([x+s*9.5,y+s*15,x+s*13,y+s*17],fill=(25,25,25))
+    d.rounded_rectangle([x,y,x+w,y+h],radius=6,fill=(30,60,160),outline=(10,25,90),width=3)
+    for hx in (1.9,15.1):   # mounting holes with square pads
+        d.rectangle([x+(hx-1.5)*s,y+0.4*s,x+(hx+1.5)*s,y+3.4*s],fill=(205,208,214),outline=(120,120,128),width=2);d.ellipse([x+(hx-0.5)*s,y+1.4*s,x+(hx+0.5)*s,y+2.4*s],fill=(15,15,25))
+    d.rounded_rectangle([x+w*0.30,y-s*0.6,x+w*0.70,y+s*4.6],radius=6,fill=(215,195,120),outline=(150,130,60),width=3);d.text((x+w/2-d.textlength('USB-C',font=F(14,True))/2,y+s*1.4),'USB-C',fill=BLK,font=F(14,True))
+    d.rectangle([x+s*5.2,y+s*6.2,x+s*11.8,y+s*12.6],fill=(25,25,25),outline=(70,70,70));d.text((x+s*6.2,y+s*8.6),'TP4056',fill=(210,210,210),font=F(14,True))
+    d.rectangle([x+s*14.3,y+s*5.6,x+s*16.3,y+s*7.6],fill=(235,235,200),outline=(150,150,100));d.rectangle([x+s*14.3,y+s*8.4,x+s*16.3,y+s*10.4],fill=(235,235,200),outline=(150,150,100))
+    d.text((x+s*12.6,y+s*6.2),'LED',fill='white',font=F(11));d.text((x+s*12.6,y+s*9.0),'LED',fill='white',font=F(11))
+    d.rectangle([x+s*5.8,y+s*14.2,x+s*10.2,y+s*16.0],fill=(150,130,90));d.rectangle([x+s*2.8,y+s*17.4,x+s*8.2,y+s*22],fill=(25,25,25));d.rectangle([x+s*10.4,y+s*17.2,x+s*14.2,y+s*21.6],fill=(25,25,25))
     P={}
-    for name,mx in (('B+',2.2),('B-',5.0),('OUT-',10.8),('OUT+',14.6)):
-        px,py=x+mx*s,y+25*s;d.rectangle([px-s,py-s*1.2,px+s,py+s*1.2],fill=GOLD,outline=(150,110,20),width=2)
-        d.text((px-d.textlength(name,font=F(14,True))/2,py-s*3.0),name,fill=(255,255,255),font=F(14,True));P[name]=(px,py+s*1.2)
-    d.text((x,y-s*2.6),'TP4056 USB-C charger (17 x 27)',fill=NAVY,font=F(17,True))
+    for name,mx in (('OUT-',2.4),('B-',6.0),('B+',11.0),('OUT+',14.6)):
+        px,py=x+mx*s,y+25.0*s
+        d.rectangle([px-1.5*s,py-1.6*s,px+1.5*s,py+1.6*s],fill=(205,208,214),outline=(120,120,128),width=2);d.ellipse([px-0.5*s,py-0.5*s,px+0.5*s,py+0.5*s],fill=(15,15,25))
+        d.text((px-d.textlength(name,font=F(14,True))/2,py-s*3.4),name,fill=(255,255,255),font=F(14,True));P[name]=(px,py+1.6*s)
+    d.text((x,y-s*2.8),'TP4056 USB-C charger (17 x 27)',fill=NAVY,font=F(17,True))
     return P
 ESP_L=['5V','GND','3V3','GPIO4','GPIO3','GPIO2','GPIO1','GPIO0'];ESP_R=['GPIO5','GPIO6','GPIO7','GPIO8','GPIO9','GPIO10','GPIO20','GPIO21']
 def esp(d,x,y,s=16,hl=()):
@@ -77,12 +81,15 @@ def oled(d,x,y,s=11):
         d.text((px-d.textlength(n,font=F(11,True))/2,py-s*2.7),n,fill='white',font=F(11,True));P[n]=(px,py+s*0.6)
     d.text((x,y-58),'1.3" OLED module (35.4 x 33.5)',fill=NAVY,font=F(17,True));d.text((x,y-34),'pin order varies: read YOUR silkscreen',fill=(200,30,30),font=F(14,True))
     return P
-def battery(d,x,y,s=12):
+def battery(d,x,y,s=12,leads='R'):
     w,h=20*s,30*s
     d.rounded_rectangle([x,y,x+w,y+h],radius=10,fill=(200,205,215),outline=(110,115,125),width=3);d.text((x+w/2-70,y+h/2-14),'Li-Po 502030',fill=BLK,font=F(18,True));d.text((x+w/2-40,y+h/2+12),'3.7 V  ~300 mAh',fill=(70,70,70),font=F(14))
-    d.rectangle([x+w-2,y+h*0.55-5,x+w+s*2.2,y+h*0.55+5],fill=RED);d.rectangle([x+w-2,y+h*0.72-5,x+w+s*2.2,y+h*0.72+5],fill=BLK)
+    if leads=='R':
+        d.rectangle([x+w-2,y+h*0.55-5,x+w+s*2.2,y+h*0.55+5],fill=RED);d.rectangle([x+w-2,y+h*0.72-5,x+w+s*2.2,y+h*0.72+5],fill=BLK);lx=x+w+s*2.2
+    else:
+        d.rectangle([x-s*2.2,y+h*0.30-5,x+2,y+h*0.30+5],fill=RED);d.rectangle([x-s*2.2,y+h*0.50-5,x+2,y+h*0.50+5],fill=BLK);lx=x-s*2.2
     d.text((x,y-s*2.4),'Battery 502030 (20 x 30 x 5)',fill=NAVY,font=F(17,True))
-    return {'+':(x+w+s*2.2,y+h*0.55),'-':(x+w+s*2.2,y+h*0.72)}
+    return {'+':(lx,y+h*(0.55 if leads=='R' else 0.30)),'-':(lx,y+h*(0.72 if leads=='R' else 0.50))}
 def switch(d,x,y,s=24):
     w,h=10.5*s*0.55,4.5*s*0.55*1.6
     d.rounded_rectangle([x,y,x+10.5*s*0.7,y+4.5*s*0.7],radius=5,fill=(180,185,195),outline=(90,90,95),width=3)
@@ -162,13 +169,17 @@ def step1():
     d.text((40,1120),'For every wire: strip 2 mm, twist, tin. Also tin the pads you will use. Keep the battery DISCONNECTED until step 3.',fill=(200,30,30),font=F(18,True))
     return im
 def step2():
-    im,d=new(2,'BATTERY TO CHARGER','Battery leads to the TP4056 B+ / B- pads. Polarity is the one mistake you cannot undo.')
-    bt=battery(d,70,330);T=tp(d,560,215)
-    wire(d,bt['+'],T['B+'],RED,c1=(bt['+'][0]+160,bt['+'][1]),c2=(T['B+'][0],T['B+'][1]+120),label='35 mm')
-    wire(d,bt['-'],T['B-'],BLK,c1=(bt['-'][0]+200,bt['-'][1]+40),c2=(T['B-'][0],T['B-'][1]+170))
-    marker(d,T['B+'],1,-34,-40);marker(d,T['B-'],2,34,-40)
-    zoom(d,1010,820,150,'tinned lead on the pad',RED);legend(d,60,1090)
-    panel(d,[('n','Slide a 10 mm piece of heat-shrink over each battery lead FIRST.'),('n','Battery RED lead to pad B+. Hold the pad with tweezers, touch 2-3 s.'),('n','Battery BLACK lead to pad B-.'),('n','Slide the heat-shrink over the joint and shrink it with the iron side.'),('!','Red = +. Check with the multimeter: pad B+ to the battery red lead is 0 ohm.'),('!','Never let B+ and B- touch. Cover the exposed pads when done.'),('-','Do not plug in USB yet.')])
+    im,d=new(2,'BATTERY TO CHARGER','Battery leads to the MIDDLE pair of pads on the TP4056: B- (left) and B+ (right). Polarity is the one mistake you cannot undo.')
+    T=tp(d,300,170,16);bt=battery(d,720,600,12,leads='L')
+    wire(d,bt['+'],T['B+'],RED,c1=(bt['+'][0]-120,bt['+'][1]),c2=(T['B+'][0],T['B+'][1]+150),label='35 mm')
+    wire(d,bt['-'],T['B-'],BLK,c1=(bt['-'][0]-200,bt['-'][1]+40),c2=(T['B-'][0],T['B-'][1]+260))
+    marker(d,T['B-'],1,-36,-66);marker(d,T['B+'],2,36,-66)
+    d.text((60,780),'Pad order along the bottom edge',fill=NAVY,font=F(18,True));d.text((60,806),'(USB-C at the top, as in your photo):',fill=NAVY,font=F(16))
+    for i,(n,c) in enumerate((('OUT-',(120,120,128)),('B-',BLK),('B+',RED),('OUT+',(120,120,128)))):
+        d.rounded_rectangle([60+i*110,845,60+i*110+100,895],radius=8,fill=(240,242,248),outline=c,width=4);d.text((60+i*110+50-d.textlength(n,font=F(20,True))/2,859),n,fill=c if n[0]=='B' else (110,110,118),font=F(20,True))
+    d.text((60,905),'Battery goes to the MIDDLE two (B- and B+).',fill=(200,30,30),font=F(16,True));d.text((60,929),'The two OUTER pads are the output to the switch/ESP32.',fill=(90,90,90),font=F(15))
+    zoom(d,1010,950,140,'tinned lead on the pad',RED);legend(d,60,1130)
+    panel(d,[('n','Slide a 10 mm piece of heat-shrink over each battery lead FIRST.'),('n','Battery BLACK lead to pad B- (the middle pad on the LEFT). Touch 2-3 s.'),('n','Battery RED lead to pad B+ (the middle pad on the RIGHT).'),('n','Slide the heat-shrink over each joint and shrink it with the side of the iron.'),('!','Read the small labels printed on YOUR board: B+/B- are the pair in the middle, OUT-/OUT+ the outer pair.'),('!','Red = +. Check with the multimeter that B+ to the battery red lead is 0 ohm. Never let B+ and B- touch.'),('-','Do not plug in USB yet.')])
     return im
 def step3():
     im,d=new(3,'POWER SWITCH AND ESP32 POWER','Charger output goes through the slide switch to the ESP32. Then test the power.')
@@ -177,14 +188,14 @@ def step3():
     wire(d,T['OUT+'],S['COM'],RED,c1=(T['OUT+'][0]+60,T['OUT+'][1]+150),c2=(S['COM'][0]-80,S['COM'][1]+80),label='%d mm'%ln('TP4056 OUT+','Switch COM',80))
     wire(d,S['ON'],E['5V'],RED,c1=(S['ON'][0]+150,S['ON'][1]+60),c2=(E['5V'][0]-150,E['5V'][1]-10),label='%d mm'%ln('Switch ON','ESP32 5V',75))
     wire(d,T['OUT-'],E['GND'],BLK,c1=(T['OUT-'][0]-10,T['OUT-'][1]+260),c2=(E['GND'][0]-260,E['GND'][1]+60),label='%d mm'%ln('TP4056 OUT-','ESP32 GND',25))
-    marker(d,T['OUT+'],1,28,-34);marker(d,S['COM'],2,0,50);marker(d,S['ON'],3,40,40);marker(d,E['5V'],4,-44,-26);marker(d,T['OUT-'],5,-34,-34);marker(d,E['GND'],6,-44,28)
+    marker(d,T['OUT+'],1,46,-14);marker(d,S['COM'],2,0,50);marker(d,S['ON'],3,40,40);marker(d,E['5V'],4,-44,-26);marker(d,T['OUT-'],5,-34,-14);marker(d,E['GND'],6,-44,28)
     # multimeter test
     mx,my=330,880
     d.line([(mx+40,my),(T['OUT+'][0]-8,T['OUT+'][1]+30)],fill=RED,width=5);d.line([(mx+110,my),(T['OUT-'][0]+8,T['OUT-'][1]+30)],fill=BLK,width=5)
     d.rounded_rectangle([mx,my,mx+150,my+240],radius=14,fill=(240,200,40),outline=BLK,width=4);d.rectangle([mx+14,my+16,mx+136,my+80],fill=(160,205,160),outline=BLK,width=2);d.text((mx+26,my+28),'3.9 V',fill=BLK,font=F(34,True));d.ellipse([mx+40,my+110,mx+110,my+180],fill=(60,60,60),outline=BLK,width=3);d.text((mx+60,my+130),'V',fill='white',font=F(24,True))
     d.text((mx+170,my+30),'POWER TEST',fill=NAVY,font=F(22,True));d.text((mx+170,my+62),'USB-C in, switch ON:',fill=BLK,font=F(16));d.text((mx+170,my+84),'OUT+ to OUT- = 3.7 - 4.2 V',fill=BLK,font=F(16,True));d.text((mx+170,my+106),'red CHRG LED on while charging',fill=BLK,font=F(16))
     legend(d,40,1130)
-    panel(d,[('n','TP4056 OUT+ to the middle pin of the switch (COM).'),('n','Switch pin ON (the side that is ON when the lever is toward the lid mark) to ESP32 5V pad.'),('n','TP4056 OUT- to ESP32 GND pad.'),('n','Connect the battery and plug USB-C into the TP4056. Switch ON.'),('n','Measure OUT+ to OUT-: 3.7 - 4.2 V, and the ESP32 LED lights. Switch OFF.'),('!','If the ESP32 gets hot or the CHRG LED flickers, unplug and look for a short.'),('-','The unused outer switch pin stays free: trim or insulate it.')])
+    panel(d,[('n','TP4056 OUT+ (the OUTER pad on the right) to the middle pin of the switch (COM).'),('n','Switch pin ON (the side that is ON when the lever is toward the lid mark) to ESP32 5V pad.'),('n','TP4056 OUT- (the OUTER pad on the left) to ESP32 GND pad.'),('n','Connect the battery and plug USB-C into the TP4056. Switch ON.'),('n','Measure OUT+ to OUT-: 3.7 - 4.2 V, and the ESP32 LED lights. Switch OFF.'),('!','If the ESP32 gets hot or the CHRG LED flickers, unplug and look for a short.'),('-','The unused outer switch pin stays free: trim or insulate it.')])
     return im
 def step4():
     im,d=new(4,'DISPLAY','OLED: VCC and GND go to splices, SDA and SCL go straight to the ESP32.')
