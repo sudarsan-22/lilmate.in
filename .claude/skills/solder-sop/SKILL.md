@@ -7,6 +7,9 @@ description: Generate or update the soldering SOP (step-by-step wiring and solde
 
 Each product has `<project>/hardware/soldering_sop.png` (+ `.md` with the same steps and the cut list). The sheet has: the full wiring diagram, one panel per step with that step's wires highlighted, a wire cut list (colour, length, step) and safety notes.
 
+## Illustrated step images (Elephant)
+`elephant/hardware/sop/step1_...step6_*.png`: one image per step with real board shapes, numbered solder points and a joint close-up. Regenerate with `python3 .claude/skills/solder-sop/scripts/make_steps_elephant.py`. Other products still have the single overview sheet only.
+
 ## Regenerate
 ```bash
 python3 .claude/skills/solder-sop/scripts/make_sop.py [project ...]     # default: all six
