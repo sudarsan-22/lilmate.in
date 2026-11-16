@@ -7,10 +7,10 @@ description: Work on the Music Player (Retro PC v2) lilmate desk buddy: change i
 
 Tiny retro-PC music player. The screen leans back 15 degrees; keys on a perfboard strip on the keyboard wedge; orange volume knob on an EC11 encoder. No speaker: listening is through the 3.5 mm jack (wired only).
 
-Project folder: `music_player/` (standard layout: `src/ docs/ reference/ previews/ output/ print/ build/ archive/`).
+Project folder: `music_player/` (layout: `3d/` = CAD, print files and archive; `firmware/`; `hardware/`; `docs/`; `packaging/`).
 
 ## Final print file
-- `print/RETRO_PC_V2_FINAL.gcode.3mf`
+- `3d/print/RETRO_PC_V2_FINAL.gcode.3mf`
 - Plate contents: print_base, print_deck, print_keyplate, print_shell, print_back, print_key_face, print_key_prev, print_key_next, print_key_PLAY_orange, print_knob_orange
 - Print settings read from the file: 0.12 mm layers (first 0.2), 3 walls, 15% gyroid, 6 top / 5 bottom shells, no supports, auto brim, PLA 220 C / bed 60 C (Cool Plate), outer wall 200 mm/s, process "0.12mm Fine (lilmate retro pc)", Bambu Lab A1 mini, 0.4 nozzle
 - Estimated: about 2 h 47 min, 51 g
@@ -79,20 +79,25 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Size: tact 6 x 6, body 3.5 high, 5 with plunger; perfboard 54 x 13 x 1.6, switches at 14 mm pitch, centred; keycap 12 x 12 x 4.5 (plate hole 12.4), key plate 1.8 thick on the 12 deg slope. PLAY keycap and knob are the orange parts.
 
 ## How to change or rebuild
-- `src/main.scad`: `part = assembly | exploded | section | electronics | check | print_base | print_deck | print_keyplate | print_shell | print_back | print_keycap_i | print_knob`. `check` must be EMPTY (no printed part touches an electronics dummy).
-- Exports: `output/v2/*.stl` (v1 kept for history); helper scripts in `build/`.
+- `3d/src/main.scad`: `part = assembly | exploded | section | electronics | check | print_base | print_deck | print_keyplate | print_shell | print_back | print_keycap_i | print_knob`. `check` must be EMPTY (no printed part touches an electronics dummy).
+- Exports: `3d/output/v2/*.stl` (v1 kept for history); helper scripts in `3d/build/`.
 - Parts list and pin map: `docs/components_L_retro_pc.md`.
-- Run OpenSCAD from inside `src/` so relative imports resolve, for example `cd src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
-- After a CAD change: re-export the STLs into `output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `print/older/`).
-- Keep a copy of the previous source in `archive/src/` as `main_before_<change>.scad` before large edits.
+- Run OpenSCAD from inside `3d/src/` so relative imports resolve, for example `cd 3d/src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
+- After a CAD change: re-export the STLs into `3d/output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `3d/print/older/`).
+- Keep a copy of the previous source in `3d/archive/src/` as `main_before_<change>.scad` before large edits.
 
 ## Design rules and gotchas
 - Battery is a Li-Po 503450 (about 1000 mAh) flat in the base; keys use 6x6x5 tact switches on a 54 x 13 perfboard at 14 mm pitch.
 - YX6300 (HW-311 layout) size is from photos: confirm 43 x 25 mm PCB with calipers.
 - Shell prints roof-down, back plate on the bed, key plate top-face down; see the `print_*` modes for the print orientation.
 
+## Firmware and hardware
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `firmware/`: sketch folder `firmware/music_player/music_player.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
+- A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
+
 ## Where things are
-- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets.
-- `reference/`: look references and third-party originals (read only).
-- `print/`: sliced files, `print/tests/` test coupons, `print/slice/` slicer profiles and scripts.
-- `archive/`: older source copies and backups; do not edit.
+- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets. `packaging/` (Deck Buddy, Elephant, Desk Mini only): box and cutting template.
+- `3d/reference/`: look references and third-party originals (read only).
+- `3d/print/`: sliced files, `3d/print/tests/` test coupons, `3d/print/slice/` slicer profiles and scripts.
+- `3d/archive/`: older source copies and backups; do not edit.

@@ -10,7 +10,7 @@ Remote: `origin` (GitHub `sudarsan-22/crazy_projects`, branch `main`). The git r
 ## What counts as major (commit + push automatically)
 - a `*_FINAL*` file was added, changed or renamed (the FINAL 3mf was rebuilt)
 - a new project folder appeared
-- at least 30 changed lines in a current `src/*.scad` (moves into `archive/` do not count)
+- at least 30 changed lines in a current `3d/src/*.scad` or in `firmware/` sources (moves into `archive/` do not count)
 Minor edits (docs, previews, comments, small tweaks) wait until one of the above happens.
 
 ## Run it
@@ -24,7 +24,7 @@ It stages only `lilmate_3D_design/`, writes `design(<projects>): <reason>` as th
 ## Safety rules
 - Never force-push. If the push is rejected the commit stays local and the failure goes to `/tmp/auto_commit_push.err`; tell the user, do not retry with force.
 - Files over 95 MB are skipped (GitHub limit 100 MB) and reported.
-- `lilmate_3D_design/.gitignore` keeps slicer scratch (`print/slice/out*`, `proj*`), logs and `__pycache__` out; the repo-level ignore already excludes `output/` STLs, `backup_before_*/`, `*.zip` and `result.json`.
+- `lilmate_3D_design/.gitignore` keeps slicer scratch (`3d/print/slice/out*`, `proj*`), logs and `__pycache__` out; the repo-level ignore already excludes `output/` STLs, `backup_before_*/`, `*.zip` and `result.json`.
 - Rebuild the FINAL 3mf first (build-final-3mf skill) so the commit contains a final that matches the source.
 
 ## Automatic

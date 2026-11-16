@@ -7,10 +7,10 @@ description: Work on the Desk Mini v2 lilmate desk buddy: change its CAD, check 
 
 Small desk gadget built by editing imported STL parts: body, back plate, 0.96" display bezel with crush ribs, and a shell with a buzzer holder.
 
-Project folder: `desk_mini/` (standard layout: `src/ docs/ reference/ previews/ output/ print/ build/ archive/`).
+Project folder: `desk_mini/` (layout: `3d/` = CAD, print files and archive; `firmware/`; `hardware/`; `docs/`; `packaging/`).
 
 ## Final print file
-- `output/DESK_MINI_V2_FINAL.3mf`
+- `3d/output/DESK_MINI_V2_FINAL.3mf`
 - Plate contents: one "OpenSCAD Model" object: body, back plate, display bezel and shell laid out apart (exploded layout)
 - Print settings read from the file: The final 3mf is model geometry only (no slicer settings). Use the same defaults as the other lilmate prints: Bambu Lab A1 mini, 0.4 nozzle, PLA, 0.12 mm layers, 3 walls, 15% gyroid.
 - Estimated: not sliced yet
@@ -59,21 +59,26 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Screwless: two split snap pins (shaft 2.6, head 3.5, slit 0.7) in relief wells 4.2 wide replace the M2 pilot holes; plate holes diameter 3 with a 4.4 counterbore leaving a 0.5 ledge. The board type itself is not named in the sources, so confirm its size before changing the opening.
 
 ## How to change or rebuild
-- `src/desk_mini_v2.scad` with `part = all | shell | plate | body | tray | bezel` (`all` is the exploded layout that became the final 3mf).
-- `src/desk_mini_issues.scad` is the older issue-review view.
-- STL exports per part are in `output/` (`v2_body.stl`, `v2_plate.stl`, `v2_bezel.stl`, `v2_shell.stl`).
-- Run OpenSCAD from inside `src/` so relative imports resolve, for example `cd src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
-- After a CAD change: re-export the STLs into `output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `print/older/`).
-- Keep a copy of the previous source in `archive/src/` as `main_before_<change>.scad` before large edits.
+- `3d/src/desk_mini_v2.scad` with `part = all | shell | plate | body | tray | bezel` (`all` is the exploded layout that became the final 3mf).
+- `3d/src/desk_mini_issues.scad` is the older issue-review view.
+- STL exports per part are in `3d/output/` (`v2_body.stl`, `v2_plate.stl`, `v2_bezel.stl`, `v2_shell.stl`).
+- Run OpenSCAD from inside `3d/src/` so relative imports resolve, for example `cd 3d/src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
+- After a CAD change: re-export the STLs into `3d/output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `3d/print/older/`).
+- Keep a copy of the previous source in `3d/archive/src/` as `main_before_<change>.scad` before large edits.
 
 ## Design rules and gotchas
-- The source STLs in `reference/original/` stay untouched; v2 edits are made in scad on top of them.
+- The source STLs in `3d/reference/original/` stay untouched; v2 edits are made in scad on top of them.
 - Plate board opening was widened 18 -> 20 mm; buzzer holder moved 10 mm; the six sound holes sit inside the 11.7 mm buzzer pocket.
 - Screwless mounting: two split snap pins replace the M2 pilot holes (pin 2.6, head 3.5).
 - The tray (obj_1) was removed from the project on request.
 
+## Firmware and hardware
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `firmware/`: sketch folder `firmware/desk_mini/desk_mini.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
+- A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
+
 ## Where things are
-- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets.
-- `reference/`: look references and third-party originals (read only).
-- `print/`: sliced files, `print/tests/` test coupons, `print/slice/` slicer profiles and scripts.
-- `archive/`: older source copies and backups; do not edit.
+- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets. `packaging/` (Deck Buddy, Elephant, Desk Mini only): box and cutting template.
+- `3d/reference/`: look references and third-party originals (read only).
+- `3d/print/`: sliced files, `3d/print/tests/` test coupons, `3d/print/slice/` slicer profiles and scripts.
+- `3d/archive/`: older source copies and backups; do not edit.

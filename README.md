@@ -1,11 +1,16 @@
-# lilmate 3D design
+# lilmate
 
-Desk-buddy projects. Every project uses the same folder layout:
+Desk-buddy products. Every project uses the same layout:
 
 ```
 <project>/
-  README.md   src/   docs/ (docs/dimensions/)   reference/   previews/
-  output/     print/ (print/tests/, print/slice/)   build/   archive/ (src/, backups/)
+  README.md
+  3d/          src  output  print  previews  reference  build  archive
+  firmware/    sketch + flashing notes
+  hardware/    bom.csv  pinout.md  components.md  datasheets/
+  docs/        notes, concepts, dimensions/
+  packaging/   box + cutting template (deck_buddy, elephant, desk_mini)
+  .claude/skills/
 ```
 
 | Project | What |
@@ -18,4 +23,4 @@ Desk-buddy projects. Every project uses the same folder layout:
 | `office_buddy` | Retro-PC office buddy v1 |
 | `pengu_chubby` | Pengu v3 penguin desk buddy |
 
-Each project's `docs/dimensions/` has a parts-dimension sheet and an enclosure-fit sheet (components placed inside the enclosure).
+Shared tooling is in `.claude/skills/` (`build-final-3mf`, `commit-design`). `packaging/` at this level holds the shared box template source.

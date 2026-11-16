@@ -44,6 +44,9 @@ done
 # 3. big edit of current CAD source (renames into archive/ do not count)
 n="$(git diff --cached -M --numstat --relative -- . | awk '$3 ~ /\/src\/[^\/]*\.scad/ && $3 !~ /archive\// && $3 !~ /=>/ {s+=$1+$2} END{print s+0}')"
 [ "$n" -ge "$LINES_MAJOR" ] && reasons+=("CAD source changed ($n lines)")
+# 4. big edit of firmware source
+fn="$(git diff --cached -M --numstat --relative -- . | awk '$3 ~ /\/firmware\/.*\.(ino|cpp|h|c|ini)$/ && $3 !~ /=>/ {s+=$1+$2} END{print s+0}')"
+[ "$fn" -ge "$LINES_MAJOR" ] && reasons+=("firmware changed ($fn lines)")
 [ "$FORCE" = 1 ] && reasons+=("forced")
 
 if [ ${#reasons[@]} -eq 0 ]; then git reset -q -- . ; exit 0; fi   # minor: leave it for later

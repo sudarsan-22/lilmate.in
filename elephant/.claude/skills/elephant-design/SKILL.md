@@ -7,10 +7,10 @@ description: Work on the Elephant (Ellie v3) lilmate desk buddy: change its CAD,
 
 Round sitting elephant desk buddy: one-piece front body with built-in wings plus a snap-on back lid. Look approved from `docs/look_front.png`.
 
-Project folder: `elephant/` (standard layout: `src/ docs/ reference/ previews/ output/ print/ build/ archive/`).
+Project folder: `elephant/` (layout: `3d/` = CAD, print files and archive; `firmware/`; `hardware/`; `docs/`; `packaging/`).
 
 ## Final print file
-- `print/ELLIE_V3_FINAL.gcode.3mf`
+- `3d/print/ELLIE_V3_FINAL.gcode.3mf`
 - Plate contents: ellie_v3_body_upright_NO_SUPPORT, ellie_v3_lid_upright_NO_SUPPORT (supports come from the slicer, not the model)
 - Print settings read from the file: 0.12 mm layers (first 0.2), 3 walls, 15% gyroid, 5 top / 5 bottom shells, tree(auto) supports ON, brim outer only, PLA 220 C / bed 60 C (Textured PEI), outer wall 60 mm/s, process "ellie v3 bambu supports", Bambu Lab A1 mini, 0.4 nozzle
 - Estimated: about 6 h 53 min, 87 g
@@ -71,21 +71,26 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Housing: flat seat 17 x 12.5 under the head top, cradle arms hold the board with the holding face 0.15 under it, skin over the pad kept at 1.6. (The second jaw pad is defined in the source but not used.)
 
 ## How to change or rebuild
-- `src/main.scad`: `part = assembly | front | back | print_front | print_back | rim | check_front | check_back | check_all`. `check_*` must come out EMPTY of clashes with the component dummies.
-- Final STLs: `output/ellie_v3_body_upright_NO_SUPPORT.stl`, `output/ellie_v3_lid_upright_NO_SUPPORT.stl`.
-- Slicer profile: `print/slice/process_ellie_v3_bambu_support.json`.
-- Run OpenSCAD from inside `src/` so relative imports resolve, for example `cd src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
-- After a CAD change: re-export the STLs into `output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `print/older/`).
-- Keep a copy of the previous source in `archive/src/` as `main_before_<change>.scad` before large edits.
+- `3d/src/main.scad`: `part = assembly | front | back | print_front | print_back | rim | check_front | check_back | check_all`. `check_*` must come out EMPTY of clashes with the component dummies.
+- Final STLs: `3d/output/ellie_v3_body_upright_NO_SUPPORT.stl`, `3d/output/ellie_v3_lid_upright_NO_SUPPORT.stl`.
+- Slicer profile: `3d/print/slice/process_ellie_v3_bambu_support.json`.
+- Run OpenSCAD from inside `3d/src/` so relative imports resolve, for example `cd 3d/src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
+- After a CAD change: re-export the STLs into `3d/output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `3d/print/older/`).
+- Keep a copy of the previous source in `3d/archive/src/` as `main_before_<change>.scad` before large edits.
 
 ## Design rules and gotchas
 - Axes: X left-right, -Y front (face), +Y back, Z up; the body splits from the lid at Y = 13.
 - Snap closure: front lip + bumps into back rebate + dimples (snap_h 0.6, lip_clr 0.12). Do not tighten it without a coupon print.
 - Boards (ESP 18x22x1, TP4056 17x27x1) slide in from the back opening into slots; ports sit flush with the opening.
-- Battery lies in the floor bay 20.5 x 30.5 x 5.5; older `main_before_*` copies are in `archive/src/`.
+- Battery lies in the floor bay 20.5 x 30.5 x 5.5; older `main_before_*` copies are in `3d/archive/src/`.
+
+## Firmware and hardware
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `firmware/`: sketch folder `firmware/elephant/elephant.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
+- A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
 
 ## Where things are
-- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets.
-- `reference/`: look references and third-party originals (read only).
-- `print/`: sliced files, `print/tests/` test coupons, `print/slice/` slicer profiles and scripts.
-- `archive/`: older source copies and backups; do not edit.
+- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets. `packaging/` (Deck Buddy, Elephant, Desk Mini only): box and cutting template.
+- `3d/reference/`: look references and third-party originals (read only).
+- `3d/print/`: sliced files, `3d/print/tests/` test coupons, `3d/print/slice/` slicer profiles and scripts.
+- `3d/archive/`: older source copies and backups; do not edit.

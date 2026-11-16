@@ -7,10 +7,10 @@ description: Work on the Pengu Chubby v3 lilmate desk buddy: change its CAD, che
 
 Chubby sitting penguin desk buddy: one-piece front body (wings built in) plus snap-on back lid. This is the proven electronics layout that Ellie and Deck Buddy copy.
 
-Project folder: `pengu_chubby/` (standard layout: `src/ docs/ reference/ previews/ output/ print/ build/ archive/`).
+Project folder: `pengu_chubby/` (layout: `3d/` = CAD, print files and archive; `firmware/`; `hardware/`; `docs/`; `packaging/`).
 
 ## Final print file
-- `print/PENGU_V3_FINAL.gcode.3mf`
+- `3d/print/PENGU_V3_FINAL.gcode.3mf`
 - Plate contents: pengu_v3_body_upright, pengu_v3_lid_upright
 - Print settings read from the file: 0.12 mm layers (first 0.2), 3 walls, 15% gyroid, 5 top / 5 bottom shells, tree(auto) supports ON, brim outer only, PLA 220 C / bed 60 C (Textured PEI), outer wall 60 mm/s, process "ellie v3 bambu supports", Bambu Lab A1 mini, 0.4 nozzle
 - Estimated: about 6 h 10 min, 73 g
@@ -68,18 +68,23 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Size: 15 x 11 x 1.6; pocket box 17 x 12.5 under the head top (centre y = -5), skin over the pad 1.6.
 
 ## How to change or rebuild
-- `src/main.scad`: `part = assembly | front | back | print_front | print_back | rim | check_front | check_back | check_all`.
-- Final STLs: `output/pengu_v3_body_upright.stl`, `output/pengu_v3_lid_upright.stl`.
-- Run OpenSCAD from inside `src/` so relative imports resolve, for example `cd src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
-- After a CAD change: re-export the STLs into `output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `print/older/`).
-- Keep a copy of the previous source in `archive/src/` as `main_before_<change>.scad` before large edits.
+- `3d/src/main.scad`: `part = assembly | front | back | print_front | print_back | rim | check_front | check_back | check_all`.
+- Final STLs: `3d/output/pengu_v3_body_upright.stl`, `3d/output/pengu_v3_lid_upright.stl`.
+- Run OpenSCAD from inside `3d/src/` so relative imports resolve, for example `cd 3d/src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
+- After a CAD change: re-export the STLs into `3d/output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `3d/print/older/`).
+- Keep a copy of the previous source in `3d/archive/src/` as `main_before_<change>.scad` before large edits.
 
 ## Design rules and gotchas
 - Same axes, split plane (Y = 13), snap closure and board slots as Elephant. A change to the electronics layout here usually has to be mirrored in `elephant` and `deck_buddy`.
 - OLED glass plane y_if = -18.2; slide switch SS-12F15 pocket 11.8 x 5.2.
 
+## Firmware and hardware
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `firmware/`: sketch folder `firmware/pengu_chubby/pengu_chubby.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
+- A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
+
 ## Where things are
-- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets.
-- `reference/`: look references and third-party originals (read only).
-- `print/`: sliced files, `print/tests/` test coupons, `print/slice/` slicer profiles and scripts.
-- `archive/`: older source copies and backups; do not edit.
+- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets. `packaging/` (Deck Buddy, Elephant, Desk Mini only): box and cutting template.
+- `3d/reference/`: look references and third-party originals (read only).
+- `3d/print/`: sliced files, `3d/print/tests/` test coupons, `3d/print/slice/` slicer profiles and scripts.
+- `3d/archive/`: older source copies and backups; do not edit.

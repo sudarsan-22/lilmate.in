@@ -1,0 +1,7 @@
+part,qty,size_mm,notes
+"1.3"" I2C OLED 4-pin (SH1106)",1,"PCB 35.4 x 33.5 x 1.2, glass 34.5 x 23",measured (Ellie/Pengu)
+ESP32-C3 Super Mini,1,18 x 22 x 1 (USB-C),Robocraze; measured by user 2026-11-14
+TP4056 USB-C charger board (with protection),1,17 x 27 x 1,measured by user 2026-11-14
+Li-Po 502030 (about 300 mAh),1,about 20 x 30 x 5,bay 20.5 x 30.5 x 5.5
+SS-12F15 slide switch (ears bent),1,"body 10.5 x 4.5 x 5.1, lever 3 x 3 x 4",datasheet / measured 11 x 5 x 5
+TTP223 touch pad,1,15 x 11 x 1.6,head top

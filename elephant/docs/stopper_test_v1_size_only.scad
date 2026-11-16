@@ -2,7 +2,7 @@
 // where the bottom (TP4056) stopper is made the SAME SIZE as the top (ESP32) stopper.
 // variant = "new"  -> bottom stopper copies the top one (reach 3.75, height 5.75, front-to-back 2)
 // variant = "now"  -> current design (for side-by-side comparison)
-include <../src/main.scad>
+include <../3d/src/main.scad>
 variant = "new";
 cut = [32, 34, 28];                       // x (centred), y from y_cut0, z from 0
 y_cut0 = -18;

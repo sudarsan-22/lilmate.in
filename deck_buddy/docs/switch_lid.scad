@@ -20,8 +20,8 @@ tower_h  = 5.5;                          // v2: housing height above the lid's i
 clip_z0  = sw_depth - sw_sink + 0.4;     // lip underside, 0.4 above the switch back (4.4)
 assert(lock_reach == 0 || tower_h - lock_reach > clip_z0, "lips too short for the 45 deg ramp");
 module rrect(s, r) offset(r) offset(-r) square(s, center = true);
-module lid_orig() multmatrix([[0,-1,0,179.2],[-1,0,0,266.85],[0,0,-1,0],[0,0,0,1]]) import("../reference/original/obj_4_Yeti Full.stl_3.stl");
-module body_orig() import("../reference/original/obj_7_corp+face.stl_1.stl");
+module lid_orig() multmatrix([[0,-1,0,179.2],[-1,0,0,266.85],[0,0,-1,0],[0,0,0,1]]) import("../3d/reference/original/obj_4_Yeti Full.stl_3.stl");
+module body_orig() import("../3d/reference/original/obj_7_corp+face.stl_1.stl");
 module tower() translate([sw_c.x, sw_c.y, 0]) {
     difference() {
         translate([0,0,-0.01]) linear_extrude(tower_h + 0.01) square([sw_body[0] + 2.4, sw_body[1] + 2*wall_long], center = true);

@@ -3,7 +3,7 @@
 //                  (the 27 mm board then sticks out 5 mm past the opening into the lid)
 //                  (2) top (ESP32) slot gets the SAME full-length lip rail over both board edges as the bottom slot
 // variant = "now": current design, for comparison
-include <../src/main.scad>
+include <../3d/src/main.scad>
 variant = "new";
 cut = [32, 34, 28];                       // x (centred), y from y_cut0, z from 0
 y_cut0 = -18;

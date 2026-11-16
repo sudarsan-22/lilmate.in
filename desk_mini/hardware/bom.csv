@@ -1,0 +1,4 @@
+part,qty,size_mm,notes
+"0.96"" I2C OLED module (SSD1306)",1,fits 27.0 x 27.4 cavity,bezel cavity
+Passive/active buzzer,1,"diameter 11.5, about 3 high",pocket 11.7
+Controller board (type not named in source),1,opening 20 mm wide,CONFIRM

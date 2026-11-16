@@ -7,10 +7,10 @@ description: Work on the Office Buddy v1 lilmate desk buddy: change its CAD, che
 
 Retro-PC office buddy, wider than the Music Player (base 74 mm): 1.3" OLED, buzzer, ESP32-C3, TP4056 on a pin-mounted carrier, 4 keys and a volume knob.
 
-Project folder: `office_buddy/` (standard layout: `src/ docs/ reference/ previews/ output/ print/ build/ archive/`).
+Project folder: `office_buddy/` (layout: `3d/` = CAD, print files and archive; `firmware/`; `hardware/`; `docs/`; `packaging/`).
 
 ## Final print file
-- `print/OFFICE_BUDDY_FINAL.gcode.3mf`
+- `3d/print/OFFICE_BUDDY_FINAL.gcode.3mf`
 - Plate contents: print_base, print_deck, print_keyplate, print_carrier, print_shell, print_back, print_key0-3, print_knob, print_pin
 - Print settings read from the file: 0.12 mm layers (first 0.2), 3 walls, 15% gyroid, 6 top / 5 bottom shells, no supports, auto brim, PLA 220 C / bed 60 C (Cool Plate), outer wall 200 mm/s, process "0.12mm Fine (lilmate retro pc)", Bambu Lab A1 mini, 0.4 nozzle
 - Estimated: about 3 h 07 min, 58 g
@@ -66,7 +66,7 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 
 ### TP4056 USB-C charger (shortened)
 - Size: PCB 17 W x 23.5 L x 1 (cut down 4 mm; 24.1 overall with the USB port), mounting holes diameter 1.3 (assumed, confirm) 1.5 from the long edges (14 apart) and 1.95 from each end.
-- Housing: slot length 26.5 from the plate, lip 1.0 over the edge, shelf 1.0 under it, 0.2 clearance per side, guide walls 1.2, PCB end 0.7 from the plate inner face; four vertical lock pins (shaft 1.5, head 2.5, socket 1.65) through the mounting holes into blocks under the board. Board at local z 14. Tuned with the `print/tests/` coupons.
+- Housing: slot length 26.5 from the plate, lip 1.0 over the edge, shelf 1.0 under it, 0.2 clearance per side, guide walls 1.2, PCB end 0.7 from the plate inner face; four vertical lock pins (shaft 1.5, head 2.5, socket 1.65) through the mounting holes into blocks under the board. Board at local z 14. Tuned with the `3d/print/tests/` coupons.
 
 ### ESP32-C3 Super Mini
 - Size: PCB 18 W x 22 L x 1, USB-C opening 9.6 x 3.9, plug niche 13.5 x 7.8. Slot 22 deep, USB-C end closed so the board is held, not stopped; board at local z 26.
@@ -82,21 +82,26 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Housing: one printed carrier 64.4 x 16.4 x 4.5, pocket 13 x 12 per switch (1.5 gap), walls 1.2, support ledge 0.8 with four 4 mm tabs (reach 3.5), switch drops in from the top, body top 0.4 below the rim, 1.5 gap to the key plate for keycap flange and travel. Keycap 13.5 at 16 mm pitch, key plate 1.8, cap height 4.5, slope 12 deg.
 
 ## How to change or rebuild
-- `src/main.scad`: same `part` modes as Music Player plus `carrier`, `print_carrier`, `print_pin`.
-- `build/check.scad` runs the clash check; `build/export_parts.sh` exports all parts.
-- Exports: `output/v1/*.stl`; test coupons (`output/test_key`, `output/test_tp`) and their sliced files are in `print/tests/`.
-- Design notes: `docs/design_proposal.md`; look reference: `reference/look_reference_retro_pc.png`.
-- Run OpenSCAD from inside `src/` so relative imports resolve, for example `cd src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
-- After a CAD change: re-export the STLs into `output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `print/older/`).
-- Keep a copy of the previous source in `archive/src/` as `main_before_<change>.scad` before large edits.
+- `3d/src/main.scad`: same `part` modes as Music Player plus `carrier`, `print_carrier`, `print_pin`.
+- `3d/build/check.scad` runs the clash check; `3d/build/export_parts.sh` exports all parts.
+- Exports: `3d/output/v1/*.stl`; test coupons (`3d/output/test_key`, `3d/output/test_tp`) and their sliced files are in `3d/print/tests/`.
+- Design notes: `docs/design_proposal.md`; look reference: `3d/reference/look_reference_retro_pc.png`.
+- Run OpenSCAD from inside `3d/src/` so relative imports resolve, for example `cd 3d/src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
+- After a CAD change: re-export the STLs into `3d/output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `3d/print/older/`).
+- Keep a copy of the previous source in `3d/archive/src/` as `main_before_<change>.scad` before large edits.
 
 ## Design rules and gotchas
-- TP4056 is held on 4 pins (`print_pin`) in the base sockets; the charger slot, key pockets and switch lock were tuned with the test prints in `print/tests/`. Re-run a coupon before changing those sizes.
+- TP4056 is held on 4 pins (`print_pin`) in the base sockets; the charger slot, key pockets and switch lock were tuned with the test prints in `3d/print/tests/`. Re-run a coupon before changing those sizes.
 - Battery is a Li-Po 503450 flat in the base; wired audio only.
-- Many `main_before_*` snapshots of past tweaks are in `archive/src/`.
+- Many `main_before_*` snapshots of past tweaks are in `3d/archive/src/`.
+
+## Firmware and hardware
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `firmware/`: sketch folder `firmware/office_buddy/office_buddy.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
+- A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
 
 ## Where things are
-- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets.
-- `reference/`: look references and third-party originals (read only).
-- `print/`: sliced files, `print/tests/` test coupons, `print/slice/` slicer profiles and scripts.
-- `archive/`: older source copies and backups; do not edit.
+- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets. `packaging/` (Deck Buddy, Elephant, Desk Mini only): box and cutting template.
+- `3d/reference/`: look references and third-party originals (read only).
+- `3d/print/`: sliced files, `3d/print/tests/` test coupons, `3d/print/slice/` slicer profiles and scripts.
+- `3d/archive/`: older source copies and backups; do not edit.

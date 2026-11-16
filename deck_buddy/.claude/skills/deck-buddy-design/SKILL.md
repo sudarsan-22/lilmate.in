@@ -7,10 +7,10 @@ description: Work on the Deck Buddy (1.3" OLED, SA body) lilmate desk buddy: cha
 
 Yeti desk buddy: original Yeti body modified (SA), new 1.3" OLED bezel and display bracket with locking pins, Ellie-style two-board stack (TP4056 + ESP32-C3 Mini) and a snap-on back lid with an SPDT slide switch.
 
-Project folder: `deck_buddy/` (standard layout: `src/ docs/ reference/ previews/ output/ print/ build/ archive/`).
+Project folder: `deck_buddy/` (layout: `3d/` = CAD, print files and archive; `firmware/`; `hardware/`; `docs/`; `packaging/`).
 
 ## Final print file
-- `print/DECK_BUDDY_SA_OLED13_FINAL.gcode.3mf`
+- `3d/print/DECK_BUDDY_SA_OLED13_FINAL.gcode.3mf`
 - Plate contents: deck_buddy_SA_body_upright, back_lid_switch, bezel_obj8, bracket_obj1, block_obj3, plate_obj5, plate_obj6 (obj3/5/6 are untouched originals from the Yeti set)
 - Print settings read from the file: 0.12 mm layers (first 0.2), 3 walls, 15% gyroid, 6 top / 5 bottom shells, no supports, brim outer only, PLA 220 C / bed 60 C (Cool Plate), outer wall 200 mm/s, Bambu Lab A1 mini, 0.4 nozzle, filament "Bambu PLA Basic @BBL A1M (pengu)"
 - Estimated: about 4 h 49 min, 64 g
@@ -69,22 +69,27 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 Battery: not modelled in these sources.
 
 ## How to change or rebuild
-- Body: `src/deck_buddy_SA.scad` (`view="print"` gives the upright print STL).
-- Bracket and bezel: `src/deck_buddy_oled13.scad` with `view="bracket"` or `view="bezel"`. Check views: `asm`, `clash_body`, `clash_boards`, `clash_slide_tp`, `clash_slide_esp`, `clash_bezel`.
-- Lid: `src/back_lid_switch_FINAL.scad`.
-- Re-slice everything into the final 3mf: `print/slice/slice_SA13.sh` (writes `print/DECK_BUDDY_SA_OLED13_print.gcode.3mf`; rename it to `_FINAL` when you accept it).
-- Run OpenSCAD from inside `src/` so relative imports resolve, for example `cd src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
-- After a CAD change: re-export the STLs into `output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `print/older/`).
-- Keep a copy of the previous source in `archive/src/` as `main_before_<change>.scad` before large edits.
+- Body: `3d/src/deck_buddy_SA.scad` (`view="print"` gives the upright print STL).
+- Bracket and bezel: `3d/src/deck_buddy_oled13.scad` with `view="bracket"` or `view="bezel"`. Check views: `asm`, `clash_body`, `clash_boards`, `clash_slide_tp`, `clash_slide_esp`, `clash_bezel`.
+- Lid: `3d/src/back_lid_switch_FINAL.scad`.
+- Re-slice everything into the final 3mf: `3d/print/slice/slice_SA13.sh` (writes `3d/print/DECK_BUDDY_SA_OLED13_print.gcode.3mf`; rename it to `_FINAL` when you accept it).
+- Run OpenSCAD from inside `3d/src/` so relative imports resolve, for example `cd 3d/src && openscad -o ../output/x.stl -D 'part="..."' main.scad`.
+- After a CAD change: re-export the STLs into `3d/output/`, re-run the clash check where the project has one, re-slice, and save the new final file under the same `_FINAL` name (move the old one to `3d/print/older/`).
+- Keep a copy of the previous source in `3d/archive/src/` as `main_before_<change>.scad` before large edits.
 
 ## Design rules and gotchas
-- The original Yeti STLs in `reference/original/` are the source for the body, bracket and bezel frames. Never edit them; the scad files import and modify them.
+- The original Yeti STLs in `3d/reference/original/` are the source for the body, bracket and bezel frames. Never edit them; the scad files import and modify them.
 - Display module is 3.3 mm thick (PCB 1.2 + glass 2.1); locking pins go through the 4 mm holes, 30 mm apart.
 - Boards slide in from the back opening: TP4056 slot keeps its front stop, the ESP32 slot has none.
 - No battery is modelled in these sources; confirm its place before adding one.
 
+## Firmware and hardware
+- `hardware/`: `bom.csv` (parts), `pinout.md` (GPIO and power path), `components.md` (sizes and housing), `datasheets/`.
+- `firmware/`: sketch folder `firmware/deck_buddy/deck_buddy.ino` when it exists, `README.md` with board, libraries and arduino-cli commands. Pin changes go in `hardware/pinout.md` first.
+- A firmware change of 30+ lines counts as a major change: the auto-commit pushes it.
+
 ## Where things are
-- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets.
-- `reference/`: look references and third-party originals (read only).
-- `print/`: sliced files, `print/tests/` test coupons, `print/slice/` slicer profiles and scripts.
-- `archive/`: older source copies and backups; do not edit.
+- `docs/`: design notes and concept scad. `docs/dimensions/`: dimension sheets. `packaging/` (Deck Buddy, Elephant, Desk Mini only): box and cutting template.
+- `3d/reference/`: look references and third-party originals (read only).
+- `3d/print/`: sliced files, `3d/print/tests/` test coupons, `3d/print/slice/` slicer profiles and scripts.
+- `3d/archive/`: older source copies and backups; do not edit.
