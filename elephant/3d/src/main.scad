@@ -26,16 +26,13 @@ wall      = 2.2;
 split_y   = 13;
 lip_h     = 3.0;
 lip_keep  = 1.4;        // lid outer skin kept at the seam (was 0.9: too thin to hold a catch) - v8
-lip_clr   = 0.30;       // v11: loose locator (was 0.12, too tight to close/open); the screws hold the lid
+lip_clr   = 0.12;       // tighter snap = no visible gap at the seam
 seam_ch   = 0.35;       // small matching chamfer on both seam edges (clean, even line)
 snap_h    = 0.60;       // catch height (was 0.40) - v8 stronger lock
 snap_y0   = 0.8;        // steep holding face sits this far behind the seam plane
 snap_top  = 0.8;        // flat top of the catch
 snap_ramp = 1.2;        // gentle lead-in ramp (~27 deg): easy to push on, hard to pull off
 snap_n    = 4;          // ramp steps (smooth when printed)
-lead_lip  = 0.6;        // v11: 45 deg lead-in on the lip tip (outer side)
-lead_mouth= 0.5;        // v11: 45 deg lead-in on the lid mouth (inner edge of the outer skin)
-lead_n    = 4;          // lead-in steps (smooth when printed)
 
 /* [Screw fit] */
 // v10: the snap (3 failed prints) is replaced by 4 x M2 x 10 pan-head screws, lid -> body. Lip + rebate stay as the locator only.
@@ -48,8 +45,8 @@ scr_reach    = 6;                       // the boss grows this far sideways into
 scr_pilot    = 1.8;                     // pilot hole in the body boss: M2 self-tapping into PLA
 scr_pilot_len= 7.2;                     // pilot depth (the 10 mm screw ends 5.8-6.4 behind the seam)
 scr_clear    = 2.4;                     // clearance hole in the lid
-scr_csk_d    = 4.2;                     // v11: countersink top diameter (M2 countersunk head 3.8), 90 deg cone down to scr_clear
-scr_rim      = 0.6;                     // head top sits this far below the skin at the low (outer) edge of the seat
+scr_head_d   = 4.6;                     // head pocket in the lid skin
+scr_head_h   = 1.3;                     // pocket depth at its low (outer) edge = M2 pan head height
 scr_gap      = 0.1;                     // lid boss stops this far behind the seam plane
 
 /* [Body: round sitting ball] */
@@ -646,12 +643,7 @@ module shell_band(o1, o2) difference() { inner_solid(o1); inner_solid(o2); }   /
 lip_t = 1.0;
 // lip with a stepped 45 deg underside (thick at the root, 1 mm at the tip) -> prints upright with no support
 lip_thick_z = head_c.z;         // above this the lip root is thickened (that arc hangs in the air when printed upright)
-module lip() difference() { lip_raw(); lip_tip_cut(); }
-module lip_tip_cut() for (i = [0:lead_n - 1]) intersection() {     // stepped 45 deg chamfer on the outer corner of the lip tip
-    half_y(split_y + lip_h - lead_lip + i*lead_lip/lead_n, split_y + lip_h + 1);
-    shell_band(lip_keep + lip_clr - 1, lip_keep + lip_clr + (i + 1)*lead_lip/lead_n);
-}
-module lip_raw() union() {
+module lip() union() {
     intersection() {
         half_y(split_y - eps, split_y + lip_h);
         shell_band(lip_keep + lip_clr, lip_keep + lip_clr + lip_t);
@@ -905,7 +897,7 @@ module dimples() intersection() {
 function scr_sx(p) = p[0] < 0 ? -1 : 1;
 // outer skin y at (x, z) on the back (head above z 40, body below)
 function scr_yout(x, z) = z > 40 ? -head_y(x, z) : body_cy + body_sy * sqrt(max(0, pow(body_r(z), 2) - x*x));
-function scr_floor(p) = scr_yout(p[0] + scr_sx(p) * scr_csk_d/2, p[1]) - scr_rim;   // top of the countersink cone (head top level), y
+function scr_floor(p) = scr_yout(p[0] + scr_sx(p) * scr_head_d/2, p[1]) - scr_head_h;   // pocket floor y: the outer edge keeps scr_head_h of rim
 module scr_boss2d(p) hull() {
     sx = scr_sx(p);
     translate([p[0], p[1]]) circle(d = scr_boss_d, $fn = 48);
@@ -928,10 +920,8 @@ module screw_lid() if (screw_on) for (p = scr_pts) intersection() {
     outer_main();
 }
 module screw_lid_cuts() if (screw_on) for (p = scr_pts) {
-    extrude_y(split_y - 1, 60) translate([p[0], p[1]]) circle(d = scr_clear, $fn = 24);                       // clearance hole
-    extrude_y(scr_floor(p), 60) translate([p[0], p[1]]) circle(d = scr_csk_d, $fn = 32);                      // well above the seat (curved skin)
-    translate([p[0], scr_floor(p) - (scr_csk_d - scr_clear)/2, p[1]]) rotate([-90, 0, 0])                     // 90 deg countersink seat
-        cylinder(h = (scr_csk_d - scr_clear)/2 + 0.01, d1 = scr_clear, d2 = scr_csk_d, $fn = 32);
+    extrude_y(split_y - 1, 60) translate([p[0], p[1]]) circle(d = scr_clear, $fn = 24);
+    extrude_y(scr_floor(p), 60) translate([p[0], p[1]]) circle(d = scr_head_d, $fn = 32);
 }
 echo(str("screw pocket floors y: ", [for (p = scr_pts) scr_floor(p)], "  outer y at axis: ", [for (p = scr_pts) scr_yout(p[0], p[1])]));
 
@@ -950,10 +940,6 @@ module lid_text() if (lid_text_on) intersection() {
     half_y(split_y, 200);
 }
 
-module lid_mouth_cut() for (j = [0:lead_n - 1]) intersection() {   // stepped 45 deg chamfer on the inner edge of the lid's outer skin at the seam
-    half_y(split_y - eps, split_y + (j + 1)*lead_mouth/lead_n);
-    shell_band(lip_keep - lead_mouth*(lead_n - j)/lead_n, lip_keep + 0.05);
-}
 module back_shell() difference() {
     union() {
         intersection() {
@@ -967,7 +953,6 @@ module back_shell() difference() {
         lid_text();
     }
     rebate();
-    lid_mouth_cut();
     if (snap_on) dimples();
     screw_lid_cuts();
     seam_chamfer_back();

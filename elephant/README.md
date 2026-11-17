@@ -14,4 +14,4 @@ Printer: Bambu Lab A1 mini. Material: PLA. Units: mm.
 | `packaging/` | Box and cutting template |
 | `.claude/skills/` | Project skill for Claude Code |
 
-Closure: 4 countersunk M2 screws (v11, replaces the snap fit; loose 0.30 lip locator). See `docs/elephant_screw_fit_FINAL.png`. USB-C niche 7.25 mm deep: `docs/usb_niche_before_after.png`.
+Closure: 4 x M2 x 10 screws (v10, replaces the snap fit). See `docs/elephant_screw_fit_FINAL.png`. USB-C niche 7.25 mm deep: `docs/usb_niche_before_after.png`.
