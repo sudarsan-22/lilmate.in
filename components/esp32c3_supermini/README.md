@@ -1,33 +1,21 @@
-# ESP32-C3 Super Mini - reference model
+# ESP32-C3 Super Mini - original datasheet + downloaded STEP
 
-Shared reference part (Deck Buddy, Elephant, Pengu, Music Player, Office Buddy). Design reference only.
-
-| File | What |
-|---|---|
-| `esp32c3_supermini.step` | Board + USB-C + buttons + chip/crystal/regulator + antenna + optional 2x8 headers |
-| `esp32c3_supermini.stl` | Same, for OpenSCAD `import()` |
-| `make_esp32c3_step.py` | Generator (CadQuery). Edit the numbers at the top and re-run. |
-| `source_size_drawing.jpg`, `source_pinout.jpg` | Source images (mischianti.org) |
-| `esp32c3_supermini_preview.png` | Front / back / angled previews |
-
-## Coordinates
-Origin = centre of the PCB outline. +Y = USB-C end. +Z = component side. Z = 0 = PCB bottom face.
-
-## Dimensions (mm)
-| Feature | Value | Source |
+| File | What | Source |
 |---|---|---|
-| PCB | 18.0 x 22.5 x 1.0 | drawing (thickness: user) |
-| Pin rows | 2 x 8, 15.24 apart (1.38 in from the long edges), pitch 2.54, hole Ø1.0 + castellated edge | drawing |
-| First pin | 1.63 from the USB end, last pin 3.12 from the antenna end | measured from the drawing |
-| USB-C | 8.94 x 7.35 x 3.26, centred, sticks out about 1.4 past the board end | drawing / standard receptacle |
-| BOOT / RST buttons | 4.4 x 3.0 x 2.0, 7.3-10.3 below the USB end | measured from the drawing |
-| Tallest point | 4.26 above the PCB bottom (USB-C) | model |
+| `ESP32-C3_SuperMini_datasheet.pdf` | Board datasheet (vendor, 16 pages): pinout p2, **dimensions p3 (18.00 x 22.52, rows 15.24)**, schematic p2 | artronshop.co.th copy via sudo.is |
+| `ESP32-C3_SuperMini_schematic.pdf` | Board schematic | mischianti.org |
+| `esp32-c3_chip_datasheet_espressif.pdf` | ESP32-C3 chip datasheet | espressif.com |
+| `esp32c3_supermini_printables_hefti.step` | 3D model, 221 solids (castellations, USB-C, BOOT/RST, QFN, crystal, LDO, antenna). Public Domain | printables.com/model/1360390 (Josselin Hefti) |
+| `esp32c3_supermini_printables_preview.png` | Renders of that STEP | |
+| `generated_fallback/` | My earlier self-made model from the size drawing (only a fallback) | |
 
-## Pins (USB at the top, components facing you)
-| Left (top -> bottom) | 5 | 6 | 7 | 8 (LED, SDA) | 9 (BOOT, SCL) | 10 | 20 (RX) | 21 (TX) |
-|---|---|---|---|---|---|---|---|---|
-| **Right (top -> bottom)** | **5V** | **GND** | **3V3** | **4** | **3** | **2** | **1** | **0** |
+## STEP check against the vendor datasheet
+| | Datasheet | Printables STEP |
+|---|---|---|
+| Board | 18.00 x 22.52 | 18.00 x **22.80** x 1.01 |
+| Pin row spacing | **15.24** | **14.48** (holes Ø1.2, 1.76 in from the edges) |
+| Pin pitch | 2.54 | 2.54 OK |
+| USB-C | - | 8.94 wide, 4.06 tall (top 4.16 above the PCB bottom), sticks out 1.40 |
 
-## To confirm on the real board
-- Length: drawing 22.5, your note says 22.0.
-- USB-C overhang: the drawing shows about 1.4; the Elephant CAD uses about 0.5.
+STEP origin: PCB corner at (0,0,0), board along +X (USB-C at the -X end), width along +Y, components on +Z.
+Use the STEP for the board outline, USB-C and component heights; if you design anything that uses the header holes, use the datasheet 15.24 and measure your board.
