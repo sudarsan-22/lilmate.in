@@ -34,21 +34,6 @@ snap_top  = 0.8;        // flat top of the catch
 snap_ramp = 1.2;        // gentle lead-in ramp (~27 deg): easy to push on, hard to pull off
 snap_n    = 4;          // ramp steps (smooth when printed)
 
-/* [Screw fit] */
-// v10: the snap (3 failed prints) is replaced by 4 x M2 x 10 pan-head screws, lid -> body. Lip + rebate stay as the locator only.
-screw_on     = true;
-snap_on      = !screw_on;               // snap bumps + dimples (off when screws are used)
-scr_pts      = [[-23, 72], [23, 72], [-18, 14], [18, 14]];   // screw axes (x, z), all parallel to Y
-scr_boss_d   = 7.6;                     // boss outside diameter
-scr_body_len = 8;                       // body boss length behind the seam
-scr_reach    = 6;                       // the boss grows this far sideways into the wall (45 deg underside, prints upright)
-scr_pilot    = 1.8;                     // pilot hole in the body boss: M2 self-tapping into PLA
-scr_pilot_len= 7.2;                     // pilot depth (the 10 mm screw ends 5.8-6.4 behind the seam)
-scr_clear    = 2.4;                     // clearance hole in the lid
-scr_head_d   = 4.6;                     // head pocket in the lid skin
-scr_head_h   = 1.3;                     // pocket depth at its low (outer) edge = M2 pan head height
-scr_gap      = 0.1;                     // lid boss stops this far behind the seam plane
-
 /* [Body: round sitting ball] */
 body_cy  = 3;
 body_R   = 26.5;
@@ -82,8 +67,6 @@ y_if        = -19.3;    // OLED glass front plane (solved for the round head; pc
 bay_clr     = 0.6;      // OLED pcb clearance per side (was 0.25: too tight)
 bay_depth   = 3.5;      // holder depth behind the pcb (short = easy to fit)
 bay_wall    = 1.4;
-bay_peak    = true;     // 45 deg peaked top above the OLED slot (the slash lines at the top corners); false = flat top
-bay_wedge   = true;     // 45 deg support wedge under the holder floor (was needed for modelled supports; the slicer now makes the supports)
 
 /* [ESP32-C3 Mini + TP4056] */
 // [length (y, slides in), width (x), thickness]  - measured by the user 2026-11-14
@@ -94,7 +77,7 @@ slot_zclr = 0.3;                    // clearance above the board under the lip
 stop_len  = 2.0;                    // front stop length (y)
 stop_reach= 2.5;                    // how far the front stop reaches over the board edge
 board_y1  = split_y;                // the ESP32's back edge ends FLUSH with the body's back opening
-tp_stop_depth = 27;                 // v10: TP4056 back end ends FLUSH with the body opening (like Pengu) -> USB-C niche in the lid is 7.25 mm deep (was 22: board stuck 5 mm into the lid, niche only 2.25 deep)
+tp_stop_depth = 27;                 // TP4056 back end ends flush with the body opening (like Pengu): 27 mm in from the opening. The USB-C niche in the lid is then 7.25 mm deep. (user: "tp_stop_depth 27 this revision", 2026-11-17)
 usb_h     = 3.3;
 usb_hole  = [9.6, 3.9];            // horizontal USB-C opening (x, z)
 plug_mold = [13.5, 7.8];           // horizontal cable-plug niche (x, z)
@@ -475,7 +458,7 @@ module oled_bay_walls() {
         outer_main();
     }
     // 45 deg wedge under the holder floor: it grows up from the chin instead of bridging in mid-air
-    if (bay_wedge) intersection() {
+    intersection() {
         hull() {
             translate([-(bay_in[0]/2 + bay_wall), y_if, oled_zc - bay_in[1]/2 - bay_wall]) cube([bay_in[0] + 2*bay_wall, bay_end - y_if, bay_wall]);
             translate([-(bay_in[0]/2 + bay_wall), y_if, oled_zc - bay_in[1]/2 - bay_wall - (bay_end - y_if)]) cube([bay_in[0] + 2*bay_wall, 0.01, 0.01]);
@@ -497,7 +480,7 @@ module oled_bay_cuts() {
     extrude_y(pcb_front_y, split_y + lip_h + 1 - pcb_front_y) translate([0, oled_zc]) square(bay_in, center = true);
     // ...with a 45 deg peaked top inside the head, so nothing above it is a flat ceiling in mid-air
     // (the flat top of this channel left a 10 x 31 mm unsupported slab -> the spaghetti failure)
-    if (bay_peak) intersection() {
+    intersection() {
         extrude_y(pcb_front_y, split_y + lip_h + 1 - pcb_front_y) translate([0, oled_zc])
             polygon([[-bay_in[0]/2, bay_in[1]/2 - 0.01], [bay_in[0]/2, bay_in[1]/2 - 0.01], [0, bay_in[1]/2 + bay_in[0]/2]]);
         head_hull(wall);                                   // never cut into the outer skin
@@ -520,7 +503,7 @@ tp_slope  = 0.136;       // seat plane rises 0.136 mm per mm toward the back (7.
 tch_z0    = 88.4;        // seat plane z at the FRONT edge of the pocket
 tp_board  = [15, 11, 1.6];
 tp_side   = 0.2;         // clearance per side between board and arm
-tp_arm_t  = 1.2;         // arm thickness (v10: was 0.65, the thin arms broke off with the tree supports). Flexes in the print-layer plane, never across the layers
+tp_arm_t  = 1.2;         // thicker touch arms (was 0.65, the thin arms broke off with the tree supports)
 tp_arm_h  = 2.2;         // arm height
 tp_reach  = 0.7;         // lip reach over the board edge (hold = reach - 0.2 clearance... board edge overlap 0.5)
 tp_gap_up = 0.3;         // free slit between arm top and the roof so the arm can flex
@@ -717,15 +700,13 @@ module front_shell_core() {
                 half_y(-200, split_y);
             }
             lip();
-            if (snap_on) lip_bumps();
-            screw_front();
+            lip_bumps();
             oled_bay_walls();
             battery_ribs_front();
             touch_fill();
         }
         face_cuts();
         oled_bay_cuts();
-        screw_front_cuts();
         touch_pocket();
         // side touch pad (touch2) REMOVED: the TTP223 now lives only under the head top (touch_pocket)
         seam_chamfer_front();
@@ -891,55 +872,6 @@ module dimples() intersection() {
     half_y(split_y + snap_y0 - 0.05, split_y + snap_y0 + snap_top + snap_ramp + 0.25);   // 0.05 play behind the holding face
     shell_band(lip_keep - snap_h, lip_keep + 0.1);                                        // leaves lip_keep - snap_h = 0.8 of outer skin
 }
-// ------------------------------------------------------------
-// SCREW FIT: 4 bosses in the body (pilot holes) + 4 bosses in the lid (clearance hole + head pocket)
-// ------------------------------------------------------------
-function scr_sx(p) = p[0] < 0 ? -1 : 1;
-// outer skin y at (x, z) on the back (head above z 40, body below)
-function scr_yout(x, z) = z > 40 ? -head_y(x, z) : body_cy + body_sy * sqrt(max(0, pow(body_r(z), 2) - x*x));
-function scr_floor(p) = scr_yout(p[0] + scr_sx(p) * scr_head_d/2, p[1]) - scr_head_h;   // pocket floor y: the outer edge keeps scr_head_h of rim
-module scr_boss2d(p) hull() {
-    sx = scr_sx(p);
-    translate([p[0], p[1]]) circle(d = scr_boss_d, $fn = 48);
-    translate([p[0] + sx*scr_reach, p[1]]) circle(d = scr_boss_d, $fn = 48);
-    translate([p[0] + sx*scr_reach, p[1] - scr_reach]) circle(d = scr_boss_d, $fn = 48);   // 45 deg underside
-}
-module screw_front() if (screw_on) for (p = scr_pts) intersection() {
-    extrude_y(split_y - scr_body_len, scr_body_len) scr_boss2d(p);
-    outer_main();
-}
-module screw_front_cuts() if (screw_on) for (p = scr_pts)
-    extrude_y(split_y - scr_pilot_len, scr_pilot_len + 1) translate([p[0], p[1]]) circle(d = scr_pilot, $fn = 24);
-// lid boss: inside the front lip ring where the lip slides (offset >= wall + 0.65), full to the skin behind the rebate
-module screw_lid() if (screw_on) for (p = scr_pts) intersection() {
-    extrude_y(split_y + scr_gap, 40) scr_boss2d(p);
-    union() {
-        intersection() { half_y(split_y, split_y + lip_h + 0.3); inner_solid(p[1] > lip_thick_z - 1 ? lip_keep + lip_clr + lip_t + lip_h + 0.5 : wall + 0.65); }   // above z 64 the lid rebate is cut deeper (thick lip root)
-        half_y(split_y + lip_h + 0.3 - eps, 200);
-    }
-    outer_main();
-}
-module screw_lid_cuts() if (screw_on) for (p = scr_pts) {
-    extrude_y(split_y - 1, 60) translate([p[0], p[1]]) circle(d = scr_clear, $fn = 24);
-    extrude_y(scr_floor(p), 60) translate([p[0], p[1]]) circle(d = scr_head_d, $fn = 32);
-}
-echo(str("screw pocket floors y: ", [for (p = scr_pts) scr_floor(p)], "  outer y at axis: ", [for (p = scr_pts) scr_yout(p[0], p[1])]));
-
-// ------------------------------------------------------------
-// LID TEXT: raised "lil.mate" on the back of the head, above the power switch (v11)
-// ------------------------------------------------------------
-lid_text_on = true;
-lid_text    = "lil.mate";
-lid_text_z  = 72;       // centre height (the switch housing tops out at z 65.5)
-lid_text_h  = 4.2;      // letter height
-lid_text_rel= 0.6;      // how far the letters stand out of the skin
-module lid_text2d() mirror([1, 0, 0]) text(lid_text, size = lid_text_h, font = "DejaVu Sans:style=Bold", halign = "center", valign = "center");   // mirrored: it is read from behind
-module lid_text() if (lid_text_on) intersection() {
-    extrude_y(18, 16) translate([0, lid_text_z]) lid_text2d();
-    difference() { union() { head_hull(-lid_text_rel); body_outer(lid_text_rel); } inner_solid(0.4); }   // skin shell: 0.4 sunk into the wall, lid_text_rel out
-    half_y(split_y, 200);
-}
-
 module back_shell() difference() {
     union() {
         intersection() {
@@ -949,12 +881,9 @@ module back_shell() difference() {
         port_block();
         switch_block();
         battery_ribs();
-        screw_lid();
-        lid_text();
     }
     rebate();
-    if (snap_on) dimples();
-    screw_lid_cuts();
+    dimples();
     seam_chamfer_back();
     port_cuts();
     switch_cuts();
@@ -1002,5 +931,4 @@ else if (part == "supports")    all_supports();
 else if (part == "oled_out")    difference() { oled_envelope(); union() { head_hull(1.0); body_outer(-1.0); } }   // must be EMPTY
 else if (part == "check_front") intersection() { front_shell(); union() { components(0); components(1); for (k = [2, 4, 5, 6, 8]) components(k); } }
 else if (part == "check_back")  intersection() { back_shell(); union() { for (k = [2:7]) components(k); } }
-else if (part == "check_parts") intersection() { front_shell(); back_shell(); }   // front and lid must not overlap: must be EMPTY
 else if (part == "check_all")   intersection() { union() { front_shell(); back_shell(); } components(); }
