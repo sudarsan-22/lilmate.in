@@ -47,5 +47,5 @@ Each component: its size, then how the enclosure holds it (pockets, slots, clear
 - Size: 15 x 11 x 1.6.
 - Housing: flat seat 17 x 12.5 under the head top, cradle arms hold the board with the holding face 0.15 under it, skin over the pad kept at 1.6. (The second jaw pad is defined in the source but not used.)
 
-### Lid screws (M2 x 10, 4 pcs)
-- Housing: bosses OD 7.6 at (x, z) (+-23, 72) and (+-18, 14); body pilot hole 1.8 x 7.2, lid clearance hole 2.4, head pocket 4.6 (see `docs/elephant_screw_fit_FINAL.png`).
+### Lid screws (4 countersunk M2: 2 x M2 x 12 upper, 2 x M2 x 10 lower)
+- Housing: bosses OD 7.6 at (x, z) (+-23, 72) and (+-18, 14); body pilot hole 1.8 x 7.2, lid clearance hole 2.4 with a 90 deg countersink (top d4.2). Lip clearance 0.30 with lead-ins (loose locator).
