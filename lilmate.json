@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "notes": "Buddy firmware 0.2.1: first update delivered from GitHub.",
+  "date": "2026-11-19",
+  "app": {},
+  "firmware": {
+    "version": "0.2.1",
+    "file": "lilmate-os-0.2.1.bin",
+    "size": 1488224,
+    "sha256": "1b1d066f956087ea2de7703bd9b5598531dcda1f75bda3faa48d3c1f08f060a0",
+    "md5": "ada902f0c0db5af4c7ace8dd83ffd9b1"
+  }
+}
