@@ -4,8 +4,9 @@
 //   { "version": "0.2.0", "notes": "…", "date": "2026-11-20",
 //     "app": { "deb": {file, sha256, size}, "appimage": {…}, "win": {…}, "mac": {…} },
 //     "firmware": { "version": "0.2.0", "file": "lilmate-os-0.2.0.bin", "sha256": "…", "md5": "…", "size": 1488224 } }
-// It is read from  https://github.com/<repo>/releases/latest/download/lilmate.json  (no API, no rate limit)
-// and every file is fetched next to it, then checked against its sha256 before it is used.
+// It lives on the repo's `updates` branch (package.json lilmate.updateFeed), next to the firmware .bin.
+// App installers are too big for a branch: their entries carry a "url" to a GitHub Release asset.
+// Every file is checked against its sha256 before it is used.
 'use strict';
 const { app, net, shell } = require('electron');
 const crypto = require('crypto');
@@ -15,8 +16,8 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 const pkg = require('../package.json');
-const REPO = (pkg.lilmate && pkg.lilmate.updateRepo) || 'lilmate/lilmate-desk';
-const FEED = (process.env.LILMATE_UPDATE_FEED || `https://github.com/${REPO}/releases/latest/download/`).replace(/\/?$/, '/');
+const REPO = (pkg.lilmate && pkg.lilmate.updateRepo) || 'sudarsan-22/lilmate.in';
+const FEED = (process.env.LILMATE_UPDATE_FEED || (pkg.lilmate && pkg.lilmate.updateFeed) || `https://github.com/${REPO}/releases/latest/download/`).replace(/\/?$/, '/');
 const RELEASES_PAGE = `https://github.com/${REPO}/releases/latest`;
 
 // "0.10.2" > "0.9.9"; anything after a dash (0.2.0-beta) sorts before the plain version
@@ -57,7 +58,8 @@ async function fetchManifest() {
 // download a release file into a private temp folder, checking size and sha256
 async function download(entry, onProgress) {
   if (!entry || !entry.file || !/^[\w.+-]+$/.test(entry.file) || !/^[0-9a-f]{64}$/i.test(entry.sha256 || '')) throw new Error('The update info looks broken');
-  const r = await net.fetch(FEED + entry.file, { cache: 'no-store' });
+  const url = entry.url && /^https:\/\/(github\.com|objects\.githubusercontent\.com|raw\.githubusercontent\.com)\//.test(entry.url) ? entry.url : FEED + entry.file;
+  const r = await net.fetch(url, { cache: 'no-store' });
   if (!r.ok) throw new Error(`Download failed (${r.status})`);
   const total = entry.size || Number(r.headers.get('content-length')) || 0;
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lilmate-update-'));

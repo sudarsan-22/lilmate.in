@@ -59,6 +59,7 @@
   "homepage": "https://lilmate.in",
   "desktopName": "lilmate-desk.desktop",
   "lilmate": {
-    "updateRepo": "sudarsan-22/lilmate-releases"
+    "updateRepo": "sudarsan-22/lilmate.in",
+    "updateFeed": "https://raw.githubusercontent.com/sudarsan-22/lilmate.in/updates/"
   }
 }
