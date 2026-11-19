@@ -7,3 +7,8 @@
 **/build/*.log
 **/build/parts/
 **/build/plate/
+
+# lil.mate software: build output and dependencies
+software/lilmate_desk/node_modules/
+software/lilmate_desk/dist/
+software/lilmate_os/build/

@@ -1,0 +1,64 @@
+{
+  "name": "lilmate-desk",
+  "productName": "lil.mate Desk",
+  "version": "0.2.0",
+  "description": "Desktop companion for the lil.mate desk buddy: top-of-screen island, AI agent alerts, one-click setup",
+  "main": "main.js",
+  "author": "lil.mate",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron . --no-sandbox",
+    "dist:linux": "electron-builder --linux AppImage deb",
+    "dist:win": "electron-builder --win nsis",
+    "icons": "electron scripts/make-icons.js --no-sandbox",
+    "release": "bash scripts/release.sh"
+  },
+  "build": {
+    "appId": "in.lilmate.desk",
+    "productName": "lil.mate Desk",
+    "files": [
+      "main.js",
+      "preload.js",
+      "lib/**",
+      "renderer/**",
+      "assets/**"
+    ],
+    "asarUnpack": [
+      "node_modules/@serialport/**"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility",
+      "icon": "assets/icon.png",
+      "maintainer": "lil.mate",
+      "executableArgs": [
+        "--no-sandbox"
+      ],
+      "syncDesktopName": true
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false
+    },
+    "artifactName": "lilmate-desk-${version}-${arch}.${ext}"
+  },
+  "dependencies": {
+    "serialport": "^13.0.0"
+  },
+  "devDependencies": {
+    "electron": "^38.8.6",
+    "electron-builder": "^26.18.0"
+  },
+  "homepage": "https://lilmate.in",
+  "desktopName": "lilmate-desk.desktop",
+  "lilmate": {
+    "updateRepo": "sudarsan-22/lilmate-releases"
+  }
+}

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:">
+<title>lil.mate</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="m-pill">
+<div id="island">
+
+  <!-- collapsed: the pill hanging from the top of the screen -->
+  <div id="pill">
+    <svg class="mark" id="pillFace" viewBox="0 -18 88 62"></svg>
+    <span id="pillText">lil.mate</span>
+    <span class="dot" id="pillDot"></span>
+  </div>
+
+  <!-- an AI tool is asking for permission -->
+  <div id="ask">
+    <div class="askHead"><svg class="mark attn" id="askFace" viewBox="0 -18 88 62"></svg><div><b id="askTitle">Claude wants to run</b><small id="askWhere"></small></div></div>
+    <code id="askCmd"></code>
+    <div class="askRow"><button class="btn" id="askAllow">Allow</button><button class="btn2" id="askDeny">Deny</button><span class="hint">or hold lil.mate</span></div>
+    <div class="ttl"><i id="askTtl"></i></div>
+  </div>
+
+  <!-- expanded panel -->
+  <div id="panel">
+    <aside>
+      <div class="me" title="Drag to move">
+        <div class="brand"><svg class="mark" id="avFace" viewBox="0 -18 88 62"></svg><span class="word">lil<i>.</i>mate</span></div>
+        <small id="conn"><span class="dot"></span> looking…</small>
+      </div>
+      <nav id="nav">
+        <a data-p="home" class="on"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/></svg>Today</a>
+        <a data-p="agents"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="4"/><path d="M9 11v2M15 11v2M12 3v3"/></svg>AI helpers<em id="bAg"></em></a>
+        <a data-p="tasks"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>Tasks<em id="bTk"></em></a>
+        <a data-p="habits"><svg viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .5 2 1.5 3 2.5 3-1-3 0-6 0-8z"/></svg>Habits<em id="bHb"></em></a>
+        <a data-p="team"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.5"/><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M14.5 15.5c2.6-.6 4.9.6 6 3.5"/></svg>Team</a>
+        <a data-p="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg>Settings<em id="bSet"></em></a>
+      </nav>
+      <button id="pin" title="Keep open">Keep open</button>
+    </aside>
+
+    <main>
+      <section data-p="home" class="on">
+        <h1 id="hello">Today</h1><p class="sub" id="today">Your summary</p>
+        <form id="talk"><input id="talkIn" placeholder="Tell lil.mate something… e.g. remind me in 20 min to stretch" autocomplete="off"><button aria-label="send"><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></button></form>
+        <div class="cards">
+          <div class="card"><i class="c1"></i><b id="cHab">–</b><span id="cHabL">habit today</span></div>
+          <div class="card"><i class="c2"></i><b id="cTask">–</b><span>tasks left</span></div>
+          <div class="card"><i class="c3"></i><b id="cNext">–</b><span id="cNextL">next up</span></div>
+          <div class="card"><i class="c4"></i><b id="cFocus">–</b><span>focus min today</span></div>
+        </div>
+        <div class="chips">
+          <button data-c="/focus">Focus 25 min</button><button data-c="/breathe">Breathe 1 min</button><button data-c="/pat">Pat</button>
+          <span class="seg" id="dnd"><button data-d="auto">Auto</button><button data-d="on">Do not disturb</button><button data-d="off">Off</button></span>
+        </div>
+        <h2>Right now</h2>
+        <ul class="list" id="upList"></ul>
+        <p class="status" id="homeStatus"></p>
+      </section>
+
+      <section data-p="agents">
+        <h1>AI helpers</h1><p class="sub">lil.mate tells you when your coding assistant is done or needs you.</p>
+        <ul class="list" id="agList"></ul>
+        <h2>Connect your tools</h2>
+        <div class="tools" id="tools"></div>
+        <p class="sub small" id="toolNote">Restart the tool after connecting it.</p>
+      </section>
+
+      <section data-p="tasks">
+        <h1>Tasks</h1><p class="sub">Tick them here or hold lil.mate on its Tasks screen.</p>
+        <form class="addrow" data-pre="/task "><input placeholder="Add a task" autocomplete="off"><button>Add</button></form>
+        <ul class="list" id="tkList"></ul>
+        <h2>Reminders</h2>
+        <form class="addrow" data-pre="/remind "><input placeholder="10m stretch · 18:30 call mom · daily 08:00 meds" autocomplete="off"><button>Add</button></form>
+        <ul class="list" id="rmList"></ul>
+      </section>
+
+      <section data-p="habits">
+        <h1>Habits</h1><p class="sub">Little daily goals with streaks.</p>
+        <form class="addrow" data-pre="/habit "><input placeholder="water 8" autocomplete="off"><button>Add</button></form>
+        <ul class="list" id="hbList"></ul>
+      </section>
+
+      <section data-p="team">
+        <h1>Team</h1><p class="sub">Buddies nearby find each other on their own, no Wi-Fi needed.</p>
+        <div class="chips"><button data-c="/tea">Tea break call</button><button data-c="/lunch">Lunch call</button></div>
+        <ul class="list" id="tmList"></ul>
+      </section>
+
+      <section data-p="settings">
+        <h1>Settings</h1><p class="sub" id="ver"></p>
+        <div class="set upd-box" id="updBox">
+          <div><b>Updates</b><small id="updWhen">Not checked yet</small></div>
+          <div class="upd"><span><b>lil.mate Desk</b><small id="updApp">–</small></span><button class="btn" id="updAppBtn" hidden>Update</button></div>
+          <div class="upd"><span><b>lil.mate buddy</b><small id="updFw">–</small></span><button class="btn" id="updFwBtn" hidden>Update</button></div>
+          <div class="bar" id="updBar" hidden><div><i id="updPct"></i></div><small id="updStage"></small></div>
+          <p id="updNotes"></p>
+          <div class="row"><button class="btn2" id="updCheck">Check for updates</button><label><input type="checkbox" id="autoCheck"> Check by itself</label></div>
+        </div>
+        <div class="set">
+          <div><b>Island position</b><small>Drag the pill (or the lil.mate name here) along the top of any screen. It remembers the spot.</small></div>
+          <div class="row"><select id="screens"></select><button class="btn2" id="posReset">Reset to centre</button></div>
+        </div>
+        <div class="set">
+          <div><b>Connection</b><small id="setConn">–</small></div>
+          <div class="row"><input id="host" placeholder="lil.mate address (e.g. 192.168.0.10)"><button class="btn2" id="hostSave">Save</button></div>
+        </div>
+        <div class="set">
+          <div><b>Wi-Fi for lil.mate</b><small>Over the USB cable, no QR needed.</small></div>
+          <div class="row"><input id="ssid" placeholder="Wi-Fi name"><input id="wpass" type="password" placeholder="password"><button class="btn2" id="wifiSave">Send</button></div>
+        </div>
+        <div class="set">
+          <div><b>Calendar</b><small id="calState">Paste your private iCal link for meeting heads-ups.</small></div>
+          <div class="row"><input id="ics" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics"><button class="btn2" id="icsSave">Save</button></div>
+        </div>
+        <div class="set toggles">
+          <label><input type="checkbox" id="autostart"> Start with my computer</label>
+          <label><input type="checkbox" id="approve"> Approve AI commands from lil.mate</label>
+        </div>
+        <div class="set"><div><b>Phone page</b><small>Tasks, reminders and more on your phone.</small></div><button class="btn2" id="openDash">Open</button></div>
+      </section>
+    </main>
+  </div>
+</div>
+<div id="toast"></div>
+<script src="app.js"></script>
+</body>
+</html>
