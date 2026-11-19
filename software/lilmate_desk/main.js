@@ -105,7 +105,7 @@ function applyAutostart() {
   if (process.platform === 'linux') {
     const dir = path.join(os.homedir(), '.config', 'autostart'); const f = path.join(dir, 'lilmate-desk.desktop');
     const exe = process.env.APPIMAGE || process.execPath;
-    if (!app.isPackaged) return;                                // never register the dev build
+    if (!app.isPackaged || (!process.env.APPIMAGE && !process.execPath.startsWith('/opt/'))) return;   // only the installed app, never a dev/test copy
     if (settings.autostart) { fs.mkdirSync(dir, { recursive: true }); fs.writeFileSync(f, `[Desktop Entry]\nType=Application\nName=lil.mate Desk\nExec="${exe}" --no-sandbox\nX-GNOME-Autostart-enabled=true\n`); }
     else { try { fs.unlinkSync(f); } catch (e) {} }
   } else if (app.isPackaged) app.setLoginItemSettings({ openAtLogin: !!settings.autostart });
