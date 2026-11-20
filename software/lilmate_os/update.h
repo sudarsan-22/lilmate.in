@@ -19,6 +19,9 @@
 #define BLE_DATA      "6c696c6d-6174-6503-8000-00805f9b34fb"   // write without response: firmware bytes
 #define BLE_INFO      "6c696c6d-6174-6504-8000-00805f9b34fb"   // read: {"fw":"0.2.1","name":"…"}
 #define UPD_CHECK_EVERY (24UL * 3600000UL)
+#define BLE_IDLE_OFF_MS (5UL * 60000UL)   // on Wi-Fi, Bluetooth switches itself off after 5 min unused (it holds ~76 KB of RAM)
+
+uint8_t otaBuf[1024];   // one chunk buffer for every update path (only one update can run at a time)
 
 extern uint32_t restartAt;
 bool isBusy();
@@ -38,7 +41,7 @@ struct {
 enum BleSt : uint8_t { B_OFF, B_ON, B_WAIT, B_RECV, B_DONE };
 struct {
   volatile BleSt st = B_OFF;
-  volatile uint32_t size = 0, got = 0, acked = 0, waitSince = 0, startedAt = 0;
+  volatile uint32_t size = 0, got = 0, acked = 0, waitSince = 0, startedAt = 0, lastUse = 0;
   volatile bool connected = false, allowed = false, failed = false;
   char md5[33] = "", err[32] = "";
   BLECharacteristic *ctrl = nullptr;
@@ -65,12 +68,13 @@ static bool updCheck() {
   tls.stop();                                       // one TLS session at a time: the C3 has little RAM
   NetworkClientSecure c; c.setCACert(UPDATE_ROOTS);
   HTTPClient h; h.setConnectTimeout(10000); h.setTimeout(15000);
+  h.useHTTP10(true);                                // plain (not chunked) body, so it can be parsed straight off the connection
   if (!h.begin(c, UPDATE_FEED "lilmate.json")) { updFail("no connection"); return false; }
   int code = h.GET();
   if (code != 200) { h.end(); char b[40]; snprintf(b, sizeof(b), code < 0 ? "can't reach GitHub" : "server said %d", code); updFail(b); return false; }
   JsonDocument filter; filter["firmware"] = true; filter["notes"] = true;
   JsonDocument d;
-  DeserializationError e = deserializeJson(d, h.getString(), DeserializationOption::Filter(filter));
+  DeserializationError e = deserializeJson(d, h.getStream(), DeserializationOption::Filter(filter));
   h.end();
   if (e || !d["firmware"]["version"]) { updFail("update info unreadable"); return false; }
   JsonObject f = d["firmware"];
@@ -100,12 +104,12 @@ static void updInstall() {
   if (!Update.begin(up.size)) { h.end(); updFail(Update.errorString()); return; }
   Update.setMD5(up.md5);
   NetworkClient *s = h.getStreamPtr();
-  static uint8_t buf[1024];
+  uint8_t *buf = otaBuf; const size_t bufLen = sizeof(otaBuf);
   uint32_t got = 0, last = millis();
   while (got < up.size) {
     int a = s->available();
     if (a > 0) {
-      int n = s->readBytes(buf, min((uint32_t)min(a, (int)sizeof(buf)), up.size - got));
+      int n = s->readBytes(buf, min((uint32_t)min(a, (int)bufLen), up.size - got));
       if (n > 0 && Update.write(buf, n) != (size_t)n) { Update.abort(); h.end(); updFail(Update.errorString()); return; }
       got += n; last = millis(); up.pct = (uint64_t)got * 100 / up.size;
     } else if (!s->connected() || millis() - last > 20000) { Update.abort(); h.end(); updFail("download stopped"); return; }
@@ -120,6 +124,7 @@ static void updInstall() {
 
 void updService() {   // called from the net task (it owns the network)
   if (otaBusy() || bl.st == B_DONE) return;
+  if ((up.wantInstall || up.wantCheck) && bl.st == B_ON && !bl.connected) return;   // updTick switches Bluetooth off first
   if (up.wantInstall) { up.wantInstall = false; updInstall(); }
   else if (up.wantCheck) { up.wantCheck = false; updCheck(); }
 }
@@ -133,15 +138,16 @@ static void bleFail(const char *why) {
 }
 
 class BleSrv : public BLEServerCallbacks {
-  void onConnect(BLEServer *) override { bl.connected = true; Serial.println("[ble] connected"); }
+  void onConnect(BLEServer *) override { bl.connected = true; bl.lastUse = millis(); Serial.println("[ble] connected"); }
   void onDisconnect(BLEServer *s) override {
-    bl.connected = false; Serial.println("[ble] disconnected");
+    bl.connected = false; bl.lastUse = millis(); Serial.println("[ble] disconnected");
     if (bl.st == B_RECV || bl.st == B_WAIT) bleFail("disconnected");
     s->getAdvertising()->start();
   }
 };
 class BleCtrl : public BLECharacteristicCallbacks {
   void onWrite(BLECharacteristic *c) override {
+    bl.lastUse = millis();
     String v = c->getValue(); v.trim();
     if (v.startsWith("begin ")) {
       if (up.st == U_GETTING || bl.st == B_RECV) { bleSay("err busy"); return; }
@@ -174,18 +180,21 @@ class BleData : public BLECharacteristicCallbacks {
   }
 };
 
-// started when there is no Wi-Fi (office), or on request (/bluetooth, phone page); stays on until restart
+// started when there is no Wi-Fi (office), or on request (/bluetooth, phone page).
+// On Wi-Fi it switches itself off again after 5 min unused, because it holds ~76 KB of RAM
+// (and a GitHub update check needs ~73 KB). Without Wi-Fi it stays on: nothing else needs the memory then.
+static BleSrv bleSrvCb; static BleCtrl bleCtrlCb; static BleData bleDataCb;   // static: no leak when Bluetooth is turned on again
 void bleStart() {
   if (bl.st != B_OFF) return;
   char name[24]; snprintf(name, sizeof(name), "lil.mate %s", S.owner);
   BLEDevice::init(name);
   BLEDevice::setMTU(517);
-  BLEServer *srv = BLEDevice::createServer(); srv->setCallbacks(new BleSrv());
+  BLEServer *srv = BLEDevice::createServer(); srv->setCallbacks(&bleSrvCb);
   BLEService *svc = srv->createService(BLE_SVC);
   bl.ctrl = svc->createCharacteristic(BLE_CTRL, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
-  bl.ctrl->setCallbacks(new BleCtrl());
+  bl.ctrl->setCallbacks(&bleCtrlCb);
   BLECharacteristic *data = svc->createCharacteristic(BLE_DATA, BLECharacteristic::PROPERTY_WRITE_NR | BLECharacteristic::PROPERTY_WRITE);
-  data->setCallbacks(new BleData());
+  data->setCallbacks(&bleDataCb);
   BLECharacteristic *info = svc->createCharacteristic(BLE_INFO, BLECharacteristic::PROPERTY_READ);
   String inf = String("{\"fw\":\"") + FW_VERSION + "\",\"name\":\"" + S.owner + "\"}";
   info->setValue(inf);
@@ -193,8 +202,34 @@ void bleStart() {
   BLEAdvertising *adv = BLEDevice::getAdvertising();
   adv->addServiceUUID(BLE_SVC); adv->setScanResponse(true);
   adv->start();
-  bl.st = B_ON; bl.startedAt = millis();
+  bl.st = B_ON; bl.startedAt = bl.lastUse = millis();
   Serial.printf("[ble] advertising as \"%s\" (heap %u)\n", name, (unsigned)ESP.getFreeHeap());
+}
+uint8_t bleCycles = 0;   // times Bluetooth was switched off since boot (each one leaves ~2.4 KB the library never frees)
+void bleStop() {
+  if (bl.st != B_ON || bl.connected) return;
+  bleCycles++;
+  bl.ctrl = nullptr; bl.st = B_OFF;
+  BLEDevice::deinit(false);   // false: keep the controller's memory so Bluetooth can be turned on again
+  Serial.printf("[ble] off (heap %u)\n", (unsigned)ESP.getFreeHeap());
+}
+
+// ------------------------------------------------------------ memory safety net
+// Restart quietly at night while the buddy sleeps (no splash, screen stays dark, everything saved first) when
+//   * Bluetooth was switched off since boot: its leftovers chop the free memory into smaller pieces, or
+//   * no big free block has been left for 10 minutes (an HTTPS check needs ~36 KB in one piece).
+// The restart log (/diag) shows it as "memory tidy-up (night)".
+static void memGuard(uint32_t now) {
+  static uint32_t lowSince = 0;
+  if (otaBusy() || bl.st != B_OFF) { lowSince = 0; return; }
+  bool low = ESP.getMaxAllocHeap() < 24 * 1024;
+  if (!low) lowSince = 0;
+  else if (!lowSince) { lowSince = now; Serial.printf("[mem] low: biggest block %u\n", (unsigned)ESP.getMaxAllocHeap()); }
+  bool want = bleCycles > 0 || (lowSince && now - lowSince > 600000);
+  struct tm tm; bool night = !localNow(tm) || (tm.tm_hour >= 1 && tm.tm_hour < 5);
+  if (want && now > 3600000 && asleep && night && !isBusy() && !restartAt) {
+    Serial.println("[mem] night tidy-up restart"); diagRestart(SW_LOWMEM); restartAt = now + 500;
+  }
 }
 
 // ------------------------------------------------------------ schedule (main loop, once a second)
@@ -209,6 +244,9 @@ void updTick(uint32_t now) {
   if (localNow(tm) && tm.tm_hour == 4) up.nightDone = false;
   // no Wi-Fi for a minute (office): offer Bluetooth so a phone can still update the buddy
   if (bl.st == B_OFF && offlineMode && now - bootAt > 60000 && !apMode) bleStart();
+  // back on Wi-Fi and nobody is using Bluetooth: give its memory back (right away if an update wants it)
+  if (bl.st == B_ON && !bl.connected && wifiUp && (now - bl.lastUse > BLE_IDLE_OFF_MS || up.wantCheck || up.wantInstall)) bleStop();
+  memGuard(now);
   // nobody held the buddy within 40 s: refuse the Bluetooth update
   if (bl.st == B_WAIT && now - bl.waitSince > 40000) bleFail("not allowed on the buddy");
 }
@@ -251,6 +289,7 @@ bool updTouch(TouchEv e) {
       if (strlen(bl.md5) == 32) Update.setMD5(bl.md5);
       bl.st = B_RECV; bleSay("ready"); faceSay("Updating...");
     } else if (e == T_TAP2) bleFail("not allowed on the buddy");
+    bl.lastUse = millis();
     return e != T_PRESS && e != T_RELEASE;
   }
   if (up.st == U_READY && millis() < up.promptUntil) {
@@ -273,7 +312,7 @@ String updStatusText() {
     default: break;
   }
   s += String("\nInstall at night by itself: ") + (up.autoInstall ? "on" : "off") + " (/update auto on|off)";
-  s += String("\nBluetooth update: ") + (bl.st == B_OFF ? "off (/bluetooth to turn on)" : "on");
+  s += String("\nBluetooth update: ") + (bl.st == B_OFF ? "off (/bluetooth to turn on)" : wifiUp ? "on (switches off after 5 min unused)" : "on");
   return s;
 }
 String updCommand(const String &argl) {
@@ -293,8 +332,8 @@ String updCommand(const String &argl) {
   return updStatusText();
 }
 String bleCommand() {
-  if (bl.st == B_OFF) bleStart();
-  return String("🔵 Bluetooth update is on. Open the lil.mate updater in Chrome and pick \"lil.mate ") + S.owner + "\".";
+  if (bl.st == B_OFF) bleStart(); else bl.lastUse = millis();
+  return String("🔵 Bluetooth update is on") + (wifiUp ? " for the next 5 minutes" : "") + ". Open the lil.mate updater in Chrome and pick \"lil.mate " + S.owner + "\".";
 }
 void updJson(JsonObject o) {
   o["st"] = UPD_ST_NAMES[up.st]; o["ver"] = up.ver; o["pct"] = up.st == U_GETTING ? up.pct : (bl.st == B_RECV && bl.size ? (int)((uint64_t)bl.got * 100 / bl.size) : 0);

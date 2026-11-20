@@ -14,7 +14,7 @@ enum { ST_BOOT = 1, ST_TOUCH, ST_WIFI, ST_WEB, ST_TG, ST_SERIAL, ST_BRAIN, ST_RE
 // net-task stages
 enum { NS_IDLE = 1, NS_WEATHER, NS_TG_SEND, NS_TG_POLL };
 // why we restarted ourselves
-enum { SW_NONE = 0, SW_OTA, SW_WIFI_SAVE, SW_CMD, SW_AP_RETRY };
+enum { SW_NONE = 0, SW_OTA, SW_WIFI_SAVE, SW_CMD, SW_AP_RETRY, SW_LOWMEM };
 
 static const char *stageName(uint32_t s) {
   static const char *n[] = { "?", "boot", "touch", "wifi", "web", "telegram", "serial", "brain", "render", "store", "idle" };
@@ -25,7 +25,7 @@ static const char *netStageName(uint32_t s) {
   return s < sizeof(n) / sizeof(n[0]) ? n[s] : "?";
 }
 static const char *swName(uint32_t s) {
-  static const char *n[] = { "restart", "firmware update", "wifi saved", "command", "hotspot retry" };
+  static const char *n[] = { "restart", "firmware update", "wifi saved", "command", "hotspot retry", "memory tidy-up (night)" };
   return s < sizeof(n) / sizeof(n[0]) ? n[s] : "restart";
 }
 const char *resetName(uint8_t r) {
@@ -78,6 +78,17 @@ String resetLine(const ResetRec &r) {
   if (r.reason == ESP_RST_PANIC || r.reason == ESP_RST_INT_WDT || r.reason == ESP_RST_TASK_WDT || r.reason == ESP_RST_WDT)
     s += String(", in ") + stageName(r.stage) + " / net " + netStageName(r.netStage) + ", min heap " + String(r.heapMin / 1024) + "k";
   return s;
+}
+// ------------------------------------------------------------ memory: how much is free, how chopped up, how deep the stacks went
+TaskHandle_t netTaskH = nullptr, loopTaskH = nullptr;
+uint32_t memLowBlock = UINT32_MAX;          // smallest "largest free block" seen (fragmentation low point)
+void memTick() { uint32_t b = ESP.getMaxAllocHeap(); if (b < memLowBlock) memLowBlock = b; }
+// one line, also used by @mem (machine) and /mem (people)
+void memLine(char *o, size_t n) {
+  snprintf(o, n, "free %uk  biggest block %uk  lowest %uk  lowest block %uk  stack left: loop %u, net %u",
+           (unsigned)(ESP.getFreeHeap() / 1024), (unsigned)(ESP.getMaxAllocHeap() / 1024), (unsigned)(ESP.getMinFreeHeap() / 1024),
+           (unsigned)((memLowBlock == UINT32_MAX ? ESP.getMaxAllocHeap() : memLowBlock) / 1024),
+           loopTaskH ? (unsigned)uxTaskGetStackHighWaterMark(loopTaskH) : 0, netTaskH ? (unsigned)uxTaskGetStackHighWaterMark(netTaskH) : 0);
 }
 String resetReport() {
   String s = "🩺 Restarts (newest last), boot #" + String(bootCount) + ", min heap now " + String(ESP.getMinFreeHeap() / 1024) + "k\n";

@@ -264,7 +264,7 @@ void buildState(JsonDocument &d) {
   if (localNow(tm)) strftime(tb, sizeof(tb), "%H:%M", &tm);
   d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; updJson(d["upd"].to<JsonObject>()); d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
   d["time"] = tb; d["mood"] = MOOD_NAMES[mood]; d["screen"] = SCREEN_NAMES[screen];
-  d["boot"] = bootCount; d["lastReset"] = resetLine(lastReset); d["minHeap"] = ESP.getMinFreeHeap();
+  d["boot"] = bootCount; d["lastReset"] = resetLine(lastReset); d["minHeap"] = ESP.getMinFreeHeap(); d["heap"] = ESP.getFreeHeap(); d["block"] = ESP.getMaxAllocHeap();
   d["happy"] = pet.happy; d["pats"] = pet.pats; d["asleep"] = asleep;
   JsonObject w = d["wx"].to<JsonObject>();
   w["ok"] = wx.ok; w["temp"] = wx.temp; w["text"] = wxText(wx.code); w["place"] = wx.place; w["max"] = wx.tmax; w["min"] = wx.tmin;
@@ -290,11 +290,12 @@ void buildState(JsonDocument &d) {
   JsonArray ms = d["moods"].to<JsonArray>(); for (auto m : MOOD_NAMES) ms.add(m);
   JsonArray ss = d["screens"].to<JsonArray>(); for (auto m : SCREEN_NAMES) ss.add(m);
 }
-void sendState() {
-  JsonDocument d; buildState(d);
-  String o; serializeJson(d, o);
+// one exact-size allocation for the reply instead of growing it piece by piece (less chopped-up memory)
+void sendJson(JsonDocument &d) {
+  String o; o.reserve(measureJson(d) + 1); serializeJson(d, o);
   server.send(200, "application/json", o);
 }
+void sendState() { JsonDocument d; buildState(d); sendJson(d); }
 
 void handleSettings() {
   auto has = [](const char *k) { return server.hasArg(k); };
@@ -340,8 +341,7 @@ void handleScan() {
     if (!dup) a.add(s);
   }
   WiFi.scanDelete();
-  String o; serializeJson(d, o);
-  server.send(200, "application/json", o);
+  sendJson(d);
 }
 
 bool pcUpdate(JsonObjectConst d) {   // shared by HTTP and USB; returns "focus session running"
@@ -356,16 +356,14 @@ void handlePc() {
   if (deserializeJson(d, server.arg("plain"))) { server.send(400, "text/plain", "bad json"); return; }
   bool focus = pcUpdate(d.as<JsonObjectConst>());
   JsonDocument r; r["focus"] = focus; r["mood"] = MOOD_NAMES[mood];
-  String o; serializeJson(r, o);
-  server.send(200, "application/json", o);
+  sendJson(r);
 }
 
 void handleGame() {   // GET /api/game?k=L|R|T|X  (k optional = just read the score)
   if (server.hasArg("k") && server.arg("k").length()) gameKey(toupper(server.arg("k")[0]));
   JsonDocument d; gameJson(d.to<JsonObject>());
-  String o; serializeJson(d, o);
   server.sendHeader("Cache-Control", "no-store");
-  server.send(200, "application/json", o);
+  sendJson(d);
 }
 
 void webBegin() {

@@ -347,6 +347,7 @@ String runCommand(String line, Source src, const char *from = "") {
   if (cmd == "update" || cmd == "upgrade" || cmd == "version") return updCommand(argl);
   if (cmd == "bluetooth" || cmd == "ble") return bleCommand();
   if (cmd == "resets" || cmd == "crash" || cmd == "diag") return resetReport();
+  if (cmd == "mem" || cmd == "memory") { char b[140]; memLine(b, sizeof(b)); return String("🧠 ") + b; }
   // everyday: busy / breathe / wrap-up / meetings / team
   if (cmd == "dnd" || cmd == "busy") {
     if (argl == "on") setDnd(1); else if (argl == "off") setDnd(2); else if (argl == "auto") setDnd(0);

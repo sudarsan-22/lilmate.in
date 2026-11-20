@@ -79,10 +79,10 @@ void serialOta(String args) {
   Serial.printf("[ota] usb %u bytes\n", (unsigned)size);
   otaScreen("UPDATING", "keep me plugged in", 0);
   Serial.println("@ota {\"ok\":true}");
-  static uint8_t buf[1024];
+  uint8_t *buf = otaBuf; const size_t bufLen = sizeof(otaBuf);   // shared with the other update paths
   uint32_t got = 0, last = millis(); int shown = 0;
   while (got < size) {
-    size_t want = min((uint32_t)sizeof(buf), size - got), n = 0;
+    size_t want = min((uint32_t)bufLen, size - got), n = 0;
     while (n < want) {
       int a = Serial.available();
       if (a > 0) { n += Serial.read(buf + n, min((size_t)a, want - n)); last = millis(); }
@@ -108,7 +108,7 @@ void serialLoop() {
     char c = Serial.read();
     if (c == '\r') continue;
     if (c != '\n') { if (serialBuf.length() < 700) serialBuf += c; continue; }
-    String line = serialBuf; serialBuf = ""; line.trim();
+    String line = serialBuf; serialBuf.remove(0); line.trim();   // remove(): keeps the reserved buffer
     if (!line.length()) continue;
     // machine protocol from pc_agent/lilmate_agent.py (USB link, no Wi-Fi needed)
     if (line.startsWith("@ev ")) {
@@ -131,6 +131,7 @@ void serialLoop() {
     if (line.startsWith("@cmd ")) { JsonDocument d; d["r"] = runCommand(line.substring(5), SRC_AGENT, ""); Serial.print("@re "); serializeJson(d, Serial); Serial.println(); continue; }
     if (line.startsWith("@look ")) { float x = 0, y = 0; sscanf(line.c_str() + 6, "%f %f", &x, &y); lookX = constrain(x, -1.f, 1.f); lookY = constrain(y, -1.f, 1.f); lookUntil = millis() + 3000; continue; }
     if (line.startsWith("@ota ")) { serialOta(line.substring(5)); continue; }
+    if (line == "@mem") { char b[140]; memLine(b, sizeof(b)); Serial.printf("@mem %s\n", b); continue; }
     if (line.startsWith("@hello")) { Serial.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\"}\n", FW_VERSION, S.owner); continue; }
     String low = line; low.toLowerCase();
     if (low.startsWith("/wifi ")) {          // /wifi My Network|password
@@ -141,6 +142,7 @@ void serialLoop() {
       Serial.printf("> Wi-Fi saved (%s). Restarting...\n", S.ssid);
       diagRestart(SW_WIFI_SAVE); delay(300); ESP.restart();
     }
+    if (low == "/sim memtidy") { Serial.println("> night tidy-up restart (test)"); storeFlush(); diagRestart(SW_LOWMEM); delay(200); ESP.restart(); }
     if (low.startsWith("/sim bat ")) { simBatV = low.substring(9).toFloat(); simBatUntil = millis() + 120000; nextBatRead = 0; Serial.printf("> simulating battery %.2f V for 2 min\n", simBatV); continue; }
     if (low.startsWith("/sim ")) {           // /sim tap|double|triple|long|vlong|press
       String g = low.substring(5);
@@ -189,6 +191,7 @@ void bootSplash() {
 
 void setup() {
   Serial.setRxBufferSize(4096);   // room for firmware chunks over USB
+  serialBuf.reserve(704);         // one line buffer for good, instead of growing it a character at a time
   Serial.begin(115200);
   delay(50);
   Serial.println("\n== " FW_NAME " " FW_VERSION " ==");
@@ -200,18 +203,20 @@ void setup() {
   touchBegin();
   randomSeed(esp_random());
 
+  // the night memory tidy-up restart comes back quietly: no splash, no hello, straight back to sleep with the screen off
+  bool quiet = lastReset.reason == ESP_RST_SW && lastReset.swWhy == SW_LOWMEM;
   oled.setBusClock(800000);
   oled.begin();
   oled.setContrast(S.contrast);
-  bootSplash();
+  if (quiet) { oled.setPowerSave(1); displayOff = true; goSleep(); faceBegin(); faceSetMood(M_SLEEP); } else bootSplash();
 
   netBegin();
   linkBegin();
   webBegin();
 
-  lastActivity = millis();
-  faceSetMood(M_HAPPY, 2000);
-  faceSay(String("Hi ") + S.owner + "!");
+  loopTaskH = xTaskGetCurrentTaskHandle();
+  if (quiet) lastActivity = millis() - (SLEEP_AFTER_MS + screenOffMs) - 1000;   // brainTick puts it straight back to sleep
+  else { lastActivity = millis(); faceSetMood(M_HAPPY, 2000); faceSay(String("Hi ") + S.owner + "!"); }
   Serial.printf("[boot] heap %lu, tasks %u, reminders %u, habits %u\n", (unsigned long)ESP.getFreeHeap(), nTasks, nRems, nHabits);
 }
 
@@ -232,7 +237,7 @@ void loop() {
   static uint32_t lastBrain = 0, lastFrame = 0;
   diagStage(ST_WIFI); linkLoop();
   now = millis();   // handlers above may have stamped events with a newer millis(); never subtract into the past
-  if (now - lastBrain >= 1000) { lastBrain = now; diagTick(); diagStage(ST_BRAIN); brainTick(now); agentTick(now); workTick(now); powerTick(now); updTick(now); }
+  if (now - lastBrain >= 1000) { lastBrain = now; diagTick(); memTick(); diagStage(ST_BRAIN); brainTick(now); agentTick(now); workTick(now); powerTick(now); updTick(now); }
   if (now - lastFrame >= frameMs) {
     lastFrame = now;
     diagStage(ST_RENDER);

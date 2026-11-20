@@ -278,13 +278,16 @@ void faceDraw(uint32_t now) {
     int w = oled.getStrWidth(bubble.c_str());
     if (w <= 118) oled.drawStr((128 - w) / 2, 59, bubble.c_str());
     else {  // marquee (u8g2 coords are unsigned: scroll by substring, 6px font)
-      String loop = bubble + "      " + bubble;
-      int cycle = (bubble.length() + 6) * 6;
+      // text + 6 spaces, repeating; pick the 21 visible characters straight into a stack buffer (no heap work per frame)
+      int len = bubble.length(), period = len + 6, cycle = period * 6;
       int t = (int)(now - bubbleAt) - 900;
       int off = t > 0 ? (t / 28) % cycle : 0;
       int c0 = off / 6;
+      char vis[22];
+      for (int i = 0; i < 21; i++) { int k = (c0 + i) % period; vis[i] = k < len ? bubble[k] : ' '; }
+      vis[21] = 0;
       oled.setClipWindow(4, 47, 124, 63);
-      oled.drawStr(5 - (off % 6), 59, loop.substring(c0, c0 + 21).c_str());
+      oled.drawStr(5 - (off % 6), 59, vis);
       oled.setMaxClipWindow();
     }
   }

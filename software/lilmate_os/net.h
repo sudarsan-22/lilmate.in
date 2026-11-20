@@ -123,18 +123,20 @@ void wifiLoop() {
 }
 
 // ------------------------------------------------------------ HTTP helpers (net task)
-bool httpGetString(const String &url, String &out) {
+// GET + parse JSON straight off the connection (no copy of the whole body in RAM); filter keeps only what we read
+bool httpGetJson(const String &url, JsonDocument &d, JsonDocument *filter = nullptr) {
   WiFiClient c; HTTPClient h;
   h.setConnectTimeout(6000); h.setTimeout(8000);
+  h.useHTTP10(true);                 // plain body, never chunked
   if (!h.begin(c, url)) return false;
   int code = h.GET();
-  if (code == 200) out = h.getString();
+  bool ok = code == 200 && !(filter ? deserializeJson(d, h.getStream(), DeserializationOption::Filter(*filter)) : deserializeJson(d, h.getStream()));
   h.end();
-  return code == 200;
+  return ok;
 }
 
 String urlEncode(const char *s) {
-  String o; char b[4];
+  String o; char b[4]; o.reserve(strlen(s) * 3);
   for (; *s; s++) {
     if (isalnum((uint8_t)*s) || *s == '-' || *s == '.' || *s == '_') o += *s;
     else { snprintf(b, sizeof(b), "%%%02X", (uint8_t)*s); o += b; }
@@ -143,17 +145,16 @@ String urlEncode(const char *s) {
 }
 
 void fetchWeather() {
-  String body;
   if (S.lat == 0 && S.lon == 0) {
     JsonDocument d;
     if (S.city[0]) {
-      if (!httpGetString(String("http://geocoding-api.open-meteo.com/v1/search?count=1&name=") + urlEncode(S.city), body)) return;
-      if (deserializeJson(d, body) || !d["results"][0]) { Serial.println("[wx] city not found"); return; }
+      if (!httpGetJson(String("http://geocoding-api.open-meteo.com/v1/search?count=1&name=") + urlEncode(S.city), d)) return;
+      if (!d["results"][0]) { Serial.println("[wx] city not found"); return; }
       S.lat = d["results"][0]["latitude"]; S.lon = d["results"][0]["longitude"];
       copyStr(wx.place, d["results"][0]["name"] | S.city, sizeof(wx.place));
     } else {  // no city set: approximate location from IP
-      if (!httpGetString("http://ip-api.com/json/?fields=status,city,lat,lon", body)) return;
-      if (deserializeJson(d, body) || strcmp(d["status"] | "", "success")) return;
+      if (!httpGetJson("http://ip-api.com/json/?fields=status,city,lat,lon", d)) return;
+      if (strcmp(d["status"] | "", "success")) return;
       S.lat = d["lat"]; S.lon = d["lon"];
       copyStr(S.city, d["city"] | "", sizeof(S.city));
       copyStr(wx.place, S.city, sizeof(wx.place));
@@ -166,9 +167,11 @@ void fetchWeather() {
            "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m"
            "&daily=temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=1",
            S.lat, S.lon);
-  if (!httpGetString(url, body)) { Serial.println("[wx] fetch failed"); return; }
+  JsonDocument filter;   // skip the units blocks and the rest
+  for (auto k : { "temperature_2m", "relative_humidity_2m", "weather_code", "wind_speed_10m" }) filter["current"][k] = true;
+  filter["daily"]["temperature_2m_max"] = true; filter["daily"]["temperature_2m_min"] = true; filter["utc_offset_seconds"] = true;
   JsonDocument d;
-  if (deserializeJson(d, body)) return;
+  if (!httpGetJson(url, d, &filter)) { Serial.println("[wx] fetch failed"); return; }
   wx.temp = d["current"]["temperature_2m"];
   wx.hum  = d["current"]["relative_humidity_2m"];
   wx.code = d["current"]["weather_code"];
@@ -268,5 +271,5 @@ void netBegin() {
   outQ = xQueueCreate(5, sizeof(OutMsg));
   applyTz();
   wifiBegin();
-  xTaskCreate(netTask, "net", 12288, nullptr, 1, nullptr);
+  xTaskCreate(netTask, "net", 10240, nullptr, 1, &netTaskH);   // measured peak use ~4 KB (TLS check + weather); 6 KB spare
 }
