@@ -13,19 +13,20 @@ input:focus,select:focus{border-color:var(--orange)}
 input::placeholder{color:var(--mute)}
 svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 
-/* #island is the visible shape hanging from the top of the screen. It grows into the panel with a soft spring and
-   tucks back into the pill quickly; the pill, ask card and panel sit inside at their final size and cross-fade,
-   so nothing reflows while it moves. The window is a little bigger than the island so the shadow has room. */
+/* #island is the visible shape hanging from the top of the screen. These are its resting sizes; the moves between
+   them (spring, arch-shaped corners, the logo flying between pill and panel) are played by app.js (islandTo).
+   The pill, ask card and panel sit inside at their final size, so nothing reflows while it moves.
+   The window is a little bigger than the island so the shadow has room. */
 #island{position:fixed;top:0;left:50%;width:240px;height:42px;transform:translateX(calc(-50% + var(--shift, 0px)));
   background:var(--cream);border:1px solid var(--line);border-top:0;box-shadow:var(--sh-island);border-radius:0 0 22px 22px;overflow:hidden;
-  transition:width .24s cubic-bezier(.4,0,.2,1),height .24s cubic-bezier(.4,0,.2,1),border-radius .24s,transform .24s cubic-bezier(.4,0,.2,1)}
+  contain:layout paint;transition:transform .24s cubic-bezier(.4,0,.2,1)}
 .m-ask #island{width:460px;height:168px;border-radius:0 0 24px 24px}
 .m-panel #island{width:800px;height:520px;border-radius:0 0 28px 28px}
-.m-ask #island,.m-panel #island{transition-duration:.4s;transition-timing-function:cubic-bezier(.25,1.12,.35,1)}   /* opening: a soft spring */
-#pill,#ask,#panel{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;opacity:0;visibility:hidden;transition:opacity .1s,visibility 0s .1s}
-.m-pill #pill,.m-ask #ask,.m-panel #panel{opacity:1;visibility:visible;transition:opacity .2s .08s,visibility 0s}
-.m-pill #pill{transition-delay:.12s}
-@media (prefers-reduced-motion:reduce){#island,#pill,#ask,#panel{transition:none!important}}
+#pill,#ask,#panel{position:absolute;top:0;left:50%;transform:translateX(-50%);display:flex;opacity:0;visibility:hidden}
+.m-pill #pill,.m-ask #ask,.m-panel #panel{opacity:1;visibility:visible}
+#island .leaving{visibility:visible}
+/* the logo while it flies between the pill and the panel */
+#flyMark{position:fixed;left:0;top:0;transform-origin:0 0;pointer-events:none;z-index:5;display:none;color:var(--ink)}
 
 /* ---------------- the logo mark: arch head, eyes that follow the buddy's mood, orange spark */
 .mark{overflow:visible;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}

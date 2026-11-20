@@ -40,7 +40,97 @@ const hhmm = t => new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', m
 function setMode(x) {
   const m = typeof x === 'string' ? x : x.m;
   if (x && typeof x.shift === 'number') $('#island').style.setProperty('--shift', x.shift + 'px');
-  mode = m; document.body.className = 'm-' + m + (drag && drag.moved ? ' dragging' : '');
+  const from = mode; mode = m;
+  if (from !== m && booted) islandTo(from, m);
+  else document.body.className = 'm-' + m + (drag && drag.moved ? ' dragging' : '');
+  booted = true;
+}
+let booted = false;
+
+// ------------------------------------------------------------ open / close animation, inspired by the logo
+// A real spring (stiffness k, damping c) turned into a CSS linear() easing: opening overshoots a touch, closing doesn't.
+function spring(k, c) {
+  const xs = []; let x = 0, v = 0, still = 0;
+  for (let t = 0; t < 1.5; t += 0.001) {
+    v += (-k * (x - 1) - c * v) * 0.001; x += v * 0.001; xs.push(x);
+    if (Math.abs(x - 1) < 0.002 && Math.abs(v) < 0.03) { if (++still > 20) break; } else still = 0;
+  }
+  const n = 40, pts = [0];
+  for (let i = 1; i < n; i++) pts.push(+xs[Math.round(i / n * (xs.length - 1))].toFixed(4));
+  pts.push(1);
+  return { easing: `linear(${pts.join(',')})`, ms: xs.length };
+}
+const OPEN = spring(190, 21), CLOSE = spring(500, 44);   // open: ~0.6 s, 2% overshoot · close: ~0.4 s, no bounce (main.js ANIM_MS must cover it)
+const SIZE = { pill: [240, 42, 22], ask: [460, 168, 24], panel: [800, 520, 28] };
+const PANE = { pill: '#pill', ask: '#ask', panel: '#panel' };
+const calm = matchMedia('(prefers-reduced-motion: reduce)');
+let running = [];
+const fly = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+fly.id = 'flyMark'; fly.setAttribute('viewBox', '0 -18 88 62'); document.body.appendChild(fly);
+
+function islandTo(from, to) {
+  const isl = $('#island'), r = isl.getBoundingClientRect();
+  const rad0 = parseFloat(getComputedStyle(isl).borderBottomLeftRadius) || SIZE[from][2];
+  const flyFrom = from === 'pill' && to === 'panel' ? $('#pillFace') : from === 'panel' && to === 'pill' ? $('#avFace') : null;
+  const flyTo = flyFrom && (to === 'panel' ? $('#avFace') : $('#pillFace'));
+  const a = flyFrom && flyFrom.getBoundingClientRect();          // measured before anything moves
+  running.forEach(an => an.finish ? an.cancel() : an()); running = [];
+  document.body.className = 'm-' + to + (drag && drag.moved ? ' dragging' : '');
+  if (calm.matches) return;
+  const [w, h, rad] = SIZE[to], opening = w * h > r.width * r.height, sp = opening ? OPEN : CLOSE;
+  // the shape: springs to its new size; its corners round out like the logo's arch head on the way, then settle
+  const arch = opening ? 70 : 40;
+  running.push(
+    isl.animate([{ width: r.width + 'px', height: r.height + 'px' }, { width: w + 'px', height: h + 'px' }], { duration: sp.ms, easing: sp.easing }),
+    isl.animate([{ borderRadius: `0 0 ${rad0}px ${rad0}px` }, { borderRadius: `0 0 ${arch}px ${arch}px`, offset: 0.35 }, { borderRadius: `0 0 ${rad}px ${rad}px` }],
+      { duration: sp.ms * 0.85, easing: 'cubic-bezier(.45,0,.3,1)' }));
+  // the old face fades out quickly, the new one fades in as the shape arrives
+  const out = $(PANE[from]);
+  out.classList.add('leaving');
+  const fo = out.animate([{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 90 : 120, easing: 'ease-out', fill: 'forwards' });
+  fo.onfinish = () => { out.classList.remove('leaving'); fo.cancel(); };
+  running.push(() => { out.classList.remove('leaving'); fo.cancel(); });
+  running.push($(PANE[to]).animate([{ opacity: 0, scale: opening ? '.985' : '1.02' }, { opacity: 1, scale: '1' }],
+    { duration: opening ? 240 : 200, delay: opening ? 70 : sp.ms * 0.5, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+  // opening the panel: its menu and cards arrive one after another
+  if (to === 'panel') [...$$('#nav a, #pin'), ...$$('main section.on > *')].slice(0, 15).forEach((el, i) =>
+    running.push(el.animate([{ opacity: 0, translate: '0 7px' }, { opacity: 1, translate: '0 0' }],
+      { duration: 300, delay: 110 + i * 16, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' })));
+  if (flyFrom) flyLogo(flyFrom, flyTo, a, opening);
+}
+
+// the logo flies between the pill and the panel: it blinks on the way, opens with happy ^ ^ eyes and a spark pop,
+// and closes with a sleepy blink before it settles back in the pill
+const FLY = { open: { ms: 460, easing: 'cubic-bezier(.3,.85,.25,1)' }, close: { ms: 360, easing: 'cubic-bezier(.5,0,.3,1)' } };
+function flyLogo(src, dst, a, opening) {
+  const sp = opening ? FLY.open : FLY.close;
+  const b = dst.getBoundingClientRect();
+  if (!a.width || !b.width) return;
+  fly.dataset.k = ''; fly.innerHTML = src.innerHTML; fly.setAttribute('class', src.getAttribute('class'));
+  Object.assign(fly.style, { display: 'block', left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px' });
+  src.style.visibility = dst.style.visibility = 'hidden';
+  const dx = a.left - b.left, dy = a.top - b.top, s = a.width / b.width, big = Math.max(s, 1) * 1.14;
+  const mv = fly.animate([
+    { transform: `translate(${dx}px, ${dy}px) scale(${s})` },
+    { transform: `translate(${dx * 0.5}px, ${dy * 0.5}px) scale(${big})`, offset: 0.5 },      // swells a little on the way, like a hop
+    { transform: 'translate(0, 0) scale(1)' }], { duration: sp.ms, easing: sp.easing });
+  // opening: the name and the connection line slide in beside the logo as it lands (so it never flies through the text)
+  if (opening) for (const [el, d] of [[$('.brand .word'), 0.7], [$('#conn'), 0.82]])
+    running.push(el.animate([{ opacity: 0, translate: '-8px 0' }, { opacity: 1, translate: '0 0' }],
+      { duration: 260, delay: sp.ms * d, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+  const mood = (S.offline ? 'off' : S.mood) || 'happy';
+  const timers = [
+    setTimeout(() => setFace(fly, opening ? 'sleepy' : 'sleep'), sp.ms * 0.18),                       // blink
+    setTimeout(() => {
+      setFace(fly, opening ? 'happy' : mood);
+      if (opening) { const k = fly.querySelector('.spark');
+        k && k.animate([{ transform: 'scale(0) rotate(-35deg)', opacity: 0 }, { transform: 'scale(1.35) rotate(12deg)', opacity: 1, offset: 0.6 }, { transform: 'none', opacity: 1 }],
+          { duration: 360, easing: 'cubic-bezier(.3,1.4,.5,1)' }); }
+    }, sp.ms * 0.4)];
+  const done = () => { timers.forEach(clearTimeout); fly.style.display = 'none'; src.style.visibility = dst.style.visibility = '';
+    if (opening) { setFace(dst, 'happy'); setTimeout(() => setFace(dst, mood), 1200); } };   // stays happy for a moment
+  mv.onfinish = done;
+  running.push(() => { mv.cancel(); done(); });
 }
 lil.on('mode', setMode);
 // the logo's eyes look toward the mouse

@@ -82,7 +82,7 @@ function displayList() {
 }
 // Growing: make the window big first (the new room is transparent), then the island animates into it.
 // Shrinking: the island animates first, then the window is trimmed once the animation is over.
-const ANIM_MS = 320;
+const ANIM_MS = 460;   // longest closing animation in app.js (spring CLOSE + fades), then the shape is trimmed
 let boundsTimer = null;
 function setMode(m) {
   if (!SIZES[m] || !win) return;
