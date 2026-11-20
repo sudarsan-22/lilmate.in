@@ -1,0 +1,27 @@
+{
+    "error_string": "Failed slicing the model. Please verify the slicing of all plates on Bambu Studio before uploading.",
+    "export_time": 0,
+    "layer_height": 0.11999999731779099,
+    "plate_index": 1,
+    "prepare_time": 38,
+    "return_code": -100,
+    "sliced_plates": [
+        {
+            "filament_change_times": 0,
+            "generate_support_material_time": 0,
+            "id": 1,
+            "infill_time": 0,
+            "layer_filament_change": 0,
+            "main_predication": 0.0,
+            "make_perimeters_time": 0,
+            "obj_cached_cnt": 0,
+            "sliced_time": 0,
+            "sliced_time_with_cache": 0,
+            "total_predication": 0.0,
+            "triangle_count": 0,
+            "warning_message": "Object can't be printed for empty layer between 14.96 and 22.04.\nObject: t.stl\nMaybe parts of the object at these height are too thin, or the object has faulty mesh"
+        }
+    ],
+    "sparse_infill_density": 15.0,
+    "wall_loops": 3
+}
