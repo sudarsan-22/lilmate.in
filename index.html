@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>lil.mate Updater</title>
+<meta name="description" content="Update your lil.mate buddy from any phone or computer: Wi-Fi, USB cable or Bluetooth.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fff8ee;--cream2:#f7ecdb;--cream3:#efdfc6;--ink:#24130f;--soft:#6b5a4f;--orange:#f7931e;--green:#3f9b63;--white:#fff;--line:rgba(36,19,15,.08);--sh:0 10px 30px -12px rgba(36,19,15,.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font:600 16px/1.5 Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,.word{font-family:Fredoka,system-ui,sans-serif;font-weight:600;letter-spacing:-.02em}
+main{max-width:760px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;justify-content:space-between;background:#ffffffc0;border:1px solid var(--line);border-radius:999px;padding:8px 10px 8px 18px;box-shadow:var(--sh)}
+.brand{display:flex;align-items:flex-end;gap:8px;color:var(--ink);text-decoration:none}
+.brand svg{width:34px;height:24px;overflow:visible;fill:none;stroke:currentColor;stroke-linecap:round}
+.word{font-size:24px;line-height:1}.word i{font-style:normal;color:var(--orange)}
+header a.site{color:var(--soft);text-decoration:none;font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px}
+header a.site:hover{background:rgba(36,19,15,.06);color:var(--ink)}
+.hero{padding:34px 4px 18px}
+h1{font-size:clamp(30px,6vw,44px);line-height:1.08}
+h1 em{font-style:normal;color:var(--orange)}
+.lead{color:var(--soft);margin-top:10px;max-width:560px}
+.latest{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--white);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 8px;font-size:14px;box-shadow:var(--sh)}
+.latest b{background:var(--ink);color:var(--cream);border-radius:999px;padding:1px 10px;font-weight:800}
+.notes{color:var(--soft);font-size:14px;margin-top:8px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:24px;padding:20px;margin-top:14px;box-shadow:var(--sh)}
+.card.off{opacity:.6}
+.top{display:flex;gap:14px;align-items:flex-start}
+.ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex:none}
+.ic svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.i1{background:#e3ecf5;color:#5b7397}.i2{background:#fde7cb;color:#b4600a}.i3{background:var(--cream2);color:var(--ink)}
+h2{font-size:21px;line-height:1.2}
+.who{color:var(--soft);font-size:14px}
+.tag{display:inline-block;font-size:12px;font-weight:800;border-radius:999px;padding:1px 9px;background:var(--cream2);color:var(--soft);margin-left:6px;vertical-align:middle}
+.tag.best{background:#dff1e6;color:var(--green)}
+ol{margin:14px 0 0 20px;color:var(--ink)}ol li{margin:4px 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:16px}
+.btn{background:var(--ink);color:var(--cream);border:0;border-radius:999px;padding:12px 22px;font:800 15px Nunito,sans-serif;cursor:pointer;transition:background .15s}
+.btn:hover:not(:disabled){background:var(--orange);color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn2{background:none;border:1.5px solid rgba(36,19,15,.15);color:var(--ink);border-radius:999px;padding:10px 18px;font:800 15px Nunito,sans-serif;cursor:pointer;text-decoration:none}
+.btn2:hover{background:rgba(36,19,15,.05)}
+.status{font-size:14px;color:var(--soft);min-height:21px}
+.status.ok{color:var(--green)}.status.err{color:#b4441b}
+.bar{height:10px;background:var(--cream2);border-radius:99px;overflow:hidden;margin-top:12px;display:none}
+.bar.on{display:block}.bar i{display:block;height:100%;width:0;background:var(--orange);border-radius:99px;transition:width .2s}
+.hold{display:none;margin-top:14px;background:#fde7cb;border-radius:16px;padding:12px 14px;font-weight:800;color:#8a4a00}
+.hold.on{display:flex;gap:10px;align-items:center}
+.hold span{width:12px;height:12px;border-radius:50%;background:var(--orange);animation:p 1s infinite;flex:none}
+@keyframes p{50%{box-shadow:0 0 0 7px rgba(247,147,30,.25)}}
+.why{font-size:13px;color:var(--soft);margin-top:10px}
+footer{color:var(--soft);font-size:13px;text-align:center;margin-top:30px}
+footer a{color:var(--soft)}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <a class="brand" href="https://lilmate.in" aria-label="lil.mate home">
+    <svg viewBox="0 -18 88 62"><path stroke-width="5" d="M6 40C6 18 18 6 32 6C46 6 58 18 58 40"/><path stroke-width="4" d="M21 31Q24.5 25 28 31M36 31Q39.5 25 43 31"/><g transform="translate(56 -16) scale(.7)" stroke="#f7931e" stroke-width="5"><path d="M14 4L11 15M30 9L21 18M36 25L25 28"/></g></svg>
+    <span class="word">lil<i>.</i>mate</span>
+  </a>
+  <a class="site" href="https://lilmate.in">lilmate.in</a>
+</header>
+
+<section class="hero">
+  <h1>Update your <em>lil.mate</em></h1>
+  <p class="lead">Pick whatever you have. Your tasks, habits and settings stay. If anything goes wrong, lil.mate keeps running the version it has.</p>
+  <div class="latest" id="latest"><b>…</b><span>checking the newest version</span></div>
+  <p class="notes" id="notes"></p>
+</section>
+
+<!-- Wi-Fi: works with every phone and computer, nothing to install -->
+<div class="card" id="cWifi">
+  <div class="top"><div class="ic i1"><svg viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/></svg></div>
+    <div><h2>Over Wi-Fi <span class="tag best">easiest</span></h2><p class="who">Any phone or computer, iPhone too. lil.mate downloads it by itself.</p></div></div>
+  <ol>
+    <li>lil.mate checks for new versions once a day and says <b>"New update"</b> on its screen.</li>
+    <li><b>Hold</b> lil.mate to install. (Missed it? Go to its <b>Info</b> screen and hold.)</li>
+    <li>Or on your phone: open <b>lilmate.local</b> → <b>More</b> → <b>Updates</b> → <b>Install</b>.</li>
+  </ol>
+  <div class="row"><a class="btn2" href="http://lilmate.local" target="_blank" rel="noopener">Open lilmate.local</a></div>
+  <p class="why">Can't open lilmate.local on Android? Use the address shown on lil.mate's Info screen, like 192.168.0.10.</p>
+</div>
+
+<!-- USB cable: Web Serial (Chrome / Edge on Windows, Mac, Linux, ChromeOS) -->
+<div class="card" id="cUsb">
+  <div class="top"><div class="ic i2"><svg viewBox="0 0 24 24"><path d="M12 3v13M8.5 6.5 12 3l3.5 3.5M7 10v2.5l5 3.5 5-3.5V10"/><circle cx="12" cy="19" r="2"/></svg></div>
+    <div><h2>USB cable</h2><p class="who">Windows, Mac, Linux or Chromebook, in Chrome or Edge. No Wi-Fi needed.</p></div></div>
+  <ol>
+    <li>Plug lil.mate into the computer with its USB-C cable.</li>
+    <li>Quit the lil.mate Desk app if it's open (only one app can use the cable).</li>
+    <li>Press <b>Connect</b> and pick <b>USB JTAG/serial</b> (or lil.mate) in the list.</li>
+  </ol>
+  <div class="row"><button class="btn" id="usbGo">Connect</button><span class="status" id="usbSt"></span></div>
+  <div class="bar" id="usbBar"><i></i></div>
+</div>
+
+<!-- Bluetooth: Web Bluetooth (Chrome on Android, Chrome / Edge on computers) -->
+<div class="card" id="cBle">
+  <div class="top"><div class="ic i3"><svg viewBox="0 0 24 24"><path d="m7 7 10 10-5 4V3l5 4L7 17"/></svg></div>
+    <div><h2>Bluetooth</h2><p class="who">Android phones (Chrome) and computers with Bluetooth. Good for offices without Wi-Fi.</p></div></div>
+  <ol>
+    <li>Bluetooth turns on by itself when lil.mate has no Wi-Fi. If it has Wi-Fi, send <b>/bluetooth</b> to it (Telegram, lilmate.local or the Desk app).</li>
+    <li>Press <b>Connect</b> and pick <b>lil.mate</b>.</li>
+    <li>When lil.mate asks, <b>hold it</b> to allow the update. Keep the phone close.</li>
+  </ol>
+  <div class="row"><button class="btn" id="bleGo">Connect</button><span class="status" id="bleSt"></span></div>
+  <div class="hold" id="bleHold"><span></span>Now hold lil.mate to allow the update</div>
+  <div class="bar" id="bleBar"><i></i></div>
+</div>
+
+<footer>Made by lil.mate · <a href="https://lilmate.in">lilmate.in</a> · <span id="env"></span></footer>
+</main>
+
+<script>
+'use strict';
+const FEED = 'https://raw.githubusercontent.com/sudarsan-22/lilmate.in/updates/';
+const SVC = '6c696c6d-6174-6501-8000-00805f9b34fb', CTRL = '6c696c6d-6174-6502-8000-00805f9b34fb', DATA = '6c696c6d-6174-6503-8000-00805f9b34fb', INFO = '6c696c6d-6174-6504-8000-00805f9b34fb';
+const $ = s => document.querySelector(s);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+let M = null, BIN = null;
+
+function newer(a, b) { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); return false; }
+function say(id, t, cls) { const e = $(id); e.textContent = t; e.className = 'status' + (cls ? ' ' + cls : ''); }
+function bar(id, p) { const b = $(id); b.classList.toggle('on', p >= 0); b.firstElementChild.style.width = Math.max(0, Math.min(100, p)) + '%'; }
+const hex = buf => [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+
+async function manifest() {
+  const r = await fetch(FEED + 'lilmate.json?t=' + Date.now(), { cache: 'no-store' });
+  if (!r.ok) throw new Error('Could not reach the update server');
+  return r.json();
+}
+// download once, checked against its sha256 before anything is sent to lil.mate
+async function firmware(onP) {
+  if (BIN) return BIN;
+  const f = M.firmware;
+  const r = await fetch(FEED + f.file, { cache: 'no-store' });
+  if (!r.ok) throw new Error('Download failed');
+  const total = f.size, rd = r.body.getReader(), parts = []; let got = 0;
+  for (;;) { const { done, value } = await rd.read(); if (done) break; parts.push(value); got += value.length; onP && onP(got / total); }
+  const bin = new Uint8Array(got); let o = 0; for (const p of parts) { bin.set(p, o); o += p.length; }
+  if (got !== f.size || hex(await crypto.subtle.digest('SHA-256', bin)) !== f.sha256) throw new Error('Download did not match, try again');
+  return (BIN = bin);
+}
+
+// ------------------------------------------------------------ USB cable (Web Serial), same "@ota" protocol as lil.mate Desk
+class Lines {
+  constructor(port) { this.port = port; this.buf = ''; this.waiters = []; this.reader = port.readable.getReader(); this.writer = port.writable.getWriter(); this.pump(); }
+  async pump() {
+    const dec = new TextDecoder();
+    try { for (;;) { const { value, done } = await this.reader.read(); if (done) break; this.buf += dec.decode(value, { stream: true });
+      let i; while ((i = this.buf.indexOf('\n')) >= 0) { const l = this.buf.slice(0, i).replace(/\r$/, ''); this.buf = this.buf.slice(i + 1); this.line(l); } } } catch (e) {}
+  }
+  line(l) { const w = this.waiters.find(w => w.m(l)); if (w) { this.waiters = this.waiters.filter(x => x !== w); clearTimeout(w.t); w.res(l); } }
+  expect(m, ms, send) {
+    return new Promise((res, rej) => { const w = { m, res }; w.t = setTimeout(() => { this.waiters = this.waiters.filter(x => x !== w); rej(new Error('lil.mate stopped answering')); }, ms); this.waiters.push(w);
+      if (send) this.writer.write(typeof send === 'string' ? new TextEncoder().encode(send) : send); });
+  }
+  async close() { try { this.reader.cancel(); } catch (e) {} try { this.writer.releaseLock(); this.reader.releaseLock(); await this.port.close(); } catch (e) {} }
+}
+let usb = null;
+$('#usbGo').onclick = async () => {
+  const b = $('#usbGo');
+  try {
+    if (!usb) {
+      const port = await navigator.serial.requestPort({ filters: [{ usbVendorId: 0x303a }] });
+      await port.open({ baudRate: 115200 });
+      usb = new Lines(port);
+      say('#usbSt', 'Saying hello…');
+      let hi = null;
+      for (let i = 0; i < 6 && !hi; i++) hi = await usb.expect(l => l.startsWith('@hi '), 1500, '\n@hello\n').catch(() => null);   // it may still be booting
+      if (!hi) throw new Error('lil.mate did not answer. Unplug it, plug it back in and try again.');
+      const d = JSON.parse(hi.slice(4));
+      usb.fw = (String(d.fw).match(/\d+\.\d+\.\d+/) || ['0.0.0'])[0];
+      if (!newer(M.firmware.version, usb.fw)) { say('#usbSt', `lil.mate ${usb.fw} is up to date`, 'ok'); b.textContent = 'Install again'; b.dataset.force = 1; return; }
+      say('#usbSt', `lil.mate ${usb.fw} found. ${M.firmware.version} is ready.`); b.textContent = `Install ${M.firmware.version}`; return;
+    }
+    b.disabled = true;
+    say('#usbSt', 'Downloading…'); bar('#usbBar', 0);
+    const bin = await firmware(p => bar('#usbBar', p * 100));
+    say('#usbSt', 'Sending to lil.mate… keep it plugged in'); bar('#usbBar', 0);
+    let r = await usb.expect(l => l.startsWith('@ota '), 6000, `@ota ${bin.length} ${M.firmware.md5}\n`).catch(() => null);
+    if (!r) throw new Error('This lil.mate is too old for cable updates. Update it once over Wi-Fi first.');
+    r = JSON.parse(r.slice(5)); if (!r.ok) throw new Error('lil.mate said: ' + r.e);
+    for (let off = 0; off < bin.length; off += 1024) {
+      const l = await usb.expect(l => l.startsWith('@ok ') || l.startsWith('@ota '), 10000, bin.subarray(off, off + 1024));
+      if (l.startsWith('@ota ')) throw new Error('lil.mate said: ' + JSON.parse(l.slice(5)).e);
+      bar('#usbBar', Number(l.slice(4)) / bin.length * 100);
+    }
+    r = JSON.parse((await usb.expect(l => l.startsWith('@ota '), 20000)).slice(5));
+    if (!r.ok || !r.done) throw new Error('lil.mate said: ' + (r.e || 'not finished'));
+    say('#usbSt', `Done! lil.mate restarts on ${M.firmware.version}.`, 'ok'); b.textContent = 'Connect';
+    await usb.close(); usb = null;
+  } catch (e) {
+    if (e.name === 'NotFoundError') { say('#usbSt', 'No lil.mate picked. Is it plugged in?', 'err'); return; }
+    say('#usbSt', e.message.includes('Failed to open') ? 'The cable is busy: quit the lil.mate Desk app and try again.' : e.message, 'err');
+    if (usb) { await usb.close(); usb = null; } b.textContent = 'Connect'; bar('#usbBar', -1);
+  } finally { b.disabled = false; }
+};
+
+// ------------------------------------------------------------ Bluetooth (Web Bluetooth)
+let ble = null;
+$('#bleGo').onclick = async () => {
+  const b = $('#bleGo');
+  try {
+    if (!ble) {
+      const dev = await navigator.bluetooth.requestDevice({ filters: [{ services: [SVC] }] });
+      say('#bleSt', 'Connecting…');
+      const gatt = await dev.gatt.connect(), svc = await gatt.getPrimaryService(SVC);
+      ble = { dev, gatt, ctrl: await svc.getCharacteristic(CTRL), data: await svc.getCharacteristic(DATA), msgs: [], wait: null };
+      const info = JSON.parse(new TextDecoder().decode(await (await svc.getCharacteristic(INFO)).readValue()));
+      ble.fw = info.fw;
+      await ble.ctrl.startNotifications();
+      ble.ctrl.addEventListener('characteristicvaluechanged', e => { const m = new TextDecoder().decode(e.target.value); if (ble.wait && ble.wait.m(m)) { const w = ble.wait; ble.wait = null; clearTimeout(w.t); w.res(m); } else ble.msgs.push(m); });
+      dev.addEventListener('gattserverdisconnected', () => { if (ble && ble.wait) ble.wait.rej(new Error('Bluetooth disconnected. Move closer and try again.')); ble = null; b.textContent = 'Connect'; });
+      if (!newer(M.firmware.version, ble.fw)) { say('#bleSt', `lil.mate ${ble.fw} is up to date`, 'ok'); b.textContent = 'Install again'; return; }
+      say('#bleSt', `lil.mate ${ble.fw} found. ${M.firmware.version} is ready.`); b.textContent = `Install ${M.firmware.version}`; return;
+    }
+    const expect = (m, ms) => new Promise((res, rej) => { const i = ble.msgs.findIndex(m); if (i >= 0) return res(ble.msgs.splice(i, 1)[0]); ble.wait = { m, res, rej, t: setTimeout(() => { ble.wait = null; rej(new Error('lil.mate stopped answering')); }, ms) }; });
+    b.disabled = true;
+    say('#bleSt', 'Downloading…'); bar('#bleBar', 0);
+    const bin = await firmware(p => bar('#bleBar', p * 100));
+    bar('#bleBar', 0); ble.msgs = [];
+    await ble.ctrl.writeValueWithResponse(new TextEncoder().encode(`begin ${bin.length} ${M.firmware.md5}`));
+    let m = await expect(x => x === 'wait' || x.startsWith('err'), 5000);
+    if (m.startsWith('err')) throw new Error('lil.mate said: ' + m.slice(4));
+    $('#bleHold').classList.add('on'); say('#bleSt', 'Waiting for you to hold lil.mate…');
+    m = await expect(x => x === 'ready' || x.startsWith('err'), 45000);
+    $('#bleHold').classList.remove('on');
+    if (m.startsWith('err')) throw new Error('lil.mate said: ' + m.slice(4));
+    say('#bleSt', 'Sending over Bluetooth… keep the phone close');
+    let chunk = 509, off = 0, acked = 0;
+    while (off < bin.length) {
+      const part = bin.subarray(off, off + chunk);
+      try { await ble.data.writeValueWithoutResponse(part); }
+      catch (e) { if (off === 0 && chunk > 20) { chunk = chunk > 244 ? 244 : chunk > 180 ? 180 : 20; continue; } throw e; }   // find what this phone's Bluetooth allows
+      off += part.length;
+      if (off - acked >= 4096 || off === bin.length) {   // let lil.mate catch up every 4 KB
+        const target = off;
+        m = await expect(x => x.startsWith('err') || (x.startsWith('ok ') && Number(x.slice(3)) >= target), 15000);
+        if (m.startsWith('err')) throw new Error('lil.mate said: ' + m.slice(4));
+        acked = target; bar('#bleBar', off / bin.length * 100);
+      }
+    }
+    m = await expect(x => x === 'done' || x.startsWith('err'), 20000);
+    if (m !== 'done') throw new Error('lil.mate said: ' + m.slice(4));
+    say('#bleSt', `Done! lil.mate restarts on ${M.firmware.version}.`, 'ok');
+  } catch (e) {
+    $('#bleHold').classList.remove('on');
+    if (e.name === 'NotFoundError') { say('#bleSt', 'No lil.mate picked. Is Bluetooth on (send /bluetooth to it)?', 'err'); return; }
+    say('#bleSt', e.message, 'err'); bar('#bleBar', -1);
+    try { ble && ble.ctrl.writeValueWithResponse(new TextEncoder().encode('abort')); } catch (x) {}
+  } finally { b.disabled = false; }
+};
+
+// ------------------------------------------------------------ start: show what this browser can do
+(async () => {
+  const ua = navigator.userAgent, ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const hasSerial = 'serial' in navigator, hasBle = 'bluetooth' in navigator;
+  if (!hasSerial) { $('#cUsb').classList.add('off'); $('#usbGo').disabled = true; say('#usbSt', ios ? 'Not on iPhone: use Wi-Fi above.' : 'Open this page in Chrome or Edge on a computer.'); }
+  if (!hasBle) { $('#cBle').classList.add('off'); $('#bleGo').disabled = true; say('#bleSt', ios ? 'Not on iPhone: use Wi-Fi above.' : 'Open this page in Chrome (Android) or Chrome / Edge.'); }
+  $('#env').textContent = [hasSerial && 'USB', hasBle && 'Bluetooth', 'Wi-Fi'].filter(Boolean).join(' · ') + ' work in this browser';
+  try {
+    M = await manifest();
+    $('#latest').innerHTML = `<b>${M.firmware.version}</b><span>newest lil.mate version · ${M.date || ''}</span>`;
+    $('#notes').textContent = M.notes || '';
+  } catch (e) {
+    $('#latest').innerHTML = `<b>!</b><span>${e.message}. Check the internet and reload.</span>`;
+    for (const id of ['#usbGo', '#bleGo']) $(id).disabled = true;
+  }
+})();
+</script>
+</body>
+</html>
