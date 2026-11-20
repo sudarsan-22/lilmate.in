@@ -9,6 +9,7 @@ const hooks = require('./lib/hooks');
 const server = require('./lib/server');
 const { fetchCalendar } = require('./lib/ics');
 const updater = require('./lib/updater');
+const tidy = require('./lib/tidy');
 
 if (process.platform === 'linux') {
   app.commandLine.appendSwitch('no-sandbox');                 // Ubuntu 24+ blocks the setuid sandbox for AppImages
@@ -18,7 +19,7 @@ if (!app.requestSingleInstanceLock()) app.quit();
 
 // ------------------------------------------------------------ settings
 const SETTINGS = path.join(app.getPath('userData'), 'settings.json');
-let settings = { host: '', forceWifi: false, ics: '', autostart: true, approve: true, first: true, autoCheck: true };
+let settings = { host: '', forceWifi: false, ics: '', autostart: true, approve: true, first: true, autoCheck: true, follow: true };
 try { settings = { ...settings, ...JSON.parse(fs.readFileSync(SETTINGS, 'utf8')) }; } catch (e) {}
 function saveSettings() { fs.mkdirSync(path.dirname(SETTINGS), { recursive: true }); fs.writeFileSync(SETTINGS, JSON.stringify(settings, null, 2), { mode: 0o600 }); }
 
@@ -283,6 +284,33 @@ async function updateFirmware(force) {
   } catch (e) { upd.busy = null; upd.error = e.message; pushUpd(); }
 }
 
+// ------------------------------------------------------------ eyes follow the mouse (island + the buddy)
+let lastCur = null, lastLook = 0;
+function cursorTick() {
+  if (!win || win.isDestroyed()) return;
+  const p = screen.getCursorScreenPoint();
+  if (lastCur && Math.abs(p.x - lastCur.x) + Math.abs(p.y - lastCur.y) < 4) return;
+  lastCur = p;
+  const b = win.getBounds();
+  send('cursor', { dx: p.x - (b.x + b.width / 2), dy: p.y - (b.y + 20) });
+  if (settings.follow === false || !link || link.updating || Date.now() - lastLook < (link.kind === 'usb' ? 250 : 800)) return;
+  lastLook = Date.now();
+  const all = screen.getAllDisplays(), minX = Math.min(...all.map(d => d.bounds.x)), maxX = Math.max(...all.map(d => d.bounds.x + d.bounds.width));
+  const d = screen.getDisplayNearestPoint(p);
+  const x = (p.x - minX) / Math.max(1, maxX - minX) * 2 - 1, y = (p.y - d.bounds.y) / d.bounds.height * 2 - 1;
+  link.look(x, y * 0.8).catch(() => {});
+}
+
+// ------------------------------------------------------------ tidy Downloads / Desktop
+const TIDY_LOG = path.join(app.getPath('userData'), 'tidy-undo.json');
+const tidyDirs = () => [{ key: 'downloads', name: 'Downloads', dir: app.getPath('downloads') }, { key: 'desktop', name: 'Desktop', dir: app.getPath('desktop') }];
+function tidyLogs() { try { return JSON.parse(fs.readFileSync(TIDY_LOG, 'utf8')); } catch (e) { return {}; } }
+function tidyPlan() { const logs = tidyLogs(); return tidyDirs().map(t => { const p = tidy.plan(t.dir); return { key: t.key, name: t.name, dir: t.dir, total: p.total, missing: !!p.missing, groups: Object.fromEntries(Object.entries(p.groups).map(([g, l]) => [g, l.length])), undo: (logs[t.key] || []).length }; }); }
+ipcMain.handle('tidy:plan', () => tidyPlan());
+ipcMain.handle('tidy:run', (_e, key) => { const t = tidyDirs().find(x => x.key === key); if (!t) return { moved: 0 }; const log = tidy.tidy(t.dir); const logs = tidyLogs(); logs[key] = log; fs.writeFileSync(TIDY_LOG, JSON.stringify(logs)); return { moved: log.length, plan: tidyPlan() }; });
+ipcMain.handle('tidy:undo', (_e, key) => { const logs = tidyLogs(); const back = tidy.undo(logs[key] || []); delete logs[key]; fs.writeFileSync(TIDY_LOG, JSON.stringify(logs)); return { back, plan: tidyPlan() }; });
+ipcMain.handle('tidy:open', (_e, key) => { const t = tidyDirs().find(x => x.key === key); if (t) shell.openPath(t.dir); });
+
 // ------------------------------------------------------------ IPC from the island UI
 ipcMain.handle('mode', (_e, m) => setMode(m));
 ipcMain.on('drag:move', (_e, x, y) => dragMove(x, y));
@@ -297,7 +325,7 @@ ipcMain.handle('hooks:set', (_e, tool, on) => { try { return { ok: true, status:
 ipcMain.handle('settings:get', () => ({ ...settings, ics: settings.ics ? 'set' : '', version: app.getVersion(), platform: process.platform }));
 ipcMain.handle('settings:set', async (_e, patch) => {
   if ('ics' in patch) { settings.ics = patch.ics; calFetched = 0; calSent = 0; }
-  for (const k of ['host', 'forceWifi', 'autostart', 'approve', 'first', 'autoCheck']) if (k in patch) settings[k] = patch[k];
+  for (const k of ['host', 'forceWifi', 'autostart', 'approve', 'first', 'autoCheck', 'follow']) if (k in patch) settings[k] = patch[k];
   saveSettings(); applyAutostart();
   if ('host' in patch || 'forceWifi' in patch) { if (link) link.close(); link = null; }
   if ('ics' in patch && settings.ics) { try { calEvents = await fetchCalendar(settings.ics); calFetched = Date.now(); calTick(); return { ok: true, meetings: calEvents }; } catch (e) { return { ok: false, error: 'Could not read that calendar link' }; } }
@@ -328,6 +356,7 @@ app.whenReady().then(() => {
   migrateOldHooks();
   pollState(); setInterval(pollState, 2000);
   setInterval(pushPc, 5000);
+  setInterval(cursorTick, 100);
   setInterval(calTick, 30000); calTick();
   setInterval(() => { if (link && link.kind === 'usb') link.syncTime(); }, 6 * 3600000);
   const autoCheck = () => { if (settings.autoCheck !== false) checkUpdates(false); };

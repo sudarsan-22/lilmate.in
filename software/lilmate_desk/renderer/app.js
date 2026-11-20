@@ -31,13 +31,23 @@ setFace($('#pillFace'), 'happy'); setFace($('#avFace'), 'happy'); setFace($('#as
 const FEEL = { neutral: 'chilling', happy: 'happy', love: 'in love', surprised: 'surprised', angry: 'grumpy', sad: 'a bit sad', sleepy: 'sleepy', sleep: 'napping', think: 'thinking', cool: 'cool', laugh: 'giggly', wink: 'playful', focus: 'focused', alert: 'calling you', dizzy: 'dizzy', curious: 'curious' };
 
 function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('on'); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('on'), 2600); }
-async function run(c) { if (!c.trim()) return; const r = await lil.cmd(c); toast(String(r).split('\n')[0]); }
+async function run(c) { if (!c.trim()) return; const r = await lil.cmd(c); toast(String(r).split('\n')[0]); flashPill(r); }
 const fmtWait = s => s < 60 ? s + 's' : Math.floor(s / 60) + 'm' + String(s % 60).padStart(2, '0');
 const hhmm = t => new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 // ------------------------------------------------------------ modes (pill / ask / panel)
 function setMode(m) { mode = m; document.body.className = 'm-' + m; }
 lil.on('mode', setMode);
+// the logo's eyes look toward the mouse
+lil.on('cursor', c => { if (S.offline) return; const k = v => Math.max(-1, Math.min(1, v / 420)); document.documentElement.style.setProperty('--ex', (k(c.dx) * 3).toFixed(2) + 'px'); document.documentElement.style.setProperty('--ey', (k(c.dy) * 2).toFixed(2) + 'px'); });
+// after each command the closed pill shows a short tick, like "✓ Added"
+let flash = null;
+function flashPill(r) {
+  const t = String(r || '').replace(/^[^\w(]+/u, '').split(/[\n.:!]/)[0].trim();
+  if (!t || /not connected|unknown|sorry|which/i.test(t)) return;
+  flash = { t: '✓ ' + (t.length > 26 ? t.slice(0, 25) + '…' : t), until: Date.now() + 2400 }; render();
+  setTimeout(render, 2500);
+}
 // hover opens after a short pause (so a grab-to-drag doesn't pop the panel); a click opens at once
 let openTimer = null, drag = null;
 $('#pill').addEventListener('mouseenter', () => { clearTimeout(openTimer); openTimer = setTimeout(() => { if (!drag) lil.mode('panel'); }, 450); });
@@ -71,7 +81,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = f
 $('#pin').onclick = () => { pinned = !pinned; $('#pin').classList.toggle('on', pinned); $('#pin').textContent = pinned ? 'Kept open · Esc to close' : 'Keep open'; };
 
 // ------------------------------------------------------------ navigation
-function go(p) { $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.p === p)); $$('main section').forEach(s => s.classList.toggle('on', s.dataset.p === p)); if (p === 'agents') loadTools(); if (p === 'settings') loadSettings(); }
+function go(p) { $$('#nav a').forEach(a => a.classList.toggle('on', a.dataset.p === p)); $$('main section').forEach(s => s.classList.toggle('on', s.dataset.p === p)); if (p === 'agents') loadTools(); if (p === 'settings') loadSettings(); if (p === 'tidy') loadTidy(); }
 $$('#nav a').forEach(a => a.onclick = () => go(a.dataset.p));
 
 // ------------------------------------------------------------ input
@@ -94,7 +104,9 @@ $('#askDeny').onclick = () => asks[0] && lil.decide(asks[0].rid, 'deny');
 setInterval(() => { const a = asks[0]; if (a) $('#askTtl').style.width = Math.max(0, 100 - (Date.now() - a.at) / (a.ttl * 10)) + '%'; }, 200);
 
 // ------------------------------------------------------------ state from the buddy
-lil.on('state', s => { S = s; render(); });
+let focusEnd = 0;
+lil.on('state', s => { S = s; if (s.focus && s.focus.running && !s.focus.paused) focusEnd = Date.now() + s.focus.remain; render(); });
+setInterval(() => { if (S.focus && S.focus.running && !S.focus.paused && mode !== 'panel') render(); }, 1000);
 function render() {
   const off = S.offline;
   const conn = off ? '<span class="dot"></span> not connected' : `<span class="dot ok"></span> ${S.conn && S.conn.kind === 'usb' ? 'USB cable' : 'Wi-Fi'}`;
@@ -109,10 +121,13 @@ function render() {
   else if (asks.length) { txt = 'needs your OK'; attn = true; }
   else if (att) { attn = att.st !== 'done'; txt = att.st === 'done' ? `${att.name} is done` : `${att.name} needs you`; }
   else if (meet && meet.t - now < 900) txt = meet.t <= now ? `in ${meet.s}` : `${meet.s} in ${Math.ceil((meet.t - now) / 60)}m`;
+  else if (S.focus && S.focus.running) { const left = Math.max(0, Math.ceil((focusEnd - Date.now()) / 1000)); txt = `${S.focus.brk ? 'break' : 'focus'} ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}${S.focus.paused ? ' · paused' : ''}`; }
   else if (work) txt = `${work.name} · ${fmtWait(work.wait)}`;
   else if (w.busy) txt = `busy · ${w.reason}`;
   else if (S.time) txt = S.time + (S.wx && S.wx.ok ? ` · ${Math.round(S.wx.temp)}°` : '');
-  $('#pillText').textContent = txt;
+  const fl = flash && Date.now() < flash.until && !attn;
+  $('#pillText').textContent = fl ? flash.t : txt;
+  $('#pill').classList.toggle('flash', !!fl);
   $('#pill').classList.toggle('attn', attn);
   $('#pillDot').className = 'dot ' + (off ? '' : attn ? 'attn' : 'ok');
   setFace($('#pillFace'), off ? 'off' : S.mood, attn); setFace($('#avFace'), off ? 'off' : S.mood);
@@ -178,7 +193,7 @@ async function loadTools() {
 async function loadSettings() {
   const s = await lil.settings();
   $('#ver').textContent = `lil.mate Desk ${s.version} · ${s.platform}`;
-  $('#autoCheck').checked = s.autoCheck !== false;
+  $('#autoCheck').checked = s.autoCheck !== false; $('#follow').checked = s.follow !== false;
   $('#host').value = s.host || ''; $('#autostart').checked = !!s.autostart; $('#approve').checked = s.approve !== false;
   const ds = await lil.displays();
   $('#screens').innerHTML = ds.map(d => `<option value="${d.id}" ${d.current ? 'selected' : ''}>${esc(d.label)}</option>`).join('');
@@ -193,6 +208,26 @@ $('#icsSave').onclick = async () => {
 };
 $('#autostart').onchange = e => lil.setSettings({ autostart: e.target.checked });
 $('#approve').onchange = e => lil.setSettings({ approve: e.target.checked });
+$('#follow').onchange = e => lil.setSettings({ follow: e.target.checked });
+
+// ------------------------------------------------------------ tidy Downloads / Desktop
+let tidySure = null;
+function renderTidy(plan) {
+  $('#tidyList').innerHTML = plan.map(t => `<div class="tcard"><div class="th"><b>${esc(t.name)}</b><small>${t.missing ? 'not found' : t.total ? `${t.total} loose file${t.total > 1 ? 's' : ''} to sort` : 'already tidy'}</small></div>
+    ${t.total ? `<div class="tg">${Object.entries(t.groups).map(([g, n]) => `<span>${esc(g)}<i>${n}</i></span>`).join('')}</div>` : ''}
+    <div class="row">${t.total ? `<button class="btn" data-tidy="${t.key}">${tidySure === t.key ? 'Sure? Click again' : 'Tidy now'}</button>` : ''}${t.undo ? `<button class="btn2" data-undo="${t.key}">Undo last tidy (${t.undo})</button>` : ''}<button class="btn2" data-open="${t.key}">Open folder</button></div></div>`).join('');
+}
+async function loadTidy() { renderTidy(await lil.tidyPlan()); }
+$('#tidyList').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.open) return lil.tidyOpen(b.dataset.open);
+  if (b.dataset.undo) { const r = await lil.tidyUndo(b.dataset.undo); toast(`Put back ${r.back} file${r.back === 1 ? '' : 's'}`); flashPill('Put back'); return renderTidy(r.plan); }
+  if (b.dataset.tidy) {
+    if (tidySure !== b.dataset.tidy) { tidySure = b.dataset.tidy; setTimeout(() => { tidySure = null; }, 4000); return loadTidy(); }
+    tidySure = null; const r = await lil.tidyRun(b.dataset.tidy);
+    toast(`Sorted ${r.moved} file${r.moved === 1 ? '' : 's'} into folders`); flashPill('Tidied'); renderTidy(r.plan);
+  }
+});
 $('#openDash').onclick = () => lil.openDashboard();
 $('#screens').onchange = e => { lil.moveTo(e.target.value); toast('Moved'); };
 $('#posReset').onclick = () => { lil.resetPos(); toast('Back to the centre'); setTimeout(loadSettings, 300); };

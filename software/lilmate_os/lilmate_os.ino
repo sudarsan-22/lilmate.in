@@ -27,6 +27,7 @@
 #include "diag.h"
 #include "face.h"
 #include "touch.h"
+#include "scenes.h"
 #include "net.h"
 #include "apps.h"
 #include "agent.h"
@@ -128,6 +129,7 @@ void serialLoop() {
     }
     if (line == "@state") { JsonDocument d; buildState(d); Serial.print("@st "); serializeJson(d, Serial); Serial.println(); continue; }
     if (line.startsWith("@cmd ")) { JsonDocument d; d["r"] = runCommand(line.substring(5), SRC_AGENT, ""); Serial.print("@re "); serializeJson(d, Serial); Serial.println(); continue; }
+    if (line.startsWith("@look ")) { float x = 0, y = 0; sscanf(line.c_str() + 6, "%f %f", &x, &y); lookX = constrain(x, -1.f, 1.f); lookY = constrain(y, -1.f, 1.f); lookUntil = millis() + 3000; continue; }
     if (line.startsWith("@ota ")) { serialOta(line.substring(5)); continue; }
     if (line.startsWith("@hello")) { Serial.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\"}\n", FW_VERSION, S.owner); continue; }
     String low = line; low.toLowerCase();

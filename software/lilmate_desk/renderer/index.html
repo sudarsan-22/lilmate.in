@@ -37,6 +37,7 @@
         <a data-p="agents"><svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="12" rx="4"/><path d="M9 11v2M15 11v2M12 3v3"/></svg>AI helpers<em id="bAg"></em></a>
         <a data-p="tasks"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="5"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>Tasks<em id="bTk"></em></a>
         <a data-p="habits"><svg viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .5 2 1.5 3 2.5 3-1-3 0-6 0-8z"/></svg>Habits<em id="bHb"></em></a>
+        <a data-p="tidy"><svg viewBox="0 0 24 24"><path d="M14 3 9.5 12.5"/><path d="M6 13h9l2 8H4z"/><path d="M8.5 17v4M12.5 17v4"/></svg>Tidy</a>
         <a data-p="team"><svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.5"/><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M14.5 15.5c2.6-.6 4.9.6 6 3.5"/></svg>Team</a>
         <a data-p="settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/></svg>Settings<em id="bSet"></em></a>
       </nav>
@@ -54,7 +55,7 @@
           <div class="card"><i class="c4"></i><b id="cFocus">–</b><span>focus min today</span></div>
         </div>
         <div class="chips">
-          <button data-c="/focus">Focus 25 min</button><button data-c="/breathe">Breathe 1 min</button><button data-c="/pat">Pat</button>
+          <button data-c="/focus">Focus 25 min</button><button data-c="/breathe">Breathe 1 min</button><button data-c="/timer 5">Timer 5 min</button><button data-c="/pat">Pat</button>
           <span class="seg" id="dnd"><button data-d="auto">Auto</button><button data-d="on">Do not disturb</button><button data-d="off">Off</button></span>
         </div>
         <h2>Right now</h2>
@@ -83,6 +84,12 @@
         <h1>Habits</h1><p class="sub">Little daily goals with streaks.</p>
         <form class="addrow" data-pre="/habit "><input placeholder="water 8" autocomplete="off"><button>Add</button></form>
         <ul class="list" id="hbList"></ul>
+      </section>
+
+      <section data-p="tidy">
+        <h1>Tidy up</h1><p class="sub">Moves loose files into folders by type. Never deletes anything, and you can undo.</p>
+        <div id="tidyList"></div>
+        <p class="sub small">Skips files that are still downloading or changed in the last 2 minutes, shortcuts, and types it doesn't know.</p>
       </section>
 
       <section data-p="team">
@@ -120,6 +127,7 @@
         <div class="set toggles">
           <label><input type="checkbox" id="autostart"> Start with my computer</label>
           <label><input type="checkbox" id="approve"> Approve AI commands from lil.mate</label>
+          <label><input type="checkbox" id="follow"> lil.mate's eyes follow my mouse</label>
         </div>
         <div class="set"><div><b>Phone page</b><small>Tasks, reminders and more on your phone.</small></div><button class="btn2" id="openDash">Open</button></div>
       </section>

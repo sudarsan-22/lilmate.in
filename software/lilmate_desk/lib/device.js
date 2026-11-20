@@ -74,6 +74,7 @@ class UsbLink extends EventEmitter {
   pc(p) { this._send('@pc ' + JSON.stringify(p)); return Promise.resolve(); }
   cal(evs) { this._send('@cal ' + JSON.stringify({ ev: evs })); return Promise.resolve(); }
   syncTime() { this._send('/time ' + Math.floor(Date.now() / 1000)); }
+  look(x, y) { this._send(`@look ${x.toFixed(2)} ${y.toFixed(2)}`); return Promise.resolve(); }
   setWifi(ssid, pass) { this._send(`/wifi ${ssid}|${pass}`); }
   close() { try { this.port.close(); } catch (e) {} }
 
@@ -121,6 +122,7 @@ class WifiLink extends EventEmitter {
   async cal(evs) { await this._fetch('/api/cal', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ev: evs }) }); }
   syncTime() {}
   setWifi() {}
+  async look(x, y) { await this._fetch(`/api/look?x=${x.toFixed(2)}&y=${y.toFixed(2)}`, { method: 'POST' }, 1500); }
   // firmware update over Wi-Fi: the same /update upload the phone page uses, plus the md5 check
   flash(bin, md5, onProgress) {
     const http = require('http');

@@ -10,6 +10,7 @@ static const char HELP_TEXT[] =
   "/remind 10m stretch\n"
   "/remind 18:30 call mom\n"
   "/remind daily 08:00 meds\n"
+  "/timer 5 · /timer 10m tea\n"
   "/reminders · /unremind 1\n"
   "  or just: remind me in 20 min to drink water\n"
   "/habit water 8 - new habit (goal 8/day)\n"
@@ -234,6 +235,12 @@ String runCommand(String line, Source src, const char *from = "") {
   }
 
   // reminders
+  if (cmd == "timer" || cmd == "t") {        // /timer 5 · /timer 10m tea · /timer 1h30m
+    if (!arg.length()) return "⏱ /timer 5 (minutes) or /timer 10m tea";
+    int s2 = arg.indexOf(' '); String d = s2 < 0 ? arg : arg.substring(0, s2), what = s2 < 0 ? "Timer" : arg.substring(s2 + 1);
+    bool digits = d.length() > 0; for (char c : d) if (!isdigit(c)) digits = false;
+    return cmdRemind(d + (digits ? "m " : " ") + what);
+  }
   if (cmd == "remind" || cmd == "reminder" || cmd == "r") { if (!arg.length()) return listReminders(); return cmdRemind(arg); }
   if (cmd == "reminders") return listReminders();
   if (cmd == "unremind" || cmd == "delremind") {
@@ -260,7 +267,7 @@ String runCommand(String line, Source src, const char *from = "") {
     if (i < 0) return nHabits ? "Which habit? " + listHabits() : "No habits yet. /habit water 8";
     int r = logHabit(i);
     Habit &h = habits[i];
-    if (r == 2) { petHappy(10); faceSetMood(M_LOVE, 2500); faceSay(String(h.name) + " goal done!"); }
+    if (r == 2) { petHappy(10); faceSetMood(M_LOVE, 2500); celebrateStart(h.name, h.streak); }
     else { faceSetMood(M_HAPPY, 1500); faceSay(String(h.name) + " " + h.count + "/" + h.goal); }
     return String(r == 2 ? "🎉 Goal reached! " : "👍 ") + h.name + " " + h.count + "/" + h.goal + "  🔥" + h.streak + "d";
   }

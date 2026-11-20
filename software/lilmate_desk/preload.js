@@ -20,6 +20,10 @@ contextBridge.exposeInMainWorld('lil', {
   checkUpdates: () => ipcRenderer.invoke('update:check'),
   updateApp: () => ipcRenderer.invoke('update:app'),
   updateFirmware: force => ipcRenderer.invoke('update:fw', force),
+  tidyPlan: () => ipcRenderer.invoke('tidy:plan'),
+  tidyRun: k => ipcRenderer.invoke('tidy:run', k),
+  tidyUndo: k => ipcRenderer.invoke('tidy:undo', k),
+  tidyOpen: k => ipcRenderer.invoke('tidy:open', k),
   battery: b => ipcRenderer.send('battery', b),
-  on: (ch, fn) => { const ok = ['state', 'mode', 'asks', 'link', 'update', 'goto', 'toast']; if (ok.includes(ch)) ipcRenderer.on(ch, (_e, d) => fn(d)); },
+  on: (ch, fn) => { const ok = ['state', 'mode', 'asks', 'link', 'update', 'goto', 'toast', 'cursor']; if (ok.includes(ch)) ipcRenderer.on(ch, (_e, d) => fn(d)); },
 });

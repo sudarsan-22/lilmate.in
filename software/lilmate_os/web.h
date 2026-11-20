@@ -419,6 +419,10 @@ void webBegin() {
     String r = linkAction(server.arg("do"), server.hasArg("i") ? server.arg("i").toInt() : -1);
     server.send(200, "text/plain; charset=utf-8", r);
   });
+  server.on("/api/look", HTTP_POST, [] {     // lil.mate Desk: eyes follow the mouse
+    lookX = constrain(server.arg("x").toFloat(), -1.f, 1.f); lookY = constrain(server.arg("y").toFloat(), -1.f, 1.f); lookUntil = millis() + 3000;
+    server.send(204);
+  });
   server.on("/api/update", HTTP_POST, [] {   // phone page: check / now / auto on|off / ble
     String a = server.arg("do"); a.toLowerCase();
     String r = a == "ble" ? bleCommand() : updCommand(a == "auto_on" ? "auto on" : a == "auto_off" ? "auto off" : a);

@@ -8,6 +8,7 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C oled(U8G2_R0, U8X8_PIN_NONE, I2C_SCL, I2C_SD
 struct EyeP { float w, h, r, lidIn, lidOut, bottom; };
 struct FaceAnim { EyeP L, R; float gx, gy, cy; };
 FaceAnim fc, ft;                 // current + target
+float lookX = 0, lookY = 0; uint32_t lookUntil = 0;   // where your mouse is (from lil.mate Desk)
 
 Mood     mood = M_NEUTRAL;       // what is shown
 Mood     restMood = M_NEUTRAL;   // what it returns to after a timed mood
@@ -171,6 +172,8 @@ void faceUpdate(uint32_t now) {
       if (toyX < 4 || toyX > 123) { toyVX = -toyVX; toyX = constrain(toyX, 4.0f, 123.0f); }
     }
     if (toy != TOY_NONE) { ft.gx = constrain((toyX - 64) / 50.0f, -1.0f, 1.0f); ft.gy = constrain((toyY - 32) / 26.0f, -1.0f, 1.0f); }
+  } else if (!gazeHold && now < lookUntil && mood != M_SLEEP && mood != M_SLEEPY) {
+    ft.gx = lookX; ft.gy = lookY; nextGaze = now + 1500;   // follow the mouse, then wander again
   } else if (!gazeHold && now > nextGaze) {
     nextGaze = now + random(1200, 4200);
     if (random(0, 2) == 0) { ft.gx = 0; ft.gy = 0; }

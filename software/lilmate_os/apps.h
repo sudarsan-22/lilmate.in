@@ -217,13 +217,13 @@ void drawHabits() {
   }
   if (habitCur >= nHabits) habitCur = 0;
   Habit &h = habits[habitCur]; habitRoll(h);
-  centerStr(28, u8g2_font_7x14B_tr, h.name);
-  if (h.goal <= 10) {
-    int sp = 12, x0 = 64 - (h.goal * sp) / 2 + sp / 2;
-    for (int i = 0; i < h.goal; i++) { if (i < h.count) oled.drawDisc(x0 + i * sp, 39, 4); else oled.drawCircle(x0 + i * sp, 39, 4); }
-  } else bar(8, 35, 112, 8, (float)h.count / h.goal);
-  char b[32]; snprintf(b, sizeof(b), "%u/%u today  streak %ud", h.count, h.goal, h.streak);
-  centerStr(54, u8g2_font_5x7_tr, b);
+  drawScene(sceneFor(h.name), 2, 13, h.goal ? (float)h.count / h.goal : 0, millis());   // its little animated scene
+  char nm[12]; copyStr(nm, h.name, sizeof(nm));
+  oled.setFont(u8g2_font_6x10_tr); oled.drawStr(60, 22, nm);
+  char b[24]; snprintf(b, sizeof(b), "%u/%u", h.count, h.goal);
+  oled.setFont(u8g2_font_10x20_tr); oled.drawStr(60, 42, b);
+  snprintf(b, sizeof(b), "streak %ud", h.streak);
+  oled.setFont(u8g2_font_5x7_tr); oled.drawStr(60, 52, b);
   centerStr(63, u8g2_font_5x7_tr, h.count >= h.goal ? "done for today!" : "tap next - hold +1");
 }
 
@@ -494,7 +494,7 @@ void onScreenGesture(TouchEv e, uint32_t now) {
       if (e == T_TAP1 && nHabits) habitCur = (habitCur + 1) % nHabits;
       else if (e == T_LONG && habitCur < nHabits) {
         int r = logHabit(habitCur);
-        if (r == 2) { petHappy(10); screen = S_FACE; faceSetMood(M_LOVE, 2500); faceSay(String(habits[habitCur].name) + " done! streak " + habits[habitCur].streak); }
+        if (r == 2) { petHappy(10); faceSetMood(M_LOVE, 2500); celebrateStart(habits[habitCur].name, habits[habitCur].streak); }
       }
       break;
     case S_GAME:
@@ -522,7 +522,7 @@ void handleTouch(uint32_t now) {
       else if (e == T_LONG) dismissAlert(true);
       continue;
     }
-    if (updTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
+    if (updTouch(e) || celebrateTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
     if (screen == S_GAME && gm.playing) { onScreenGesture(e, now); continue; }  // raw presses, no tap counting
     if (e == T_TAP2) { nextScreen(); continue; }
     if (e == T_TAP3 && screen != S_FACE) { screen = S_FACE; continue; }
@@ -631,7 +631,7 @@ void brainTick(uint32_t now) {
 void render(uint32_t now) {
   oled.clearBuffer();
   if (apMode) drawSetup(now);
-  else if (updDraw(now) || (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now)))) {}   // same priority as touch
+  else if (updDraw(now) || celebrateDraw(now) || (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now)))) {}   // same priority as touch
   else switch (screen) {
     case S_FACE:   faceDraw(now); if (isBusy()) drawDndIcon(1, 0); drawBatteryIcon(114, 0); break;
     case S_AGENTS: drawAgents(now); break;
