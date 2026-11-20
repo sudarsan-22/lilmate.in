@@ -1,7 +1,7 @@
 {
   "name": "lilmate-desk",
   "productName": "lil.mate Desk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Desktop companion for the lil.mate desk buddy: top-of-screen island, AI agent alerts, one-click setup",
   "main": "main.js",
   "author": "lil.mate",
@@ -47,7 +47,12 @@
       "oneClick": true,
       "perMachine": false
     },
-    "artifactName": "lilmate-desk-${version}-${arch}.${ext}"
+    "artifactName": "lilmate-desk-${version}-${arch}.${ext}",
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.png",
+      "category": "public.app-category.productivity"
+    }
   },
   "dependencies": {
     "serialport": "^13.0.0"

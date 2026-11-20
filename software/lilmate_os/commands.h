@@ -20,6 +20,7 @@ static const char HELP_TEXT[] =
   "/pat · /play fly|ball · /screen clock\n"
   "/weather · /city Chennai · /name Sudarsan\n"
   "/brightness 0-255 · /sleep · /wake\n"
+  "/update - new version? · /update now · /bluetooth\n"
   "Any other message pops up on Lilmate's screen.";
 
 // ------------------------------------------------------------ time parsing
@@ -336,6 +337,8 @@ String runCommand(String line, Source src, const char *from = "") {
   if (cmd == "unpair") { S.tgChat[0] = 0; markDirty(D_SET); return "Telegram unpaired. The next /start will pair."; }
   if (cmd == "reboot") { diagRestart(SW_CMD); storeFlush(); delay(200); ESP.restart(); return ""; }
   if (cmd == "wifireset") { S.ssid[0] = 0; S.pass[0] = 0; markDirty(D_SET); storeFlush(); diagRestart(SW_CMD); delay(200); ESP.restart(); return ""; }
+  if (cmd == "update" || cmd == "upgrade" || cmd == "version") return updCommand(argl);
+  if (cmd == "bluetooth" || cmd == "ble") return bleCommand();
   if (cmd == "resets" || cmd == "crash" || cmd == "diag") return resetReport();
   // everyday: busy / breathe / wrap-up / meetings / team
   if (cmd == "dnd" || cmd == "busy") {

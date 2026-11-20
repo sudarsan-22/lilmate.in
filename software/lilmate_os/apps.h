@@ -16,6 +16,7 @@ void wakeUp(bool greet = false);
 // implemented in agent.h / link.h (included after this file)
 bool agentTouch(TouchEv e); bool agentDraw(uint32_t now); void drawAgents(uint32_t now);
 bool linkTouch(TouchEv e); bool linkDraw(uint32_t now); void drawPlay(uint32_t now); bool linkBusy();
+bool updTouch(TouchEv e); bool updDraw(uint32_t now); const char *updInfoLine(); bool updHoldInstall();
 bool workTouch(TouchEv e); bool workDraw(uint32_t now); bool workOverlay(); bool isBusy(); void breatheStart(); void drawDndIcon(int x, int y);
 extern uint32_t screenOffMs; extern bool batPresent; extern int batPct; void drawBatteryIcon(int x, int y);   // power.h
 
@@ -352,7 +353,8 @@ void drawInfo(uint32_t now) {
   else snprintf(b, sizeof(b), "up %luh%02lum  heap %uk", (unsigned long)(now / 3600000), (unsigned long)(now / 60000 % 60), (unsigned)(ESP.getFreeHeap() / 1024));
   oled.drawStr(0, 48, b);
   snprintf(b, sizeof(b), "pats %lu  joy %d%%", (unsigned long)pet.pats, pet.happy); oled.drawStr(0, 57, b);
-  oled.drawStr(0, 64, "hold: QR  hold 4s: setup");
+  const char *u = updInfoLine();
+  oled.drawStr(0, 64, u ? u : "hold: QR  hold 4s: setup");
 }
 
 void drawSetup(uint32_t now) {
@@ -501,7 +503,7 @@ void onScreenGesture(TouchEv e, uint32_t now) {
       else if (e == T_LONG) { gm.playing = false; gm.over = false; screen = S_FACE; }
       break;
     case S_INFO:
-      if (e == T_LONG) qrUntil = now + 20000;
+      if (e == T_LONG) { if (updHoldInstall()) faceSay("Updating..."); else qrUntil = now + 20000; }
       else if (e == T_VLONG) { faceSay("Setup mode..."); startAP(); }
       break;
     default: break;
@@ -520,7 +522,7 @@ void handleTouch(uint32_t now) {
       else if (e == T_LONG) dismissAlert(true);
       continue;
     }
-    if (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e))) continue;   // matches, agent prompts, breathe / wrap-up, invites
+    if (updTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
     if (screen == S_GAME && gm.playing) { onScreenGesture(e, now); continue; }  // raw presses, no tap counting
     if (e == T_TAP2) { nextScreen(); continue; }
     if (e == T_TAP3 && screen != S_FACE) { screen = S_FACE; continue; }
@@ -629,7 +631,7 @@ void brainTick(uint32_t now) {
 void render(uint32_t now) {
   oled.clearBuffer();
   if (apMode) drawSetup(now);
-  else if (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now))) {}   // same priority as touch
+  else if (updDraw(now) || (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now)))) {}   // same priority as touch
   else switch (screen) {
     case S_FACE:   faceDraw(now); if (isBusy()) drawDndIcon(1, 0); drawBatteryIcon(114, 0); break;
     case S_AGENTS: drawAgents(now); break;

@@ -142,6 +142,7 @@ static const char DASH[] PROGMEM = R"HTML(<!doctype html><html lang=en><head><me
 <div class=card data-t=rem><h2>Reminders</h2><p class=sub>Try "10m", "1h30m" or "18:30".</p><ul id=rems></ul><div class=row><input id=rt placeholder="What"><input id=rw placeholder="when" style="max-width:96px"></div>
 <div class=row style="margin-top:10px"><label class=row style="flex:1;margin:0"><input type=checkbox id=rd class=ck> every day</label><button class=add onclick="addRem()">Add</button></div></div>
 <div class=card data-t=hab><h2>Habits</h2><p class=sub>Hold on the Habits screen to log +1.</p><ul id=habs></ul><div class=row><input id=hn2 placeholder="Habit, e.g. water"><input id=hg type=number min=1 max=20 value=1 style="max-width:70px"><button class=add onclick="addHab()">Add</button></div></div>
+<div class=card data-t=more id=updc><h2>Updates <span class=live id=upV>v</span></h2><p class=sub id=upTx>lil.mate checks for a new version by itself once a day.</p><div class=chips><button class=btn2 onclick="post('/api/update?do=check');setTimeout(load,7000)">Check now</button><button class=btn id=upNow style="display:none" onclick="if(confirm('Install the new version now? lil.mate restarts in about a minute and keeps all your stuff.'))post('/api/update?do=now')">Install <i>&darr;</i></button></div><label class=row style="margin:12px 0 0"><input type=checkbox id=upAuto class=ck onchange="post('/api/update?do='+(this.checked?'auto_on':'auto_off'))"> Install new versions by itself at night</label></div>
 <div class=card data-t=more><h2>Command</h2><p class=sub>Same as Telegram. Try /help</p><div class=row><input id=cl placeholder="/status"><button class=mini onclick="sendIn('cl','')">Run</button></div><pre id=out></pre></div>
 </div>
 <details class=card data-t=more id=setd style="margin-top:14px"><summary>Settings</summary><form id=sf onsubmit="return saveSet(event)" style="margin-top:14px">
@@ -188,6 +189,8 @@ $('#habs').innerHTML=s.habits.map((h,i)=>`<li><span>${esc(h.n)} <small>${h.c}/${
 $('#tgs').textContent=s.tg.set?(s.tg.paired?'· paired ✓':'· send /start to your bot'):'· off';
 if(s.game)gRender(s.game);if(s.work)wkRender(s.work);if(s.agents)agRender(s.agents);if(s.link)plRender(s.link);badge('#bT',left);badge('#bR',s.rems.length);badge('#bH',s.habits.filter(h=>h.c<h.g).length);
 $('#ft').textContent=`Designed & 3D-printed in India · ${s.fw} · ${s.ip}`;
+const u=s.upd||{},um={ready:`Version ${u.ver} is ready.`,latest:'You have the newest version.',checking:'Checking GitHub…',installing:`Installing ${u.pct}%… keep lil.mate powered.`,done:'Updated! Restarting…',failed:`Last try: ${u.err}`,idle:'lil.mate checks for a new version by itself once a day.'};
+$('#upV').textContent=s.ver;$('#upTx').textContent=(um[u.st]||'')+(u.st=='ready'&&u.notes?' '+u.notes:'');$('#upNow').style.display=u.st=='ready'?'':'none';$('#upAuto').checked=!!u.auto;
 if(!filled){filled=1;for(const k in s.set){const e=$('#sf [name='+k+']');if(e)e.value=s.set[k]}
 $('#face').innerHTML=s.moods.map(m=>`<option value=${m}>${MW[m]||m}</option>`).join('');$('#scrn').innerHTML=s.screens.map(m=>`<option>${m}</option>`).join('')}}
 async function load(){try{render(await(await fetch('/api/state')).json())}catch(e){$('#on').className='pill off';$('#clk').textContent='offline'}}
@@ -259,7 +262,7 @@ void gameJson(JsonObject g) {
 void buildState(JsonDocument &d) {
   struct tm tm; char tb[8] = "";
   if (localNow(tm)) strftime(tb, sizeof(tb), "%H:%M", &tm);
-  d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
+  d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; updJson(d["upd"].to<JsonObject>()); d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
   d["time"] = tb; d["mood"] = MOOD_NAMES[mood]; d["screen"] = SCREEN_NAMES[screen];
   d["boot"] = bootCount; d["lastReset"] = resetLine(lastReset); d["minHeap"] = ESP.getMinFreeHeap();
   d["happy"] = pet.happy; d["pats"] = pet.pats; d["asleep"] = asleep;
@@ -416,15 +419,23 @@ void webBegin() {
     String r = linkAction(server.arg("do"), server.hasArg("i") ? server.arg("i").toInt() : -1);
     server.send(200, "text/plain; charset=utf-8", r);
   });
+  server.on("/api/update", HTTP_POST, [] {   // phone page: check / now / auto on|off / ble
+    String a = server.arg("do"); a.toLowerCase();
+    String r = a == "ble" ? bleCommand() : updCommand(a == "auto_on" ? "auto on" : a == "auto_off" ? "auto off" : a);
+    server.send(200, "text/plain; charset=utf-8", r);
+  });
   server.on("/update", HTTP_GET, [] { server.send_P(200, "text/html; charset=utf-8", UPDATE_PAGE); });
   server.on("/update", HTTP_POST,
     [] {
-      bool ok = !Update.hasError();
+      bool ok = !Update.hasError() && !otaBusy() && Update.isFinished();
       server.send(200, "text/plain; charset=utf-8", ok ? "✅ Updated! Restarting…" : String("❌ Update failed: ") + Update.errorString());
       if (ok) { diagRestart(SW_OTA); restartAt = millis() + 1000; }
     },
     [] {
       HTTPUpload &u = server.upload();
+      static bool refused = false;
+      if (u.status == UPLOAD_FILE_START) refused = otaBusy();
+      if (refused) return;                       // a GitHub / Bluetooth update is already running
       if (u.status == UPLOAD_FILE_START) {
         Serial.printf("[ota] %s\n", u.filename.c_str());
         oled.clearBuffer(); centerStr(30, u8g2_font_7x14B_tr, "UPDATING..."); centerStr(46, u8g2_font_5x7_tr, "don't unplug me"); oled.sendBuffer();

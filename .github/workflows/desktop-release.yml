@@ -1,0 +1,57 @@
+# Builds lil.mate Desk for Linux, Windows and macOS when a version tag (v1.2.3) is pushed,
+# and attaches the installers to the GitHub Release of that tag. The apps' updater downloads them from there.
+name: lil.mate Desk release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            args: --linux deb AppImage
+          - os: windows-latest
+            args: --win nsis
+          - os: macos-latest
+            args: --mac dmg
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: software/lilmate_desk
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: software/lilmate_desk/package-lock.json
+      - run: npm ci
+      - run: npx electron-builder ${{ matrix.args }} --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'   # not code-signed yet
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desk-${{ matrix.os }}
+          path: |
+            software/lilmate_desk/dist/*.deb
+            software/lilmate_desk/dist/*.AppImage
+            software/lilmate_desk/dist/*.exe
+            software/lilmate_desk/dist/*.dmg
+          if-no-files-found: error
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: out
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: out/*
+          name: lil.mate ${{ github.ref_name }}
+          body: Installers for lil.mate Desk. Customers get these through the app's own updater.

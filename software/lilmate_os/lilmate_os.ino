@@ -33,6 +33,7 @@
 #include "work.h"
 #include "link.h"
 #include "power.h"
+#include "update.h"
 #include "commands.h"
 #include "web.h"
 
@@ -70,6 +71,7 @@ void serialOta(String args) {
   args.trim(); int sp = args.indexOf(' ');
   uint32_t size = (sp < 0 ? args : args.substring(0, sp)).toInt();
   String md5 = sp < 0 ? "" : args.substring(sp + 1); md5.trim();
+  if (otaBusy()) { Serial.println("@ota {\"ok\":false,\"e\":\"busy updating\"}"); return; }
   if (size < 64 * 1024 || size > 0x1E0000) { Serial.println("@ota {\"ok\":false,\"e\":\"bad size\"}"); return; }
   if (!Update.begin(size)) { otaFail(Update.errorString()); return; }
   if (md5.length() == 32) Update.setMD5(md5.c_str());
@@ -192,6 +194,7 @@ void setup() {
   diagBoot();
   workBegin();
   powerBegin();
+  updBegin();
   touchBegin();
   randomSeed(esp_random());
 
@@ -227,7 +230,7 @@ void loop() {
   static uint32_t lastBrain = 0, lastFrame = 0;
   diagStage(ST_WIFI); linkLoop();
   now = millis();   // handlers above may have stamped events with a newer millis(); never subtract into the past
-  if (now - lastBrain >= 1000) { lastBrain = now; diagTick(); diagStage(ST_BRAIN); brainTick(now); agentTick(now); workTick(now); powerTick(now); }
+  if (now - lastBrain >= 1000) { lastBrain = now; diagTick(); diagStage(ST_BRAIN); brainTick(now); agentTick(now); workTick(now); powerTick(now); updTick(now); }
   if (now - lastFrame >= frameMs) {
     lastFrame = now;
     diagStage(ST_RENDER);

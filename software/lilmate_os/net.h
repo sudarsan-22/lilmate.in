@@ -12,6 +12,7 @@ bool     apMode = false;
 bool     offlineMode = false;      // saved Wi-Fi not around (office): stay a normal buddy, retry quietly
 uint32_t wifiRetryAt = 0, wifiTryAt = 0, wifiLostAt = 0;
 bool linkBusy();
+void updService();
 bool     wifiUp = false, wifiEver = false;
 uint32_t wifiStartAt = 0, apStartAt = 0;
 String   apName;
@@ -246,6 +247,7 @@ void netTask(void *) {
     if (wxRequest || now - lastWx > WEATHER_EVERY_MS || (!wx.ok && now - lastWx > 60000)) {
       wxRequest = false; lastWx = now; diagNet(NS_WEATHER); fetchWeather();
     }
+    diagNet(NS_IDLE); updService();   // firmware check / download from GitHub, when asked
     OutMsg m;
     if (S.tgToken[0]) {
       diagNet(NS_TG_SEND);
