@@ -36,7 +36,12 @@ const fmtWait = s => s < 60 ? s + 's' : Math.floor(s / 60) + 'm' + String(s % 60
 const hhmm = t => new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
 // ------------------------------------------------------------ modes (pill / ask / panel)
-function setMode(m) { mode = m; document.body.className = 'm-' + m; }
+// main sends { m, shift }: shift = how far the island sits from the window's centre (only near a screen edge)
+function setMode(x) {
+  const m = typeof x === 'string' ? x : x.m;
+  if (x && typeof x.shift === 'number') $('#island').style.setProperty('--shift', x.shift + 'px');
+  mode = m; document.body.className = 'm-' + m + (drag && drag.moved ? ' dragging' : '');
+}
 lil.on('mode', setMode);
 // the logo's eyes look toward the mouse
 lil.on('cursor', c => { if (S.offline) return; const k = v => Math.max(-1, Math.min(1, v / 420)); document.documentElement.style.setProperty('--ex', (k(c.dx) * 3).toFixed(2) + 'px'); document.documentElement.style.setProperty('--ey', (k(c.dy) * 2).toFixed(2) + 'px'); });
@@ -48,10 +53,21 @@ function flashPill(r) {
   flash = { t: '✓ ' + (t.length > 26 ? t.slice(0, 25) + '…' : t), until: Date.now() + 2400 }; render();
   setTimeout(render, 2500);
 }
-// hover opens after a short pause (so a grab-to-drag doesn't pop the panel); a click opens at once
+// hover opens after a short pause (so a grab-to-drag doesn't pop the panel); a click opens at once.
+// Moving back onto the island while it is still tucking away opens it again.
+const OPEN_MS = 140, CLOSE_MS = 350;
 let openTimer = null, drag = null;
-$('#pill').addEventListener('mouseenter', () => { clearTimeout(openTimer); openTimer = setTimeout(() => { if (!drag) lil.mode('panel'); }, 450); });
-$('#pill').addEventListener('mouseleave', () => clearTimeout(openTimer));
+$('#island').addEventListener('mouseenter', () => {
+  clearTimeout(leaveTimer);
+  if (mode !== 'pill') return;
+  clearTimeout(openTimer); openTimer = setTimeout(() => { if (!drag && mode === 'pill') lil.mode('panel'); }, OPEN_MS);
+});
+$('#island').addEventListener('mouseleave', () => {
+  clearTimeout(openTimer);
+  if (mode !== 'panel') return;
+  clearTimeout(leaveTimer);
+  leaveTimer = setTimeout(() => { if (!drag && !pinned && !document.activeElement.matches('input, select') && mode === 'panel') lil.mode(asks.length ? 'ask' : 'pill'); }, CLOSE_MS);
+});
 // drag the pill (or the lil.mate name in the panel) along the top edge or onto another screen
 for (const h of [$('#pill'), $('.me')]) {
   h.addEventListener('pointerdown', e => {
@@ -72,11 +88,6 @@ for (const h of [$('#pill'), $('.me')]) {
     if (moved) lil.dragEnd(); else if (fromPill) lil.mode('panel');
   });
 }
-$('#panel').addEventListener('mouseleave', () => {
-  clearTimeout(leaveTimer);
-  leaveTimer = setTimeout(() => { if (!drag && !pinned && !document.activeElement.matches('input, select') && mode === 'panel') lil.mode(asks.length ? 'ask' : 'pill'); }, 700);
-});
-$('#panel').addEventListener('mouseenter', () => clearTimeout(leaveTimer));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = false; $('#pin').classList.remove('on'); lil.mode(asks.length ? 'ask' : 'pill'); } });
 $('#pin').onclick = () => { pinned = !pinned; $('#pin').classList.toggle('on', pinned); $('#pin').textContent = pinned ? 'Kept open · Esc to close' : 'Keep open'; };
 

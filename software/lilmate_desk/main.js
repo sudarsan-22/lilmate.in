@@ -41,17 +41,32 @@ function anchorDisplay() {
   return screen.getPrimaryDisplay();
 }
 const topOf = d => process.platform === 'linux' ? d.workArea.y : d.bounds.y;   // under the GNOME top bar; very top on Windows
-function placeWindow() {
+// Windows + Linux: the window keeps the panel's size and setShape() cuts it down to the island (outside it, clicks
+// go to the apps below). Changing the shape doesn't redraw the window, so there is no blank frame when it opens or
+// closes. macOS has no window shapes, so there the window itself is resized.
+const USE_SHAPE = process.platform !== 'darwin';
+let shown = SIZES.pill;   // the area currently given to the island (shape, or window size on macOS)
+// size: the area to give the island right now (default: the current mode's); also tells the page where it sits
+function placeWindow(size) {
   if (dragging) return;
   const d = anchorDisplay();
-  const [w, h] = SIZES[mode];
+  shown = size || SIZES[mode];
+  const [w, h] = USE_SHAPE ? SIZES.panel : shown;
   const frac = settings.anchor && typeof settings.anchor.frac === 'number' ? settings.anchor.frac : 0.5;
   const cx = d.bounds.x + frac * d.bounds.width;
   const x = Math.min(Math.max(cx - w / 2, d.workArea.x), d.workArea.x + d.workArea.width - w);   // never off the screen
-  win.setBounds({ x: Math.round(x), y: topOf(d), width: w, height: h });
+  const nb = { x: Math.round(x), y: topOf(d), width: w, height: h }, ob = win.getBounds();
+  if (nb.x !== ob.x || nb.y !== ob.y || nb.width !== ob.width || nb.height !== ob.height) win.setBounds(nb);
+  const iw = SIZES[mode][0] - 2 * PAD.x, wc = x + w / 2;                                 // keep the island under its anchor, inside the window
+  const shift = Math.round(Math.min(Math.max(cx, x + PAD.x + iw / 2), x + w - PAD.x - iw / 2) - wc);
+  if (USE_SHAPE) {
+    const sx = Math.round(w / 2 + shift - shown[0] / 2);
+    win.setShape([{ x: Math.max(0, sx), y: 0, width: Math.min(shown[0], w), height: shown[1] }]);
+  }
+  send('mode', { m: mode, shift });
 }
 let dragging = false;
-function dragMove(x, y) { dragging = true; const [w, h] = SIZES[mode]; win.setBounds({ x: Math.round(x), y: Math.round(y), width: w, height: h }); }
+function dragMove(x, y) { dragging = true; const [w, h] = USE_SHAPE ? SIZES.panel : SIZES[mode]; win.setBounds({ x: Math.round(x), y: Math.round(y), width: w, height: h }); }
 function dragEnd() {
   const b = win.getBounds(), center = { x: Math.round(b.x + b.width / 2), y: Math.round(b.y + 10) };
   const d = screen.getDisplayNearestPoint(center);
@@ -65,7 +80,17 @@ function displayList() {
   const cur = anchorDisplay(), prim = screen.getPrimaryDisplay();
   return screen.getAllDisplays().sort((a, b) => a.bounds.x - b.bounds.x).map((d, i) => ({ id: String(d.id), label: `Screen ${i + 1} · ${d.bounds.width}×${d.bounds.height}${d.id === prim.id ? ' (main)' : ''}`, current: d.id === cur.id }));
 }
-function setMode(m) { if (!SIZES[m] || !win) return; mode = m; placeWindow(); win.webContents.send('mode', m); }
+// Growing: make the window big first (the new room is transparent), then the island animates into it.
+// Shrinking: the island animates first, then the window is trimmed once the animation is over.
+const ANIM_MS = 320;
+let boundsTimer = null;
+function setMode(m) {
+  if (!SIZES[m] || !win) return;
+  mode = m; clearTimeout(boundsTimer);
+  const [cw, ch] = shown, [nw, nh] = SIZES[m];
+  if (cw <= nw && ch <= nh) placeWindow();
+  else { placeWindow([Math.max(cw, nw), Math.max(ch, nh)]); boundsTimer = setTimeout(() => placeWindow(), ANIM_MS); }
+}
 
 function createWindow() {
   win = new BrowserWindow({
