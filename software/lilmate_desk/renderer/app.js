@@ -60,7 +60,7 @@ function spring(k, c) {
   pts.push(1);
   return { easing: `linear(${pts.join(',')})`, ms: xs.length };
 }
-const OPEN = spring(190, 21), CLOSE = spring(500, 44);   // open: ~0.6 s, 2% overshoot · close: ~0.4 s, no bounce (main.js ANIM_MS must cover it)
+const OPEN = spring(190, 21), CLOSE = spring(1100, 66);   // open: ~0.6 s, 2% overshoot · close: ~0.25 s, no bounce (main.js ANIM_MS must cover it)
 const SIZE = { pill: [240, 42, 22], ask: [460, 168, 24], panel: [800, 520, 28] };
 const PANE = { pill: '#pill', ask: '#ask', panel: '#panel' };
 const calm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -87,11 +87,11 @@ function islandTo(from, to) {
   // the old face fades out quickly, the new one fades in as the shape arrives
   const out = $(PANE[from]);
   out.classList.add('leaving');
-  const fo = out.animate([{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 90 : 120, easing: 'ease-out', fill: 'forwards' });
+  const fo = out.animate([{ opacity: 1 }, { opacity: 0 }], { duration: opening ? 90 : 60, easing: 'ease-out', fill: 'forwards' });
   fo.onfinish = () => { out.classList.remove('leaving'); fo.cancel(); };
   running.push(() => { out.classList.remove('leaving'); fo.cancel(); });
   running.push($(PANE[to]).animate([{ opacity: 0, scale: opening ? '.985' : '1.02' }, { opacity: 1, scale: '1' }],
-    { duration: opening ? 240 : 200, delay: opening ? 70 : sp.ms * 0.5, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
+    { duration: opening ? 240 : 150, delay: opening ? 70 : sp.ms * 0.4, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
   // opening the panel: its menu and cards arrive one after another
   if (to === 'panel') [...$$('#nav a, #pin'), ...$$('main section.on > *')].slice(0, 15).forEach((el, i) =>
     running.push(el.animate([{ opacity: 0, translate: '0 7px' }, { opacity: 1, translate: '0 0' }],
@@ -101,7 +101,7 @@ function islandTo(from, to) {
 
 // the logo flies between the pill and the panel: it blinks on the way, opens with happy ^ ^ eyes and a spark pop,
 // and closes with a sleepy blink before it settles back in the pill
-const FLY = { open: { ms: 460, easing: 'cubic-bezier(.3,.85,.25,1)' }, close: { ms: 360, easing: 'cubic-bezier(.5,0,.3,1)' } };
+const FLY = { open: { ms: 460, easing: 'cubic-bezier(.3,.85,.25,1)' }, close: { ms: 240, easing: 'cubic-bezier(.4,0,.2,1)' } };
 function flyLogo(src, dst, a, opening) {
   const sp = opening ? FLY.open : FLY.close;
   const b = dst.getBoundingClientRect();
@@ -145,7 +145,7 @@ function flashPill(r) {
 }
 // hover opens after a short pause (so a grab-to-drag doesn't pop the panel); a click opens at once.
 // Moving back onto the island while it is still tucking away opens it again.
-const OPEN_MS = 140, CLOSE_MS = 350;
+const OPEN_MS = 140, CLOSE_MS = 30;   // close almost at once; the tiny grace only stops a flicker when the mouse brushes the edge
 let openTimer = null, drag = null;
 $('#island').addEventListener('mouseenter', () => {
   clearTimeout(leaveTimer);
