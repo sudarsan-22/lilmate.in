@@ -149,7 +149,7 @@ const OPEN_MS = 140, CLOSE_MS = 30;   // close almost at once; the tiny grace on
 let openTimer = null, drag = null;
 $('#island').addEventListener('mouseenter', () => {
   clearTimeout(leaveTimer);
-  if (mode !== 'pill') return;
+  if (mode !== 'pill' || gameLive()) return;   // playing: the pill shows the score and takes the keys, it doesn't pop open
   clearTimeout(openTimer); openTimer = setTimeout(() => { if (!drag && mode === 'pill') lil.mode('panel'); }, OPEN_MS);
 });
 $('#island').addEventListener('mouseleave', () => {
@@ -175,9 +175,40 @@ for (const h of [$('#pill'), $('.me')]) {
   h.addEventListener('pointerup', () => {
     if (!drag) return;
     const moved = drag.moved, fromPill = drag.el.id === 'pill'; drag = null; document.body.classList.remove('dragging');
-    if (moved) lil.dragEnd(); else if (fromPill) lil.mode('panel');
+    if (moved) lil.dragEnd(); else if (fromPill && !gameLive()) lil.mode('panel');   // during a game a click just gives the keys to lil.mate
   });
 }
+// ------------------------------------------------------------ games from the keyboard
+// Star Catcher: ← → (or A D) move, Space / Enter turn or start, Esc quits. Team match: Space / Enter = tap.
+const LIVE = ['inviting', 'invited', 'countdown', 'round', 'roundend', 'matchend'];
+const star = () => !!(S.game && S.game.on), match = () => !!(S.link && LIVE.includes(S.link.mode));
+const gameLive = () => !S.offline && (star() || match());
+const GKEY = { ArrowLeft: 'L', a: 'L', A: 'L', ArrowRight: 'R', d: 'R', D: 'R', ' ': 'T', Enter: 'T', ArrowUp: 'T', w: 'T', W: 'T', Escape: 'X' };
+function gameText() {
+  if (!document.hasFocus()) return 'click here to play with keys';
+  const l = S.link || {}, g = S.game || {};
+  if (match()) {
+    const vs = l.opp ? ` vs ${l.opp}` : '', score = `${l.me || 0}–${l.them || 0}`;
+    if (l.mode === 'inviting') return `waiting for ${l.opp || 'buddy'}…`;
+    if (l.mode === 'invited') return `${l.opp || 'A buddy'} wants to play`;
+    if (l.mode === 'countdown' || l.mode === 'round') return l.kind === 'tug' ? `Tug of War · tap Space fast!` : `Quick Draw · Space on GO!`;
+    return `${score}${vs}`;
+  }
+  if (g.p) return `★ ${g.s}  ${'♥'.repeat(Math.max(0, g.l))}  ← →`;
+  if (g.o) return `★ ${g.s} · Space to play again`;
+  return 'Star Catcher · Space to start';
+}
+document.addEventListener('keydown', e => {
+  if (!gameLive() || e.target.closest('input, select, textarea')) return;
+  let hit = false;
+  if (match()) { if ((e.key === ' ' || e.key === 'Enter') && ['countdown', 'round'].includes(S.link.mode)) { hit = true; if (!e.repeat) lil.gameTap(); } }
+  else if (GKEY[e.key]) { hit = true; if (!e.repeat) lil.gameKey(GKEY[e.key]); }
+  if (hit) { e.preventDefault(); e.stopImmediatePropagation(); }
+}, true);
+window.addEventListener('focus', () => gameLive() && render());
+window.addEventListener('blur', () => gameLive() && render());
+$('#playStar').onclick = () => { pinned = false; $('#pin').classList.remove('on'); S.game = { ...(S.game || {}), on: true, p: false, o: false }; lil.gameStart(); lil.mode('pill'); render(); };
+
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = false; $('#pin').classList.remove('on'); lil.mode(asks.length ? 'ask' : 'pill'); } });
 $('#pin').onclick = () => { pinned = !pinned; $('#pin').classList.toggle('on', pinned); $('#pin').textContent = pinned ? 'Kept open · Esc to close' : 'Keep open'; };
 
@@ -206,6 +237,7 @@ setInterval(() => { const a = asks[0]; if (a) $('#askTtl').style.width = Math.ma
 
 // ------------------------------------------------------------ state from the buddy
 let focusEnd = 0;
+lil.on('game', g => { if (!S.offline) { Object.assign(S, g); render(); } });
 lil.on('state', s => { S = s; if (s.focus && s.focus.running && !s.focus.paused) focusEnd = Date.now() + s.focus.remain; render(); });
 setInterval(() => { if (S.focus && S.focus.running && !S.focus.paused && mode !== 'panel') render(); }, 1000);
 function render() {
@@ -219,6 +251,7 @@ function render() {
   const ub = U && U.busy;
   if (ub && ub.what === 'fw') txt = ub.stage === 'restarting' ? 'lil.mate is restarting…' : `updating lil.mate ${ub.pct}%`;
   else if (off) txt = 'lil.mate · not connected';
+  else if (gameLive()) { txt = gameText(); attn = !document.hasFocus(); }
   else if (asks.length) { txt = 'needs your OK'; attn = true; }
   else if (att) { attn = att.st !== 'done'; txt = att.st === 'done' ? `${att.name} is done` : `${att.name} needs you`; }
   else if (meet && meet.t - now < 900) txt = meet.t <= now ? `in ${meet.s}` : `${meet.s} in ${Math.ceil((meet.t - now) / 60)}m`;

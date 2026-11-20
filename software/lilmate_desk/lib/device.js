@@ -75,6 +75,9 @@ class UsbLink extends EventEmitter {
   cal(evs) { this._send('@cal ' + JSON.stringify({ ev: evs })); return Promise.resolve(); }
   syncTime() { this._send('/time ' + Math.floor(Date.now() / 1000)); }
   look(x, y) { this._send(`@look ${x.toFixed(2)} ${y.toFixed(2)}`); return Promise.resolve(); }
+  key(k) { this._send('@key ' + k); return Promise.resolve(); }          // games from the keyboard (fire and forget = no lag)
+  tap() { this._send('@tap'); return Promise.resolve(); }
+  gm() { return this._request('@gm', '@gm', 1500); }
   setWifi(ssid, pass) { this._send(`/wifi ${ssid}|${pass}`); }
   close() { try { this.port.close(); } catch (e) {} }
 
@@ -123,6 +126,9 @@ class WifiLink extends EventEmitter {
   syncTime() {}
   setWifi() {}
   async look(x, y) { await this._fetch(`/api/look?x=${x.toFixed(2)}&y=${y.toFixed(2)}`, { method: 'POST' }, 1500); }
+  async key(k) { await this._fetch('/api/game?k=' + k, {}, 1500); }
+  async tap() { await this._fetch('/api/link?do=tap', { method: 'POST' }, 1500); }
+  async gm() { return { game: JSON.parse(await this._fetch('/api/game', {}, 1500)) }; }   // link state comes with the normal poll
   // firmware update over Wi-Fi: the same /update upload the phone page uses, plus the md5 check
   flash(bin, md5, onProgress) {
     const http = require('http');

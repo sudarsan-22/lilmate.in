@@ -132,6 +132,10 @@ void serialLoop() {
     if (line.startsWith("@look ")) { float x = 0, y = 0; sscanf(line.c_str() + 6, "%f %f", &x, &y); lookX = constrain(x, -1.f, 1.f); lookY = constrain(y, -1.f, 1.f); lookUntil = millis() + 3000; continue; }
     if (line.startsWith("@ota ")) { serialOta(line.substring(5)); continue; }
     if (line == "@mem") { char b[140]; memLine(b, sizeof(b)); Serial.printf("@mem %s\n", b); continue; }
+    // games from the PC keyboard (lil.mate Desk): Star Catcher keys L/R/T/X, team match tap, and a small status reply
+    if (line.startsWith("@key ") && line.length() > 5) { gameKey(toupper(line[5])); continue; }
+    if (line == "@tap") { markActivity(); gameInput(); continue; }
+    if (line == "@gm") { JsonDocument d; gameJson(d["game"].to<JsonObject>()); linkJson(d["link"].to<JsonObject>()); Serial.print("@gm "); serializeJson(d, Serial); Serial.println(); continue; }
     if (line.startsWith("@hello")) { Serial.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\"}\n", FW_VERSION, S.owner); continue; }
     String low = line; low.toLowerCase();
     if (low.startsWith("/wifi ")) {          // /wifi My Network|password

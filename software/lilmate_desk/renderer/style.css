@@ -168,3 +168,4 @@ h2{font-size:17px;font-weight:600;margin:20px 0 8px}
 .tg span{background:var(--cream);border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
 .tg span i{font-style:normal;color:#c46a00;margin-left:4px}
 .tcard .row{display:flex;gap:8px;margin-top:10px}
+kbd{font:800 11px/1 inherit;padding:2px 6px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;background:var(--white);color:var(--ink)}

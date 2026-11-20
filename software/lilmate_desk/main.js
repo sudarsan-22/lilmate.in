@@ -165,11 +165,33 @@ async function pollState() {
     noteFirmware(s);
     if (s.ip && s.ip !== '0.0.0.0' && s.ip !== settings.host) { settings.host = s.ip; saveSettings(); }   // remember for Wi-Fi later
     send('state', { ...s, conn: { kind: link.kind, where: link.kind === 'usb' ? link.path : link.host } });
+    noteGame(s);
   } catch (e) {
     if (link && link.kind === 'wifi') link = null;
     send('state', { offline: true });
   }
 }
+
+// ------------------------------------------------------------ games from the keyboard (Star Catcher + team Quick Draw / Tug of War)
+// While a game is on, the buddy is asked for the score ~3x a second, and the island takes keyboard focus once so the keys just work.
+const LIVE = ['inviting', 'invited', 'countdown', 'round', 'roundend', 'matchend'];
+const gameLive = s => !!(s && ((s.game && s.game.on) || (s.link && LIVE.includes(s.link.mode))));
+let gameOn = false, gmBusy = false;
+let gameFocused = false;
+function noteGame(s) {
+  gameOn = gameLive(s);
+  // take the keys once when play actually starts (not for an invite, which may arrive while you're typing)
+  const playing = !!(s && ((s.game && s.game.on) || (s.link && ['countdown', 'round'].includes(s.link.mode))));
+  if (playing && !gameFocused && win && !win.isDestroyed()) { win.show(); win.focus(); }
+  gameFocused = playing;
+}
+async function gameTick() {
+  if (!gameOn || gmBusy || !link || link.updating) return;
+  gmBusy = true;
+  try { const g = await link.gm(); lastState = { ...lastState, ...g }; send('game', g); noteGame(lastState); } catch (e) {}
+  gmBusy = false;
+}
+function gameKey(k) { if (link && !link.updating) link.key(k).catch(() => {}); setTimeout(gameTick, 60); }
 
 // ------------------------------------------------------------ PC stats + "in the zone" activity
 let prevCpu = null, battery = { level: -1, charging: false };
@@ -338,6 +360,9 @@ ipcMain.handle('tidy:open', (_e, key) => { const t = tidyDirs().find(x => x.key 
 
 // ------------------------------------------------------------ IPC from the island UI
 ipcMain.handle('mode', (_e, m) => setMode(m));
+ipcMain.on('game:key', (_e, k) => { if (/^[LRTX]$/.test(k)) gameKey(k); });
+ipcMain.on('game:tap', () => { if (link && !link.updating) link.tap().catch(() => {}); });
+ipcMain.on('game:start', () => { gameOn = true; gameKey('T'); if (win && !win.isDestroyed()) win.focus(); });
 ipcMain.on('drag:move', (_e, x, y) => dragMove(x, y));
 ipcMain.on('drag:end', () => dragEnd());
 ipcMain.handle('island:displays', () => displayList());
@@ -380,6 +405,7 @@ app.whenReady().then(() => {
   server.start(appApi);
   migrateOldHooks();
   pollState(); setInterval(pollState, 2000);
+  setInterval(gameTick, 300);
   setInterval(pushPc, 5000);
   setInterval(cursorTick, 100);
   setInterval(calTick, 30000); calTick();
@@ -392,7 +418,8 @@ if (process.env.LILMATE_DEBUG) {
   require('http').createServer(async (req, res) => {
     const u = new URL(req.url, 'http://x');
     if (u.searchParams.get('upd')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify(upd)); }
-    if (u.searchParams.get('bounds')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ win: win.getBounds(), mode, display: screen.getPrimaryDisplay().bounds })); }
+    if (u.searchParams.get('bounds')) { res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end(JSON.stringify({ win: win.getBounds(), mode, focused: win.isFocused(), display: screen.getPrimaryDisplay().bounds })); }
+    if (u.searchParams.get('key')) { const k = u.searchParams.get('key'); win.webContents.sendInputEvent({ type: 'keyDown', keyCode: k }); win.webContents.sendInputEvent({ type: 'keyUp', keyCode: k }); }
     if (u.searchParams.get('mode')) setMode(u.searchParams.get('mode'));
     if (u.searchParams.get('page')) win.webContents.executeJavaScript(`go(${JSON.stringify(u.searchParams.get('page'))})`);
     if (u.searchParams.get('js')) await win.webContents.executeJavaScript(u.searchParams.get('js')).catch(() => {});

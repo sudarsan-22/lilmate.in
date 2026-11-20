@@ -25,5 +25,8 @@ contextBridge.exposeInMainWorld('lil', {
   tidyUndo: k => ipcRenderer.invoke('tidy:undo', k),
   tidyOpen: k => ipcRenderer.invoke('tidy:open', k),
   battery: b => ipcRenderer.send('battery', b),
-  on: (ch, fn) => { const ok = ['state', 'mode', 'asks', 'link', 'update', 'goto', 'toast', 'cursor']; if (ok.includes(ch)) ipcRenderer.on(ch, (_e, d) => fn(d)); },
+  gameKey: k => ipcRenderer.send('game:key', k),
+  gameTap: () => ipcRenderer.send('game:tap'),
+  gameStart: () => ipcRenderer.send('game:start'),
+  on: (ch, fn) => { const ok = ['state', 'mode', 'asks', 'link', 'update', 'goto', 'toast', 'cursor', 'game']; if (ok.includes(ch)) ipcRenderer.on(ch, (_e, d) => fn(d)); },
 });
