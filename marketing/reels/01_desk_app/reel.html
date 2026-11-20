@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>lil.mate Desk · reel 01</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Reel 01: lil.mate Desk. 1080x1920. Every frame is a pure function of time: render(t) sets everything.
+   No CSS transitions or animations, so headless frame capture is exact. The island copies the real app's look
+   (software/lilmate_desk/renderer/style.css) and its spring numbers (app.js: OPEN 190/21, CLOSE 1100/66). */
+:root{--cream:#fff8ee;--cream2:#f7ecdb;--cream3:#efdfc6;--ink:#24130f;--soft:#6b5a4f;--mute:#9a8878;--orange:#f7931e;--pengu:#5b7397;--green:#3f9b63;--white:#fff;
+  --line:rgba(36,19,15,.08);--line2:rgba(36,19,15,.14);--sh:0 10px 30px -12px rgba(36,19,15,.18)}
+*{box-sizing:border-box;margin:0;padding:0;transition:none!important;animation:none!important}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+body{font:600 14px/1.4 Nunito,system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+h1,h2,b,.word,.cap{font-family:Fredoka,system-ui,sans-serif}
+svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#stage{position:absolute;inset:0;overflow:hidden;background:#0b0706}
+.shot{position:absolute;inset:0;overflow:hidden;opacity:0}
+
+/* ---------- logo mark */
+.mark{overflow:visible;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mark .head{stroke-width:5}.mark .eyes{stroke-width:4}.mark .eyes circle{stroke-width:3.4}
+.mark .spark{stroke:var(--orange);stroke-width:5;transform-box:fill-box;transform-origin:0 100%}
+.mark .eyes path{transform-box:fill-box;transform-origin:center}
+.word{font-weight:600;letter-spacing:-.025em;line-height:1}.word i{font-style:normal;color:var(--orange)}
+
+/* ---------- island (same look as the app) */
+.island{position:absolute;top:0;left:50%;width:240px;height:42px;transform:translateX(-50%);background:var(--cream);
+  border:1px solid var(--line);border-top:0;border-radius:0 0 22px 22px;overflow:hidden;
+  box-shadow:0 18px 40px -12px rgba(0,0,0,.55),0 2px 6px rgba(0,0,0,.18)}
+.pill,.ask,.panel{position:absolute;top:0;left:50%;display:flex;transform-origin:50% 0}
+.pill{width:238px;height:41px;align-items:center;gap:10px;padding:0 16px 0 14px}
+.pill .mark{width:30px;height:22px;flex:none}
+.pillText{flex:1;font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--mute);flex:none;display:inline-block}
+.dot.ok{background:var(--green)}.dot.attn{background:var(--orange)}
+.ask{width:458px;height:167px;flex-direction:column;gap:10px;padding:14px 18px 12px}
+.askHead{display:flex;gap:12px;align-items:center}
+.askHead .mark{width:36px;height:26px;flex:none}
+.askHead b{display:block;font-size:17px;font-weight:600}.askHead small{color:var(--soft);font-size:12px}
+.askCmd{display:block;font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--cream2);border-radius:12px;padding:8px 11px;white-space:nowrap;overflow:hidden}
+.askRow{display:flex;gap:8px;align-items:center}
+.btn{background:var(--ink);color:var(--cream);font-weight:700;border-radius:999px;padding:8px 22px;border:0;font:inherit;font-weight:700}
+.btn2{border:1.5px solid var(--line2);border-radius:999px;padding:7px 18px;font-weight:700;white-space:nowrap;background:none;font:inherit;font-weight:700;color:var(--ink)}
+.hint{color:var(--soft);font-size:12px;margin-left:auto}
+.ttl{height:3px;background:var(--cream2);border-radius:3px;overflow:hidden}.ttl i{display:block;height:100%;background:var(--orange);width:100%}
+.panel{width:798px;height:519px;overflow:hidden}
+aside{width:214px;flex:none;padding:18px 12px 14px;display:flex;flex-direction:column;gap:16px;background:var(--cream2);border-right:1px solid var(--line)}
+.me{display:flex;flex-direction:column;gap:6px;padding:6px 8px 4px}
+.brand{display:flex;align-items:flex-end;gap:9px}.brand .mark{width:38px;height:28px;flex:none}.brand .word{font-size:24px}
+.me small{display:flex;align-items:center;gap:6px;color:var(--soft);font-size:12px;padding-left:2px}
+nav{display:flex;flex-direction:column;gap:3px}
+nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:999px;color:var(--soft);font-weight:700}
+nav a.on{background:var(--ink);color:var(--cream)}nav a.on svg{color:var(--orange)}
+nav em{margin-left:auto;font-style:normal;font-size:11px;background:var(--cream3);color:var(--ink);border-radius:999px;padding:1px 8px;font-weight:800}
+.pin{margin-top:auto;color:var(--soft);font-size:12px;padding:6px 12px}
+main{flex:1;padding:24px 28px 18px;background:var(--cream);overflow:hidden}
+h1{font-size:28px;font-weight:600;line-height:1.1;letter-spacing:-.02em}
+h2{font-size:17px;font-weight:600;margin:16px 0 8px}
+.sub{color:var(--soft);margin:5px 0 14px}
+.talk{display:flex;gap:8px;align-items:center;background:var(--white);border:1.5px solid var(--line);border-radius:999px;padding:5px 5px 5px 18px;margin-bottom:14px;box-shadow:var(--sh)}
+.talk span{flex:1;color:var(--mute);white-space:nowrap;overflow:hidden}
+.talk i{width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--cream);display:grid;place-items:center;flex:none}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:20px;padding:13px 13px 11px;display:flex;flex-direction:column;gap:6px;min-width:0;box-shadow:var(--sh)}
+.card i{width:22px;height:22px;border-radius:8px;display:block}
+.c1{background:var(--pengu)}.c2{background:var(--orange)}.c3{background:var(--ink)}.c4{background:var(--cream3)}
+.card b{font-size:25px;font-weight:600;line-height:1;white-space:nowrap}
+.card span{font-size:12px;color:var(--soft);white-space:nowrap}
+.chips{display:flex;flex-wrap:nowrap;gap:7px;margin-top:14px;align-items:center}
+.chips>span{background:var(--white);border:1px solid var(--line2);border-radius:999px;padding:6px 13px;font-weight:700;white-space:nowrap;font-size:13px}
+.list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.list li{display:flex;align-items:center;gap:10px;background:var(--white);border:1px solid var(--line);border-radius:16px;padding:9px 12px}
+.list li span{flex:1;min-width:0;white-space:nowrap;overflow:hidden}
+.list li.done span{text-decoration:line-through;color:var(--mute)}
+.ck{width:20px;height:20px;border-radius:50%;border:2px solid var(--cream3);flex:none;display:grid;place-items:center}
+.ck.on{background:var(--orange);border-color:var(--orange)}.ck.on::after{content:"";width:5px;height:9px;border:solid var(--ink);border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.tag{font-size:11px;border-radius:999px;padding:2px 9px;background:var(--cream2);color:var(--soft);font-weight:800;font-style:normal;white-space:nowrap}
+.tag.done{color:var(--green)}.tag.soon{color:#c46a00;background:#fde7cb}
+.fly{position:absolute;top:0;left:50%;width:38px;height:28px;color:var(--ink);transform-origin:0 0;z-index:5}
+
+/* ---------- desktop (inside the laptop, and the macro shots) */
+.desk{position:absolute;left:0;top:0;width:1440px;overflow:hidden;
+  background:
+    radial-gradient(60% 45% at 78% 78%,rgba(247,147,30,.62),transparent 70%),
+    radial-gradient(55% 40% at 12% 22%,rgba(91,115,151,.55),transparent 70%),
+    radial-gradient(70% 50% at 45% 105%,rgba(255,214,170,.35),transparent 70%),
+    radial-gradient(40% 30% at 60% 30%,rgba(196,106,0,.25),transparent 70%),
+    linear-gradient(160deg,#2a1c17,#170e0b 55%,#24140d)}
+.win{position:absolute;left:90px;top:150px;width:760px;height:520px;border-radius:14px;background:rgba(20,14,12,.92);
+  box-shadow:0 30px 70px -20px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.06);overflow:hidden}
+.win .bar{height:34px;display:flex;align-items:center;gap:8px;padding:0 14px;background:rgba(255,255,255,.04)}
+.win .bar i{width:11px;height:11px;border-radius:50%;background:#5a4a42}
+.win .code{padding:22px 26px;display:flex;flex-direction:column;gap:11px}
+.win .code u{display:block;height:9px;border-radius:5px;text-decoration:none}
+.win2{left:900px;top:420px;width:440px;height:330px}
+.dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:12px;padding:10px 14px;border-radius:22px;
+  background:rgba(255,248,238,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.dock i{width:46px;height:46px;border-radius:12px;display:block}
+.cursor{position:absolute;left:0;top:0;width:26px;height:38px;transform-origin:3px 3px;z-index:20;filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
+
+/* ---------- laptop shot (CSS 3D) */
+#sLaptop{perspective:1800px;perspective-origin:540px 960px;
+  background:radial-gradient(70% 38% at 50% 44%,#3a2117 0%,#1a0f0b 45%,#070403 100%)}
+#rig{position:absolute;left:540px;top:960px;width:0;height:0;transform-style:preserve-3d}
+#rig>*{position:absolute}
+.lid{left:-480px;top:-620px;width:960px;height:620px;transform-origin:50% 100%;transform:rotateX(8deg);border-radius:26px 26px 8px 8px;
+  background:#0a0a0b;box-shadow:inset 0 0 0 2px #3b3a3f,inset 0 0 0 4px #121214;padding:26px 30px 32px}
+.screen{position:relative;width:900px;height:562px;overflow:hidden;border-radius:4px;background:#000}
+.screen .desk{height:900px;transform:scale(.625);transform-origin:0 0}
+.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 70%,rgba(255,255,255,.03) 100%);pointer-events:none}
+.base{left:-500px;top:0;width:1000px;height:660px;transform-origin:50% 0;transform:rotateX(90deg);border-radius:6px 6px 28px 28px;
+  background:linear-gradient(#2b2a2f,#1f1e22 60%,#18171a)}
+.kbd{position:absolute;left:96px;top:60px;width:808px;height:300px;border-radius:12px;background:#0f0f11;
+  background-image:repeating-linear-gradient(90deg,transparent 0 6px,#232226 6px 54px,transparent 54px 60px),repeating-linear-gradient(0deg,transparent 0 6px,rgba(0,0,0,.0) 6px 44px,#0f0f11 44px 50px)}
+.pad{position:absolute;left:330px;top:395px;width:340px;height:220px;border-radius:16px;background:#26252a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
+.baseglow{position:absolute;inset:0;border-radius:inherit;background:radial-gradient(70% 55% at 50% 0%,rgba(255,190,120,.16),transparent 70%)}
+.front{left:-500px;top:0;width:1000px;height:16px;transform:translateZ(660px);border-radius:0 0 14px 14px;background:linear-gradient(#3a393e,#141316)}
+.table{left:-2200px;top:16px;width:4400px;height:3200px;transform-origin:50% 0;transform:translateZ(-1400px) rotateX(90deg);
+  background:radial-gradient(18% 14% at 50% 46%,rgba(255,170,90,.22),transparent 70%),linear-gradient(#120a07,#2a1810 45%,#1a0e09)}
+
+/* ---------- macro shots: the top of the screen, very close */
+#sMacro{background:#050303}
+#mcam{position:absolute;left:540px;top:0;width:0;height:0;transform-origin:0 0}
+.mroom{position:absolute;left:-3000px;top:-3000px;width:6000px;height:2962px;background:radial-gradient(40% 30% at 50% 100%,#2a1913,#060403 70%)}
+.medge{position:absolute;left:-3000px;top:-40px;width:6000px;height:4px;background:linear-gradient(90deg,transparent,#5a585e 30%,#77757b 50%,#5a585e 70%,transparent)}
+.mbezel{position:absolute;left:-3000px;top:-36px;width:6000px;height:36px;background:#0a0a0b}
+.mcam{position:absolute;left:-5px;top:-23px;width:10px;height:10px;border-radius:50%;background:#16161a;box-shadow:inset 0 0 0 2px #222128}
+.mdesk{position:absolute;left:-720px;top:0}
+.mdesk .desk{height:1800px;width:1440px}
+.mscreen{position:absolute;left:-3000px;top:0;width:6000px;height:4000px;background:#170e0b}
+
+/* ---------- title / logo / end */
+#sTitle{background:radial-gradient(60% 40% at 50% 50%,#1c110c,#050302 80%)}
+#sLogo{background:radial-gradient(55% 35% at 50% 47%,#24150f,#050302 80%)}
+#sEnd{background:radial-gradient(70% 45% at 50% 45%,#fffaf2,#f6ead8 90%)}
+.cap{position:absolute;left:0;width:1080px;text-align:center;color:var(--cream);font-weight:600;letter-spacing:-.025em;line-height:1.06}
+.cap i{font-style:normal;color:var(--orange)}
+.cap.dark{color:var(--ink)}
+.cap.small{font-family:Nunito,system-ui,sans-serif;font-weight:700;letter-spacing:0}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(75% 60% at 50% 50%,transparent 55%,rgba(0,0,0,.5))}
+#grain{position:absolute;inset:0;width:1080px;height:1920px;pointer-events:none;mix-blend-mode:overlay;opacity:.07}
+#fade{position:absolute;inset:0;background:#000;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="shot" id="sTitle"></div>
+  <div class="shot" id="sLogo"><svg class="mark" id="bigMark" viewBox="0 -18 88 62"></svg></div>
+  <div class="shot" id="sLaptop">
+    <div id="rig">
+      <div class="table"></div>
+      <div class="base"><div class="kbd"></div><div class="pad"></div><div class="baseglow"></div></div>
+      <div class="front"></div>
+      <div class="lid"><div class="screen" id="lapScreen"></div><div class="glare"></div></div>
+    </div>
+  </div>
+  <div class="shot" id="sMacro">
+    <div id="mcam">
+      <div class="mroom"></div>
+      <div class="mscreen"></div>
+      <div class="mdesk" id="macroDesk"></div>
+      <div class="mbezel"></div><div class="medge"></div><div class="mcam"></div>
+    </div>
+  </div>
+  <div class="shot" id="sEnd"><svg class="mark" id="endMark" viewBox="0 -18 88 62"></svg></div>
+  <div id="caps"></div>
+  <div id="vig"></div>
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="fade"></div>
+</div>
+<div id="measure" style="position:absolute;left:3000px;top:0;width:1440px;height:900px"></div>
+
+<script>
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, p) => a + (b - a) * p;
+function bez(x1, y1, x2, y2) {
+  return x => { if (x <= 0) return 0; if (x >= 1) return 1; let lo = 0, hi = 1, u = .5;
+    for (let i = 0; i < 40; i++) { u = (lo + hi) / 2; const cx = 3 * x1 * u * (1 - u) ** 2 + 3 * x2 * u * u * (1 - u) + u ** 3; if (cx < x) lo = u; else hi = u; }
+    return 3 * y1 * u * (1 - u) ** 2 + 3 * y2 * u * u * (1 - u) + u ** 3; };
+}
+const eOut = bez(.2, .8, .2, 1), eIO = bez(.45, 0, .3, 1), eCam = bez(.6, 0, .25, 1), eSoft = bez(.3, .1, .3, 1), eFly = bez(.3, .85, .25, 1), ePop = bez(.3, 1.4, .5, 1);
+const seg = (t, a, b, e = x => x) => e(clamp((t - a) / (b - a)));
+// keyframe track: [[t, value], ...] with an easing per step
+function track(t, keys, e = eCam) {
+  if (t <= keys[0][0]) return keys[0][1];
+  for (let i = 1; i < keys.length; i++) if (t < keys[i][0]) {
+    const [t0, v0] = keys[i - 1], [t1, v1, ee] = keys[i], p = (ee || e)(clamp((t - t0) / (t1 - t0)));
+    return Array.isArray(v0) ? v0.map((v, j) => lerp(v, v1[j], p)) : lerp(v0, v1, p);
+  }
+  return keys[keys.length - 1][1];
+}
+
+// ------------------------------------------------------------ the logo (same paths as the app)
+const EYE = {
+  open: '<path d="M24.5 25.5V31"/><path d="M39.5 25.5V31"/>',
+  happy: '<path d="M21 31Q24.5 25 28 31"/><path d="M36 31Q39.5 25 43 31"/>',
+  sleepy: '<path d="M21 29.5H28"/><path d="M36 29.5H43"/>',
+  alert: '<circle cx="24.5" cy="28.5" r="3.2"/><circle cx="39.5" cy="28.5" r="3.2"/>',
+  focus: '<path d="M21 27.5L28 29.5"/><path d="M36 29.5L43 27.5"/>',
+};
+function face(el, eye) {
+  if (el.dataset.k === eye) return; el.dataset.k = eye;
+  el.innerHTML = '<path class="head" d="M6 40C6 18 18 6 32 6C46 6 58 18 58 40"/><g class="eyes">' + EYE[eye] + '</g>' +
+    '<g transform="translate(56 -16) scale(.7)"><g class="spark"><path d="M14 4L11 15"/><path d="M30 9L21 18"/><path d="M36 25L25 28"/></g></g>';
+}
+
+// ------------------------------------------------------------ the island, built like the app's markup
+const ICON = {
+  home: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/>',
+  ag: '<rect x="4" y="6" width="16" height="12" rx="4"/><path d="M9 11v2M15 11v2M12 3v3"/>',
+  tk: '<rect x="4" y="4" width="16" height="16" rx="5"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+  hb: '<path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .5 2 1.5 3 2.5 3-1-3 0-6 0-8z"/>',
+  td: '<path d="M14 3 9.5 12.5"/><path d="M6 13h9l2 8H4z"/><path d="M8.5 17v4M12.5 17v4"/>',
+  tm: '<circle cx="9" cy="9" r="3"/><circle cx="16.5" cy="10" r="2.5"/><path d="M3.5 19c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5M14.5 15.5c2.6-.6 4.9.6 6 3.5"/>',
+  st: '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>',
+};
+const nav = (k, label, em = '', on = '') => `<a class="${on}"><svg viewBox="0 0 24 24">${ICON[k]}</svg>${label}${em ? `<em>${em}</em>` : ''}</a>`;
+const ISLAND = `
+<div class="island">
+  <div class="pill"><svg class="mark pf" viewBox="0 -18 88 62"></svg><span class="pillText">lil.mate</span><span class="dot ok"></span></div>
+  <div class="ask">
+    <div class="askHead"><svg class="mark af" viewBox="0 -18 88 62"></svg><div><b>Claude wants to run</b><small>lilmate · terminal 2</small></div></div>
+    <code class="askCmd">npm run build &amp;&amp; npm test</code>
+    <div class="askRow"><button class="btn allow">Allow</button><button class="btn2">Deny</button><span class="hint">or hold lil.mate</span></div>
+    <div class="ttl"><i></i></div>
+  </div>
+  <div class="panel">
+    <aside>
+      <div class="me"><div class="brand"><svg class="mark bf" viewBox="0 -18 88 62"></svg><span class="word">lil<i>.</i>mate</span></div>
+        <small><span class="dot ok"></span> connected · happy</small></div>
+      <nav>${nav('home', 'Today', '', 'on')}${nav('ag', 'AI helpers', '1')}${nav('tk', 'Tasks', '3')}${nav('hb', 'Habits')}${nav('td', 'Tidy')}${nav('tm', 'Team')}${nav('st', 'Settings')}</nav>
+      <span class="pin">Keep open</span>
+    </aside>
+    <main>
+      <h1>Good morning</h1><p class="sub">Thursday · 3 tasks, 1 meeting, a good day for focus</p>
+      <div class="talk"><span>Tell lil.mate something… e.g. remind me in 20 min to stretch</span><i><svg viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg></i></div>
+      <div class="cards">
+        <div class="card"><i class="c1"></i><b class="n1">0/8</b><span>water today</span></div>
+        <div class="card"><i class="c2"></i><b class="n2">0</b><span>tasks left</span></div>
+        <div class="card"><i class="c3"></i><b>10:30</b><span>standup</span></div>
+        <div class="card"><i class="c4"></i><b class="n4">0</b><span>focus min today</span></div>
+      </div>
+      <div class="chips"><span>Focus 25 min</span><span>Breathe 1 min</span><span>Timer 5 min</span><span>Pat</span><span>★ Star Catcher</span></div>
+      <h2>Right now</h2>
+      <ul class="list">
+        <li><span>Claude Code finished the build</span><em class="tag done">done</em></li>
+        <li><span>Standup in 25 min</span><em class="tag soon">10:30</em></li>
+        <li class="water"><i class="ck"></i><span>Drink a glass of water</span><small>habit</small></li>
+      </ul>
+    </main>
+  </div>
+  <svg class="mark fly" viewBox="0 -18 88 62"></svg>
+</div>`;
+const DESK = h => `<div class="desk" style="height:${h}px">
+  <div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="code">${
+    [[38, '#f7931e'], [62, '#e9d8c4'], [48, '#8fa6c8'], [70, '#e9d8c4'], [30, '#6fbf8c'], [55, '#e9d8c4'], [44, '#f7931e'], [66, '#8fa6c8'], [36, '#e9d8c4'], [58, '#e9d8c4'], [28, '#6fbf8c'], [50, '#8fa6c8'], [64, '#e9d8c4'], [40, '#e9d8c4']]
+      .map(([w, c], i) => `<u style="width:${w}%;margin-left:${(i % 4) * 22}px;background:${c};opacity:.55"></u>`).join('')}</div></div>
+  <div class="win win2"><div class="bar"><i></i><i></i><i></i></div><div class="code">${
+    [[70, '#6fbf8c'], [45, '#e9d8c4'], [60, '#e9d8c4'], [35, '#f7931e'], [52, '#e9d8c4']].map(([w, c]) => `<u style="width:${w}%;background:${c};opacity:.5"></u>`).join('')}</div></div>
+  <div class="dock">${['#f7931e', '#5b7397', '#3f9b63', '#fff8ee', '#c46a00', '#8fa6c8', '#24130f'].map(c => `<i style="background:${c};opacity:.8"></i>`).join('')}</div>
+</div>`;
+const CURSOR = '<svg class="cursor" viewBox="0 0 26 38" style="width:26px;height:38px"><path d="M3 3 L3 30 L10 23.5 L14.5 34 L19 32 L14.6 21.8 L23.5 21.6 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+
+function buildIsland(host, x0) {
+  const wrap = document.createElement('div'); wrap.style.cssText = `position:absolute;left:${x0}px;top:0;width:0;height:0`;
+  wrap.innerHTML = ISLAND + CURSOR; host.appendChild(wrap);
+  const I = { wrap, el: $('.island', wrap), pill: $('.pill', wrap), ask: $('.ask', wrap), panel: $('.panel', wrap), cur: $('.cursor', wrap),
+    pf: $('.pf', wrap), af: $('.af', wrap), bf: $('.bf', wrap), fly: $('.fly', wrap), pillText: $('.pillText', wrap), pillDot: $('.pill .dot', wrap),
+    allow: $('.allow', wrap), ttl: $('.ttl i', wrap), n1: $('.n1', wrap), n2: $('.n2', wrap), n4: $('.n4', wrap), water: $('.water', wrap), ck: $('.water .ck', wrap),
+    word: $('.brand .word', wrap), conn: $('.me small', wrap),
+    stag: [...$$('nav a, .pin', wrap), ...$$('main > *', wrap)].slice(0, 15) };
+  face(I.pf, 'happy'); face(I.bf, 'happy'); face(I.af, 'alert'); face(I.fly, 'happy');
+  return I;
+}
+
+// ------------------------------------------------------------ springs (same as app.js)
+function spring(k, c) {
+  const xs = []; let x = 0, v = 0, still = 0;
+  for (let t = 0; t < 1.5; t += 0.001) { v += (-k * (x - 1) - c * v) * 0.001; x += v * 0.001; xs.push(x);
+    if (Math.abs(x - 1) < 0.002 && Math.abs(v) < 0.03) { if (++still > 20) break; } else still = 0; }
+  return { ms: xs.length, at: ms => ms <= 0 ? 0 : ms >= xs.length ? 1 : xs[Math.floor(ms)] };
+}
+const OPEN = spring(190, 21), CLOSE = spring(1100, 66);
+const SIZE = { pill: [240, 42, 22], ask: [460, 168, 24], panel: [800, 520, 28] };
+
+// ------------------------------------------------------------ the story of the island
+const T = { open: 7.3, close: 12.6, ask: 13.3, allow: 14.62, askClose: 14.95, focus: 15.85, tick: 11.55 };
+const TR = [[T.open, 'pill', 'panel'], [T.close, 'panel', 'pill'], [T.ask, 'pill', 'ask'], [T.askClose, 'ask', 'pill']];
+let POS = {};   // where things sit inside the island (measured once)
+
+function drawIsland(I, t) {
+  let cur = null; for (const tr of TR) if (t >= tr[0]) cur = tr;
+  const op = { pill: 0, ask: 0, panel: 0 }, sc = { pill: 1, ask: 1, panel: 1 };
+  let w, h, rad, tau = 1e9, to = 'pill', from = 'pill', opening = false;
+  if (!cur) { [w, h, rad] = SIZE.pill; op.pill = 1; }
+  else {
+    [, from, to] = cur; tau = (t - cur[0]) * 1000;
+    const [w0, h0, r0] = SIZE[from], [w1, h1, r1] = SIZE[to]; opening = w1 * h1 > w0 * h0;
+    const sp = opening ? OPEN : CLOSE, p = sp.at(tau);
+    w = lerp(w0, w1, p); h = lerp(h0, h1, p);
+    const arch = opening ? 70 : 40, e = eIO(clamp(tau / (sp.ms * .85)));
+    rad = e < .35 ? lerp(r0, arch, e / .35) : lerp(arch, r1, (e - .35) / .65);
+    op[from] = 1 - clamp(tau / (opening ? 90 : 60));
+    const d = opening ? 70 : sp.ms * .4, pi = eOut(clamp((tau - d) / (opening ? 240 : 150)));
+    op[to] = pi; sc[to] = lerp(opening ? .985 : 1.02, 1, pi);
+  }
+  Object.assign(I.el.style, { width: w + 'px', height: h + 'px', borderRadius: `0 0 ${rad}px ${rad}px` });
+  for (const k of ['pill', 'ask', 'panel']) { const el = I[k]; el.style.opacity = op[k]; el.style.visibility = op[k] > 0.001 ? 'visible' : 'hidden';
+    el.style.transform = `translateX(-50%) scale(${sc[k]})`; }
+
+  // panel: menu and cards arrive one after another; the logo hops from the pill to the panel
+  const intoPanel = to === 'panel';
+  I.stag.forEach((el, i) => { const p = intoPanel ? eOut(clamp((tau - 110 - i * 16) / 300)) : 1; el.style.opacity = p; el.style.transform = `translateY(${7 * (1 - p)}px)`; });
+  const fp = intoPanel ? clamp(tau / 460) : 1;
+  if (intoPanel && fp < 1) {
+    const e = eFly(fp), s0 = 30 / 38, big = 1.14;
+    const k = e < .5 ? e / .5 : (e - .5) / .5;
+    const [dx, dy, s] = e < .5 ? [lerp(POS.pfx, (POS.pfx + POS.bfx) / 2, k), lerp(POS.pfy, (POS.pfy + POS.bfy) / 2, k), lerp(s0, big, k)]
+                               : [lerp((POS.pfx + POS.bfx) / 2, POS.bfx, k), lerp((POS.pfy + POS.bfy) / 2, POS.bfy, k), lerp(big, 1, k)];
+    I.fly.style.display = 'block'; I.fly.style.transform = `translate(${dx}px, ${dy}px) scale(${s})`;
+    face(I.fly, fp < .18 ? 'happy' : fp < .4 ? 'sleepy' : 'happy');
+    sparkPop(I.fly, (tau - 184) / 360);
+    I.pf.style.visibility = I.bf.style.visibility = 'hidden';
+  } else { I.fly.style.display = 'none'; I.pf.style.visibility = I.bf.style.visibility = ''; sparkPop(I.bf, 1); }
+  I.word.style.opacity = intoPanel ? eOut(clamp((tau - 322) / 260)) : 1;
+  I.conn.style.opacity = intoPanel ? eOut(clamp((tau - 377) / 260)) : 1;
+
+  // the day's numbers count up once we are close
+  const c = seg(t, 9.85, 11.0, eOut);
+  I.n1.textContent = Math.round(5 * c) + '/8'; I.n2.textContent = String(Math.round(3 * c)); I.n4.textContent = String(Math.round(75 * c));
+  const ticked = t >= T.tick; I.ck.classList.toggle('on', ticked); I.water.classList.toggle('done', ticked);
+  I.ck.style.transform = `scale(${ticked ? 1 + .25 * Math.sin(Math.PI * clamp((t - T.tick) / .22)) : 1})`;
+
+  // ask card: spark pulses while it waits, the countdown bar runs, Allow lights up under the mouse
+  const pulse = .5 - .5 * Math.cos(2 * Math.PI * ((t - T.ask) % 1));
+  const ks = $('.spark', I.af); if (ks) { ks.style.opacity = 1 - .65 * pulse; ks.style.transform = `rotate(${16 * pulse}deg) scale(${1 + .15 * pulse})`; }
+  I.ttl.style.width = (100 - clamp((t - T.ask) / 30) * 100) + '%';
+  const hov = t > 14.42 && t < T.askClose + .05;
+  I.allow.style.background = hov ? 'var(--orange)' : ''; I.allow.style.color = hov ? 'var(--ink)' : '';
+  I.allow.style.transform = `scale(${t > T.allow && t < T.allow + .14 ? .94 : 1})`;
+
+  // pill text through the story
+  let txt = 'lil.mate', col = '', dot = 'dot ok', eye = 'happy';
+  if (t >= T.askClose && t < T.focus) { txt = '✓ Allowed'; col = 'var(--green)'; }
+  if (t >= T.focus) { const left = 25 * 60 - Math.floor((t - T.focus) * 1.0); txt = `Focus · ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`; col = '#c46a00'; dot = 'dot attn'; eye = 'focus'; }
+  if (I.pillText.textContent !== txt) I.pillText.textContent = txt;
+  I.pillText.style.color = col; I.pillDot.className = dot; face(I.pf, eye);
+  const fo = t >= T.focus ? clamp((t - T.focus) / .25) : 1;     // the new pill text eases in
+  I.pillText.style.opacity = (t >= T.askClose && t < T.askClose + .2) ? clamp((t - T.askClose) / .2) : fo;
+  I.pillDot.style.boxShadow = dot === 'dot attn' ? `0 0 0 ${5 * (.5 - .5 * Math.cos(2 * Math.PI * (t - T.focus)))}px rgba(247,147,30,.3)` : '';
+}
+function sparkPop(mark, p) {
+  const k = $('.spark', mark); if (!k) return;
+  if (p >= 1) { k.style.transform = ''; k.style.opacity = 1; return; }
+  if (p <= 0) { k.style.opacity = 0; return; }
+  const e = ePop(p), [s, r, o] = e < .6 ? [lerp(0, 1.35, e / .6), lerp(-35, 12, e / .6), e / .6] : [lerp(1.35, 1, (e - .6) / .4), lerp(12, 0, (e - .6) / .4), 1];
+  k.style.opacity = clamp(o); k.style.transform = `scale(${s}) rotate(${r}deg)`;
+}
+
+// ------------------------------------------------------------ the mouse, in island coordinates (x from the island's centre)
+function cursorAt(t) {
+  return track(t, [
+    [5.2, [330, 640]], [6.25, [330, 640]], [7.15, [36, 24]], [7.7, [36, 24]], [8.9, [235, 330], eSoft],
+    [10.5, [235, 330]], [11.35, POS.ck], [11.85, POS.ck], [12.5, [470, 640]],
+    [13.95, [470, 640]], [14.5, POS.allow], [15.0, POS.allow], [15.7, [520, 460]],
+  ]);
+}
+function drawCursor(I, t, s) {
+  const [x, y] = cursorAt(t), press = (t > T.tick - .05 && t < T.tick + .12) || (t > T.allow && t < T.allow + .14);
+  I.cur.style.transform = `translate(${x - 3}px, ${y - 3}px) scale(${(press ? .86 : 1) / (s || 1)})`;
+}
+
+// ------------------------------------------------------------ captions
+const CAPS = [
+  // [in, out, html, y(centre), size, class]
+  [0.35, 1.72, 'Your desk<br>has a mate.', 960, 118],
+  [1.86, 3.0, 'Now your <i>screen</i><br>does too.', 960, 118],
+  [5.75, 9.25, 'Lives at the top<br>of your screen.', 1530, 70],
+  [9.95, 12.45, 'Your whole day,<br>at a glance.', 1440, 70],
+  [13.55, 15.35, 'Knows when your<br>AI needs you.', 1330, 70],
+  [16.15, 18.45, 'Keeps you<br>in the flow.', 1270, 70],
+  [19.25, 22.5, 'Your buddy, now on your screen.', 1268, 44, 'dark small'],
+  [19.75, 22.5, 'lilmate.in', 1400, 46, 'dark'],
+];
+const capEls = CAPS.map(([, , html, y, size, cls]) => { const d = document.createElement('div'); d.className = 'cap ' + (cls || ''); d.innerHTML = html;
+  d.style.fontSize = size + 'px'; d.dataset.y = y; $('#caps').appendChild(d); return d; });
+function drawCaps(t) {
+  CAPS.forEach(([a, b], i) => {
+    const el = capEls[i], p = eOut(clamp((t - a) / .7)), q = eIO(clamp((t - (b - .32)) / .32)), o = p * (1 - q);
+    el.style.opacity = o; el.style.visibility = o > .001 ? 'visible' : 'hidden';
+    el.style.filter = `blur(${(16 * (1 - p) + 10 * q).toFixed(2)}px)`;
+    el.style.transform = `translateY(${(+el.dataset.y - el.offsetHeight / 2 + 26 * (1 - p) - 6 * q).toFixed(2)}px) scale(${1 + .015 * q})`;
+  });
+  capEls[capEls.length - 1].style.color = '#c46a00';
+}
+
+// ------------------------------------------------------------ shots
+function show(id, o, extra = '') { const el = $(id); el.style.opacity = o; el.style.visibility = o > .001 ? 'visible' : 'hidden'; if (extra !== null) el.style.filter = extra; return el; }
+let LAP, MAC, headLen = 0;
+
+function drawLogo(t) {
+  const o = seg(t, 2.85, 3.25) * (1 - seg(t, 5.0, 5.45, eIO));
+  const el = show('#sLogo', o, `blur(${(14 * seg(t, 5.0, 5.45, eIO)).toFixed(2)}px)`);
+  if (o <= 0) return;
+  const m = $('#bigMark'), s = 1 + .07 * seg(t, 2.9, 5.45, eSoft) + .25 * seg(t, 5.0, 5.45, eIO);
+  Object.assign(m.style, { position: 'absolute', left: '320px', top: '640px', width: '440px', height: '310px', color: 'var(--cream)', transform: `scale(${s})`, transformOrigin: '50% 60%' });
+  face(m, t < 4.62 ? 'open' : t < 4.74 ? 'sleepy' : 'happy');
+  const head = $('.head', m); head.style.strokeDasharray = headLen; head.style.strokeDashoffset = headLen * (1 - seg(t, 3.05, 3.95, eIO));
+  const ep = seg(t, 3.85, 4.15, ePop); $('.eyes', m).style.opacity = clamp(ep * 3); $$('.eyes path', m).forEach(p => p.style.transform = `scaleY(${Math.max(.01, ep)})`);
+  sparkPop(m, (t - 4.05) / .45);
+  let w = $('#sLogo .wm'); if (!w) { w = document.createElement('div'); w.className = 'cap wm'; w.innerHTML = '<span class="word">lil<i>.</i>mate</span> Desk'; $('#sLogo').appendChild(w); }
+  const wp = eOut(seg(t, 4.2, 4.95));
+  Object.assign(w.style, { fontSize: '112px', top: '1090px', opacity: wp, filter: `blur(${14 * (1 - wp)}px)`, transform: `translateY(${24 * (1 - wp)}px) scale(${s * .98})` });
+}
+
+function drawLaptop(t) {
+  const o = seg(t, 5.05, 5.6, eSoft) * (1 - seg(t, 9.42, 9.7));
+  const z = seg(t, 9.3, 9.7, eIO);
+  const el = show('#sLaptop', o, `blur(${(18 * z).toFixed(2)}px)`);
+  if (o <= 0) return;
+  el.style.transform = `scale(${1 + .14 * z})`;
+  const p = seg(t, 5.05, 9.7, bez(.42, 0, .35, 1));
+  const Z = lerp(-900, 640, p), Y = lerp(200, 575, p), A = lerp(16, 5, p), B = lerp(-11, 0, p), X = lerp(40, 0, p);
+  $('#rig').style.transform = `translate3d(${X}px, ${Y}px, ${Z}px) rotateX(${-A}deg) rotateY(${B}deg)`;
+  drawIsland(LAP, t); drawCursor(LAP, t, 1);
+  LAP.cur.style.opacity = seg(t, 5.9, 6.3);
+}
+
+function drawMacro(t) {
+  const o = seg(t, 9.42, 9.75, eSoft) * (1 - seg(t, 18.45, 18.95, eIO));
+  const zi = 1 - seg(t, 9.42, 9.8, eOut);
+  show('#sMacro', o, `blur(${(16 * zi + 10 * seg(t, 18.45, 18.95)).toFixed(2)}px)`);
+  if (o <= 0) return;
+  const [s, y] = track(t, [
+    [9.42, [1.02, 700]], [12.5, [1.2, 640], eSoft],
+    [12.68, [1.2, 640]], [13.5, [2.02, 760]],
+    [15.05, [2.1, 756], eSoft], [15.95, [3.45, 840]],
+    [18.95, [3.62, 832], eSoft],
+  ]);
+  $('#mcam').style.transform = `translate(0px, ${y}px) scale(${s})`;
+  $('#macroDesk').style.filter = `blur(${(5 + 3 * s).toFixed(1)}px)`;   // shallow depth of field: the closer, the softer the screen behind
+  drawIsland(MAC, t); drawCursor(MAC, t, s * .55);
+}
+
+function drawTitle(t) { show('#sTitle', 1 - seg(t, 2.9, 3.2), null); }
+
+function drawEnd(t) {
+  const o = seg(t, 18.5, 19.0, eSoft);
+  show('#sEnd', o, null); if (o <= 0) return;
+  const m = $('#endMark'), p = eOut(seg(t, 18.75, 19.5));
+  Object.assign(m.style, { position: 'absolute', left: '400px', top: '700px', width: '280px', height: '197px', color: 'var(--ink)', opacity: p,
+    transform: `translateY(${30 * (1 - p)}px) scale(${.92 + .08 * p})`, filter: `blur(${10 * (1 - p)}px)` });
+  face(m, t < 20.55 ? 'open' : t < 20.68 ? 'sleepy' : 'happy');
+  sparkPop(m, (t - 20.7) / .45);
+  let w = $('#sEnd .wm'); if (!w) { w = document.createElement('div'); w.className = 'cap dark wm'; w.innerHTML = '<span class="word">lil<i>.</i>mate</span> Desk'; $('#sEnd').appendChild(w); }
+  const wp = eOut(seg(t, 19.0, 19.7));
+  Object.assign(w.style, { fontSize: '104px', top: '1010px', opacity: wp, filter: `blur(${12 * (1 - wp)}px)`, transform: `translateY(${22 * (1 - wp)}px)` });
+}
+
+// ------------------------------------------------------------ film grain + vignette
+const grains = [];
+function makeGrain() {
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let g = 0; g < 8; g++) { const c = document.createElement('canvas'); c.width = 540; c.height = 960; const x = c.getContext('2d'), d = x.createImageData(540, 960);
+    for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (rnd() - .5) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+    x.putImageData(d, 0, 0); grains.push(c); }
+}
+
+// ------------------------------------------------------------ one frame
+window.render = t => {
+  drawTitle(t); drawLogo(t); drawLaptop(t); drawMacro(t); drawEnd(t); drawCaps(t);
+  const g = $('#grain').getContext('2d'); g.drawImage(grains[Math.floor(t * 30) % grains.length], 0, 0);
+  $('#grain').style.opacity = t > 18.7 ? .045 : .075;
+  $('#vig').style.opacity = 1 - .7 * seg(t, 18.5, 19.0);
+  $('#fade').style.opacity = 1 - seg(t, 0, .35);
+};
+
+window.setup = async () => {
+  await document.fonts.ready;
+  $('#lapScreen').innerHTML = DESK(900).replace('<div class="desk"', '<div class="desk" id="lapDesk"');
+  LAP = buildIsland($('#lapDesk'), 720);
+  $('#macroDesk').innerHTML = DESK(1800);
+  MAC = buildIsland($('#mcam'), 0);
+  $('#mcam').appendChild(MAC.wrap);
+  // measure where the logo, the water tick and Allow sit, on an unscaled copy
+  const M = buildIsland($('#measure'), 720), isl = () => M.el.getBoundingClientRect();
+  const at = (el, mode) => { const tt = { pill: 0, panel: 9, ask: 14 }[mode]; drawIsland(M, tt); const a = isl(), b = el.getBoundingClientRect();
+    return [b.left - (a.left + a.width / 2), b.top - a.top, b.width, b.height]; };
+  POS.ck = (([x, y, w, h]) => [x + w / 2, y + h / 2])(at(M.ck, 'panel'));
+  POS.allow = (([x, y, w, h]) => [x + w * .45, y + h * .55])(at(M.allow, 'ask'));
+  // the hopping logo sits at the panel logo's spot; its translate starts at the pill logo's spot
+  const pf = at(M.pf, 'pill'), bf = at(M.bf, 'panel');
+  MAC.fly.style.left = LAP.fly.style.left = `calc(50% + ${bf[0]}px)`; MAC.fly.style.top = LAP.fly.style.top = bf[1] + 'px';
+  POS.pfx = pf[0] - bf[0]; POS.pfy = pf[1] - bf[1]; POS.bfx = 0; POS.bfy = 0;
+  $('#measure').remove();
+  headLen = Math.ceil($('.head', (face($('#bigMark'), 'open'), $('#bigMark'))).getTotalLength()) + 2;
+  makeGrain();
+  return POS;
+};
+</script>
+</body>
+</html>
