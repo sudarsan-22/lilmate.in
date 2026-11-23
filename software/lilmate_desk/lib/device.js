@@ -226,7 +226,13 @@ function findWifi(settings) {
     const finish = () => {
       if (done) return; done = true; clearTimeout(deadline);
       const rank = l => (want && l.id === want ? 0 : known[l.id] ? 1 : 2);
-      resolve(got.sort((a, b) => rank(a) - rank(b))[0] || null);
+      got.sort((a, b) => rank(a) - rank(b));
+      // never someone else's buddy (an office with several on one Wi-Fi): once this computer has a buddy of its own,
+      // only buddies it knows count. A brand-new Desk takes the buddy on the Wi-Fi only if there is exactly one.
+      const hasOwn = Object.keys(known).length > 0 || !!want;
+      const ok = got.filter(l => (want && l.id === want) || known[l.id] || (!hasOwn && got.length === 1));
+      if (!ok.length && got.length > 1 && !hasOwn) hint.text = `${got.length} lil.mates are on this Wi-Fi: plug yours in with the USB cable once, so Desk knows which one is yours.`;
+      resolve(ok[0] || null);
     };
     const probe = ip => {
       if (!ip || tried.has(ip) || done) return;
@@ -258,7 +264,8 @@ async function connect(settings) {
   const mine = settings.lastBuddy;
   const w = process.env.LILMATE_NO_WIFI ? null : await findWifi(settings);   // LILMATE_NO_WIFI: test the Bluetooth path
   if (w && (!mine || !w.id || w.id === mine)) return w;
-  // our buddy isn't on Wi-Fi: reach it over Bluetooth before settling for another buddy that is (two buddies at home)
+  // our last buddy isn't on Wi-Fi: reach it over Bluetooth before settling for another of *our* buddies that is
+  // (findWifi only returns buddies this computer knows, so this is never a colleague's)
   const b = await connectBle(settings, !!w);
   return b || w;
 }

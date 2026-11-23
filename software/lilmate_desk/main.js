@@ -188,11 +188,17 @@ async function connectOnce() {
       // on the cable the buddy hands over its id + Bluetooth key, so it can still link when unplugged (office, no Wi-Fi)
       if (link.kind === 'usb' && await device.learn(link, settings)) saveSettings();
       if (link && link.kind === 'ble' && settings.lastBuddy !== link.id) { settings.lastBuddy = link.id; saveSettings(); }
+      // a new Desk that found the only buddy on its Wi-Fi: that one is ours from now on (another buddy that joins
+      // the Wi-Fi later is not picked up by mistake)
+      if (link && link.kind === 'wifi' && link.id && !settings.lastBuddy) {
+        settings.buddies = settings.buddies || {}; settings.buddies[link.id] = { ...(settings.buddies[link.id] || {}), ip: link.host };
+        settings.lastBuddy = link.id; saveSettings(); log(`wifi: ${link.id} is this computer's buddy now`);
+      }
     }
   } finally { connecting = false; }
 }
 
-let polling = false, misses = 0, wifiCheckAt = 0;
+let polling = false, misses = 0, wifiCheckAt = 0, learnAt = 0;
 async function pollState() {
   if (polling) return;                  // hook events ask for extra polls: never run two at once
   polling = true;
@@ -215,6 +221,12 @@ async function pollOnce() {
     const s = await link.state();
     lastState = s; lastStateAt = Date.now();
     noteFirmware(s);
+    // on the cable, a buddy we don't have the key of yet (it was on older firmware when plugged in, or just got
+    // updated): ask it now instead of only when the cable was connected
+    if (link.kind === 'usb' && s.id && !(settings.buddies && settings.buddies[s.id] && settings.buddies[s.id].key) && Date.now() > learnAt) {
+      learnAt = Date.now() + 30000;
+      if (await device.learn(link, settings)) { saveSettings(); log(`usb: learnt ${s.id}`); }
+    }
     if (s.ip && s.ip !== '0.0.0.0' && s.ip !== settings.host) { settings.host = s.ip; saveSettings(); }   // remember for Wi-Fi later
     if (s.id && settings.buddies && settings.buddies[s.id] && s.ip && s.ip !== '0.0.0.0' && settings.buddies[s.id].ip !== s.ip) { settings.buddies[s.id].ip = s.ip; saveSettings(); }
     send('state', { ...s, conn: { kind: link.kind, where: link.where } });
