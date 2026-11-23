@@ -148,12 +148,16 @@ class WifiLink extends EventEmitter {
   // The buddy's web server answers one request at a time: at most 2 in flight, the rest wait their turn
   // (a burst of requests otherwise times out all together and the link looks dead).
   async _fetch(path, opts = {}, ms = 3000) {
+    const t0 = Date.now();
     if (this.busy >= 2) {
       if (this.waiting.length >= 20) throw new Error('lil.mate is busy');   // buddy not answering: don't pile up
       await new Promise(r => this.waiting.push(r));
     }
+    // the time limit counts from the call, waiting included: a switched-off buddy must show up as gone quickly
+    const left = ms - (Date.now() - t0);
+    if (left < 300) { const next = this.waiting.shift(); if (next) next(); throw new Error('lil.mate is not answering'); }
     this.busy++;
-    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), ms);
+    const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), left);
     try { const r = await fetch(`http://${this.host}${path}`, { ...opts, signal: ctl.signal }); return await r.text(); }
     finally { clearTimeout(t); this.busy--; const next = this.waiting.shift(); if (next) next(); }
   }

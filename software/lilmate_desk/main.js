@@ -227,6 +227,11 @@ async function pollOnce() {
     if (link && ++misses >= (link.kind === 'wifi' ? 2 : 3)) {
       log(`link ${link.kind} not answering: ${e.message}`); misses = 0;
       try { link.close(); } catch (x) {} link = null; send('link', { kind: 'none' }); send('state', { offline: true });
+    } else if (link) {
+      // first miss: say so at once ("checking…") and ask again right away instead of in 2 s, so a buddy that was
+      // switched off shows "not connected" within a few seconds, while one slow answer still doesn't drop the link
+      if (lastState && !lastState.offline) send('state', { ...lastState, conn: { kind: link.kind, where: link.where, checking: true } });
+      setTimeout(pollState, 50);
     }
   }
 }

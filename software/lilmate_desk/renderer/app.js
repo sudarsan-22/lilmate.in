@@ -252,7 +252,8 @@ lil.on('state', s => { S = s; S.at = Date.now(); if (s.focus && s.focus.running 
 setInterval(() => { if (S.focus && S.focus.running && !S.focus.paused && mode !== 'panel') render(); }, 1000);
 function render() {
   const off = S.offline;
-  const conn = off ? '<span class="dot"></span> not connected' : `<span class="dot ok"></span> ${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[S.conn && S.conn.kind] || 'Wi-Fi')}`;
+  const conn = off ? '<span class="dot"></span> not connected' : S.conn && S.conn.checking ? '<span class="dot attn"></span> checking…'
+    : `<span class="dot ok"></span> ${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[S.conn && S.conn.kind] || 'Wi-Fi')}`;
   setHtml($('#conn'), conn);
   const agents = S.agents || [], att = agents.find(a => !a.acked && ['needs you', 'approve?', 'done', 'error'].includes(a.st)), work = agents.find(a => a.st === 'working');
   // pill
