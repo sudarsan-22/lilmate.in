@@ -165,10 +165,11 @@ class WifiLink extends EventEmitter {
   async cal(evs) { await this._fetch('/api/cal', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ev: evs }) }); }
   syncTime() {}
   setWifi() {}
-  async look(x, y) { await this._fetch(`/api/look?x=${x.toFixed(2)}&y=${y.toFixed(2)}`, { method: 'POST' }, 1500); }
+  // eyes following the mouse is a nicety: skip it while anything else is on its way, so it never delays the status
+  async look(x, y) { if (this.busy) return; await this._fetch(`/api/look?x=${x.toFixed(2)}&y=${y.toFixed(2)}`, { method: 'POST' }, 1500); }
   async key(k) { await this._fetch('/api/game?k=' + k, {}, 1500); }
   async tap() { await this._fetch('/api/link?do=tap', { method: 'POST' }, 1500); }
-  async gm() { return { game: JSON.parse(await this._fetch('/api/game', {}, 1500)) }; }   // link state comes with the normal poll
+  async gm() { if (this.busy >= 2) throw new Error('busy'); return { game: JSON.parse(await this._fetch('/api/game', {}, 1500)) }; }   // never queue up score checks   // link state comes with the normal poll
   // firmware update over Wi-Fi: the same /update upload the phone page uses, plus the md5 check
   flash(bin, md5, onProgress) {
     const http = require('http');

@@ -141,6 +141,7 @@ function flyLogo(src, dst, a, opening) {
   running.push(() => { mv.cancel(); done(); });
 }
 lil.on('mode', setMode);
+setInterval(() => { if (mode === 'pill' && S.game && S.game.on && Date.now() - (S.at || 0) >= 6000) render(); }, 2000);
 // the logo's eyes look toward the mouse
 lil.on('cursor', c => { if (S.offline) return; const k = v => Math.max(-1, Math.min(1, v / 420)); document.documentElement.style.setProperty('--ex', (k(c.dx) * 3).toFixed(2) + 'px'); document.documentElement.style.setProperty('--ey', (k(c.dy) * 2).toFixed(2) + 'px'); });
 // after each command the closed pill shows a short tick, like "✓ Added"
@@ -190,7 +191,8 @@ for (const h of [$('#pill'), $('.me')]) {
 // Star Catcher: ← → (or A D) move, Space / Enter turn or start, Esc quits. Team match: Space / Enter = tap.
 const LIVE = ['inviting', 'invited', 'countdown', 'round', 'roundend', 'matchend'];
 const star = () => !!(S.game && S.game.on), match = () => !!(S.link && LIVE.includes(S.link.mode));
-const gameLive = () => !S.offline && (star() || match());
+// only while the buddy's answer is fresh: a stale "game on" (lost poll, slow Wi-Fi) must never lock the island shut
+const gameLive = () => !S.offline && Date.now() - (S.at || 0) < 6000 && (star() || match());
 const GKEY = { ArrowLeft: 'L', a: 'L', A: 'L', ArrowRight: 'R', d: 'R', D: 'R', ' ': 'T', Enter: 'T', ArrowUp: 'T', w: 'T', W: 'T', Escape: 'X' };
 function gameText() {
   if (!document.hasFocus()) return 'click here to play with keys';
@@ -215,7 +217,7 @@ document.addEventListener('keydown', e => {
 }, true);
 window.addEventListener('focus', () => gameLive() && render());
 window.addEventListener('blur', () => gameLive() && render());
-$('#playStar').onclick = () => { pinned = false; $('#pin').classList.remove('on'); S.game = { ...(S.game || {}), on: true, p: false, o: false }; lil.gameStart(); lil.mode('pill'); render(); };
+$('#playStar').onclick = () => { pinned = false; $('#pin').classList.remove('on'); S.game = { ...(S.game || {}), on: true, p: false, o: false }; S.at = Date.now(); lil.gameStart(); lil.mode('pill'); render(); };
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { pinned = false; $('#pin').classList.remove('on'); lil.mode(asks.length ? 'ask' : 'pill'); } });
 $('#pin').onclick = () => { pinned = !pinned; $('#pin').classList.toggle('on', pinned); $('#pin').textContent = pinned ? 'Kept open · Esc to close' : 'Keep open'; };
@@ -245,8 +247,8 @@ setInterval(() => { const a = asks[0]; if (a) $('#askTtl').style.width = Math.ma
 
 // ------------------------------------------------------------ state from the buddy
 let focusEnd = 0;
-lil.on('game', g => { if (!S.offline) { Object.assign(S, g); render(); } });
-lil.on('state', s => { S = s; if (s.focus && s.focus.running && !s.focus.paused) focusEnd = Date.now() + s.focus.remain; render(); });
+lil.on('game', g => { if (!S.offline) { Object.assign(S, g, { at: Date.now() }); render(); } });
+lil.on('state', s => { S = s; S.at = Date.now(); if (s.focus && s.focus.running && !s.focus.paused) focusEnd = Date.now() + s.focus.remain; render(); });
 setInterval(() => { if (S.focus && S.focus.running && !S.focus.paused && mode !== 'panel') render(); }, 1000);
 function render() {
   const off = S.offline;

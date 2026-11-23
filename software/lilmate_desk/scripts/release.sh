@@ -49,7 +49,8 @@ if [[ " $* " == *" --publish "* ]]; then
     git clone -q --branch updates --single-branch "$URL" "$U" 2>/dev/null || { rm -rf "$U"; mkdir -p "$U"; git -C "$U" init -q -b updates; git -C "$U" remote add origin "$URL"; }
   fi
   git -C "$U" pull -q origin updates 2>/dev/null || true
-  rm -f "$U"/lilmate-os-*.bin
+  # keep the previous firmware too: apps that read the older lilmate.json a moment ago can still download it
+  ls -t "$U"/lilmate-os-*.bin 2>/dev/null | tail -n +2 | xargs -r rm -f
   cp "$OUT/lilmate.json" "$OUT"/lilmate-os-*.bin "$U/"
   printf '# lil.mate updates\nRead by the lil.mate Desk app. Made by scripts/release.sh, do not edit by hand.\n' > "$U/README.md"
   git -C "$U" add -A

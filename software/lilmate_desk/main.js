@@ -357,7 +357,7 @@ async function checkUpdates(manual) {
 }
 async function updateApp() {
   if (upd.busy) return;
-  if (!manifest) await checkUpdates(true);
+  await checkUpdates(true);
   const entry = manifest && manifest.app && manifest.app[upd.kind];
   if (upd.kind === 'dev') { upd.error = 'This is the developer copy: updates install in the real app'; return pushUpd(); }
   if (!entry) { upd.error = 'No update for this computer yet'; return pushUpd(); }
@@ -374,7 +374,7 @@ async function updateApp() {
 }
 async function updateFirmware(force) {
   if (upd.busy) return;
-  if (!manifest) await checkUpdates(true);
+  await checkUpdates(true);   // always the newest list: an older one can point at a file a newer release replaced (404)
   const fw = manifest && manifest.firmware;
   if (!fw) { upd.error = 'No lil.mate firmware in this release'; return pushUpd(); }
   await ensureLink();
