@@ -347,7 +347,7 @@ async function loadSettings() {
   $('#setConn').textContent = S.offline || !S.conn ? 'Not connected' : `${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[S.conn.kind] || 'Wi-Fi')} · ${S.conn.where || ''}`;
 }
 $('#hostSave').onclick = async () => { await lil.setSettings({ host: $('#host').value.trim() }); toast('Saved. Connecting…'); };
-$('#wifiSave').onclick = async () => { const r = await lil.setWifi($('#ssid').value.trim(), $('#wpass').value); toast(r.ok ? 'Sent. lil.mate restarts and joins Wi-Fi.' : r.error); if (r.ok) $('#wpass').value = ''; };
+$('#wifiSave').onclick = async () => { const r = await lil.setWifi($('#ssid').value.trim(), $('#wpass').value); toast(r.ok ? 'Sent. lil.mate restarts and joins Wi-Fi.' : r.error); if (r.ok) { $('#wpass').value = ''; $('#wpass').type = 'password'; $('.eye').classList.toggle('on', false); } };
 $('#icsSave').onclick = async () => {
   const r = await lil.setSettings({ ics: $('#ics').value.trim() }); $('#ics').value = '';
   toast(r.ok ? (r.meetings ? `Calendar connected · ${r.meetings.length} meeting(s) in the next 36 h` : 'Calendar removed') : r.error); loadSettings();
@@ -374,6 +374,12 @@ $('#tidyList').addEventListener('click', async e => {
     tidySure = null; const r = await lil.tidyRun(b.dataset.tidy);
     toast(`Sorted ${r.moved} file${r.moved === 1 ? '' : 's'} into folders`); flashPill('Tidied'); renderTidy(r.plan);
   }
+});
+// show / hide what's typed in a password box
+$$('.eye').forEach(b => b.onclick = () => {
+  const i = b.previousElementSibling, show = i.type === 'password';
+  i.type = show ? 'text' : 'password'; b.classList.toggle('on', show);
+  b.title = show ? 'Hide password' : 'Show password'; b.setAttribute('aria-label', b.title); i.focus();
 });
 $('#openDash').onclick = () => lil.openDashboard();
 $('#factoryReset').onclick = () => {

@@ -4,6 +4,7 @@
 #include "config.h"
 
 Screen   screen = S_FACE;
+uint8_t  infoSel = 0;   // Info screen: what a hold does (0 QR / update, 1 Wi-Fi setup, 2 factory reset)
 uint32_t lastActivity = 0;
 bool     asleep = false, displayOff = false;
 bool     swallowGesture = false;   // a wake-up press should not also count as a tap
@@ -354,7 +355,12 @@ void drawInfo(uint32_t now) {
   oled.drawStr(0, 48, b);
   snprintf(b, sizeof(b), "pats %lu  joy %d%%", (unsigned long)pet.pats, pet.happy); oled.drawStr(0, 57, b);
   const char *u = updInfoLine();
-  oled.drawStr(0, 64, u ? u : "hold: QR  hold 4s: setup");
+  // tap = next option, hold = do it (the update line, while there is one, is the first option)
+  static const char *OPT[] = { "hold: show QR", "hold: Wi-Fi setup", "hold: factory reset" };
+  char o[40];
+  if (infoSel == 0 && u) snprintf(o, sizeof(o), "%s", u); else snprintf(o, sizeof(o), "%s", OPT[infoSel]);
+  oled.drawStr(0, 64, o);
+  oled.drawStr(128 - oled.getStrWidth("tap >"), 64, "tap >");
 }
 
 // "I'm online!" for 2 min after a fresh setup: happy logo + a QR to the dashboard. A tap closes it.
@@ -373,12 +379,11 @@ bool welcomeDraw(uint32_t now) {
 bool welcomeTouch(TouchEv e) { if (!welcomeUntil || millis() > welcomeUntil) return false; if (e == T_TAP1) { welcomeUntil = 0; return true; } return false; }
 
 // ============================================================ factory reset
-// Two ways in: switch the buddy off and on 5 times in a row (each time off again within 8 s), or "/factoryreset"
-// (lil.mate Desk > Settings, the phone page, Telegram). Either way it only erases after a 3 s hold on the buddy itself:
-// nobody can wipe it over the network, and a flick of the switch by accident does nothing.
+// Two ways in: the Info screen menu on the buddy (tap to "factory reset", hold), or "/factoryreset" (lil.mate Desk >
+// Settings, the phone page, Telegram). Either way it only erases after a 3 s hold on the buddy itself, so nobody can
+// wipe it over the network.
 #define FR_HOLD_MS 3000
 uint32_t frUntil = 0;
-uint8_t  pwrCount = 0;   // power-ons in a row (set in setup)
 void factoryResetAsk() { frUntil = millis() + 20000; wakeUp(false); Serial.println("[reset] asking: hold 3 s to erase"); }
 void factoryResetNow() {
   oled.clearBuffer(); centerStr(30, u8g2_font_7x14B_tr, "ERASING..."); centerStr(46, u8g2_font_5x7_tr, "back to a new lil.mate"); oled.sendBuffer();
@@ -387,13 +392,6 @@ void factoryResetNow() {
   prefs.end();
   WiFi.disconnect(true, true);   // the Wi-Fi driver's own saved network too
   delay(800); ESP.restart();     // comes back with the setup hotspot, like a new one
-}
-void factoryTick() {
-  static bool counted = false;
-  if (counted || millis() < 8000) return;
-  counted = true;                // up for 8 s: this power-on doesn't count toward the 5
-  if (prefs.getUChar("pwrc", 0)) prefs.putUChar("pwrc", 0);
-  if (pwrCount >= 5) factoryResetAsk();
 }
 bool factoryDraw(uint32_t now) {
   if (!frUntil) return false;
@@ -517,7 +515,7 @@ String chatterLine() {
 void nextScreen() {
   screen = (Screen)((screen + 1) % S_COUNT);
   if (screen == S_GAME) { gm.playing = false; gm.over = false; }
-  if (screen == S_INFO) qrUntil = 0;
+  if (screen == S_INFO) { qrUntil = 0; infoSel = 0; }
 }
 
 void onFaceGesture(TouchEv e, uint32_t now) {
@@ -569,8 +567,13 @@ void onScreenGesture(TouchEv e, uint32_t now) {
       else if (e == T_LONG) { gm.playing = false; gm.over = false; screen = S_FACE; }
       break;
     case S_INFO:
-      if (e == T_LONG) { if (updHoldInstall()) faceSay("Updating..."); else qrUntil = now + 20000; }
-      else if (e == T_VLONG) { faceSay("Setup mode..."); startAP(); }
+      if (e == T_TAP1) { infoSel = (infoSel + 1) % 3; qrUntil = 0; }
+      else if (e == T_LONG) {
+        if (infoSel == 0) { if (updHoldInstall()) faceSay("Updating..."); else qrUntil = now + 20000; }
+        else if (infoSel == 1) { faceSay("Setup mode..."); startAP(); }
+        else factoryResetAsk();
+        infoSel = 0;
+      }
       break;
     default: break;
   }

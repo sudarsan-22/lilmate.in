@@ -169,3 +169,11 @@ h2{font-size:17px;font-weight:600;margin:20px 0 8px}
 .tg span i{font-style:normal;color:#c46a00;margin-left:4px}
 .tcard .row{display:flex;gap:8px;margin-top:10px}
 kbd{font:800 11px/1 inherit;padding:2px 6px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;background:var(--white);color:var(--ink)}
+
+/* password box with a show / hide eye */
+.set .row > input,.pw{flex:1 1 0;min-width:0}
+.pw{position:relative;display:block}
+.pw input{padding-right:42px}
+.eye{position:absolute;right:4px;top:0;bottom:0;margin:auto 0;height:32px;background:none;border:0;padding:6px;cursor:pointer;color:var(--soft);display:flex;border-radius:10px}
+.eye:hover{color:var(--ink)}
+.eye .sl{display:none}.eye.on .sl{display:inline}

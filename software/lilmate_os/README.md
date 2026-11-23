@@ -83,7 +83,7 @@ USB only: /wifi SSID|password   /sim tap|double|triple|long|vlong   /state
 ### Factory reset
 Erases Wi-Fi, name, Telegram, tasks, reminders, habits, pet stats and the Desk pairing key; the buddy restarts with the setup hotspot like a new one.
 
-- **Buddy only:** switch it off and on 5 times in a row (switch off again as soon as the face shows, each time within 8 s). On the 5th, leave it on.
+- **Buddy only:** double-tap to the Info screen, tap until the bottom line says *hold: factory reset*, then hold.
 - **lil.mate Desk:** Settings > Reset lil.mate > Reset… (or send `/factoryreset` from the phone page or Telegram).
 
 Either way the buddy shows *FACTORY RESET?* for 20 s: **hold it 3 s** to erase, tap to cancel. Nothing is erased without that hold.
