@@ -389,12 +389,24 @@ async function updateFirmware(force) {
     if (fw.md5 && fw.md5 !== md5) throw new Error('Download did not match, try again');
     upd.busy = { what: 'fw', stage: 'sending', pct: 0, to: fw.version, via: link.kind }; pushUpd();
     const prog = p => { upd.busy.pct = Math.round(p * 100); send('update', upd); };
-    try { await link.flash(bin, md5, prog); }
-    catch (e) {
-      if (!(e.old && settings.host)) throw e;                 // older firmware has no cable update: use Wi-Fi once
-      upd.busy.via = 'wifi'; pushUpd();
-      await new device.WifiLink(settings.host).flash(bin, md5, prog);
-    }
+    log(`firmware ${fw.version}: sending over ${link.kind}`);
+    try {
+      try { await link.flash(bin, md5, prog); }
+      catch (e) {
+        if (e.old && settings.host) {                           // older firmware has no cable update: use Wi-Fi once
+          upd.busy.via = 'wifi'; pushUpd();
+          await new device.WifiLink(settings.host).flash(bin, md5, prog);
+        } else if (link && link.kind === 'wifi') {
+          // one more go: a Wi-Fi upload that broke off earlier leaves the buddy's update open, and the next one
+          // fails with "Not Enough Space" while closing it (firmware before 0.3.3), so the second try goes through
+          log(`firmware ${fw.version}: ${e.message}, trying once more`);
+          upd.busy.pct = 0; pushUpd();
+          await new Promise(r => setTimeout(r, 2500));
+          await new device.WifiLink(link.host).flash(bin, md5, prog);
+        } else throw e;
+      }
+    } catch (e) { log(`firmware ${fw.version}: failed: ${e.message}`); throw e; }
+    log(`firmware ${fw.version}: sent, lil.mate restarting`);
     upd.busy = { what: 'fw', stage: 'restarting', pct: 100, to: fw.version }; pushUpd();
     if (link && link.kind === 'wifi') { link.close(); link = null; }
     setTimeout(() => { if (upd.busy && upd.busy.stage === 'restarting') { upd.busy = null; upd.error = 'lil.mate restarted but has not reported back yet'; pushUpd(); } }, 60000);

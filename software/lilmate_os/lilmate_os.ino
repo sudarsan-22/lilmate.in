@@ -74,6 +74,7 @@ void serialOta(String args) {
   String md5 = sp < 0 ? "" : args.substring(sp + 1); md5.trim();
   if (otaBusy()) { Serial.println("@ota {\"ok\":false,\"e\":\"busy updating\"}"); return; }
   if (size < 64 * 1024 || size > 0x1E0000) { Serial.println("@ota {\"ok\":false,\"e\":\"bad size\"}"); return; }
+  if (Update.isRunning()) Update.abort();   // an earlier update that broke off
   if (!Update.begin(size)) { otaFail(Update.errorString()); return; }
   if (md5.length() == 32) Update.setMD5(md5.c_str());
   Serial.printf("[ota] usb %u bytes\n", (unsigned)size);

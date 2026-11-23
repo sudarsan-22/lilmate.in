@@ -5,7 +5,7 @@
 #include <Arduino.h>
 
 #define FW_NAME     "Lilmate OS"
-#define FW_VERSION  "0.3.2"
+#define FW_VERSION  "0.3.3"
 #define HOSTNAME    "lilmate"
 
 // ---- Pins (same wiring as minimo_bear / elephant / pengu_chubby) ----

@@ -445,27 +445,37 @@ void webBegin() {
     String r = a == "ble" ? bleCommand() : updCommand(a == "auto_on" ? "auto on" : a == "auto_off" ? "auto off" : a);
     server.send(200, "text/plain; charset=utf-8", r);
   });
+  static char webOtaErr[48]; webOtaErr[0] = 0;
   server.on("/update", HTTP_GET, [] { server.send_P(200, "text/html; charset=utf-8", UPDATE_PAGE); });
   server.on("/update", HTTP_POST,
     [] {
-      bool ok = !Update.hasError() && !otaBusy() && Update.isFinished();
-      server.send(200, "text/plain; charset=utf-8", ok ? "✅ Updated! Restarting…" : String("❌ Update failed: ") + Update.errorString());
+      bool ok = !webOtaErr[0] && !Update.hasError() && !otaBusy() && Update.isFinished();
+      server.send(200, "text/plain; charset=utf-8", ok ? "✅ Updated! Restarting…" : String("❌ Update failed: ") + (webOtaErr[0] ? webOtaErr : Update.errorString()));
       if (ok) { diagRestart(SW_OTA); restartAt = millis() + 1000; }
     },
     [] {
       HTTPUpload &u = server.upload();
       static bool refused = false;
       if (u.status == UPLOAD_FILE_START) refused = otaBusy();
-      if (refused) return;                       // a GitHub / Bluetooth update is already running
+      if (u.status == UPLOAD_FILE_START) webOtaErr[0] = 0;
+      if (refused) { copyStr(webOtaErr, "busy with another update", sizeof(webOtaErr)); return; }   // a GitHub / Bluetooth update is already running
       if (u.status == UPLOAD_FILE_START) {
         Serial.printf("[ota] %s\n", u.filename.c_str());
+        // an upload that broke off earlier (Wi-Fi dropped) left its update open: close it, or this one is
+        // refused and its bytes land in the old one ("Not Enough Space")
+        if (Update.isRunning()) { Serial.println("[ota] closing an unfinished update"); Update.abort(); }
+        bleStop();                                 // Bluetooth not in use: give its memory to the download
         oled.clearBuffer(); centerStr(30, u8g2_font_7x14B_tr, "UPDATING..."); centerStr(46, u8g2_font_5x7_tr, "don't unplug me"); oled.sendBuffer();
-        if (!Update.begin(UPDATE_SIZE_UNKNOWN)) Update.printError(Serial);
+        if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { copyStr(webOtaErr, Update.hasError() ? Update.errorString() : "not enough memory, try again", sizeof(webOtaErr)); Update.printError(Serial); }
         else if (server.hasArg("md5") && server.arg("md5").length() == 32) Update.setMD5(server.arg("md5").c_str());   // lil.mate Desk sends it
+      } else if (webOtaErr[0]) {
+        return;                                    // already failed: let the rest of the upload pass
       } else if (u.status == UPLOAD_FILE_WRITE) {
         if (Update.write(u.buf, u.currentSize) != u.currentSize) Update.printError(Serial);
       } else if (u.status == UPLOAD_FILE_END) {
         if (!Update.end(true)) Update.printError(Serial);
+      } else if (u.status == UPLOAD_FILE_ABORTED) {
+        Serial.println("[ota] upload broke off"); Update.abort(); copyStr(webOtaErr, "upload broke off", sizeof(webOtaErr));
       }
     });
   server.onNotFound([] {

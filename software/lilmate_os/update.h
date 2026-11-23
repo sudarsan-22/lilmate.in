@@ -107,6 +107,7 @@ static void updInstall() {
   int code = h.GET();
   if (code != 200) { h.end(); updFail("download failed"); return; }
   if (h.getSize() > 0 && (uint32_t)h.getSize() != up.size) { h.end(); updFail("wrong file size"); return; }
+  if (Update.isRunning()) Update.abort();   // an earlier update that broke off
   if (!Update.begin(up.size)) { h.end(); updFail(Update.errorString()); return; }
   Update.setMD5(up.md5);
   NetworkClient *s = h.getStreamPtr();
@@ -366,6 +367,7 @@ bool updTouch(TouchEv e) {
   if (up.st == U_GETTING || up.st == U_DONE || bl.st == B_RECV || bl.st == B_DONE) return true;   // hands off while flashing
   if (bl.st == B_WAIT) {
     if (e == T_LONG) {
+      if (Update.isRunning()) Update.abort();
       if (!Update.begin(bl.size)) { bleFail(Update.errorString()); return true; }
       if (strlen(bl.md5) == 32) Update.setMD5(bl.md5);
       bl.st = B_RECV; bleSay("ready"); faceSay("Updating...");
