@@ -1,13 +1,13 @@
 {
   "version": "0.3.1",
-  "notes": "Buddy 0.3.3: Wi-Fi update fix, connection banner, Desk over Bluetooth",
+  "notes": "Buddy 0.3.4: factory reset (switch off/on 5 times, or Desk > Settings), Wi-Fi update fix, connection banner",
   "date": "2026-11-23",
   "app": {},
   "firmware": {
-    "version": "0.3.3",
-    "file": "lilmate-os-0.3.3.bin",
-    "size": 1825856,
-    "sha256": "26835edd28c35e49c6a75159344e5a2d81cc216741377d3908dd25908d9fc794",
-    "md5": "19105e4e57d93e4ca316c1f5dbcc46f4"
+    "version": "0.3.4",
+    "file": "lilmate-os-0.3.4.bin",
+    "size": 1827840,
+    "sha256": "05101d03dffc7d2911cf431c0943c6fcbe43c56cf2193c066eb74cf032a8df20",
+    "md5": "24dc38010c1b4d034ab59b2adef67321"
   }
 }
