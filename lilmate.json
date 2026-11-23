@@ -1,13 +1,13 @@
 {
   "version": "0.3.1",
-  "notes": "Buddy 0.3.2: Desk over Bluetooth, connection banner on the screen, no more breathing at power-on",
+  "notes": "Buddy 0.3.3: Wi-Fi update fix, connection banner, Desk over Bluetooth",
   "date": "2026-11-23",
   "app": {},
   "firmware": {
-    "version": "0.3.2",
-    "file": "lilmate-os-0.3.2.bin",
-    "size": 1825328,
-    "sha256": "0f65b4f64e9c4057db4a656d6ec6d31817b8bcdefbb57eed9474419db4601b6c",
-    "md5": "28abb8df11236642de3db22ef1a98538"
+    "version": "0.3.3",
+    "file": "lilmate-os-0.3.3.bin",
+    "size": 1825856,
+    "sha256": "26835edd28c35e49c6a75159344e5a2d81cc216741377d3908dd25908d9fc794",
+    "md5": "19105e4e57d93e4ca316c1f5dbcc46f4"
   }
 }
