@@ -16,7 +16,7 @@ void wakeUp(bool greet = false);
 // implemented in agent.h / link.h (included after this file)
 bool agentTouch(TouchEv e); bool agentDraw(uint32_t now); void drawAgents(uint32_t now);
 bool linkTouch(TouchEv e); bool linkDraw(uint32_t now); void drawPlay(uint32_t now); bool linkBusy();
-bool updTouch(TouchEv e); bool updDraw(uint32_t now); const char *updInfoLine(); bool updHoldInstall();
+bool updTouch(TouchEv e); bool updDraw(uint32_t now); void deskBannerDraw(uint32_t now); const char *updInfoLine(); bool updHoldInstall();
 bool workTouch(TouchEv e); bool workDraw(uint32_t now); bool workOverlay(); bool isBusy(); void breatheStart(); void drawDndIcon(int x, int y);
 extern uint32_t screenOffMs; extern bool batPresent; extern int batPct; void drawBatteryIcon(int x, int y);   // power.h
 
@@ -188,7 +188,7 @@ void drawTasks() {
   if (!nTasks) {
     centerStr(30, u8g2_font_6x10_tr, "No tasks yet");
     centerStr(44, u8g2_font_5x7_tr, "add from phone:");
-    centerStr(54, u8g2_font_5x7_tr, "lilmate.local or /task");
+    centerStr(54, u8g2_font_5x7_tr, "dashboard or /task");
     return;
   }
   if (taskCur >= nTasks) taskCur = 0;
@@ -338,7 +338,7 @@ void drawInfo(uint32_t now) {
     oled.drawStr(64, 12, "scan to open");
     oled.drawStr(64, 21, "dashboard");
     oled.drawStr(64, 36, "or visit");
-    oled.drawStr(64, 45, "lilmate.local");
+    oled.drawStr(64, 45, (mdnsHost() + ".local").c_str());
     return;
   }
   header("INFO", FW_VERSION);
@@ -346,7 +346,7 @@ void drawInfo(uint32_t now) {
   oled.setFont(u8g2_font_5x7_tr);
   if (wifiUp) snprintf(b, sizeof(b), "IP %s", WiFi.localIP().toString().c_str()); else strcpy(b, "Wi-Fi: not connected");
   oled.drawStr(0, 21, b);
-  snprintf(b, sizeof(b), "%s  %ddBm", wifiUp ? HOSTNAME ".local" : "-", wifiUp ? WiFi.RSSI() : 0); oled.drawStr(0, 30, b);
+  snprintf(b, sizeof(b), "%s  %ddBm", wifiUp ? (mdnsHost() + ".local").c_str() : "-", wifiUp ? WiFi.RSSI() : 0); oled.drawStr(0, 30, b);
   snprintf(b, sizeof(b), "Telegram: %s", !S.tgToken[0] ? "off" : !S.tgChat[0] ? "send /start" : tgLastCode == 200 ? "ok" : "connecting");
   oled.drawStr(0, 39, b);
   if (batPresent) snprintf(b, sizeof(b), "up %luh%02lum  battery %d%%", (unsigned long)(now / 3600000), (unsigned long)(now / 60000 % 60), batPct);
@@ -357,7 +357,30 @@ void drawInfo(uint32_t now) {
   oled.drawStr(0, 64, u ? u : "hold: QR  hold 4s: setup");
 }
 
+// "I'm online!" for 2 min after a fresh setup: happy logo + a QR to the dashboard. A tap closes it.
+bool welcomeDraw(uint32_t now) {
+  if (!welcomeUntil || now > welcomeUntil || !wifiUp) return false;
+  qrBuild(dashUrl());
+  qrDraw(0, 0);
+  oled.setFont(u8g2_font_6x10_tr); oled.drawStr(64, 12, "I'm online!");
+  oled.setFont(u8g2_font_5x7_tr);
+  oled.drawStr(64, 26, "scan for my");
+  oled.drawStr(64, 35, "dashboard");
+  oled.drawStr(64, 50, WiFi.localIP().toString().c_str());
+  oled.drawStr(64, 60, "tap = close");
+  return true;
+}
+bool welcomeTouch(TouchEv e) { if (!welcomeUntil || millis() > welcomeUntil) return false; if (e == T_TAP1) { welcomeUntil = 0; return true; } return false; }
+
 void drawSetup(uint32_t now) {
+  // the setup page is trying the Wi-Fi it was given: say so on the buddy too
+  if (wsTry.st == 1 || wsTry.st == 2 || ((wsTry.st >= 3) && now - wsTry.shownAt < 8000)) {
+    const char *top = wsTry.st == 1 ? "JOINING..." : wsTry.st == 2 ? "CONNECTED!" : wsTry.st == 3 ? "WRONG PASSWORD" : wsTry.st == 4 ? "NOT FOUND" : "NO LUCK";
+    centerStr(22, u8g2_font_7x14B_tr, top);
+    centerStr(38, u8g2_font_6x10_tr, wsTry.st == 2 ? wsTry.ip.c_str() : wsTry.ssid);
+    centerStr(56, u8g2_font_5x7_tr, wsTry.st == 1 ? "one moment" : wsTry.st == 2 ? "restarting in a moment" : "try again on your phone");
+    return;
+  }
   bool showUrl = (now / 8000) % 2;
   qrBuild(showUrl ? String("http://192.168.4.1") : "WIFI:T:nopass;S:" + apName + ";;");
   qrDraw(0, 0);
@@ -522,7 +545,7 @@ void handleTouch(uint32_t now) {
       else if (e == T_LONG) dismissAlert(true);
       continue;
     }
-    if (updTouch(e) || celebrateTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
+    if (updTouch(e) || welcomeTouch(e) || celebrateTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
     if (screen == S_GAME && gm.playing) { onScreenGesture(e, now); continue; }  // raw presses, no tap counting
     if (e == T_TAP2) { nextScreen(); continue; }
     if (e == T_TAP3 && screen != S_FACE) { screen = S_FACE; continue; }
@@ -631,7 +654,7 @@ void brainTick(uint32_t now) {
 void render(uint32_t now) {
   oled.clearBuffer();
   if (apMode) drawSetup(now);
-  else if (updDraw(now) || celebrateDraw(now) || (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now)))) {}   // same priority as touch
+  else if (updDraw(now) || welcomeDraw(now) || celebrateDraw(now) || (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now)))) {}   // same priority as touch
   else switch (screen) {
     case S_FACE:   faceDraw(now); if (isBusy()) drawDndIcon(1, 0); drawBatteryIcon(114, 0); break;
     case S_AGENTS: drawAgents(now); break;
@@ -645,5 +668,6 @@ void render(uint32_t now) {
     case S_INFO:   drawInfo(now); break;
     default: break;
   }
+  if (!apMode) deskBannerDraw(now);   // "Desk on Wi-Fi" etc. over any screen
   oled.sendBuffer();
 }

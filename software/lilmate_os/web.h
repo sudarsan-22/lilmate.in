@@ -236,14 +236,24 @@ go(location.hash.slice(1)||'home',false);load();setInterval(load,3000);
 static const char SETUP[] PROGMEM = R"HTML(<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=theme-color content="#fff8ee"><title>lil.mate</title><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700&display=swap"><link rel=stylesheet href=/s.css></head><body><main style="max-width:520px"><nav class=nav><a class=logo href=/><span class=m><svg viewBox="0 0 64 44" width=32 height=24><path d="M6 40 C6 18 18 6 32 6 C46 6 58 18 58 40" fill=none stroke=currentColor stroke-width=5 stroke-linecap=round /><path d="M21 31 Q24.5 25 28 31" fill=none stroke=currentColor stroke-width=4 stroke-linecap=round /><path d="M36 31 Q39.5 25 43 31" fill=none stroke=currentColor stroke-width=4 stroke-linecap=round /></svg><svg viewBox="0 0 40 40"><g stroke=currentColor stroke-width=5 stroke-linecap=round><path d="M14 4 L11 15"/><path d="M30 9 L21 18"/><path d="M36 25 L25 28"/></g></svg></span><span>lil<b>.</b>mate</span></a></nav>
 <div class=hero style="padding:26px 0 8px"><div><span class=badge><i><svg viewBox="0 0 64 30" width=22 height=12><path d="M8 22 Q16 8 24 22" fill=none stroke=#fff stroke-width=6 stroke-linecap=round /><path d="M40 22 Q48 8 56 22" fill=none stroke=#fff stroke-width=6 stroke-linecap=round /></svg></i>Let's get you online</span>
 <h1>Hello! I'm your <em>lil mate</em>.</h1><p class=lead>Pick your home Wi-Fi (2.4 GHz) and I'll be on your desk in a minute.</p></div></div>
-<div class=card><label>Network</label><select id=ss onchange="$('#ssid').value=this.value"><option>Looking around…</option></select>
+<div class=card id=form><label>Network</label><select id=ss onchange="$('#ssid').value=this.value"><option>Looking around…</option></select>
 <div style="margin-top:10px"><label>or type the name</label><input id=ssid></div><div style="margin-top:10px"><label>Password</label><input id=pw type=password></div>
 <div class=fg style="margin-top:10px"><div><label>Your name</label><input id=ow></div><div><label>City (optional)</label><input id=ct></div></div>
-<button class=btn style="width:100%;justify-content:space-between" onclick="save()">Connect <i>→</i></button><pre id=msg></pre></div><p class=foot>Designed &amp; 3D-printed in India</p></main>
+<button class=btn style="width:100%;justify-content:space-between" onclick="save()">Connect <i>→</i></button><pre id=msg></pre></div>
+<div class=card id=done style="display:none"><h2 style="margin:0 0 6px">✓ Connected!</h2><p class=lead style="margin:0 0 12px">I'm on your Wi-Fi now. Switch your phone back to your normal Wi-Fi, then open me:</p>
+<a class=btn id=go style="width:100%;justify-content:space-between" href=#>Open my lil.mate <i>→</i></a><p style="margin:12px 0 0">Address: <b id=addr></b><br>Also works on computers: <b id=host></b></p><p class=foot style="margin-top:10px">Tip: add the page to your home screen.</p></div><p class=foot>Designed &amp; 3D-printed in India</p></main>
 <script>const $=s=>document.querySelector(s);
 fetch('/api/scan').then(r=>r.json()).then(l=>{$('#ss').innerHTML='<option value="">Choose a network…</option>'+l.map(n=>'<option>'+n.replace(/</g,'&lt;')+'</option>').join('')});
 async function save(){const b=new URLSearchParams({ssid:$('#ssid').value,pass:$('#pw').value,owner:$('#ow').value,city:$('#ct').value});
-if(!b.get('ssid'))return $('#msg').textContent='Pick a network first';const r=await fetch('/api/wifi',{method:'POST',body:b});$('#msg').textContent=await r.text()}
+if(!b.get('ssid'))return say('Pick your Wi-Fi first');say('Joining “'+b.get('ssid')+'”… (your phone may blink off this page for a moment)');
+try{await fetch('/api/wifi',{method:'POST',body:b})}catch(e){}const t0=Date.now();
+while(Date.now()-t0<40000){await new Promise(r=>setTimeout(r,1200));let s;try{s=await(await fetch('/api/wifi/status')).json()}catch(e){continue}
+if(s.st=='ok'){$('#form').style.display='none';$('#done').style.display='block';$('#addr').textContent='http://'+s.ip;$('#go').href='http://'+s.ip;$('#host').textContent=s.host;return}
+if(s.st=='badpass')return say('That password didn\'t work. Check it and try again.');
+if(s.st=='nonet')return say('I can\'t see “'+s.ssid+'”. Is it a 2.4 GHz network, and is the router nearby?');
+if(s.st=='fail')return say('That didn\'t connect. Try again, or move me closer to the router.')}
+say('No answer yet. Check your phone is still on the “Lilmate-…” Wi-Fi and press Connect again.')}
+function say(t){$('#msg').textContent=t}
 </script></body></html>)HTML";
 
 static const char UPDATE_PAGE[] PROGMEM = R"HTML(<!doctype html><html lang=en><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=theme-color content="#fff8ee"><title>lil.mate</title><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700&display=swap"><link rel=stylesheet href=/s.css></head><body><main style="max-width:520px"><nav class=nav><a class=logo href=/><span class=m><svg viewBox="0 0 64 44" width=32 height=24><path d="M6 40 C6 18 18 6 32 6 C46 6 58 18 58 40" fill=none stroke=currentColor stroke-width=5 stroke-linecap=round /><path d="M21 31 Q24.5 25 28 31" fill=none stroke=currentColor stroke-width=4 stroke-linecap=round /><path d="M36 31 Q39.5 25 43 31" fill=none stroke=currentColor stroke-width=4 stroke-linecap=round /></svg><svg viewBox="0 0 40 40"><g stroke=currentColor stroke-width=5 stroke-linecap=round><path d="M14 4 L11 15"/><path d="M30 9 L21 18"/><path d="M36 25 L25 28"/></g></svg></span><span>lil<b>.</b>mate</span></a></nav>
@@ -262,7 +272,7 @@ void gameJson(JsonObject g) {
 void buildState(JsonDocument &d) {
   struct tm tm; char tb[8] = "";
   if (localNow(tm)) strftime(tb, sizeof(tb), "%H:%M", &tm);
-  d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; updJson(d["upd"].to<JsonObject>()); d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
+  d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; d["id"] = buddyId(); d["host"] = mdnsHost() + ".local"; updJson(d["upd"].to<JsonObject>()); d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
   d["time"] = tb; d["mood"] = MOOD_NAMES[mood]; d["screen"] = SCREEN_NAMES[screen];
   d["boot"] = bootCount; d["lastReset"] = resetLine(lastReset); d["minHeap"] = ESP.getMinFreeHeap(); d["heap"] = ESP.getFreeHeap(); d["block"] = ESP.getMaxAllocHeap();
   d["happy"] = pet.happy; d["pats"] = pet.pats; d["asleep"] = asleep;
@@ -319,17 +329,25 @@ void handleSettings() {
   server.send(200, "text/plain; charset=utf-8", "✅ Saved");
 }
 
+// Setup page "Connect": try the network first (the hotspot stays up), the page polls /api/wifi/status for the result.
+// Only a network that worked gets saved; then the buddy restarts onto it 20 s later.
 void handleWifi() {
   if (!server.hasArg("ssid") || !server.arg("ssid").length()) { server.send(400, "text/plain", "ssid missing"); return; }
-  copyStr(S.ssid, server.arg("ssid").c_str(), sizeof(S.ssid));
-  copyStr(S.pass, server.arg("pass").c_str(), sizeof(S.pass));
-  if (server.arg("owner").length()) copyStr(S.owner, server.arg("owner").c_str(), sizeof(S.owner));
-  if (server.arg("city").length()) { copyStr(S.city, server.arg("city").c_str(), sizeof(S.city)); S.lat = S.lon = 0; }
-  markDirty(D_SET); storeFlush();
-  server.send(200, "text/plain; charset=utf-8",
-              "✅ Saved! Lilmate is restarting and joining \"" + server.arg("ssid") + "\".\nReconnect your phone to your normal Wi-Fi, then open http://lilmate.local "
-              "(or the IP shown on Lilmate's INFO screen). If it can't connect, the setup hotspot comes back.");
-  diagRestart(SW_WIFI_SAVE); restartAt = millis() + 1500;
+  if (!apMode) {   // already online (dashboard): save and restart as before
+    copyStr(S.ssid, server.arg("ssid").c_str(), sizeof(S.ssid)); copyStr(S.pass, server.arg("pass").c_str(), sizeof(S.pass));
+    markDirty(D_SET); storeFlush(); server.send(200, "text/plain; charset=utf-8", "Saved. Restarting onto the new Wi-Fi.");
+    diagRestart(SW_WIFI_SAVE); restartAt = millis() + 1500; return;
+  }
+  copyStr(wsTry.ssid, server.arg("ssid").c_str(), sizeof(wsTry.ssid)); copyStr(wsTry.pass, server.arg("pass").c_str(), sizeof(wsTry.pass));
+  copyStr(wsTry.owner, server.arg("owner").c_str(), sizeof(wsTry.owner)); copyStr(wsTry.city, server.arg("city").c_str(), sizeof(wsTry.city));
+  wsReason = 0; wsTry.ip = ""; wsTry.at = millis(); wsTry.st = 1;
+  WiFi.disconnect(false); WiFi.begin(wsTry.ssid, wsTry.pass);
+  server.send(200, "application/json", "{\"st\":\"trying\"}");
+}
+void handleWifiStatus() {
+  static const char *ST[] = { "idle", "trying", "ok", "badpass", "nonet", "fail" };
+  String j = String("{\"st\":\"") + ST[wsTry.st] + "\",\"ssid\":\"" + wsTry.ssid + "\",\"ip\":\"" + wsTry.ip + "\",\"host\":\"" + mdnsHost() + ".local\"}";
+  server.send(200, "application/json", j);
 }
 
 void handleScan() {
@@ -369,7 +387,7 @@ void handleGame() {   // GET /api/game?k=L|R|T|X  (k optional = just read the sc
 void webBegin() {
   server.on("/", HTTP_GET, [] { server.send_P(200, "text/html; charset=utf-8", apMode ? SETUP : DASH); });
   server.on("/s.css", HTTP_GET, [] { server.sendHeader("Cache-Control", "max-age=86400"); server.send_P(200, "text/css", CSS); });
-  server.on("/api/state", HTTP_GET, sendState);
+  server.on("/api/state", HTTP_GET, [] { if (server.hasArg("desk")) { deskSeenAt = millis(); deskHeard(DV_WIFI); } sendState(); });   // desk=1: lil.mate Desk (see updTick)
   server.on("/api/cmd", HTTP_POST, [] {
     // text/plain body (dashboard, agent) or form field c=... (curl -d, HTML forms)
     String body = server.hasArg("c") ? server.arg("c") : server.arg("plain");
@@ -379,6 +397,7 @@ void webBegin() {
   });
   server.on("/api/settings", HTTP_POST, handleSettings);
   server.on("/api/wifi", HTTP_POST, handleWifi);
+  server.on("/api/wifi/status", HTTP_GET, handleWifiStatus);
   server.on("/api/scan", HTTP_GET, handleScan);
   server.on("/api/pc", HTTP_POST, handlePc);
   server.on("/api/game", HTTP_GET, handleGame);
@@ -393,7 +412,7 @@ void webBegin() {
   server.on("/api/agent", HTTP_POST, [] {
     JsonDocument d;
     if (deserializeJson(d, server.arg("plain"))) { server.send(400, "application/json", "{\"ok\":false}"); return; }
-    agentEvent(d.as<JsonObjectConst>(), false);
+    agentEvent(d.as<JsonObjectConst>(), nullptr);
     server.send(200, "application/json", "{\"ok\":true}");
   });
   server.on("/api/agent/decision", HTTP_GET, [] {

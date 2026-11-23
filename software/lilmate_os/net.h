@@ -17,6 +17,17 @@ bool     wifiUp = false, wifiEver = false;
 uint32_t wifiStartAt = 0, apStartAt = 0;
 String   apName;
 DNSServer dns;
+extern uint32_t restartAt;
+#define WIFI_RETRY_MS 60000UL   // offline (office): look for the saved Wi-Fi again every minute, so coming home is quick
+
+// this buddy's own name on the network: lilmate-8b64.local (two buddies in one home never clash)
+String mdnsHost() { return String(HOSTNAME "-") + buddyId(); }
+
+// Setup page: the password is tried before it is saved, so the page can say "connected" (with the address) or what went wrong.
+// st: 0 idle, 1 trying, 2 ok, 3 wrong password, 4 network not found, 5 failed
+struct { volatile uint8_t st = 0; uint32_t at = 0, shownAt = 0; char ssid[33], pass[65], owner[16], city[32]; String ip; } wsTry;
+volatile uint8_t wsReason = 0;   // last Wi-Fi disconnect reason (from the event task)
+uint32_t welcomeUntil = 0;       // "I'm online!" screen after a fresh setup
 
 struct Weather {
   bool ok; float temp, tmax, tmin, wind; int code, hum; int32_t utcOffset; uint32_t at; char place[32];
@@ -70,6 +81,8 @@ void startAP() {
   WiFi.disconnect(true);
   WiFi.mode(WIFI_AP_STA);   // STA side only used for the network scan on the setup page
   WiFi.softAP(apName.c_str());
+  static bool evOn = false;
+  if (!evOn) { evOn = true; WiFi.onEvent([](WiFiEvent_t, WiFiEventInfo_t i) { wsReason = i.wifi_sta_disconnected.reason; }, ARDUINO_EVENT_WIFI_STA_DISCONNECTED); }
   delay(100);
   dns.start(53, "*", WiFi.softAPIP());
   Serial.printf("[wifi] setup hotspot %s at %s\n", apName.c_str(), WiFi.softAPIP().toString().c_str());
@@ -88,7 +101,12 @@ void wifiBegin() {
 
 void onWifiUp() {
   Serial.printf("[wifi] up, IP %s\n", WiFi.localIP().toString().c_str());
-  if (!wifiEver) { MDNS.begin(HOSTNAME); MDNS.addService("http", "tcp", 80); }
+  if (!wifiEver) {
+    // lilmate-8b64.local, plus a "_lilmate._tcp" service that lil.mate Desk looks for (id tells buddies apart)
+    MDNS.begin(mdnsHost().c_str()); MDNS.addService("http", "tcp", 80);
+    MDNS.addService("lilmate", "tcp", 80); MDNS.addServiceTxt("lilmate", "tcp", "id", (const char *)buddyId()); MDNS.addServiceTxt("lilmate", "tcp", "name", (const char *)S.owner);
+    if (prefs.getUChar("hello", 0)) { prefs.remove("hello"); welcomeUntil = millis() + 120000; }   // just set up: say hi
+  }
   wifiEver = true;
   configTzTime(currentTz(), "pool.ntp.org", "time.google.com", "time.cloudflare.com");
   wxRequest = true;
@@ -97,6 +115,25 @@ void onWifiUp() {
 void wifiLoop() {
   if (apMode) {
     dns.processNextRequest();
+    if (wsTry.st == 1) {   // setup page: trying the new Wi-Fi while the hotspot stays up
+      uint32_t t = millis() - wsTry.at;
+      if (WiFi.status() == WL_CONNECTED) {
+        wsTry.ip = WiFi.localIP().toString(); wsTry.st = 2;
+        copyStr(S.ssid, wsTry.ssid, sizeof(S.ssid)); copyStr(S.pass, wsTry.pass, sizeof(S.pass));
+        if (wsTry.owner[0]) copyStr(S.owner, wsTry.owner, sizeof(S.owner));
+        if (wsTry.city[0]) { copyStr(S.city, wsTry.city, sizeof(S.city)); S.lat = S.lon = 0; }
+        markDirty(D_SET); storeFlush(); prefs.putUChar("hello", 1);
+        Serial.printf("[wifi] setup: joined %s as %s, restarting in 20 s\n", S.ssid, wsTry.ip.c_str());
+        diagRestart(SW_WIFI_SAVE); restartAt = millis() + 20000;   // time for the page to show the address
+      } else if (t > 4000 && (wsReason == WIFI_REASON_AUTH_FAIL || wsReason == WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT ||
+                               wsReason == WIFI_REASON_HANDSHAKE_TIMEOUT || wsReason == WIFI_REASON_AUTH_EXPIRE || wsReason == WIFI_REASON_MIC_FAILURE)) {
+        wsTry.st = 3; wsTry.shownAt = millis(); WiFi.disconnect(false); Serial.println("[wifi] setup: wrong password");
+      } else if (t > 8000 && wsReason == WIFI_REASON_NO_AP_FOUND) {
+        wsTry.st = 4; wsTry.shownAt = millis(); WiFi.disconnect(false); Serial.println("[wifi] setup: network not found");
+      } else if (t > 25000) {
+        wsTry.st = 5; wsTry.shownAt = millis(); WiFi.disconnect(false); Serial.printf("[wifi] setup: failed (reason %u)\n", wsReason);
+      }
+    }
     // saved network but stuck in hotspot (router was off): retry every 5 min if nobody is connected
     if (S.ssid[0] && millis() - apStartAt > 300000 && WiFi.softAPgetStationNum() == 0) { diagRestart(SW_AP_RETRY); ESP.restart(); }
     return;
@@ -113,12 +150,12 @@ void wifiLoop() {
     // the saved network is not here (e.g. office): keep working offline instead of the setup screen.
     // Setup hotspot stays available on demand: INFO screen, hold 4 s.
     offlineMode = true; WiFi.setAutoReconnect(false); WiFi.disconnect(false);
-    wifiRetryAt = now + 300000; wifiTryAt = 0;
-    Serial.println("[wifi] network not found -> offline mode (retry every 5 min)");
+    wifiRetryAt = now + WIFI_RETRY_MS; wifiTryAt = 0;
+    Serial.println("[wifi] network not found -> offline mode (retry every minute)");
   }
   if (offlineMode) {
     if (!wifiTryAt && now > wifiRetryAt && !linkBusy()) { WiFi.begin(S.ssid, S.pass); wifiTryAt = now; }
-    if (wifiTryAt && now - wifiTryAt > 15000) { WiFi.disconnect(false); wifiTryAt = 0; wifiRetryAt = now + 300000; }
+    if (wifiTryAt && now - wifiTryAt > 15000) { WiFi.disconnect(false); wifiTryAt = 0; wifiRetryAt = now + WIFI_RETRY_MS; }
   }
 }
 

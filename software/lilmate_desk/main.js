@@ -14,14 +14,36 @@ const tidy = require('./lib/tidy');
 if (process.platform === 'linux') {
   app.commandLine.appendSwitch('no-sandbox');                 // Ubuntu 24+ blocks the setuid sandbox for AppImages
   app.commandLine.appendSwitch('enable-transparent-visuals');
+  app.commandLine.appendSwitch('enable-experimental-web-platform-features');   // Web Bluetooth on Linux (BlueZ); on by default on Windows / macOS
 }
-if (!app.requestSingleInstanceLock()) app.quit();
+const primary = app.requestSingleInstanceLock();
+if (!primary) app.exit(0);   // another copy is running (e.g. autostart + a manual start): leave before touching the USB port
 
 // ------------------------------------------------------------ settings
 const SETTINGS = path.join(app.getPath('userData'), 'settings.json');
-let settings = { host: '', forceWifi: false, ics: '', autostart: true, approve: true, first: true, autoCheck: true, follow: true };
+let settings = { host: '', forceWifi: false, ics: '', autostart: true, approve: true, first: true, autoCheck: true, follow: true, ble: true, buddies: {}, lastBuddy: '' };
 try { settings = { ...settings, ...JSON.parse(fs.readFileSync(SETTINGS, 'utf8')) }; } catch (e) {}
-function saveSettings() { fs.mkdirSync(path.dirname(SETTINGS), { recursive: true }); fs.writeFileSync(SETTINGS, JSON.stringify(settings, null, 2), { mode: 0o600 }); }
+// written to a temp file and renamed over: a crash or power cut never leaves half a settings file
+function saveSettings() {
+  try {
+    fs.mkdirSync(path.dirname(SETTINGS), { recursive: true });
+    const tmp = SETTINGS + '.tmp';
+    fs.writeFileSync(tmp, JSON.stringify(settings, null, 2), { mode: 0o600 }); fs.renameSync(tmp, SETTINGS);
+  } catch (e) { log('settings not saved: ' + e.message); }
+}
+
+// ------------------------------------------------------------ log + safety net
+// A small log in the app's folder (desk.log, kept under ~200 KB) instead of error dialogs: nothing unexpected may take the app down.
+const LOG = path.join(app.getPath('userData'), 'desk.log');
+function log(msg) {
+  const line = `${new Date().toISOString()} ${msg}\n`;
+  try { if (fs.statSync(LOG).size > 200000) fs.renameSync(LOG, LOG + '.old'); } catch (e) {}
+  try { fs.appendFileSync(LOG, line); } catch (e) {}
+  if (!app.isPackaged) process.stderr.write(line);
+}
+process.on('uncaughtException', e => log('uncaught: ' + (e && e.stack || e)));
+device.setLog(log);
+process.on('unhandledRejection', e => log('unhandled rejection: ' + (e && e.stack || e)));
 
 // ------------------------------------------------------------ island window
 let win = null, tray = null;
@@ -103,6 +125,10 @@ function createWindow() {
   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   if (process.env.LILMATE_DEBUG) win.webContents.on('console-message', e => console.log('[ui]', e.level, e.message, e.lineNumber));
   win.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+  // the island's page crashed or hung: reload it (the island would otherwise just vanish until a restart)
+  win.webContents.on('render-process-gone', (_e, d) => { log('island page gone: ' + d.reason); if (!app.isQuitting) setTimeout(() => { if (win && !win.isDestroyed()) win.reload(); }, 500); });
+  win.webContents.on('unresponsive', () => { log('island page unresponsive: reloading'); if (win && !win.isDestroyed()) win.webContents.forcefullyCrashRenderer(); });
+  win.webContents.on('did-finish-load', () => { if (lastState) send('state', lastState.offline ? lastState : { ...lastState, conn: link ? { kind: link.kind, where: link.where } : undefined }); placeWindow(); });
   win.once('ready-to-show', () => { placeWindow(); win.showInactive(); if (settings.first) setMode('panel'); });
   for (const ev of ['display-metrics-changed', 'display-added', 'display-removed']) screen.on(ev, () => { placeWindow(); rebuildTray(); });
 }
@@ -141,34 +167,67 @@ function applyAutostart() {
 let link = null, connecting = false, lastState = null, lastStateAt = 0;
 const send = (ch, data) => { if (win && !win.isDestroyed()) win.webContents.send(ch, data); };
 
-async function ensureLink() {
-  if ((link && link.alive) || connecting) return;
+// Everyone who needs the buddy awaits the same connect attempt (a command sent while it reconnects waits for it
+// instead of failing with "not connected").
+let connectP = null;
+function ensureLink() {
+  if (link && link.alive) return Promise.resolve();
+  if (!connectP) connectP = connectOnce().catch(e => log('connect: ' + e.message)).finally(() => { connectP = null; });
+  return connectP;
+}
+async function connectOnce() {
   connecting = true;
   try {
     link = await device.connect(settings);
     if (link) {
+      const me = link; misses = 0;
       link.on('decision', (rid, d) => resolveAsk(rid, d));
-      link.on('lost', () => { link = null; send('link', { kind: 'none' }); });
-      send('link', { kind: link.kind, where: link.kind === 'usb' ? link.path : link.host });
+      link.on('lost', () => { if (link === me) link = null; send('link', { kind: 'none' }); });
+      send('link', { kind: link.kind, where: link.where });
       calSent = 0;
+      // on the cable the buddy hands over its id + Bluetooth key, so it can still link when unplugged (office, no Wi-Fi)
+      if (link.kind === 'usb' && await device.learn(link, settings)) saveSettings();
+      if (link && link.kind === 'ble' && settings.lastBuddy !== link.id) { settings.lastBuddy = link.id; saveSettings(); }
     }
   } finally { connecting = false; }
 }
 
+let polling = false, misses = 0, wifiCheckAt = 0;
 async function pollState() {
+  if (polling) return;                  // hook events ask for extra polls: never run two at once
+  polling = true;
+  try { await pollOnce(); } catch (e) { log('poll: ' + e.message); } finally { polling = false; }
+}
+async function pollOnce() {
   if (link && link.updating) return;
+  // on Bluetooth and the cable just got plugged in: switch to the cable (faster, and it charges)
+  if (link && link.kind === 'ble' && !connecting && !settings.forceWifi && await device.findUsbPort()) { link.close(); link = null; }
+  // on Bluetooth and the same buddy is back on Wi-Fi (checked every 30 s): move to Wi-Fi, so the buddy can switch its
+  // Bluetooth off again and keep that memory for updates and Telegram
+  if (link && link.kind === 'ble' && !connecting && Date.now() > wifiCheckAt) {
+    wifiCheckAt = Date.now() + 30000;
+    const w = await device.findWifi(settings);
+    if (w && link && link.kind === 'ble' && (!w.id || w.id === link.id)) { log('buddy is back on Wi-Fi: leaving Bluetooth'); link.close(); link = null; }
+  }
   await ensureLink();
-  if (!link) { send('state', { offline: true }); return; }
+  if (!link) { send('state', { offline: true, hint: device.hint.text }); return; }
   try {
     const s = await link.state();
     lastState = s; lastStateAt = Date.now();
     noteFirmware(s);
     if (s.ip && s.ip !== '0.0.0.0' && s.ip !== settings.host) { settings.host = s.ip; saveSettings(); }   // remember for Wi-Fi later
-    send('state', { ...s, conn: { kind: link.kind, where: link.kind === 'usb' ? link.path : link.host } });
+    if (s.id && settings.buddies && settings.buddies[s.id] && s.ip && s.ip !== '0.0.0.0' && settings.buddies[s.id].ip !== s.ip) { settings.buddies[s.id].ip = s.ip; saveSettings(); }
+    send('state', { ...s, conn: { kind: link.kind, where: link.where } });
     noteGame(s);
+    misses = 0;
   } catch (e) {
-    if (link && link.kind === 'wifi') link = null;
-    send('state', { offline: true });
+    // The buddy is sometimes busy for a few seconds (weather, Telegram): one slow answer is not a lost link.
+    // Wi-Fi is dropped after 2 misses in a row, cable / Bluetooth after 3; until then the panel keeps the last state
+    // instead of blinking "not connected".
+    if (link && ++misses >= (link.kind === 'wifi' ? 2 : 3)) {
+      log(`link ${link.kind} not answering: ${e.message}`); misses = 0;
+      try { link.close(); } catch (x) {} link = null; send('link', { kind: 'none' }); send('state', { offline: true });
+    }
   }
 }
 
@@ -202,7 +261,7 @@ function cpuPercent() {
   let p = 0; if (prevCpu) { const dt = total - prevCpu.total; p = dt ? 100 * (1 - (idle - prevCpu.idle) / dt) : 0; }
   prevCpu = { total, idle }; return Math.round(p * 10) / 10;
 }
-setInterval(() => { activity.push(powerMonitor.getSystemIdleTime() < 3 ? 1 : 0); if (activity.length > 180) activity.shift(); }, 1000);
+const sampleActivity = () => { activity.push(powerMonitor.getSystemIdleTime() < 3 ? 1 : 0); if (activity.length > 180) activity.shift(); };   // started in whenReady
 async function pushPc() {
   if (!link || link.updating) return;
   const act = activity.length ? Math.round(activity.reduce((a, b) => a + b, 0) / activity.length * 100) / 100 : 0;
@@ -253,10 +312,20 @@ async function decideFromDesktop(rid, d) {
   return true;
 }
 
+// AI tools fire a "tool" event for every single tool call (several a second when busy). They only mean "still working",
+// so at most one per session goes to the buddy every 2 s; every other event goes at once.
+const lastTool = new Map();
 const appApi = {
-  event: ev => { ensureLink().then(() => link && link.event(ev).catch(() => {})); setTimeout(pollState, 300); },
+  event: ev => {
+    if (ev && ev.ev === 'tool') {
+      const k = ev.sid || '', t = Date.now();
+      if (t - (lastTool.get(k) || 0) < 2000) return;
+      lastTool.set(k, t); if (lastTool.size > 50) lastTool.delete(lastTool.keys().next().value);
+    }
+    ensureLink().then(() => link && link.event(ev).catch(() => {})); setTimeout(pollState, 300);
+  },
   ask, link: () => link,
-  cmd: async text => { await ensureLink(); return link ? link.cmd(text) : 'lil.mate is not connected'; },
+  cmd: async text => { await ensureLink(); if (!link) return 'lil.mate is not connected'; try { return await link.cmd(text); } catch (e) { return "lil.mate didn't answer, try again"; } },
 };
 
 
@@ -310,6 +379,7 @@ async function updateFirmware(force) {
   if (!fw) { upd.error = 'No lil.mate firmware in this release'; return pushUpd(); }
   await ensureLink();
   if (!link) { upd.error = 'Connect lil.mate first (USB cable or same Wi-Fi)'; return pushUpd(); }
+  if (link.kind === 'ble' && !settings.host) { upd.error = 'Plug lil.mate in with the USB cable to update it (Bluetooth is too slow for that)'; return pushUpd(); }
   if (!force && upd.fw.current && !updater.newer(fw.version, upd.fw.current)) { upd.error = 'lil.mate is already up to date'; return pushUpd(); }
   upd.busy = { what: 'fw', stage: 'downloading', pct: 0, to: fw.version }; upd.error = ''; pushUpd();
   try {
@@ -340,7 +410,7 @@ function cursorTick() {
   lastCur = p;
   const b = win.getBounds();
   send('cursor', { dx: p.x - (b.x + b.width / 2), dy: p.y - (b.y + 20) });
-  if (settings.follow === false || !link || link.updating || Date.now() - lastLook < (link.kind === 'usb' ? 250 : 800)) return;
+  if (settings.follow === false || !link || link.updating || Date.now() - lastLook < ({ usb: 250, ble: 400 }[link.kind] || 800)) return;
   lastLook = Date.now();
   const all = screen.getAllDisplays(), minX = Math.min(...all.map(d => d.bounds.x)), maxX = Math.max(...all.map(d => d.bounds.x + d.bounds.width));
   const d = screen.getDisplayNearestPoint(p);
@@ -372,17 +442,26 @@ ipcMain.handle('cmd', (_e, text) => appApi.cmd(text));
 ipcMain.handle('decide', (_e, rid, d) => decideFromDesktop(rid, d));
 ipcMain.handle('hooks:status', () => hooks.status());
 ipcMain.handle('hooks:set', (_e, tool, on) => { try { return { ok: true, status: hooks.set(tool, on, { approve: settings.approve }) }; } catch (e) { return { ok: false, error: e.message, status: hooks.status() }; } });
-ipcMain.handle('settings:get', () => ({ ...settings, ics: settings.ics ? 'set' : '', version: app.getVersion(), platform: process.platform }));
+ipcMain.handle('settings:get', () => ({ ...settings, ics: settings.ics ? 'set' : '', buddies: Object.keys(settings.buddies || {}), version: app.getVersion(), platform: process.platform }));
 ipcMain.handle('settings:set', async (_e, patch) => {
   if ('ics' in patch) { settings.ics = patch.ics; calFetched = 0; calSent = 0; }
-  for (const k of ['host', 'forceWifi', 'autostart', 'approve', 'first', 'autoCheck', 'follow']) if (k in patch) settings[k] = patch[k];
+  for (const k of ['host', 'forceWifi', 'autostart', 'approve', 'first', 'autoCheck', 'follow', 'ble']) if (k in patch) settings[k] = patch[k];
   saveSettings(); applyAutostart();
-  if ('host' in patch || 'forceWifi' in patch) { if (link) link.close(); link = null; }
+  if ('host' in patch || 'forceWifi' in patch || ('ble' in patch && link && link.kind === 'ble')) { if (link) link.close(); link = null; }
   if ('ics' in patch && settings.ics) { try { calEvents = await fetchCalendar(settings.ics); calFetched = Date.now(); calTick(); return { ok: true, meetings: calEvents }; } catch (e) { return { ok: false, error: 'Could not read that calendar link' }; } }
   return { ok: true };
 });
 const calTick = () => calendarTick().catch(() => {});
 ipcMain.handle('wifi:set', async (_e, ssid, pass) => { await ensureLink(); if (!link || link.kind !== 'usb') return { ok: false, error: 'Plug lil.mate into this computer with the USB cable first' }; link.setWifi(ssid, pass); return { ok: true }; });
+// the Wi-Fi this computer is on, to fill in the "Wi-Fi for lil.mate" form (the person only types the password)
+ipcMain.handle('wifi:current', () => new Promise(resolve => {
+  const { execFile } = require('child_process');
+  const [cmd, args, pick] = process.platform === 'win32' ? ['netsh', ['wlan', 'show', 'interfaces'], o => (/^\s*SSID\s*:\s*(.+)$/m.exec(o) || [])[1]]
+    : process.platform === 'darwin' ? ['/usr/sbin/networksetup', ['-getairportnetwork', 'en0'], o => (/Network:\s*(.+)$/m.exec(o) || [])[1]]
+    : ['nmcli', ['-t', '-f', 'active,ssid', 'dev', 'wifi'], o => (/^yes:(.+)$/m.exec(o) || [])[1]];
+  // lil.mate needs the 2.4 GHz network: "Home_5G" usually has a twin called "Home"
+  execFile(cmd, args, { timeout: 4000, windowsHide: true }, (err, out) => resolve(err ? '' : (pick(String(out)) || '').trim().replace(/[\s_-]*5\s?G(Hz)?$/i, '')));
+}));
 ipcMain.handle('open:dashboard', () => { if (settings.host) shell.openExternal(`http://${settings.host}`); });
 ipcMain.on('battery', (_e, b) => { battery = b; });
 ipcMain.handle('update:get', () => upd);
@@ -401,7 +480,9 @@ function migrateOldHooks() {
 
 // ------------------------------------------------------------ start
 app.whenReady().then(() => {
+  if (!primary) return;
   createWindow(); createTray(); applyAutostart();
+  setInterval(sampleActivity, 1000);
   server.start(appApi);
   migrateOldHooks();
   pollState(); setInterval(pollState, 2000);
@@ -409,7 +490,7 @@ app.whenReady().then(() => {
   setInterval(pushPc, 5000);
   setInterval(cursorTick, 100);
   setInterval(calTick, 30000); calTick();
-  setInterval(() => { if (link && link.kind === 'usb') link.syncTime(); }, 6 * 3600000);
+  setInterval(() => { if (link && link.kind !== 'wifi') link.syncTime(); }, 6 * 3600000);
   const autoCheck = () => { if (settings.autoCheck !== false) checkUpdates(false); };
   setTimeout(autoCheck, 20000); setInterval(autoCheck, 6 * 3600000);
 });
@@ -430,3 +511,4 @@ if (process.env.LILMATE_DEBUG) {
 }
 app.on('second-instance', () => setMode('panel'));
 app.on('window-all-closed', e => { if (!app.isQuitting) e.preventDefault(); });
+app.on('before-quit', () => { app.isQuitting = true; try { if (link) link.close(); } catch (e) {} });   // release the USB port / Bluetooth cleanly

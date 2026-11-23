@@ -19,7 +19,7 @@ struct AgDec { uint32_t rid; char d; };
 AgDec agDec[8]; uint8_t agDecN = 0;
 uint32_t agNextBreakTip = 0, agAttnSince = 0;
 String agAttnKey;
-bool agSerial = false;   // events came over USB -> also report decisions on USB
+Print *agOut = nullptr;   // events came over USB or Bluetooth -> report decisions back there too (nullptr = HTTP, polled)
 
 int agFind(const char *sid, bool create) {
   for (int i = 0; i < MAX_SESS; i++) if (ag[i].used && !strcmp(ag[i].sid, sid)) return i;
@@ -53,7 +53,7 @@ AgSess *agWorking() { AgSess *b = nullptr; for (auto &s : ag) if (s.used && s.st
 
 void agRecord(uint32_t rid, char d) {
   agDec[agDecN % 8] = { rid, d }; agDecN++;
-  if (agSerial) Serial.printf("@dec {\"rid\":%lu,\"d\":\"%s\"}\n", (unsigned long)rid, d == 'a' ? "allow" : "deny");
+  if (agOut) agOut->printf("@dec {\"rid\":%lu,\"d\":\"%s\"}\n", (unsigned long)rid, d == 'a' ? "allow" : "deny");
 }
 char agDecision(uint32_t rid) { for (auto &d : agDec) if (d.rid == rid && d.d) return d.d; return 0; }
 
@@ -73,8 +73,8 @@ bool agDecideRid(uint32_t rid, bool allow, const char *via) {
 void agAck(AgSess &s) { s.acked = true; setInvert(false); faceClearBubble(); agAttnKey = ""; }
 void agAckAll() { for (auto &s : ag) if (s.used && s.st != AG_PERM) s.acked = true; setInvert(false); faceClearBubble(); agAttnKey = ""; }
 
-void agentEvent(JsonObjectConst e, bool viaSerial) {
-  agSerial = viaSerial;
+void agentEvent(JsonObjectConst e, Print *via) {
+  agOut = via;
   const char *sid = e["sid"] | "default";
   String ev = e["ev"] | "";
   int i = agFind(sid, ev != "end");

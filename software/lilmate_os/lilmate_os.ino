@@ -101,6 +101,71 @@ void serialOta(String args) {
   Serial.flush(); storeFlush(); diagRestart(SW_OTA); delay(400); ESP.restart();
 }
 
+// The machine protocol of lil.mate Desk and pc_agent/lilmate_agent.py: the same lines over the USB cable and Bluetooth.
+// out = where the replies go. trusted = the USB cable (someone with the buddy in hand): only it hands out the link key.
+bool pcLine(const String &line, Print &out, bool trusted) {
+  if (line.startsWith("@ev ")) {
+    JsonDocument d;
+    if (!deserializeJson(d, line.substring(4))) { agentEvent(d.as<JsonObjectConst>(), &out); out.println("@ok"); }
+    else out.println("@err json");
+    return true;
+  }
+  if (line.startsWith("@pc ")) {
+    JsonDocument d;
+    if (!deserializeJson(d, line.substring(4))) out.printf("@pcr {\"focus\":%s}\n", pcUpdate(d.as<JsonObjectConst>()) ? "true" : "false");
+    return true;
+  }
+  if (line.startsWith("@cal ")) {
+    JsonDocument d;
+    if (!deserializeJson(d, line.substring(5))) { calSet(d["ev"].as<JsonArrayConst>()); out.println("@ok"); }
+    return true;
+  }
+  if (line == "@state") { JsonDocument d; buildState(d); out.print("@st "); serializeJson(d, out); out.println(); return true; }
+  if (line.startsWith("@cmd ")) { JsonDocument d; d["r"] = runCommand(line.substring(5), SRC_AGENT, ""); out.print("@re "); serializeJson(d, out); out.println(); return true; }
+  if (line.startsWith("@look ")) { float x = 0, y = 0; sscanf(line.c_str() + 6, "%f %f", &x, &y); lookX = constrain(x, -1.f, 1.f); lookY = constrain(y, -1.f, 1.f); lookUntil = millis() + 3000; return true; }
+  if (line == "@mem") { char b[140]; memLine(b, sizeof(b)); out.printf("@mem %s\n", b); return true; }
+  // games from the PC keyboard (lil.mate Desk): Star Catcher keys L/R/T/X, team match tap, and a small status reply
+  if (line.startsWith("@key ") && line.length() > 5) { gameKey(toupper(line[5])); return true; }
+  if (line == "@tap") { markActivity(); gameInput(); return true; }
+  if (line == "@gm") { JsonDocument d; gameJson(d["game"].to<JsonObject>()); linkJson(d["link"].to<JsonObject>()); out.print("@gm "); serializeJson(d, out); out.println(); return true; }
+  // who are you: id = MAC digits (stable), key = the Bluetooth link key (USB only), ssid = saved Wi-Fi, ip when online
+  if (line.startsWith("@hello")) {
+    out.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\",\"id\":\"%s\"", FW_VERSION, S.owner, buddyId());
+    if (trusted) out.printf(",\"key\":\"%s\",\"ssid\":\"%s\",\"ip\":\"%s\"", linkKey, S.ssid, wifiUp ? WiFi.localIP().toString().c_str() : "");
+    out.println("}");
+    return true;
+  }
+  if (line.startsWith("@time ")) { struct timeval tv = { (time_t)line.substring(6).toInt(), 0 }; if (tv.tv_sec > 1700000000) settimeofday(&tv, nullptr); return true; }
+  return false;
+}
+
+// lil.mate Desk over Bluetooth: lines out of the stream buffer, "@auth <key>" first, then the same protocol as USB
+String bleBuf;
+void bleLineLoop() {
+  if (!bleRx) return;
+  if (!bl.connected) { if (bleBuf.length()) bleBuf = ""; if (xStreamBufferBytesAvailable(bleRx)) xStreamBufferReset(bleRx); return; }
+  char tmp[128]; size_t n;
+  while ((n = xStreamBufferReceive(bleRx, tmp, sizeof(tmp), 0)) > 0) {
+    for (size_t i = 0; i < n; i++) {
+      char c = tmp[i];
+      if (c == '\r') continue;
+      if (c != '\n') { if (bleBuf.length() < 2000) bleBuf += c; continue; }
+      String line = bleBuf; bleBuf = ""; line.trim();
+      if (!line.length()) continue;
+      if (line.startsWith("@auth ")) {
+        bl.authed = line.substring(6) == linkKey;
+        bleOut.println(bl.authed ? "@ok" : "@err key");
+        Serial.printf("[ble] Desk %s\n", bl.authed ? "linked" : "wrong key");
+        continue;
+      }
+      if (line.startsWith("@hello")) { pcLine(line, bleOut, false); continue; }
+      if (!bl.authed) { bleOut.println("@err auth"); continue; }
+      if (pcLine(line, bleOut, false)) { deskHeard(DV_BLE); continue; }
+      if (line.startsWith("/")) { String r = runCommand(line, SRC_AGENT, ""); bleOut.print("> "); bleOut.println(r); }
+    }
+  }
+}
+
 // USB serial console: same commands, plus Wi-Fi setup and touch simulation for testing
 String serialBuf;
 void serialLoop() {
@@ -110,33 +175,8 @@ void serialLoop() {
     if (c != '\n') { if (serialBuf.length() < 700) serialBuf += c; continue; }
     String line = serialBuf; serialBuf.remove(0); line.trim();   // remove(): keeps the reserved buffer
     if (!line.length()) continue;
-    // machine protocol from pc_agent/lilmate_agent.py (USB link, no Wi-Fi needed)
-    if (line.startsWith("@ev ")) {
-      JsonDocument d;
-      if (!deserializeJson(d, line.substring(4))) { agentEvent(d.as<JsonObjectConst>(), true); Serial.println("@ok"); }
-      else Serial.println("@err json");
-      continue;
-    }
-    if (line.startsWith("@pc ")) {
-      JsonDocument d;
-      if (!deserializeJson(d, line.substring(4))) Serial.printf("@pcr {\"focus\":%s}\n", pcUpdate(d.as<JsonObjectConst>()) ? "true" : "false");
-      continue;
-    }
-    if (line.startsWith("@cal ")) {
-      JsonDocument d;
-      if (!deserializeJson(d, line.substring(5))) { calSet(d["ev"].as<JsonArrayConst>()); Serial.println("@ok"); }
-      continue;
-    }
-    if (line == "@state") { JsonDocument d; buildState(d); Serial.print("@st "); serializeJson(d, Serial); Serial.println(); continue; }
-    if (line.startsWith("@cmd ")) { JsonDocument d; d["r"] = runCommand(line.substring(5), SRC_AGENT, ""); Serial.print("@re "); serializeJson(d, Serial); Serial.println(); continue; }
-    if (line.startsWith("@look ")) { float x = 0, y = 0; sscanf(line.c_str() + 6, "%f %f", &x, &y); lookX = constrain(x, -1.f, 1.f); lookY = constrain(y, -1.f, 1.f); lookUntil = millis() + 3000; continue; }
     if (line.startsWith("@ota ")) { serialOta(line.substring(5)); continue; }
-    if (line == "@mem") { char b[140]; memLine(b, sizeof(b)); Serial.printf("@mem %s\n", b); continue; }
-    // games from the PC keyboard (lil.mate Desk): Star Catcher keys L/R/T/X, team match tap, and a small status reply
-    if (line.startsWith("@key ") && line.length() > 5) { gameKey(toupper(line[5])); continue; }
-    if (line == "@tap") { markActivity(); gameInput(); continue; }
-    if (line == "@gm") { JsonDocument d; gameJson(d["game"].to<JsonObject>()); linkJson(d["link"].to<JsonObject>()); Serial.print("@gm "); serializeJson(d, Serial); Serial.println(); continue; }
-    if (line.startsWith("@hello")) { Serial.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\"}\n", FW_VERSION, S.owner); continue; }
+    if (pcLine(line, Serial, true)) { deskHeard(DV_USB); continue; }
     String low = line; low.toLowerCase();
     if (low.startsWith("/wifi ")) {          // /wifi My Network|password
       String a = line.substring(6); int bar = a.indexOf('|');
@@ -153,7 +193,7 @@ void serialLoop() {
       for (int i = 1; i < 8; i++) if (g == TOUCH_NAMES[i]) { tPush((TouchEv)i); Serial.printf("> sim %s\n", TOUCH_NAMES[i]); }
       continue;
     }
-    if (low == "/state") { Serial.printf("> screen=%s mood=%s asleep=%d off=%d alert=%d heap=%u wifi=%d ap=%d\n", SCREEN_NAMES[screen], MOOD_NAMES[mood], asleep, displayOff, al.active, (unsigned)ESP.getFreeHeap(), wifiUp, apMode); continue; }
+    if (low == "/state") { Serial.printf("> screen=%s mood=%s asleep=%d off=%d alert=%d heap=%u wifi=%d ap=%d touch=%d armed=%d\n", SCREEN_NAMES[screen], MOOD_NAMES[mood], asleep, displayOff, al.active, (unsigned)ESP.getFreeHeap(), wifiUp, apMode, digitalRead(TOUCH_PIN) == HIGH, tc.armed); continue; }
     String r = runCommand(line, SRC_SERIAL, "");
     Serial.print("> "); Serial.println(r);
   }
@@ -233,7 +273,7 @@ void loop() {
   InMsg m;
   diagStage(ST_TG);
   while (xQueueReceive(inQ, &m, 0) == pdTRUE) handleTelegram(m);
-  diagStage(ST_SERIAL); serialLoop();
+  diagStage(ST_SERIAL); serialLoop(); bleLineLoop();
 
   if (netSettingsChanged) { netSettingsChanged = false; markDirty(D_SET); }
   if (tgOffsetChanged) { tgOffsetChanged = false; markDirty(D_TG); }

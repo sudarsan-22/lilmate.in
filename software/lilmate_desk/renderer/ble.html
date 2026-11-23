@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+<title>lil.mate Bluetooth</title>
+</head>
+<body>
+<!-- Hidden window: Chromium's Web Bluetooth talks to the buddy (works on Windows, macOS and Linux without a native module).
+     lib/ble.js drives it: connect() picks the buddy (main answers select-bluetooth-device), write() sends text, data comes back. -->
+<script src="ble.js"></script>
+</body>
+</html>

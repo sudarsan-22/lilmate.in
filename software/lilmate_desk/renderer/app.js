@@ -2,6 +2,10 @@
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// Only touch the page when the content really changed: the state arrives every 2 s, and rebuilding a list under the
+// mouse swaps its buttons mid-click (the click is lost) and makes hover flicker.
+const setHtml = (el, h) => { if (el && el._h !== h) { el._h = h; el.innerHTML = h; } };
+const setText = (el, t) => { t = String(t); if (el && el.textContent !== t) el.textContent = t; };
 let S = {}, U = null, mode = 'pill', pinned = false, asks = [], leaveTimer = null;
 // the lilmate.in logo, with eyes that follow the buddy's mood
 const EYE = {
@@ -31,7 +35,11 @@ setFace($('#pillFace'), 'happy'); setFace($('#avFace'), 'happy'); setFace($('#as
 const FEEL = { neutral: 'chilling', happy: 'happy', love: 'in love', surprised: 'surprised', angry: 'grumpy', sad: 'a bit sad', sleepy: 'sleepy', sleep: 'napping', think: 'thinking', cool: 'cool', laugh: 'giggly', wink: 'playful', focus: 'focused', alert: 'calling you', dizzy: 'dizzy', curious: 'curious' };
 
 function toast(t) { const e = $('#toast'); e.textContent = t; e.classList.add('on'); clearTimeout(e._t); e._t = setTimeout(() => e.classList.remove('on'), 2600); }
-async function run(c) { if (!c.trim()) return; const r = await lil.cmd(c); toast(String(r).split('\n')[0]); flashPill(r); }
+async function run(c) {
+  if (!c.trim()) return;
+  let r; try { r = await lil.cmd(c); } catch (e) { r = "lil.mate didn't answer, try again"; }
+  toast(String(r).split('\n')[0]); flashPill(r);
+}
 const fmtWait = s => s < 60 ? s + 's' : Math.floor(s / 60) + 'm' + String(s % 60).padStart(2, '0');
 const hhmm = t => new Date(t * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -242,8 +250,8 @@ lil.on('state', s => { S = s; if (s.focus && s.focus.running && !s.focus.paused)
 setInterval(() => { if (S.focus && S.focus.running && !S.focus.paused && mode !== 'panel') render(); }, 1000);
 function render() {
   const off = S.offline;
-  const conn = off ? '<span class="dot"></span> not connected' : `<span class="dot ok"></span> ${S.conn && S.conn.kind === 'usb' ? 'USB cable' : 'Wi-Fi'}`;
-  $('#conn').innerHTML = conn;
+  const conn = off ? '<span class="dot"></span> not connected' : `<span class="dot ok"></span> ${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[S.conn && S.conn.kind] || 'Wi-Fi')}`;
+  setHtml($('#conn'), conn);
   const agents = S.agents || [], att = agents.find(a => !a.acked && ['needs you', 'approve?', 'done', 'error'].includes(a.st)), work = agents.find(a => a.st === 'working');
   // pill
   const w = S.work || {}, now = Date.now() / 1000, meet = (w.meets || []).find(m => m.e > now);
@@ -265,7 +273,7 @@ function render() {
   $('#pill').classList.toggle('attn', attn);
   $('#pillDot').className = 'dot ' + (off ? '' : attn ? 'attn' : 'ok');
   setFace($('#pillFace'), off ? 'off' : S.mood, attn); setFace($('#avFace'), off ? 'off' : S.mood);
-  if (off) { $('#homeStatus').textContent = 'Looking for lil.mate on USB and Wi-Fi… plug it in with the cable, or add its address in Settings.'; return; }
+  if (off) { $('#homeStatus').textContent = S.hint || 'Looking for lil.mate on USB, Wi-Fi and Bluetooth… plug it in with the cable once, then it links by itself.'; return; }
 
   // home
   const name = (S.set && S.set.owner) || 'there', hour = new Date().getHours();
@@ -291,24 +299,24 @@ function render() {
 
   // agents
   const tagCls = st => st === 'working' ? 'working' : st === 'done' ? 'done' : st === 'approve?' ? 'ask' : st === 'needs you' ? 'needs' : '';
-  $('#agList').innerHTML = agents.map(a => `<li><span>${esc(a.name)} <small>${esc(a.tool)}${a.msg ? ' · ' + esc(a.msg) : ''}</small></span><em class="tag ${tagCls(a.st)}">${esc(a.st)} ${fmtWait(a.wait)}</em></li>`).join('')
-    || '<li class="empty">No sessions right now. Connect a tool below, then use it as usual.</li>';
+  setHtml($('#agList'), agents.map(a => `<li><span>${esc(a.name)} <small>${esc(a.tool)}${a.msg ? ' · ' + esc(a.msg) : ''}</small></span><em class="tag ${tagCls(a.st)}">${esc(a.st)} ${fmtWait(a.wait)}</em></li>`).join('')
+    || '<li class="empty">No sessions right now. Connect a tool below, then use it as usual.</li>');
   // tasks / reminders / habits
-  $('#tkList').innerHTML = tasks.map((t, i) => `<li class="${t.d ? 'done' : ''}"><button class="ck ${t.d ? 'on' : ''}" data-run="/${t.d ? 'undone' : 'done'} ${i + 1}"></button><span>${esc(t.t)}</span><button class="mini-btn" data-run="/del ${i + 1}">✕</button></li>`).join('') || '<li class="empty">Nothing to do. Nice.</li>';
-  $('#rmList').innerHTML = (S.rems || []).map((r, i) => `<li><span>${esc(r.t)} <small>${esc(r.w)}${r.daily ? ' · daily' : ''}</small></span><button class="mini-btn" data-run="/unremind ${i + 1}">✕</button></li>`).join('') || '<li class="empty">No reminders.</li>';
-  $('#hbList').innerHTML = (S.habits || []).map((h, i) => `<li><span>${esc(h.n)} <small>${h.c}/${h.g} today · ${h.s} day streak</small></span><button class="mini-btn go" data-run="/log ${i + 1}">+1</button><button class="mini-btn" data-run="/unhabit ${i + 1}">✕</button></li>`).join('') || '<li class="empty">No habits yet. Try "water 8".</li>';
+  setHtml($('#tkList'), tasks.map((t, i) => `<li class="${t.d ? 'done' : ''}"><button class="ck ${t.d ? 'on' : ''}" data-run="/${t.d ? 'undone' : 'done'} ${i + 1}"></button><span>${esc(t.t)}</span><button class="mini-btn" data-run="/del ${i + 1}">✕</button></li>`).join('') || '<li class="empty">Nothing to do. Nice.</li>');
+  setHtml($('#rmList'), (S.rems || []).map((r, i) => `<li><span>${esc(r.t)} <small>${esc(r.w)}${r.daily ? ' · daily' : ''}</small></span><button class="mini-btn" data-run="/unremind ${i + 1}">✕</button></li>`).join('') || '<li class="empty">No reminders.</li>');
+  setHtml($('#hbList'), (S.habits || []).map((h, i) => `<li><span>${esc(h.n)} <small>${h.c}/${h.g} today · ${h.s} day streak</small></span><button class="mini-btn go" data-run="/log ${i + 1}">+1</button><button class="mini-btn" data-run="/unhabit ${i + 1}">✕</button></li>`).join('') || '<li class="empty">No habits yet. Try "water 8".</li>');
   // team
-  $('#tmList').innerHTML = ((S.link && S.link.peers) || []).map(p => `<li><span>${esc(p.name)} <small>${esc(p.st)}</small></span><button class="mini-btn" data-run="/wave ${p.i}">Wave</button><button class="mini-btn go" data-run="/invite ${p.i}">Play</button></li>`).join('') || '<li class="empty">No buddies nearby.</li>';
+  setHtml($('#tmList'), ((S.link && S.link.peers) || []).map(p => `<li><span>${esc(p.name)} <small>${esc(p.st)}</small></span><button class="mini-btn" data-run="/wave ${p.i}">Wave</button><button class="mini-btn go" data-run="/invite ${p.i}">Play</button></li>`).join('') || '<li class="empty">No buddies nearby.</li>');
 }
 
-lil.on('link', l => { $('#setConn') && ($('#setConn').textContent = l.kind === 'none' ? 'Not connected' : `${l.kind === 'usb' ? 'USB cable' : 'Wi-Fi'} · ${l.where}`); });
+lil.on('link', l => { $('#setConn') && ($('#setConn').textContent = l.kind === 'none' ? 'Not connected' : `${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[l.kind] || 'Wi-Fi')} · ${l.where}`); });
 
 function renderUpcoming(agents, meet, w) {
   const items = [];
   for (const a of agents.filter(a => a.st !== 'idle')) items.push(`<li><span>${esc(a.name)} <small>${esc(a.tool)}</small></span><em class="tag ${a.st === 'working' ? 'working' : a.st === 'done' ? 'done' : 'needs'}">${esc(a.st)} ${fmtWait(a.wait)}</em></li>`);
   for (const m of (w.meets || []).slice(0, 2)) items.push(`<li><span>${esc(m.s)} <small>meeting</small></span><em class="tag">${hhmm(m.t)}</em></li>`);
   for (const r of (S.rems || []).slice(0, 2)) items.push(`<li><span>${esc(r.t)} <small>reminder</small></span><em class="tag">${esc(r.w)}</em></li>`);
-  $('#upList').innerHTML = items.slice(0, 4).join('') || '<li class="empty">Nothing coming up. Enjoy the calm.</li>';
+  setHtml($('#upList'), items.slice(0, 4).join('') || '<li class="empty">Nothing coming up. Enjoy the calm.</li>');
 }
 
 // ------------------------------------------------------------ AI tools
@@ -327,12 +335,13 @@ async function loadTools() {
 async function loadSettings() {
   const s = await lil.settings();
   $('#ver').textContent = `lil.mate Desk ${s.version} · ${s.platform}`;
-  $('#autoCheck').checked = s.autoCheck !== false; $('#follow').checked = s.follow !== false;
+  if (!$('#ssid').value) lil.wifiNow().then(n => { if (n && !$('#ssid').value) $('#ssid').value = n; });
+  $('#autoCheck').checked = s.autoCheck !== false; $('#follow').checked = s.follow !== false; $('#ble').checked = s.ble !== false;
   $('#host').value = s.host || ''; $('#autostart').checked = !!s.autostart; $('#approve').checked = s.approve !== false;
   const ds = await lil.displays();
   $('#screens').innerHTML = ds.map(d => `<option value="${d.id}" ${d.current ? 'selected' : ''}>${esc(d.label)}</option>`).join('');
   $('#calState').textContent = s.ics ? 'Calendar connected. Paste a new link to change it.' : 'Paste your private iCal link for meeting heads-ups.';
-  $('#setConn').textContent = S.offline || !S.conn ? 'Not connected' : `${S.conn.kind === 'usb' ? 'USB cable' : 'Wi-Fi'} · ${S.conn.where || ''}`;
+  $('#setConn').textContent = S.offline || !S.conn ? 'Not connected' : `${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[S.conn.kind] || 'Wi-Fi')} · ${S.conn.where || ''}`;
 }
 $('#hostSave').onclick = async () => { await lil.setSettings({ host: $('#host').value.trim() }); toast('Saved. Connecting…'); };
 $('#wifiSave').onclick = async () => { const r = await lil.setWifi($('#ssid').value.trim(), $('#wpass').value); toast(r.ok ? 'Sent. lil.mate restarts and joins Wi-Fi.' : r.error); if (r.ok) $('#wpass').value = ''; };
@@ -343,6 +352,7 @@ $('#icsSave').onclick = async () => {
 $('#autostart').onchange = e => lil.setSettings({ autostart: e.target.checked });
 $('#approve').onchange = e => lil.setSettings({ approve: e.target.checked });
 $('#follow').onchange = e => lil.setSettings({ follow: e.target.checked });
+$('#ble').onchange = e => lil.setSettings({ ble: e.target.checked });
 
 // ------------------------------------------------------------ tidy Downloads / Desktop
 let tidySure = null;

@@ -23,9 +23,15 @@ Later updates can go over Wi-Fi: dashboard → Settings → Firmware → upload 
 
 1. The OLED shows a QR code. Scan it with your phone to join the **Lilmate-XXXX** hotspot.
 2. The setup page opens (or go to `192.168.4.1`). Pick your 2.4 GHz Wi-Fi, enter your name and city (optional; it uses your IP's location if left blank).
-3. Lilmate restarts and joins your Wi-Fi. Open **http://lilmate.local** (or the IP on the INFO screen; hold on INFO to show a QR).
+3. Lilmate **tries the password before saving it** (the screen says JOINING…). The page then shows
+   **✓ Connected!** with an *Open my lil.mate* button and the address, or says what went wrong
+   (wrong password / network not found) so you can try again right there.
+4. It restarts onto your Wi-Fi and shows **"I'm online!"** with a QR to its dashboard for 2 minutes (tap to close).
 
-Over USB instead: `/wifi MyNetwork|password` in the serial console.
+Each buddy has its own name on the network: **http://lilmate-XXXX.local** (the same 4 characters as its hotspot,
+shown on the INFO screen with its IP). lil.mate Desk finds it by itself; you never type an address.
+
+Over USB instead: lil.mate Desk → Settings → *Wi-Fi for lil.mate* (the computer's Wi-Fi name is filled in), or `/wifi MyNetwork|password` in the serial console.
 
 ## Touch controls
 
@@ -121,8 +127,14 @@ Battery models: Li-ion → TP4056 → switch → ESP32 5V. Optional battery sens
 
 ## Office: no Wi-Fi needed
 
-- If the saved Wi-Fi isn't around, lil.mate stays a normal buddy (offline mode) and retries every 5 min.
-  The setup hotspot only opens on demand (INFO screen, hold 4 s).
+- If the saved Wi-Fi isn't around, lil.mate stays a normal buddy (offline mode) and looks for it again every minute,
+  so it is back on the home Wi-Fi about a minute after you get home. The setup hotspot only opens on demand (INFO screen, hold 4 s).
+- **lil.mate Desk over Bluetooth:** plug the buddy into the office laptop once; Desk learns its id and a link key.
+  After that, when the cable is out and there is no Wi-Fi, Desk links over Bluetooth by itself (no Windows pairing, no driver),
+  and switches back to the cable when you plug it in. Bluetooth turns on by itself one minute after the buddy finds no Wi-Fi.
+  The link key means a phone or laptop nearby can't read your tasks or send commands. Protocol: the same lines as USB,
+  on characteristics `…6505…` (write) and `…6506…` (notify) of the update service; the first line must be `@auth <key>`
+  (`@hello` over USB returns `id`, `key`, `ssid`, `ip`).
 - Plug it into the laptop and run `lilmate_agent.py run`: hooks, PC stats and clock sync go over the USB cable
   (`pip install pyserial`). It shows up as a plain USB serial device; no driver.
 
@@ -154,7 +166,7 @@ Lilmate gets angry and says "Back to focus!". This needs X11 `xdotool` on Linux;
 | Pomodoro (testing) | Full 25/5 focus cycle with stats, plus a focus guard |
 | Telegram alerts and commands | Same, plus a reply keyboard and a morning summary |
 | Weather idle screen | Clock + Open-Meteo weather, auto location and timezone |
-| Troko Center (USB web flasher) | Wi-Fi setup QR, `lilmate.local` dashboard, browser firmware update |
+| Troko Center (USB web flasher) | Wi-Fi setup QR, `lilmate-XXXX.local` dashboard, browser firmware update |
 | PC agent (open apps, tidy files) | PC stats, focus guard, `say` and `done` notifications |
 | Daily summary (planned) | Done |
 | Web search, music, camera | Not possible without a mic or speaker (see xiaozhi + INMP441/MAX98357A path) |

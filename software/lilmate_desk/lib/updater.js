@@ -47,7 +47,9 @@ function installKind() {
 }
 
 async function fetchManifest() {
-  const r = await net.fetch(FEED + 'lilmate.json?t=' + Date.now(), { cache: 'no-store' });
+  // 15 s limit: a stalled connection must not leave "Checking…" up forever (and block later checks)
+  const r = await net.fetch(FEED + 'lilmate.json?t=' + Date.now(), { cache: 'no-store', signal: AbortSignal.timeout(15000) })
+    .catch(e => { throw new Error(e.name === 'TimeoutError' || e.name === 'AbortError' ? 'The update server did not answer. Try again later.' : e.message); });
   if (r.status === 404) throw new Error('No releases published yet');
   if (!r.ok) throw new Error(`Update server said ${r.status}`);
   const m = await r.json();
@@ -59,28 +61,38 @@ async function fetchManifest() {
 async function download(entry, onProgress) {
   if (!entry || !entry.file || !/^[\w.+-]+$/.test(entry.file) || !/^[0-9a-f]{64}$/i.test(entry.sha256 || '')) throw new Error('The update info looks broken');
   const url = entry.url && /^https:\/\/(github\.com|objects\.githubusercontent\.com|raw\.githubusercontent\.com)\//.test(entry.url) ? entry.url : FEED + entry.file;
-  const r = await net.fetch(url, { cache: 'no-store' });
-  if (!r.ok) throw new Error(`Download failed (${r.status})`);
-  const total = entry.size || Number(r.headers.get('content-length')) || 0;
+  // no data for 30 s = stalled: give up (otherwise the update stays "downloading" forever and can't be retried)
+  const ctl = new AbortController(); let idle = null;
+  const poke = () => { clearTimeout(idle); idle = setTimeout(() => ctl.abort(), 30000); };
+  poke();
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'lilmate-update-'));
-  const file = path.join(dir, entry.file);
-  const out = fs.createWriteStream(file, { mode: 0o644 });
-  const hash = crypto.createHash('sha256');
-  const reader = r.body.getReader();
-  let got = 0, lastTick = 0;
   try {
-    for (;;) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      hash.update(value); got += value.length;
-      if (!out.write(Buffer.from(value))) await new Promise(res => out.once('drain', res));
-      if (onProgress && Date.now() - lastTick > 150) { lastTick = Date.now(); onProgress(total ? got / total : 0); }
-    }
-  } finally { await new Promise(res => out.end(res)); }
-  if (entry.size && got !== entry.size) throw new Error('Download was incomplete, try again');
-  if (hash.digest('hex') !== entry.sha256.toLowerCase()) { fs.rmSync(dir, { recursive: true, force: true }); throw new Error('Download did not match, try again'); }
-  onProgress && onProgress(1);
-  return file;
+    const r = await net.fetch(url, { cache: 'no-store', signal: ctl.signal });
+    if (!r.ok) throw new Error(`Download failed (${r.status})`);
+    const total = entry.size || Number(r.headers.get('content-length')) || 0;
+    const file = path.join(dir, entry.file);
+    const out = fs.createWriteStream(file, { mode: 0o644 });
+    const hash = crypto.createHash('sha256');
+    const reader = r.body.getReader();
+    let got = 0, lastTick = 0;
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        poke();
+        hash.update(value); got += value.length;
+        if (!out.write(Buffer.from(value))) await new Promise(res => out.once('drain', res));
+        if (onProgress && Date.now() - lastTick > 150) { lastTick = Date.now(); onProgress(total ? got / total : 0); }
+      }
+    } finally { await new Promise(res => out.end(res)); }
+    if (entry.size && got !== entry.size) throw new Error('Download was incomplete, try again');
+    if (hash.digest('hex') !== entry.sha256.toLowerCase()) throw new Error('Download did not match, try again');
+    onProgress && onProgress(1);
+    return file;
+  } catch (e) {
+    fs.rmSync(dir, { recursive: true, force: true });   // never leave half a download behind
+    throw ctl.signal.aborted ? new Error('The download stalled, try again') : e;
+  } finally { clearTimeout(idle); }
 }
 
 function run(cmd, args) {

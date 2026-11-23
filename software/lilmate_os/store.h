@@ -2,6 +2,8 @@
 #pragma once
 #include <Preferences.h>
 #include <time.h>
+#include <esp_mac.h>
+#include <esp_random.h>
 #include "config.h"
 
 struct Task     { char text[TEXT_LEN]; uint8_t done; };
@@ -44,6 +46,7 @@ Task     tasks[MAX_TASKS];  uint8_t nTasks = 0;
 Reminder rems[MAX_REMINDERS]; uint8_t nRems = 0;
 Habit    habits[MAX_HABITS]; uint8_t nHabits = 0;
 int32_t  tgOffset = 0;
+char     linkKey[17] = "";   // 16 hex chars, see storeBegin()
 
 Preferences prefs;
 enum { D_SET = 1, D_TASK = 2, D_REM = 4, D_HAB = 8, D_PET = 16, D_TG = 32 };
@@ -113,6 +116,20 @@ void storeBegin() {
   nRems   = loadArr("rems", rems, MAX_REMINDERS);
   nHabits = loadArr("habits", habits, MAX_HABITS);
   tgOffset = prefs.getInt("tgo", 0);
+  // link key: lil.mate Desk learns it over the USB cable once, then must show it to talk over Bluetooth
+  // (so a phone nearby in the office can't read the tasks or send commands). Kept apart from "set" so its layout stays.
+  // (getString returns the length *with* the closing zero, so check the text itself: the key must survive restarts)
+  if (!prefs.getString("lkey", linkKey, sizeof(linkKey)) || strlen(linkKey) != 16) {
+    for (int i = 0; i < 16; i += 8) snprintf(linkKey + i, 9, "%08lx", (unsigned long)esp_random());
+    prefs.putString("lkey", linkKey);
+  }
+}
+
+// short id from the MAC, the same 4 hex digits as the setup hotspot "Lilmate-XXXX" (lowercase here)
+const char *buddyId() {
+  static char id[5] = "";
+  if (!id[0]) { uint8_t m[6]; esp_read_mac(m, ESP_MAC_WIFI_STA); snprintf(id, sizeof(id), "%02x%02x", m[4], m[5]); }
+  return id;
 }
 
 void storeFlush() {

@@ -17,7 +17,11 @@
 #define BLE_SVC       "6c696c6d-6174-6501-8000-00805f9b34fb"
 #define BLE_CTRL      "6c696c6d-6174-6502-8000-00805f9b34fb"   // write: "begin <size> <md5>" / "abort"; notify: wait|ready|ok <n>|done|err <why>
 #define BLE_DATA      "6c696c6d-6174-6503-8000-00805f9b34fb"   // write without response: firmware bytes
-#define BLE_INFO      "6c696c6d-6174-6504-8000-00805f9b34fb"   // read: {"fw":"0.2.1","name":"…"}
+#define BLE_INFO      "6c696c6d-6174-6504-8000-00805f9b34fb"   // read: {"fw":"0.2.1","name":"…","id":"8b64"}
+// lil.mate Desk over Bluetooth (office, no Wi-Fi): the same text lines as the USB cable ("@state", "@cmd …", "@ev {…}").
+// The first line must be "@auth <link key>" (Desk learns the key over USB once); until then only "@hello" is answered.
+#define BLE_LRX       "6c696c6d-6174-6505-8000-00805f9b34fb"   // write: lines from Desk (any chunking, '\n' ends a line)
+#define BLE_LTX       "6c696c6d-6174-6506-8000-00805f9b34fb"   // notify: reply lines, chunked to the link's MTU
 #define UPD_CHECK_EVERY (24UL * 3600000UL)
 #define BLE_IDLE_OFF_MS (5UL * 60000UL)   // on Wi-Fi, Bluetooth switches itself off after 5 min unused (it holds ~76 KB of RAM)
 
@@ -44,7 +48,9 @@ struct {
   volatile uint32_t size = 0, got = 0, acked = 0, waitSince = 0, startedAt = 0, lastUse = 0;
   volatile bool connected = false, allowed = false, failed = false;
   char md5[33] = "", err[32] = "";
-  BLECharacteristic *ctrl = nullptr;
+  BLECharacteristic *ctrl = nullptr, *ltx = nullptr;
+  BLEServer *srv = nullptr;
+  volatile bool authed = false;
 } bl;
 
 bool otaBusy() { return up.st == U_GETTING || bl.st == B_RECV || bl.st == B_WAIT; }
@@ -138,9 +144,9 @@ static void bleFail(const char *why) {
 }
 
 class BleSrv : public BLEServerCallbacks {
-  void onConnect(BLEServer *) override { bl.connected = true; bl.lastUse = millis(); Serial.println("[ble] connected"); }
+  void onConnect(BLEServer *) override { bl.connected = true; bl.authed = false; bl.lastUse = millis(); Serial.println("[ble] connected"); }
   void onDisconnect(BLEServer *s) override {
-    bl.connected = false; bl.lastUse = millis(); Serial.println("[ble] disconnected");
+    bl.connected = false; bl.authed = false; bl.lastUse = millis(); Serial.println("[ble] disconnected");
     if (bl.st == B_RECV || bl.st == B_WAIT) bleFail("disconnected");
     s->getAdvertising()->start();
   }
@@ -180,23 +186,57 @@ class BleData : public BLECharacteristicCallbacks {
   }
 };
 
+// ------------------------------------------------------------ Bluetooth line link for lil.mate Desk
+// Bytes written to LRX land in a stream buffer (NimBLE task); the main loop reads whole lines out of it (bleLineLoop in
+// the .ino) and runs them like USB lines. Replies go out on LTX through BleOut, a Print that notifies line by line.
+static StreamBufferHandle_t bleRx = nullptr;
+class BleLRx : public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic *c) override {
+    bl.lastUse = millis();
+    size_t n = c->getLength(); uint8_t *p = c->getData();
+    if (n && p && bleRx) xStreamBufferSend(bleRx, p, n, 0);   // a full buffer drops bytes: Desk resends on timeout
+  }
+};
+// notify one reply, split to what this connection's MTU carries (20 bytes on the oldest links, ~500 on most)
+void bleNotify(const char *s, size_t n) {
+  if (!bl.ltx || !bl.connected) return;
+  uint16_t mtu = bl.srv ? bl.srv->getPeerMTU(bl.srv->getConnId()) : 23;
+  size_t ch = mtu > 23 ? min((size_t)mtu - 3, (size_t)240) : 20;
+  for (size_t o = 0; o < n && bl.connected; o += ch) {
+    bl.ltx->setValue((uint8_t *)s + o, min(ch, n - o)); bl.ltx->notify();
+    delay(3);   // let the stack send it before the next one (no congestion drops)
+  }
+}
+class BleOut : public Print {
+ public:
+  String line;
+  size_t write(uint8_t c) override { line += (char)c; if (c == '\n' || line.length() >= 1024) flush(); return 1; }
+  size_t write(const uint8_t *b, size_t n) override { for (size_t i = 0; i < n; i++) write(b[i]); return n; }
+  void flush() override { if (line.length()) { bleNotify(line.c_str(), line.length()); line = ""; } }
+} bleOut;
+
 // started when there is no Wi-Fi (office), or on request (/bluetooth, phone page).
 // On Wi-Fi it switches itself off again after 5 min unused, because it holds ~76 KB of RAM
 // (and a GitHub update check needs ~73 KB). Without Wi-Fi it stays on: nothing else needs the memory then.
-static BleSrv bleSrvCb; static BleCtrl bleCtrlCb; static BleData bleDataCb;   // static: no leak when Bluetooth is turned on again
+static BleSrv bleSrvCb; static BleCtrl bleCtrlCb; static BleData bleDataCb; static BleLRx bleLRxCb;   // static: no leak when Bluetooth is turned on again
 void bleStart() {
   if (bl.st != B_OFF) return;
-  char name[24]; snprintf(name, sizeof(name), "lil.mate %s", S.owner);
+  // "lil.mate Sudarsan 8b64": a friendly name for the web updater's list, the id so lil.mate Desk finds *its* buddy
+  char name[30]; snprintf(name, sizeof(name), "lil.mate %.14s %s", S.owner, buddyId());
+  if (!bleRx) bleRx = xStreamBufferCreate(2048, 1);
   BLEDevice::init(name);
   BLEDevice::setMTU(517);
-  BLEServer *srv = BLEDevice::createServer(); srv->setCallbacks(&bleSrvCb);
-  BLEService *svc = srv->createService(BLE_SVC);
+  BLEServer *srv = BLEDevice::createServer(); srv->setCallbacks(&bleSrvCb); bl.srv = srv;
+  BLEService *svc = srv->createService(BLEUUID(BLE_SVC), 20);   // 20 handles: update (8) + Desk line link (5) + room
   bl.ctrl = svc->createCharacteristic(BLE_CTRL, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
   bl.ctrl->setCallbacks(&bleCtrlCb);
   BLECharacteristic *data = svc->createCharacteristic(BLE_DATA, BLECharacteristic::PROPERTY_WRITE_NR | BLECharacteristic::PROPERTY_WRITE);
   data->setCallbacks(&bleDataCb);
   BLECharacteristic *info = svc->createCharacteristic(BLE_INFO, BLECharacteristic::PROPERTY_READ);
-  String inf = String("{\"fw\":\"") + FW_VERSION + "\",\"name\":\"" + S.owner + "\"}";
+  BLECharacteristic *lrx = svc->createCharacteristic(BLE_LRX, BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_WRITE_NR);
+  lrx->setCallbacks(&bleLRxCb);
+  bl.ltx = svc->createCharacteristic(BLE_LTX, BLECharacteristic::PROPERTY_NOTIFY);
+  String inf = String("{\"fw\":\"") + FW_VERSION + "\",\"name\":\"" + S.owner + "\",\"id\":\"" + buddyId() + "\"}";
   info->setValue(inf);
   svc->start();
   BLEAdvertising *adv = BLEDevice::getAdvertising();
@@ -205,11 +245,40 @@ void bleStart() {
   bl.st = B_ON; bl.startedAt = bl.lastUse = millis();
   Serial.printf("[ble] advertising as \"%s\" (heap %u)\n", name, (unsigned)ESP.getFreeHeap());
 }
+// How long Bluetooth may sit unused while the buddy is on Wi-Fi (Wi-Fi + Bluetooth together leave little memory):
+// 30 s when it came on because Wi-Fi dropped, 3 min when lil.mate Desk went quiet, 5 min when someone asked for it.
+uint32_t bleIdleMs = BLE_IDLE_OFF_MS;
+uint32_t deskSeenAt = 0;   // last status request from lil.mate Desk over Wi-Fi ("/api/state?desk=1")
+
+// which way lil.mate Desk talks to us right now (USB cable, Wi-Fi or Bluetooth); a short banner on the screen when it changes
+enum : uint8_t { DV_NONE, DV_USB, DV_WIFI, DV_BLE };
+static const char *DV_TEXT[] = { "Desk disconnected", "Desk on USB", "Desk on Wi-Fi", "Desk on Bluetooth" };
+uint32_t deskAt[4] = {};             // last line / status request heard from Desk on each way
+uint8_t  deskVia = DV_NONE;
+uint32_t deskBannerAt = 0;
+void deskHeard(uint8_t v) { deskAt[v] = millis() | 1; }
+void deskViaTick() {
+  uint32_t now = millis();
+  // keep the current way while Desk still uses it (it asks every 2 s): a one-off Wi-Fi check while on Bluetooth must not flicker
+  if (deskVia != DV_NONE && now - deskAt[deskVia] < 5000) return;
+  uint8_t best = DV_NONE; uint32_t bestAge = 15000;   // nothing for 15 s on any way = disconnected
+  for (uint8_t v = DV_USB; v <= DV_BLE; v++) if (deskAt[v] && now - deskAt[v] < bestAge) { bestAge = now - deskAt[v]; best = v; }
+  if (best == deskVia) return;
+  deskVia = best; deskBannerAt = now | 1;
+  Serial.printf("[desk] %s\n", DV_TEXT[best]);
+  if (!asleep) wakeUp(false);   // show it if the screen had gone dark (not at night)
+}
+void deskBannerDraw(uint32_t now) {
+  if (!deskBannerAt || now - deskBannerAt > 3500) return;
+  oled.setDrawColor(0); oled.drawBox(0, 0, 128, 15); oled.setDrawColor(1);
+  oled.drawRFrame(4, 0, 120, 15, 4);
+  centerStr(11, u8g2_font_6x10_tr, DV_TEXT[deskVia]);
+}
 uint8_t bleCycles = 0;   // times Bluetooth was switched off since boot (each one leaves ~2.4 KB the library never frees)
 void bleStop() {
   if (bl.st != B_ON || bl.connected) return;
   bleCycles++;
-  bl.ctrl = nullptr; bl.st = B_OFF;
+  bl.ctrl = bl.ltx = nullptr; bl.srv = nullptr; bl.st = B_OFF; bl.authed = false;
   BLEDevice::deinit(false);   // false: keep the controller's memory so Bluetooth can be turned on again
   Serial.printf("[ble] off (heap %u)\n", (unsigned)ESP.getFreeHeap());
 }
@@ -233,7 +302,13 @@ static void memGuard(uint32_t now) {
 }
 
 // ------------------------------------------------------------ schedule (main loop, once a second)
+// time since t, signed: a stamp taken a moment after "now" (Bluetooth start, a request from another task) counts as 0,
+// not as 49 days (unsigned "now - later" wraps around: Bluetooth went off the instant it came on)
+static inline int32_t since(uint32_t t) { int32_t d = (int32_t)(millis() - t); return d < 0 ? 0 : d; }
+
 void updTick(uint32_t now) {
+  now = millis();
+  deskViaTick();
   static uint32_t bootAt = now;
   // daily check once online and the clock is right (needed to verify certificates)
   if (wifiUp && timeOk() && !otaBusy() && up.st != U_CHECKING &&
@@ -242,13 +317,19 @@ void updTick(uint32_t now) {
   struct tm tm;
   if (up.autoInstall && up.st == U_READY && localNow(tm) && tm.tm_hour == 3 && !up.nightDone && !isBusy()) { up.nightDone = true; up.wantInstall = true; }
   if (localNow(tm) && tm.tm_hour == 4) up.nightDone = false;
-  // no Wi-Fi for a minute (office): offer Bluetooth so a phone can still update the buddy
-  if (bl.st == B_OFF && offlineMode && now - bootAt > 60000 && !apMode) bleStart();
+  // Wi-Fi gone for 10 s (office, router off) or not found since boot, or never given Wi-Fi at all: Bluetooth on, so
+  // lil.mate Desk switches to it within seconds and a phone can still update the buddy
+  bool wifiGone = S.ssid[0] && !apMode && !wifiUp && (offlineMode || (wifiLostAt && now - wifiLostAt > 10000));
+  if (bl.st == B_OFF && (wifiGone || (apMode && !S.ssid[0] && now - bootAt > 60000))) { bleStart(); bleIdleMs = 30000; }
+  // lil.mate Desk was checking in over Wi-Fi and went quiet for 12 s (its laptop lost Wi-Fi, or left): Bluetooth on for
+  // 3 min so it can carry on over Bluetooth. Once per silence; if the laptop just went to sleep, it goes off again.
+  if (bl.st == B_OFF && wifiUp && deskSeenAt && since(deskSeenAt) > 12000) { deskSeenAt = 0; bleStart(); bleIdleMs = 180000; Serial.println("[ble] Desk went quiet on Wi-Fi: Bluetooth on for 3 min"); }
   // back on Wi-Fi and nobody is using Bluetooth: give its memory back (right away if an update wants it)
-  if (bl.st == B_ON && !bl.connected && wifiUp && (now - bl.lastUse > BLE_IDLE_OFF_MS || up.wantCheck || up.wantInstall)) bleStop();
+  // Wi-Fi + Bluetooth together leave little memory: an automatic Bluetooth goes after 30 s unused, an asked-for one after 5 min
+  if (bl.st == B_ON && !bl.connected && wifiUp && (since(bl.lastUse) > (int32_t)bleIdleMs || up.wantCheck || up.wantInstall)) bleStop();
   memGuard(now);
   // nobody held the buddy within 40 s: refuse the Bluetooth update
-  if (bl.st == B_WAIT && now - bl.waitSince > 40000) bleFail("not allowed on the buddy");
+  if (bl.st == B_WAIT && since(bl.waitSince) > 40000) bleFail("not allowed on the buddy");
 }
 
 // ------------------------------------------------------------ screen + touch (take priority over everything)
@@ -333,6 +414,7 @@ String updCommand(const String &argl) {
 }
 String bleCommand() {
   if (bl.st == B_OFF) bleStart(); else bl.lastUse = millis();
+  bleIdleMs = BLE_IDLE_OFF_MS;   // asked for: keep it the full 5 minutes
   return String("🔵 Bluetooth update is on") + (wifiUp ? " for the next 5 minutes" : "") + ". Open the lil.mate updater in Chrome and pick \"lil.mate " + S.owner + "\".";
 }
 void updJson(JsonObject o) {

@@ -12,16 +12,28 @@ const HOME = os.homedir();
 const WIN = process.platform === 'win32';
 const CURL = WIN ? 'curl.exe' : 'curl';   // Windows 10+ ships curl.exe
 
+// a missing or empty file is fine (default); a file we can't parse is NOT: writing over it would lose the person's settings
 function readJson(p, dflt) {
-  try { const raw = fs.readFileSync(p, 'utf8'); return raw.trim() ? JSON.parse(raw) : dflt; } catch (e) { return dflt; }
+  let raw;
+  try { raw = fs.readFileSync(p, 'utf8'); } catch (e) { return dflt; }
+  if (!raw.trim()) return dflt;
+  try { return JSON.parse(raw); }
+  catch (e) { throw new Error(`${p.replace(HOME, '~')} has a typo, so lil.mate left it alone. Fix it, then try again.`); }
 }
+function readJsonQuiet(p, dflt) { try { return readJson(p, dflt); } catch (e) { return dflt; } }   // for status checks only
 function backup(p) {
   if (fs.existsSync(p)) {
     const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\..+/, '').replace('T', '-');
     fs.copyFileSync(p, `${p}.bak-${stamp}`);
   }
 }
-function writeJson(p, obj) { fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, JSON.stringify(obj, null, 2) + '\n'); }
+// these are the person's own tool settings: write a temp file and rename it over, so they are never left half written
+function writeAtomic(p, text) {
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  const tmp = `${p}.lilmate-tmp`;
+  fs.writeFileSync(tmp, text); fs.renameSync(tmp, p);
+}
+function writeJson(p, obj) { writeAtomic(p, JSON.stringify(obj, null, 2) + '\n'); }
 const ours = h => JSON.stringify(h).includes(MARK);
 function curlPost(url) { return `${CURL} -s -m 3 -X POST -H "Content-Type: application/json" --data-binary @- ${url}`; }
 
@@ -48,7 +60,7 @@ function claude(install, opts = {}) {
   }
   backup(CLAUDE); writeJson(CLAUDE, cfg);
 }
-function claudeInstalled() { return JSON.stringify(readJson(CLAUDE, {}).hooks || {}).includes(MARK); }
+function claudeInstalled() { return JSON.stringify(readJsonQuiet(CLAUDE, {}).hooks || {}).includes(MARK); }
 
 // ------------------------------------------------------------ GitHub Copilot in VS Code (~/.copilot/hooks/lilmate.json)
 const COPILOT = path.join(HOME, '.copilot', 'hooks', 'lilmate.json');
@@ -73,7 +85,7 @@ function cursor(install, opts = {}) {
   cfg.version = cfg.version || 1;
   backup(CURSOR); writeJson(CURSOR, cfg);
 }
-const cursorInstalled = () => JSON.stringify(readJson(CURSOR, {})).includes(MARK);
+const cursorInstalled = () => JSON.stringify(readJsonQuiet(CURSOR, {})).includes(MARK);
 
 // ------------------------------------------------------------ Codex CLI (~/.codex/config.toml: notify appends the JSON as the last argument)
 const CODEX = path.join(HOME, '.codex', 'config.toml');
@@ -84,8 +96,8 @@ function codex(install) {
     if (lines.some(l => /^\s*notify\s*=/.test(l))) throw new Error('Codex already has a "notify" setting; add lil.mate by hand');
     lines.unshift('notify = ' + JSON.stringify([CURL, '-s', '-m', '3', '-H', 'Content-Type: application/json', `${BASE}/hook/codex`, '-d']));
   }
-  backup(CODEX); fs.mkdirSync(path.dirname(CODEX), { recursive: true });
-  fs.writeFileSync(CODEX, lines.join('\n').replace(/\n*$/, '\n'));
+  backup(CODEX);
+  writeAtomic(CODEX, lines.join('\n').replace(/\n*$/, '\n'));
 }
 const codexInstalled = () => fs.existsSync(CODEX) && fs.readFileSync(CODEX, 'utf8').includes(MARK);
 
