@@ -76,9 +76,17 @@ remind me in 1 hour 30 min to call   remind me to stretch at 6pm
 /say hello   /face happy|love|cool|sad|angry|laugh|wink|sleep|dizzy|...
 /pat   /play fly|ball   /screen clock|focus|tasks|habits|pc|game|info|face
 /weather   /city Chennai|auto   /name Sudarsan   /tz IST-5:30|auto
-/brightness 0-255   /sleep   /wake   /unpair   /info   /resets   /reboot   /wifireset
+/brightness 0-255   /sleep   /wake   /unpair   /info   /resets   /reboot   /wifireset   /factoryreset
 USB only: /wifi SSID|password   /sim tap|double|triple|long|vlong   /state
 ```
+
+### Factory reset
+Erases Wi-Fi, name, Telegram, tasks, reminders, habits, pet stats and the Desk pairing key; the buddy restarts with the setup hotspot like a new one.
+
+- **Buddy only:** switch it off and on 5 times in a row (switch off again as soon as the face shows, each time within 8 s). On the 5th, leave it on.
+- **lil.mate Desk:** Settings > Reset lil.mate > Reset… (or send `/factoryreset` from the phone page or Telegram).
+
+Either way the buddy shows *FACTORY RESET?* for 20 s: **hold it 3 s** to erase, tap to cancel. Nothing is erased without that hold.
 
 ## AI agent buddy (Claude Code first; Copilot / Cursor / Codex next)
 

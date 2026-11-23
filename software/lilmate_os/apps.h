@@ -372,6 +372,49 @@ bool welcomeDraw(uint32_t now) {
 }
 bool welcomeTouch(TouchEv e) { if (!welcomeUntil || millis() > welcomeUntil) return false; if (e == T_TAP1) { welcomeUntil = 0; return true; } return false; }
 
+// ============================================================ factory reset
+// Two ways in: switch the buddy off and on 5 times in a row (each time off again within 8 s), or "/factoryreset"
+// (lil.mate Desk > Settings, the phone page, Telegram). Either way it only erases after a 3 s hold on the buddy itself:
+// nobody can wipe it over the network, and a flick of the switch by accident does nothing.
+#define FR_HOLD_MS 3000
+uint32_t frUntil = 0;
+uint8_t  pwrCount = 0;   // power-ons in a row (set in setup)
+void factoryResetAsk() { frUntil = millis() + 20000; wakeUp(false); Serial.println("[reset] asking: hold 3 s to erase"); }
+void factoryResetNow() {
+  oled.clearBuffer(); centerStr(30, u8g2_font_7x14B_tr, "ERASING..."); centerStr(46, u8g2_font_5x7_tr, "back to a new lil.mate"); oled.sendBuffer();
+  Serial.println("[reset] factory reset: erasing everything");
+  prefs.clear();                 // settings, Wi-Fi, owner, Telegram, tasks, reminders, habits, pet, Desk link key
+  prefs.end();
+  WiFi.disconnect(true, true);   // the Wi-Fi driver's own saved network too
+  delay(800); ESP.restart();     // comes back with the setup hotspot, like a new one
+}
+void factoryTick() {
+  static bool counted = false;
+  if (counted || millis() < 8000) return;
+  counted = true;                // up for 8 s: this power-on doesn't count toward the 5
+  if (prefs.getUChar("pwrc", 0)) prefs.putUChar("pwrc", 0);
+  if (pwrCount >= 5) factoryResetAsk();
+}
+bool factoryDraw(uint32_t now) {
+  if (!frUntil) return false;
+  if ((int32_t)(millis() - frUntil) > 0) { frUntil = 0; faceSay("Reset cancelled"); return false; }
+  header("FACTORY RESET?", "");
+  centerStr(27, u8g2_font_5x7_tr, "erases Wi-Fi, tasks, all");
+  uint32_t h = touchHeldMs();
+  if (h) {
+    oled.drawFrame(14, 33, 100, 8); oled.drawBox(16, 35, min(h, (uint32_t)FR_HOLD_MS) * 96 / FR_HOLD_MS, 4);
+    if (h >= FR_HOLD_MS) factoryResetNow();
+  } else centerStr(41, u8g2_font_6x10_tr, "hold me 3 s = erase");
+  centerStr(52, u8g2_font_5x7_tr, "tap = cancel");
+  char b[8]; snprintf(b, sizeof(b), "%lus", (unsigned long)((frUntil - millis()) / 1000 + 1)); centerStr(63, u8g2_font_5x7_tr, b);
+  return true;
+}
+bool factoryTouch(TouchEv e) {
+  if (!frUntil) return false;
+  if (e == T_TAP1 || e == T_TAP2 || e == T_TAP3) { frUntil = 0; faceSay("Reset cancelled"); }
+  return true;                   // while asking, every touch belongs to this screen
+}
+
 void drawSetup(uint32_t now) {
   // the setup page is trying the Wi-Fi it was given: say so on the buddy too
   if (wsTry.st == 1 || wsTry.st == 2 || ((wsTry.st >= 3) && now - wsTry.shownAt < 8000)) {
@@ -539,13 +582,14 @@ void handleTouch(uint32_t now) {
     if (e == T_PRESS && (asleep || displayOff)) { wakeUp(true); swallowGesture = true; continue; }
     if (swallowGesture) { if (e == T_TAP1 || e == T_TAP2 || e == T_TAP3 || e == T_LONG) swallowGesture = false; continue; }
     markActivity();
+    if (frUntil && factoryTouch(e)) continue;   // also in setup mode (a reset is often wanted there)
     if (apMode) continue;
     if (al.active) {
       if (e == T_TAP1 || e == T_TAP2 || e == T_TAP3) dismissAlert(false);
       else if (e == T_LONG) dismissAlert(true);
       continue;
     }
-    if (updTouch(e) || welcomeTouch(e) || celebrateTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
+    if (updTouch(e) || factoryTouch(e) || welcomeTouch(e) || celebrateTouch(e) || (linkBusy() ? linkTouch(e) : (agentTouch(e) || workTouch(e) || linkTouch(e)))) continue;   // updates first   // matches, agent prompts, breathe / wrap-up, invites
     if (screen == S_GAME && gm.playing) { onScreenGesture(e, now); continue; }  // raw presses, no tap counting
     if (e == T_TAP2) { nextScreen(); continue; }
     if (e == T_TAP3 && screen != S_FACE) { screen = S_FACE; continue; }
@@ -653,7 +697,8 @@ void brainTick(uint32_t now) {
 // ============================================================ render
 void render(uint32_t now) {
   oled.clearBuffer();
-  if (apMode) drawSetup(now);
+  if (factoryDraw(now)) {}
+  else if (apMode) drawSetup(now);
   else if (updDraw(now) || welcomeDraw(now) || celebrateDraw(now) || (linkBusy() ? linkDraw(now) : (agentDraw(now) || workDraw(now) || linkDraw(now)))) {}   // same priority as touch
   else switch (screen) {
     case S_FACE:   faceDraw(now); if (isBusy()) drawDndIcon(1, 0); drawBatteryIcon(114, 0); break;

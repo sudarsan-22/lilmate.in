@@ -343,6 +343,7 @@ String runCommand(String line, Source src, const char *from = "") {
   if (cmd == "brightness" || cmd == "contrast") { S.contrast = constrain(arg.toInt(), 1, 255); oled.setContrast(S.contrast); markDirty(D_SET); return "🔆 Brightness " + String(S.contrast); }
   if (cmd == "unpair") { S.tgChat[0] = 0; markDirty(D_SET); return "Telegram unpaired. The next /start will pair."; }
   if (cmd == "reboot") { diagRestart(SW_CMD); storeFlush(); delay(200); ESP.restart(); return ""; }
+  if (cmd == "factoryreset" || cmd == "factory-reset") { factoryResetAsk(); return "⚠️ Look at lil.mate: hold it 3 s to erase everything, or tap it to cancel (20 s)."; }
   if (cmd == "wifireset") { S.ssid[0] = 0; S.pass[0] = 0; markDirty(D_SET); storeFlush(); diagRestart(SW_CMD); delay(200); ESP.restart(); return ""; }
   if (cmd == "update" || cmd == "upgrade" || cmd == "version") return updCommand(argl);
   if (cmd == "bluetooth" || cmd == "ble") return bleCommand();

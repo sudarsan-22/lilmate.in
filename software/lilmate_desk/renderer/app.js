@@ -376,6 +376,11 @@ $('#tidyList').addEventListener('click', async e => {
   }
 });
 $('#openDash').onclick = () => lil.openDashboard();
+$('#factoryReset').onclick = () => {
+  if (S.offline) return toast('Connect lil.mate first');
+  if (!confirm('Reset lil.mate to factory settings?\n\nIt forgets its Wi-Fi, tasks, reminders, habits and this computer. Hold lil.mate for 3 seconds to confirm, or tap it to cancel.')) return;
+  run('/factoryreset');
+};
 $('#screens').onchange = e => { lil.moveTo(e.target.value); toast('Moved'); };
 $('#posReset').onclick = () => { lil.resetPos(); toast('Back to the centre'); setTimeout(loadSettings, 300); };
 

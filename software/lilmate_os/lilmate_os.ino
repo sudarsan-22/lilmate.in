@@ -241,6 +241,9 @@ void setup() {
   delay(50);
   Serial.println("\n== " FW_NAME " " FW_VERSION " ==");
   storeBegin();
+  // factory reset by the power switch: count power-ons that don't last 8 s (see factoryTick)
+  if (esp_reset_reason() == ESP_RST_POWERON) { pwrCount = prefs.getUChar("pwrc", 0) + 1; prefs.putUChar("pwrc", pwrCount); Serial.printf("[reset] power-on %u in a row\n", pwrCount); }
+  else if (prefs.getUChar("pwrc", 0)) prefs.putUChar("pwrc", 0);
   diagBoot();
   workBegin();
   powerBegin();
@@ -282,7 +285,7 @@ void loop() {
   static uint32_t lastBrain = 0, lastFrame = 0;
   diagStage(ST_WIFI); linkLoop();
   now = millis();   // handlers above may have stamped events with a newer millis(); never subtract into the past
-  if (now - lastBrain >= 1000) { lastBrain = now; diagTick(); memTick(); diagStage(ST_BRAIN); brainTick(now); agentTick(now); workTick(now); powerTick(now); updTick(now); }
+  if (now - lastBrain >= 1000) { lastBrain = now; diagTick(); memTick(); diagStage(ST_BRAIN); brainTick(now); agentTick(now); workTick(now); powerTick(now); updTick(now); factoryTick(); }
   if (now - lastFrame >= frameMs) {
     lastFrame = now;
     diagStage(ST_RENDER);
