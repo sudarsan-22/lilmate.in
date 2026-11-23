@@ -274,9 +274,9 @@ void gameJson(JsonObject g) {
 void buildState(JsonDocument &d) {
   struct tm tm; char tb[8] = "";
   if (localNow(tm)) strftime(tb, sizeof(tb), "%H:%M", &tm);
-  d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; d["id"] = buddyId(); d["host"] = mdnsHost() + ".local"; updJson(d["upd"].to<JsonObject>()); d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
+  d["fw"] = FW_NAME " " FW_VERSION; d["ver"] = FW_VERSION; d["id"] = buddyId(); d["kh"] = keyHash(); d["pair"] = pairing(); d["host"] = mdnsHost() + ".local"; updJson(d["upd"].to<JsonObject>()); d["ip"] = WiFi.localIP().toString(); d["rssi"] = WiFi.RSSI(); d["up"] = millis() / 1000;
   d["time"] = tb; d["mood"] = MOOD_NAMES[mood]; d["screen"] = SCREEN_NAMES[screen];
-  d["boot"] = bootCount; d["lastReset"] = resetLine(lastReset); d["minHeap"] = ESP.getMinFreeHeap(); d["heap"] = ESP.getFreeHeap(); d["block"] = ESP.getMaxAllocHeap();
+  d["boot"] = bootCount; d["lastReset"] = resetLine(lastReset); d["minHeap"] = ESP.getMinFreeHeap(); d["heap"] = ESP.getFreeHeap(); d["block"] = ESP.getMaxAllocHeap(); d["lag"] = lagMs; d["lagIn"] = STAGE_NAMES[lagStage < 11 ? lagStage : 0];
   d["happy"] = pet.happy; d["pats"] = pet.pats; d["asleep"] = asleep;
   JsonObject w = d["wx"].to<JsonObject>();
   w["ok"] = wx.ok; w["temp"] = wx.temp; w["text"] = wxText(wx.code); w["place"] = wx.place; w["max"] = wx.tmax; w["min"] = wx.tmin;
@@ -389,6 +389,7 @@ void handleGame() {   // GET /api/game?k=L|R|T|X  (k optional = just read the sc
 void webBegin() {
   server.on("/", HTTP_GET, [] { server.send_P(200, "text/html; charset=utf-8", apMode ? SETUP : DASH); });
   server.on("/s.css", HTTP_GET, [] { server.sendHeader("Cache-Control", "max-age=86400"); server.send_P(200, "text/css", CSS); });
+  server.on("/api/pair", HTTP_POST, [] { server.send(200, "application/json", pairReply(pairTry(server.arg("code")))); });   // Desk "Add a lil.mate" over Wi-Fi
   server.on("/api/state", HTTP_GET, [] { if (server.hasArg("desk")) { deskSeenAt = millis(); deskHeard(DV_WIFI); } sendState(); });   // desk=1: lil.mate Desk (see updTick)
   server.on("/api/cmd", HTTP_POST, [] {
     // text/plain body (dashboard, agent) or form field c=... (curl -d, HTML forms)

@@ -221,6 +221,13 @@ async function pollOnce() {
     const s = await link.state();
     lastState = s; lastStateAt = Date.now();
     noteFirmware(s);
+    // a buddy on Wi-Fi whose key is no longer ours (factory reset, handed to someone else): let go of it
+    if (link.kind === 'wifi' && s.id && device.ownership(settings, s.id, s.kh) !== 'ok' && device.ownership(settings, s.id, s.kh) !== 'old') {
+      log(`wifi: ${s.id} has a new key (reset?): not linking`);
+      device.hint.text = `lil.mate ${s.id} was reset: pair it again (Settings → Add a lil.mate, or plug it in by USB once).`;
+      try { link.close(); } catch (x) {} link = null; send('link', { kind: 'none' }); send('state', { offline: true, hint: device.hint.text });
+      return;
+    }
     // on the cable, a buddy we don't have the key of yet (it was on older firmware when plugged in, or just got
     // updated): ask it now instead of only when the cable was connected
     if (link.kind === 'usb' && s.id && !(settings.buddies && settings.buddies[s.id] && settings.buddies[s.id].key) && Date.now() > learnAt) {
@@ -280,7 +287,7 @@ function cpuPercent() {
 }
 const sampleActivity = () => { activity.push(powerMonitor.getSystemIdleTime() < 3 ? 1 : 0); if (activity.length > 180) activity.shift(); };   // started in whenReady
 async function pushPc() {
-  if (!link || link.updating) return;
+  if (!link || link.updating || gameOn) return;   // during a game only the game talks to the buddy
   const act = activity.length ? Math.round(activity.reduce((a, b) => a + b, 0) / activity.length * 100) / 100 : 0;
   const p = { cpu: cpuPercent(), ram: Math.round((1 - os.freemem() / os.totalmem()) * 1000) / 10, bat: battery.level, charging: battery.charging,
               host: os.hostname().slice(0, 20), title: '', act };
@@ -439,7 +446,7 @@ function cursorTick() {
   lastCur = p;
   const b = win.getBounds();
   send('cursor', { dx: p.x - (b.x + b.width / 2), dy: p.y - (b.y + 20) });
-  if (settings.follow === false || !link || link.updating || Date.now() - lastLook < ({ usb: 250, ble: 400 }[link.kind] || 800)) return;
+  if (settings.follow === false || !link || link.updating || gameOn || Date.now() - lastLook < ({ usb: 250, ble: 400 }[link.kind] || 800)) return;
   lastLook = Date.now();
   const all = screen.getAllDisplays(), minX = Math.min(...all.map(d => d.bounds.x)), maxX = Math.max(...all.map(d => d.bounds.x + d.bounds.width));
   const d = screen.getDisplayNearestPoint(p);
@@ -480,7 +487,18 @@ ipcMain.handle('settings:set', async (_e, patch) => {
   if ('ics' in patch && settings.ics) { try { calEvents = await fetchCalendar(settings.ics); calFetched = Date.now(); calTick(); return { ok: true, meetings: calEvents }; } catch (e) { return { ok: false, error: 'Could not read that calendar link' }; } }
   return { ok: true };
 });
-const calTick = () => calendarTick().catch(() => {});
+const calTick = () => gameOn ? null : calendarTick().catch(() => {});
+ipcMain.handle('buddy:pair', async (_e, code) => {
+  try {
+    if (link) { try { link.close(); } catch (x) {} link = null; send('link', { kind: 'none' }); }   // Bluetooth has one connection
+    const r = await device.pair(code, settings);
+    settings.buddies = settings.buddies || {};
+    settings.buddies[r.id] = { ...(settings.buddies[r.id] || {}), key: r.key, name: r.name || '', ssid: r.ssid || '', ip: r.ip || '' };
+    settings.lastBuddy = r.id; device.hint.text = ''; saveSettings();
+    setTimeout(pollState, 1500);   // the buddy restarts Bluetooth under its normal name; link again shortly
+    return { ok: true, id: r.id, name: r.name };
+  } catch (e) { log('pair: ' + e.message); setTimeout(pollState, 500); return { ok: false, error: e.message }; }
+});
 ipcMain.handle('wifi:set', async (_e, ssid, pass) => { await ensureLink(); if (!link || link.kind !== 'usb') return { ok: false, error: 'Plug lil.mate into this computer with the USB cable first' }; link.setWifi(ssid, pass); return { ok: true }; });
 // the Wi-Fi this computer is on, to fill in the "Wi-Fi for lil.mate" form (the person only types the password)
 ipcMain.handle('wifi:current', () => new Promise(resolve => {

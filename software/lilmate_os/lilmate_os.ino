@@ -131,7 +131,7 @@ bool pcLine(const String &line, Print &out, bool trusted) {
   if (line == "@gm") { JsonDocument d; gameJson(d["game"].to<JsonObject>()); linkJson(d["link"].to<JsonObject>()); out.print("@gm "); serializeJson(d, out); out.println(); return true; }
   // who are you: id = MAC digits (stable), key = the Bluetooth link key (USB only), ssid = saved Wi-Fi, ip when online
   if (line.startsWith("@hello")) {
-    out.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\",\"id\":\"%s\"", FW_VERSION, S.owner, buddyId());
+    out.printf("@hi {\"fw\":\"%s\",\"name\":\"%s\",\"id\":\"%s\",\"kh\":\"%s\"", FW_VERSION, S.owner, buddyId(), keyHash());
     if (trusted) out.printf(",\"key\":\"%s\",\"ssid\":\"%s\",\"ip\":\"%s\"", linkKey, S.ssid, wifiUp ? WiFi.localIP().toString().c_str() : "");
     out.println("}");
     return true;
@@ -157,6 +157,12 @@ void bleLineLoop() {
         bl.authed = line.substring(6) == linkKey;
         bleOut.println(bl.authed ? "@ok" : "@err key");
         Serial.printf("[ble] Desk %s\n", bl.authed ? "linked" : "wrong key");
+        continue;
+      }
+      if (line.startsWith("@pair ")) {         // "Add a lil.mate" in Desk: the code on the buddy's screen gives the key
+        int r = pairTry(line.substring(6));
+        if (r == 1) bl.authed = true;
+        bleOut.print("@pair "); bleOut.println(pairReply(r));
         continue;
       }
       if (line.startsWith("@hello")) { pcLine(line, bleOut, false); continue; }

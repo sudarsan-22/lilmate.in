@@ -10,6 +10,7 @@
 #include <NetworkClientSecure.h>
 #include <BLEDevice.h>
 #include <BLEServer.h>
+#include <mbedtls/sha256.h>
 #include "config.h"
 #include "roots.h"
 
@@ -220,10 +221,14 @@ class BleOut : public Print {
 // On Wi-Fi it switches itself off again after 5 min unused, because it holds ~76 KB of RAM
 // (and a GitHub update check needs ~73 KB). Without Wi-Fi it stays on: nothing else needs the memory then.
 static BleSrv bleSrvCb; static BleCtrl bleCtrlCb; static BleData bleDataCb; static BleLRx bleLRxCb;   // static: no leak when Bluetooth is turned on again
+bool pairing();
 void bleStart() {
   if (bl.st != B_OFF) return;
-  // "lil.mate Sudarsan 8b64": a friendly name for the web updater's list, the id so lil.mate Desk finds *its* buddy
-  char name[30]; snprintf(name, sizeof(name), "lil.mate %.14s %s", S.owner, buddyId());
+  // "lil.mate Sudarsan 8b64": a friendly name for the web updater's list, the id so lil.mate Desk finds *its* buddy.
+  // While pairing: "lil.mate pair 8b64", so Desk's "Add a lil.mate" finds the one waiting for a computer.
+  char name[30];
+  if (pairing()) snprintf(name, sizeof(name), "lil.mate pair %s", buddyId());
+  else snprintf(name, sizeof(name), "lil.mate %.14s %s", S.owner, buddyId());
   if (!bleRx) bleRx = xStreamBufferCreate(2048, 1);
   BLEDevice::init(name);
   BLEDevice::setMTU(517);
@@ -275,6 +280,75 @@ void deskBannerDraw(uint32_t now) {
   oled.drawRFrame(4, 0, 120, 15, 4);
   centerStr(11, u8g2_font_6x10_tr, DV_TEXT[deskVia]);
 }
+// ------------------------------------------------------------ pairing a computer without the cable
+// Info screen > "pair computer" > hold: a 6-digit code shows for 2 min, Bluetooth comes on as "lil.mate pair <id>" and
+// /api/state says "pair": true. lil.mate Desk (Settings > Add a lil.mate) sends the code over Bluetooth ("@pair 123456")
+// or Wi-Fi (POST /api/pair?code=123456) and gets the link key back. 5 wrong codes end it. The USB cable still works too.
+struct { uint32_t until = 0, okAt = 0; char code[7] = ""; uint8_t tries = 0; bool bleName = false; } pr;
+bool pairing() { return pr.until && (int32_t)(millis() - pr.until) < 0; }
+// a short fingerprint of the link key (never the key): Desk checks it, so a buddy that was reset (new key) is no longer
+// taken for the old owner's, over Wi-Fi too
+const char *keyHash() {
+  static char h[7] = "";
+  static char of[17] = "";
+  if (strcmp(of, linkKey)) {
+    uint8_t d[32]; mbedtls_sha256((const uint8_t *)linkKey, strlen(linkKey), d, 0);
+    snprintf(h, sizeof(h), "%02x%02x%02x", d[0], d[1], d[2]); copyStr(of, linkKey, sizeof(of));
+  }
+  return h;
+}
+void bleStop();
+void pairStart() {
+  snprintf(pr.code, sizeof(pr.code), "%06lu", (unsigned long)(esp_random() % 1000000));
+  pr.until = (millis() + 120000) | 1; pr.tries = 0; pr.okAt = 0;
+  // Bluetooth under the pairing name (restarted if it was on under the normal one and no computer is on it)
+  if (bl.st == B_ON && !bl.connected) bleStop();
+  if (bl.st == B_OFF) bleStart();
+  pr.bleName = true; bleIdleMs = 150000; bl.lastUse = millis();
+  wakeUp(false);
+  Serial.println("[pair] waiting for a computer (2 min)");
+}
+// 1 = right code, 0 = wrong, -1 = not pairing
+int pairTry(const String &code) {
+  if (!pairing()) return -1;
+  String c = code; c.trim();
+  if (c.length() == 6 && c == pr.code) { pr.until = 0; pr.okAt = millis() | 1; Serial.println("[pair] computer paired"); return 1; }
+  if (++pr.tries >= 5) { pr.until = 0; faceSay("Pairing stopped"); Serial.println("[pair] 5 wrong codes: stopped"); }
+  return 0;
+}
+String pairReply(int r) {
+  JsonDocument d;
+  d["ok"] = r == 1;
+  if (r == 1) { d["id"] = buddyId(); d["name"] = S.owner; d["key"] = linkKey; d["ssid"] = S.ssid; d["ip"] = wifiUp ? WiFi.localIP().toString() : ""; }
+  else d["e"] = r == 0 ? (pairing() ? "wrong code" : "wrong code, pairing stopped") : "not in pairing mode";
+  String o; serializeJson(d, o); return o;
+}
+// once a second: pairing over, put Bluetooth back under its normal name (it comes back by itself where it's needed)
+void pairTick() {
+  if (pr.bleName && !pairing() && bl.st == B_ON && !bl.connected) { pr.bleName = false; pr.until = 0; bleStop(); }
+  else if (pr.bleName && bl.st == B_OFF) pr.bleName = false;
+}
+bool pairDraw(uint32_t now) {
+  now = millis();
+  if (pr.okAt && now - pr.okAt < 3500) { header("PAIRED!", ""); centerStr(36, u8g2_font_7x14B_tr, "computer added"); centerStr(56, u8g2_font_5x7_tr, "lil.mate Desk can link now"); return true; }
+  if (!pairing()) return false;
+  header("PAIR A COMPUTER", "");
+  char a[4], b[4]; memcpy(a, pr.code, 3); a[3] = 0; memcpy(b, pr.code + 3, 3); b[3] = 0;
+  oled.setFont(u8g2_font_logisoso24_tn);
+  int wa = oled.getStrWidth(a), wb = oled.getStrWidth(b), x = (128 - wa - wb - 10) / 2;
+  oled.drawStr(x, 44, a); oled.drawStr(x + wa + 10, 44, b);
+  centerStr(54, u8g2_font_5x7_tr, "type it in lil.mate Desk");
+  char t[24]; snprintf(t, sizeof(t), "tap = cancel  %lus", (unsigned long)((pr.until - now) / 1000 + 1));
+  centerStr(63, u8g2_font_5x7_tr, t);
+  return true;
+}
+bool pairTouch(TouchEv e) {
+  if (pr.okAt && millis() - pr.okAt < 3500) { if (e == T_TAP1) pr.okAt = 0; return e != T_PRESS && e != T_RELEASE; }
+  if (!pairing()) return false;
+  if (e == T_TAP1 || e == T_TAP2 || e == T_TAP3) { pr.until = 0; faceSay("Pairing cancelled"); }
+  return true;
+}
+
 uint8_t bleCycles = 0;   // times Bluetooth was switched off since boot (each one leaves ~2.4 KB the library never frees)
 void bleStop() {
   if (bl.st != B_ON || bl.connected) return;
@@ -310,6 +384,7 @@ static inline int32_t since(uint32_t t) { int32_t d = (int32_t)(millis() - t); r
 void updTick(uint32_t now) {
   now = millis();
   deskViaTick();
+  pairTick();
   static uint32_t bootAt = now;
   // daily check once online and the clock is right (needed to verify certificates)
   if (wifiUp && timeOk() && !otaBusy() && up.st != U_CHECKING &&

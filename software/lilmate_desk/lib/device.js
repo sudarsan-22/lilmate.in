@@ -134,7 +134,7 @@ class BleLink extends LineLink {
     this.ble.bus.on('data', this._onData); this.ble.bus.on('gone', this._onGone);
     this.alive = true;
     try { await this._request('@auth ' + this.key, '@ok', 4000); }
-    catch (e) { this.close(); throw new Error(/key/.test(e.message) ? 'lil.mate did not accept this computer (plug it in by USB once)' : e.message); }
+    catch (e) { this.close(); throw new Error(/key/.test(e.message) ? 'lil.mate did not accept this computer (pair it again)' : e.message); }
     return this;
   }
   _off() { if (this.ble) { this.ble.bus.off('data', this._onData); this.ble.bus.off('gone', this._onGone); } }
@@ -147,11 +147,11 @@ class WifiLink extends EventEmitter {
   constructor(host) { super(); this.kind = 'wifi'; this.host = host; this.where = host; this.alive = true; this.busy = 0; this.waiting = []; }
   // The buddy's web server answers one request at a time: at most 2 in flight, the rest wait their turn
   // (a burst of requests otherwise times out all together and the link looks dead).
-  async _fetch(path, opts = {}, ms = 3000) {
+  async _fetch(path, opts = {}, ms = 3000, urgent = false) {
     const t0 = Date.now();
     if (this.busy >= 2) {
       if (this.waiting.length >= 20) throw new Error('lil.mate is busy');   // buddy not answering: don't pile up
-      await new Promise(r => this.waiting.push(r));
+      await new Promise(r => urgent ? this.waiting.unshift(r) : this.waiting.push(r));   // game keys go first
     }
     // the time limit counts from the call, waiting included: a switched-off buddy must show up as gone quickly
     const left = ms - (Date.now() - t0);
@@ -159,7 +159,9 @@ class WifiLink extends EventEmitter {
     this.busy++;
     const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), left);
     try { const r = await fetch(`http://${this.host}${path}`, { ...opts, signal: ctl.signal }); return await r.text(); }
-    finally { clearTimeout(t); this.busy--; const next = this.waiting.shift(); if (next) next(); }
+    finally {
+      const took = Date.now() - t0;   // slow answers explain "stuck" moments: note them (at most one line per 30 s)
+      if (took > 1500 && Date.now() - (this.slowAt || 0) > 30000) { this.slowAt = Date.now(); log(`wifi: ${path.split('?')[0]} took ${took} ms (busy ${this.busy}, waiting ${this.waiting.length})`); } clearTimeout(t); this.busy--; const next = this.waiting.shift(); if (next) next(); }
   }
   async state() { return JSON.parse(await this._fetch('/api/state?desk=1')); }   // desk=1: if we go quiet, the buddy turns Bluetooth on for us
   cmd(text) { return this._fetch('/api/cmd', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: text }, 5000); }
@@ -171,7 +173,7 @@ class WifiLink extends EventEmitter {
   setWifi() {}
   // eyes following the mouse is a nicety: skip it while anything else is on its way, so it never delays the status
   async look(x, y) { if (this.busy) return; await this._fetch(`/api/look?x=${x.toFixed(2)}&y=${y.toFixed(2)}`, { method: 'POST' }, 1500); }
-  async key(k) { await this._fetch('/api/game?k=' + k, {}, 1500); }
+  async key(k) { await this._fetch('/api/game?k=' + k, {}, 1500, true); }
   async tap() { await this._fetch('/api/link?do=tap', { method: 'POST' }, 1500); }
   async gm() { if (this.busy >= 2) throw new Error('busy'); return { game: JSON.parse(await this._fetch('/api/game', {}, 1500)) }; }   // never queue up score checks   // link state comes with the normal poll
   // firmware update over Wi-Fi: the same /update upload the phone page uses, plus the md5 check
@@ -212,7 +214,18 @@ async function resolveHost(h) {
 }
 
 async function wifiAlive(host) {
-  try { const l = new WifiLink(host); const s = await l.state(); if (!s || !s.fw) return null; l.id = s.id || ''; return l; } catch (e) { return null; }
+  try { const l = new WifiLink(host); const s = await l.state(); if (!s || !s.fw) return null; l.id = s.id || ''; l.kh = s.kh || ''; l.pair = !!s.pair; return l; } catch (e) { return null; }
+}
+
+// The buddy shows a fingerprint of its link key ("kh", firmware 0.3.6+), never the key. Ours must match: after a
+// factory reset (new key) the old owner's computer no longer takes it for its own, on Wi-Fi too.
+const keyHash = key => require('crypto').createHash('sha256').update(String(key || '')).digest('hex').slice(0, 6);
+// 'ok' ours · 'reset' we had it but its key changed · 'unpaired' we have no key for it · 'old' firmware without "kh"
+function ownership(settings, id, kh) {
+  const b = (settings.buddies || {})[id];
+  if (!kh) return 'old';
+  if (!b || !b.key) return 'unpaired';
+  return keyHash(b.key) === kh ? 'ok' : 'reset';
 }
 
 // All Wi-Fi checks at once (last address, a network question, the buddies' names, the old shared name), 3.5 s at most:
@@ -230,8 +243,16 @@ function findWifi(settings) {
       // never someone else's buddy (an office with several on one Wi-Fi): once this computer has a buddy of its own,
       // only buddies it knows count. A brand-new Desk takes the buddy on the Wi-Fi only if there is exactly one.
       const hasOwn = Object.keys(known).length > 0 || !!want;
-      const ok = got.filter(l => (want && l.id === want) || known[l.id] || (!hasOwn && got.length === 1));
-      if (!ok.length && got.length > 1 && !hasOwn) hint.text = `${got.length} lil.mates are on this Wi-Fi: plug yours in with the USB cable once, so Desk knows which one is yours.`;
+      // newer buddies (key fingerprint) must be paired: the same key, learnt over USB or with the pairing code.
+      // Older ones go by id as before (and a brand-new Desk takes the only one on the Wi-Fi).
+      const own = l => ownership(settings, l.id, l.kh);
+      const ok = got.filter(l => own(l) === 'ok' || (own(l) === 'old' && ((want && l.id === want) || known[l.id] || (!hasOwn && got.length === 1))));
+      if (!ok.length) {
+        const reset = got.find(l => own(l) === 'reset'), fresh = got.filter(l => own(l) === 'unpaired');
+        if (reset) hint.text = `lil.mate ${reset.id} was reset: pair it again (Settings → Add a lil.mate, or plug it in by USB once).`;
+        else if (fresh.length && !hasOwn) hint.text = fresh.length > 1 ? `${fresh.length} lil.mates are on this Wi-Fi: pair yours in Settings → Add a lil.mate (or plug it in by USB once).`
+          : 'lil.mate is on this Wi-Fi: pair it in Settings → Add a lil.mate (or plug it in by USB once).';
+      }
       resolve(ok[0] || null);
     };
     const probe = ip => {
@@ -280,7 +301,7 @@ async function connectBle(settings, now) {
     const t0 = Date.now();
     try { const l = await new BleLink(id, b.key).open(); l.syncTime(); hint.text = ''; log(`bluetooth: linked ${id} in ${Date.now() - t0} ms`); return l; }
     catch (e) {
-      if (/did not accept/.test(e && e.message)) hint.text = 'lil.mate is nearby but doesn\'t know this computer yet: plug it in with the USB cable once, then Bluetooth works by itself.';
+      if (/did not accept/.test(e && e.message)) hint.text = 'lil.mate is nearby but doesn\'t know this computer (new, or it was reset): pair it in Settings → Add a lil.mate, or plug it in with the USB cable once.';
       log(`bluetooth: ${id} not reached (${(e && (e.message || e.name)) || (typeof e === 'object' ? JSON.stringify(e) : e)}) after ${Date.now() - t0} ms`);
     }
   }
@@ -303,4 +324,55 @@ async function learn(link, settings) {
   return changed;
 }
 
-module.exports = { connect, learn, findWifi, setLog, hint, findUsbPort, UsbLink, BleLink, WifiLink };
+// "Add a lil.mate": the buddy shows a 6-digit code (Info screen > pair computer). Find the one in pairing mode on the
+// Wi-Fi first (quick), else over Bluetooth ("lil.mate pair <id>"), send the code, get { id, name, key, ssid, ip }.
+async function pair(code, settings) {
+  code = String(code || '').replace(/\D/g, '');
+  if (code.length !== 6) throw new Error('The code has 6 digits');
+  const ips = new Set();
+  const lookup = h => Promise.race([resolveHost(h), new Promise(r => setTimeout(() => r(null), 2000))]);
+  const found = await Promise.all([
+    require('./mdns').discover(1500).then(f => f.map(x => x.ip)).catch(() => []),
+    lookup(settings.host), lookup('lilmate.local'),
+    ...Object.values(settings.buddies || {}).map(b => b.ip),
+  ]);
+  found.flat().filter(Boolean).forEach(ip => ips.add(ip));
+  const alive = (await Promise.all([...ips].map(wifiAlive))).filter(l => l && l.pair);
+  let r = null, via = 'wifi';
+  if (alive.length) {
+    for (const l of alive) {
+      r = JSON.parse(await l._fetch('/api/pair', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: 'code=' + code }, 4000));
+      if (r.ok) { r.ip = r.ip || l.host; break; }
+    }
+  } else {
+    via = 'bluetooth';
+    r = await pairBle(code);
+  }
+  if (!r || !r.ok) throw new Error(r && r.e ? 'lil.mate said: ' + r.e : 'No lil.mate is waiting to pair');
+  log(`pair: ${r.id} added over ${via}`);
+  return r;
+}
+async function pairBle(code) {
+  const ble = require('./ble');
+  let opened;
+  try { opened = await Promise.race([ble.open(['*pair']), new Promise((_, j) => setTimeout(() => j(new Error('timeout')), 20000))]); }
+  catch (e) { ble.close(); throw new Error('No lil.mate is waiting to pair. On lil.mate: Info screen, tap to "pair computer", hold.'); }
+  const gen = opened.gen;
+  return new Promise((resolve, reject) => {
+    let buf = '';
+    const done = () => { clearTimeout(t); ble.bus.off('data', onData); ble.close(); };
+    const t = setTimeout(() => { done(); reject(new Error('lil.mate did not answer')); }, 8000);
+    const onData = (g, text) => {
+      if (g !== gen) return;
+      buf += text; let i;
+      while ((i = buf.indexOf('\n')) >= 0) {
+        const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+        if (line.startsWith('@pair ')) { done(); try { resolve(JSON.parse(line.slice(6))); } catch (e) { reject(new Error('lil.mate answered oddly')); } }
+      }
+    };
+    ble.bus.on('data', onData);
+    ble.write('@pair ' + code + '\n');
+  });
+}
+
+module.exports = { connect, learn, findWifi, setLog, hint, findUsbPort, UsbLink, BleLink, WifiLink, pair, ownership };

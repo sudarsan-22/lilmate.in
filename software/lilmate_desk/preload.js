@@ -16,6 +16,7 @@ contextBridge.exposeInMainWorld('lil', {
   setSettings: p => ipcRenderer.invoke('settings:set', p),
   setWifi: (s, p) => ipcRenderer.invoke('wifi:set', s, p),
   wifiNow: () => ipcRenderer.invoke('wifi:current'),
+  pairBuddy: code => ipcRenderer.invoke('buddy:pair', code),
   openDashboard: () => ipcRenderer.invoke('open:dashboard'),
   update: () => ipcRenderer.invoke('update:get'),
   checkUpdates: () => ipcRenderer.invoke('update:check'),

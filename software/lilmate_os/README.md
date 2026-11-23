@@ -80,10 +80,16 @@ remind me in 1 hour 30 min to call   remind me to stretch at 6pm
 USB only: /wifi SSID|password   /sim tap|double|triple|long|vlong   /state
 ```
 
+### Pair a computer without the cable
+On the buddy: double-tap to the Info screen, tap until *hold: pair computer*, hold. A 6-digit code shows for 2 minutes.
+In lil.mate Desk: Settings > Add a lil.mate > type the code. Works over Bluetooth (office, no Wi-Fi) or the same Wi-Fi.
+Five wrong codes end pairing. A factory reset makes a new key, so every computer paired before must pair again.
+
 ### Factory reset
 Erases Wi-Fi, name, Telegram, tasks, reminders, habits, pet stats and the Desk pairing key; the buddy restarts with the setup hotspot like a new one.
 
 - **Buddy only:** double-tap to the Info screen, tap until the bottom line says *hold: factory reset*, then hold.
+- After a reset every computer must pair again (USB cable once, or *Pair a computer* above).
 - **lil.mate Desk:** Settings > Reset lil.mate > Reset… (or send `/factoryreset` from the phone page or Telegram).
 
 Either way the buddy shows *FACTORY RESET?* for 20 s: **hold it 3 s** to erase, tap to cancel. Nothing is erased without that hold.

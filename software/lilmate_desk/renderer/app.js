@@ -381,6 +381,17 @@ $$('.eye').forEach(b => b.onclick = () => {
   i.type = show ? 'text' : 'password'; b.classList.toggle('on', show);
   b.title = show ? 'Hide password' : 'Show password'; b.setAttribute('aria-label', b.title); i.focus();
 });
+$('#pairBtn').onclick = async () => {
+  const code = $('#pairCode').value.replace(/\D/g, '');
+  if (code.length !== 6) return toast('Type the 6-digit code from lil.mate');
+  const b = $('#pairBtn'); b.disabled = true; b.textContent = 'Pairing…';
+  try {
+    const r = await lil.pairBuddy(code);
+    toast(r.ok ? `Paired with lil.mate ${r.name || r.id} ✓` : r.error);
+    if (r.ok) $('#pairCode').value = '';
+  } finally { b.disabled = false; b.textContent = 'Pair'; }
+};
+$('#pairCode').onkeydown = e => { if (e.key === 'Enter') $('#pairBtn').click(); };
 $('#openDash').onclick = () => lil.openDashboard();
 $('#factoryReset').onclick = () => {
   if (S.offline) return toast('Connect lil.mate first');

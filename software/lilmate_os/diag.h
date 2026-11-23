@@ -67,7 +67,19 @@ void diagBoot() {
   Serial.printf("[diag] boot #%lu, reset: %s (prev uptime %lus, stage %s/%s, min heap %lu)\n",
                 (unsigned long)bootCount, resetName(r.reason), (unsigned long)r.prevUp, stageName(r.stage), netStageName(r.netStage), (unsigned long)r.heapMin);
 }
-inline void diagStage(uint32_t s) { rtcStage = s; }
+// the longest the main loop sat in one step (last minute): "lag" in /api/state, and a "[lag]" line when it's > 0.7 s.
+// That is what the user feels as the buddy (and Desk) getting stuck, so it says which step to blame.
+static const char *STAGE_NAMES[] = { "?", "boot", "touch", "wifi", "web", "telegram", "serial", "brain", "render", "store", "idle" };
+uint32_t stageAt = 0, lagMs = 0, lagAt = 0; uint8_t curStage = 0, lagStage = 0;
+inline void diagStage(uint32_t s) {
+  uint32_t n = millis(), d = n - stageAt;
+  if (curStage && stageAt) {
+    if (n - lagAt > 60000) lagMs = 0;
+    if (d > lagMs) { lagMs = d; lagStage = curStage; lagAt = n; }
+    if (d > 700) Serial.printf("[lag] %lu ms in %s\n", (unsigned long)d, STAGE_NAMES[curStage < 11 ? curStage : 0]);
+  }
+  rtcStage = s; curStage = (uint8_t)s; stageAt = n;
+}
 inline void diagNet(uint32_t s) { rtcNetStage = s; }
 void diagTick() { rtcUp = millis() / 1000; uint32_t h = ESP.getMinFreeHeap(); rtcHeapMin = h; }
 void diagRestart(uint32_t why) { rtcSwWhy = why; }
