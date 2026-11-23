@@ -1,13 +1,13 @@
 {
   "version": "0.3.1",
-  "notes": "Buddy 0.3.5: factory reset from the Info screen, show/hide Wi-Fi password, connection banner",
+  "notes": "Buddy 0.3.6: pair a computer with a code (no cable), reset buddies stay private, smoother games",
   "date": "2026-11-23",
   "app": {},
   "firmware": {
-    "version": "0.3.5",
-    "file": "lilmate-os-0.3.5.bin",
-    "size": 1828576,
-    "sha256": "868cd248dc9d14bd41b2d43009f037f86df4afe9e54ebc165c185d66a3ceb8fd",
-    "md5": "575da9f1f09bcef90d98dca9e8720f1c"
+    "version": "0.3.6",
+    "file": "lilmate-os-0.3.6.bin",
+    "size": 1832400,
+    "sha256": "0100ef4bf54b8dbf62dcab2a3d4a831d9e5da08bb9faded68b41ac84cc68f609",
+    "md5": "5dc188e1c2360bbc5948a9fcb7636843"
   }
 }
