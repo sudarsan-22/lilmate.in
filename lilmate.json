@@ -1,13 +1,13 @@
 {
   "version": "0.3.1",
-  "notes": "Buddy 0.3.4: factory reset (switch off/on 5 times, or Desk > Settings), Wi-Fi update fix, connection banner",
+  "notes": "Buddy 0.3.5: factory reset from the Info screen, show/hide Wi-Fi password, connection banner",
   "date": "2026-11-23",
   "app": {},
   "firmware": {
-    "version": "0.3.4",
-    "file": "lilmate-os-0.3.4.bin",
-    "size": 1827840,
-    "sha256": "05101d03dffc7d2911cf431c0943c6fcbe43c56cf2193c066eb74cf032a8df20",
-    "md5": "24dc38010c1b4d034ab59b2adef67321"
+    "version": "0.3.5",
+    "file": "lilmate-os-0.3.5.bin",
+    "size": 1828576,
+    "sha256": "868cd248dc9d14bd41b2d43009f037f86df4afe9e54ebc165c185d66a3ceb8fd",
+    "md5": "575da9f1f09bcef90d98dca9e8720f1c"
   }
 }
