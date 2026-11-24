@@ -1,13 +1,13 @@
 {
   "version": "0.3.1",
-  "notes": "Buddy 0.3.6: pair a computer with a code (no cable), reset buddies stay private, smoother games",
-  "date": "2026-11-23",
+  "notes": "Buddy 0.3.7: set up over Bluetooth (no hotspot needed on Android/computers), pair with a code",
+  "date": "2026-11-24",
   "app": {},
   "firmware": {
-    "version": "0.3.6",
-    "file": "lilmate-os-0.3.6.bin",
-    "size": 1832400,
-    "sha256": "0100ef4bf54b8dbf62dcab2a3d4a831d9e5da08bb9faded68b41ac84cc68f609",
-    "md5": "5dc188e1c2360bbc5948a9fcb7636843"
+    "version": "0.3.7",
+    "file": "lilmate-os-0.3.7.bin",
+    "size": 1835488,
+    "sha256": "e37bd67f313e8f3e07cb251bb3d7d2da6704e87ec14ca89ac50b23cd1f379ece",
+    "md5": "23fe6a9d501038b34f9e993c05292068"
   }
 }
