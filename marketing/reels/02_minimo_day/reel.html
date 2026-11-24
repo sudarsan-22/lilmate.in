@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>lil.mate · reel 02 · Minimo</title>
+<link rel="stylesheet" href="../01_desk_app/fonts/fonts.css">
+<style>
+/* Reel 02: real footage of Minimo + a hand. 1080x1920. Frames come from extract.sh (graded JPEGs, 1188x2112);
+   render(t) picks the frame for time t, adds the push-in, the shallow-focus blur, captions, grain and the end card. */
+:root{--cream:#fff8ee;--cream2:#f7ecdb;--ink:#24130f;--soft:#6b5a4f;--orange:#f7931e}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#000}
+#stage{position:absolute;inset:0;overflow:hidden;background:#0a0706}
+.layer{position:absolute;left:50%;top:50%;width:1188px;height:2112px;margin:-1056px 0 0 -594px;transform-origin:50% 50%}
+.layer img{display:block;width:100%;height:100%}
+#blur{filter:blur(13px) brightness(.85)}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(85% 62% at 50% 48%,transparent 50%,rgba(8,4,2,.62))}
+#grain{position:absolute;inset:0;width:1080px;height:1920px;pointer-events:none;mix-blend-mode:overlay;opacity:.09}
+#fade{position:absolute;inset:0;pointer-events:none}
+.cap{position:absolute;left:0;width:1080px;text-align:center;color:var(--cream);font:600 92px/1.04 Fredoka,system-ui,sans-serif;letter-spacing:-.025em;
+  text-shadow:0 2px 30px rgba(0,0,0,.45)}
+.cap i{font-style:normal;color:var(--orange)}
+/* end card, the lilmate.in look */
+#end{position:absolute;inset:0;background:radial-gradient(70% 45% at 50% 45%,#fffaf2,#fff8ee 60%,#f6ead8);opacity:0}
+.mark{overflow:visible;stroke:currentColor;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.mark .head{stroke-width:5}.mark .eyes{stroke-width:4}
+.mark .spark{stroke:var(--orange);stroke-width:5;transform-box:fill-box;transform-origin:0 100%}
+.word{font:600 120px/1 Fredoka,sans-serif;letter-spacing:-.025em;color:var(--ink)}.word i{font-style:normal;color:var(--orange)}
+.logoRow{position:absolute;left:0;top:640px;width:1080px;display:flex;justify-content:center;align-items:flex-end;gap:22px}
+.logoRow .mark{width:150px;height:106px;color:var(--ink)}
+.ecap{position:absolute;left:0;width:1080px;text-align:center;color:var(--ink);font:600 100px/1.04 Fredoka,sans-serif;letter-spacing:-.025em}
+.ecap i{font-style:normal;color:var(--orange)}
+.ecap.small{font:700 34px/1.2 Nunito,sans-serif;letter-spacing:0;color:var(--soft)}
+.cta{position:absolute;left:0;top:1300px;width:1080px;display:flex;justify-content:center;gap:20px}
+.cta span{display:flex;align-items:center;gap:16px;border-radius:999px;padding:22px 40px;font:700 34px/1 Nunito,sans-serif;white-space:nowrap}
+.cta .fill{background:var(--ink);color:var(--cream);padding-right:16px}
+.cta .fill i{width:52px;height:52px;border-radius:50%;background:rgba(255,248,238,.16);display:grid;place-items:center;font-style:normal}
+.cta .line{border:2.5px solid rgba(36,19,15,.16);color:var(--ink)}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="layer" id="sharp"><img></div>
+  <div class="layer" id="blur"><img></div>
+  <div id="vig"></div>
+  <div id="caps"></div>
+  <div id="end">
+    <div class="logoRow" id="eLogo"><svg class="mark" id="eMark" viewBox="0 -18 88 62"></svg><span class="word">lil<i>.</i>mate</span></div>
+    <div class="ecap" id="eHead" style="top:880px">Desk buddies<br>with <i>feelings</i>.</div>
+    <div class="cta" id="eCta"><span class="fill">Pre-order yours <i>→</i></span><span class="line">lilmate.in</span></div>
+    <div class="ecap small" id="eFoot" style="top:1490px;font-size:28px">Designed &amp; 3D-printed in India</div>
+  </div>
+  <canvas id="grain" width="540" height="960"></canvas>
+  <div id="fade"></div>
+</div>
+<script>
+'use strict';
+const $ = s => document.querySelector(s);
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const lerp = (a, b, p) => a + (b - a) * p;
+function bez(x1, y1, x2, y2) {
+  return x => { if (x <= 0) return 0; if (x >= 1) return 1; let lo = 0, hi = 1, u = .5;
+    for (let i = 0; i < 40; i++) { u = (lo + hi) / 2; const cx = 3 * x1 * u * (1 - u) ** 2 + 3 * x2 * u * u * (1 - u) + u ** 3; if (cx < x) lo = u; else hi = u; }
+    return 3 * y1 * u * (1 - u) ** 2 + 3 * y2 * u * u * (1 - u) + u ** 3; };
+}
+const eOut = bez(.2, .8, .2, 1), eIO = bez(.45, 0, .3, 1), eSoft = bez(.3, .1, .3, 1), ePop = bez(.3, 1.4, .5, 1);
+const seg = (t, a, b, e = x => x) => e(clamp((t - a) / (b - a)));
+const FRAMES = new URLSearchParams(location.search).get('frames') || 'frames';
+
+// ------------------------------------------------------------ the cut
+// id, start, length (s), push-in zoom from → to, drift (px, x then y), shallow focus: [x%, y%, w%, h%] kept sharp (null = none)
+const SHOTS = [
+  ['A', 0.00, 2.30, [1.00, 1.07], [0, -10], [44, 54, 104, 70]],
+  ['B', 2.30, 3.00, [1.02, 1.08], [-8, 0], [55, 46, 96, 56]],
+  ['C', 5.30, 2.80, [1.00, 1.06], [0, 0], null],
+  ['D', 8.10, 1.20, [1.05, 1.09], [0, 0], null],
+  ['E', 9.30, 1.05, [1.03, 1.07], [0, 0], null],
+  ['F', 10.35, 0.90, [1.05, 1.09], [0, 0], null],
+  ['G', 11.25, 1.20, [1.03, 1.07], [0, 0], null],
+  ['H', 12.45, 4.00, [1.00, 1.08], [6, 0], [55, 46, 96, 56]],
+];
+const END = 16.45, DUR = 20.0;
+
+const CAPS = [
+  // in, out, html, y centre
+  [0.55, 2.2, 'Meet <i>Minimo</i>.', 1470],
+  [2.75, 5.2, 'Give it a pat…', 1470],
+  [5.55, 8.0, '…it smiles back.', 1470],
+  [8.25, 10.25, 'Two eyes.', 430],
+  [10.4, 12.4, 'Lots of <i>moods</i>.', 1470],
+  [13.0, 16.2, 'A lil mate<br>for your <i>desk</i>.', 1420],
+];
+const capEls = CAPS.map(([, , html]) => { const d = document.createElement('div'); d.className = 'cap'; d.innerHTML = html; $('#caps').appendChild(d); return d; });
+function drawCaps(t) {
+  CAPS.forEach(([a, b, , y], i) => {
+    const el = capEls[i], p = eOut(clamp((t - a) / .7)), q = eIO(clamp((t - (b - .3)) / .3)), o = p * (1 - q);
+    el.style.opacity = o; el.style.visibility = o > .001 ? 'visible' : 'hidden';
+    el.style.filter = `blur(${(14 * (1 - p) + 10 * q).toFixed(2)}px)`;
+    el.style.transform = `translateY(${(y - el.offsetHeight / 2 + 24 * (1 - p)).toFixed(1)}px)`;
+  });
+}
+
+// ------------------------------------------------------------ logo (same paths as the app and site)
+const EYE = { open: '<path d="M24.5 25.5V31"/><path d="M39.5 25.5V31"/>', happy: '<path d="M21 31Q24.5 25 28 31"/><path d="M36 31Q39.5 25 43 31"/>', sleepy: '<path d="M21 29.5H28"/><path d="M36 29.5H43"/>' };
+function face(el, eye) {
+  if (el.dataset.k === eye) return; el.dataset.k = eye;
+  el.innerHTML = '<path class="head" d="M6 40C6 18 18 6 32 6C46 6 58 18 58 40"/><g class="eyes">' + EYE[eye] + '</g>' +
+    '<g transform="translate(56 -16) scale(.7)"><g class="spark"><path d="M14 4L11 15"/><path d="M30 9L21 18"/><path d="M36 25L25 28"/></g></g>';
+}
+function sparkPop(mark, p) {
+  const k = mark.querySelector('.spark'); if (!k) return;
+  if (p >= 1) { k.style.transform = ''; k.style.opacity = 1; return; }
+  if (p <= 0) { k.style.opacity = 0; return; }
+  const e = ePop(p), [s, r, o] = e < .6 ? [lerp(0, 1.35, e / .6), lerp(-35, 12, e / .6), e / .6] : [lerp(1.35, 1, (e - .6) / .4), lerp(12, 0, (e - .6) / .4), 1];
+  k.style.opacity = clamp(o); k.style.transform = `scale(${s}) rotate(${r}deg)`;
+}
+function reveal(el, t, a, d = .7, dy = 26) { const p = eOut(seg(t, a, a + d)); el.style.opacity = p; el.style.filter = `blur(${10 * (1 - p)}px)`; el.style.transform = `translateY(${dy * (1 - p)}px)`; }
+function drawEnd(t) {
+  const o = seg(t, END - .15, END + .45, eSoft); $('#end').style.opacity = o; if (o <= 0) return;
+  reveal($('#eLogo'), t, END + .2); reveal($('#eHead'), t, END + .55); reveal($('#eCta'), t, END + 1.0); reveal($('#eFoot'), t, END + 1.4, .6, 12);
+  const m = $('#eMark'); face(m, t < END + 2.25 ? 'open' : t < END + 2.38 ? 'sleepy' : 'happy'); sparkPop(m, (t - (END + 2.4)) / .45);
+}
+
+// ------------------------------------------------------------ footage
+const imgs = [$('#sharp img'), $('#blur img')];
+async function drawShot(t) {
+  let s = null; for (const sh of SHOTS) if (t >= sh[1] && t < sh[1] + sh[2]) s = sh;
+  if (!s && t >= END) s = SHOTS[SHOTS.length - 1];          // hold the last frame under the end card's fade
+  if (!s) return;
+  const [id, t0, len, [z0, z1], [dx, dy], dof] = s;
+  const n = Math.round(len * 30), k = clamp(Math.floor((t - t0) * 30 + 1e-6), 0, n - 1) + 1;
+  const src = `${FRAMES}/${id}/${String(k).padStart(4, '0')}.jpg`;
+  const p = eSoft(clamp((t - t0) / len)), z = lerp(z0, z1, p);
+  const tr = `translate(${dx * p}px, ${dy * p}px) scale(${z})`;
+  $('#sharp').style.transform = $('#blur').style.transform = tr;
+  $('#blur').style.display = dof ? 'block' : 'none';
+  if (dof) { const [x, y, w, h] = dof, g = `radial-gradient(${w / 2}% ${h / 2}% at ${x}% ${y}%, transparent 72%, #000 100%)`;
+    $('#blur').style.webkitMaskImage = $('#blur').style.maskImage = g; }
+  await Promise.all(imgs.map(async im => { if (im.dataset.src !== src) { im.dataset.src = src; im.src = src; await im.decode(); } }));
+}
+
+// ------------------------------------------------------------ grain
+const grains = [];
+(function () { let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let g = 0; g < 8; g++) { const c = document.createElement('canvas'); c.width = 540; c.height = 960; const x = c.getContext('2d'), d = x.createImageData(540, 960);
+    for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (rnd() - .5) * 255; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+    x.putImageData(d, 0, 0); grains.push(c); } })();
+
+window.setup = async () => { await document.fonts.ready; face($('#eMark'), 'open'); return { frames: FRAMES, dur: DUR }; };
+window.render = async t => {
+  await drawShot(t); drawCaps(t); drawEnd(t);
+  $('#grain').getContext('2d').drawImage(grains[Math.floor(t * 30) % grains.length], 0, 0);
+  $('#grain').style.opacity = t >= END ? .04 : .09;
+  // open from black; the last shot glows warm into the cream end card
+  const f = $('#fade');
+  if (t < .5) { f.style.background = '#000'; f.style.opacity = 1 - seg(t, 0, .5, eSoft); }
+  else { f.style.background = '#fff2e0'; f.style.opacity = seg(t, END - .5, END - .1) * (1 - seg(t, END - .1, END + .3)); }
+};
+</script>
+</body>
+</html>

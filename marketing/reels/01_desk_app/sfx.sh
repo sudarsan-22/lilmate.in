@@ -27,8 +27,10 @@ whoosh() {  # peak time
 }
 
 add 0 $D "$pad" "lowpass=f=1600,aecho=0.8:0.6:70|140:0.25|0.15,afade=t=in:d=2.5,afade=t=out:st=19.3:d=2.7"
-for w in 3.0 5.2 9.45 15.3 18.6; do whoosh $w; done
-add 4.05 1.6 "$ding"
+for w in 3.2 5.25 9.45 15.3 18.6; do whoosh $w; done
+bub='0.13*sin(2*PI*(900*t+2600*t*t))*exp(-30*t)'
+for b in 1.3 1.45 1.6 11.65 13.85; do add $b 0.18 "$bub"; done
+add 4.3 1.6 "$ding"
 add 7.3 0.4 "$pop"
 add 11.5 0.12 "$click"
 add 12.6 0.3 "$drop"
@@ -36,7 +38,7 @@ add 13.3 0.4 "$pop"
 add 14.6 0.12 "$click"
 add 14.95 0.3 "$drop"
 for k in 16.85 17.85; do add $k 0.08 "$tick"; done
-add 20.7 1.6 "$ding"
+add 20.9 1.6 "$ding"
 
 mix=''; for ((i=0;i<n;i++)); do mix+="[a$i]"; done
 ffmpeg -y -loglevel error "${ins[@]}" -filter_complex "${fil}${mix}amix=inputs=$n:normalize=0:duration=longest,atrim=0:$D,aformat=channel_layouts=stereo,loudnorm=I=-18:TP=-1.5:LRA=11,aresample=48000[out]" \

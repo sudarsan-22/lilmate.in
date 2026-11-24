@@ -39,11 +39,12 @@ svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .askHead{display:flex;gap:12px;align-items:center}
 .askHead .mark{width:36px;height:26px;flex:none}
 .askHead b{display:block;font-size:17px;font-weight:600}.askHead small{color:var(--soft);font-size:12px}
-.askCmd{display:block;font:600 13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--cream2);border-radius:12px;padding:8px 11px;white-space:nowrap;overflow:hidden}
+.askCmd{display:flex;align-items:center;gap:9px;font:700 13px Nunito,sans-serif;color:var(--soft);background:var(--cream2);border-radius:12px;padding:8px 11px;white-space:nowrap;overflow:hidden}
 .askRow{display:flex;gap:8px;align-items:center}
 .btn{background:var(--ink);color:var(--cream);font-weight:700;border-radius:999px;padding:8px 22px;border:0;font:inherit;font-weight:700}
 .btn2{border:1.5px solid var(--line2);border-radius:999px;padding:7px 18px;font-weight:700;white-space:nowrap;background:none;font:inherit;font-weight:700;color:var(--ink)}
 .hint{color:var(--soft);font-size:12px;margin-left:auto}
+.askCmd em{font-style:normal;background:var(--ink);color:var(--cream);border-radius:8px;padding:2px 8px;font-size:12px}
 .ttl{height:3px;background:var(--cream2);border-radius:3px;overflow:hidden}.ttl i{display:block;height:100%;background:var(--orange);width:100%}
 .panel{width:798px;height:519px;overflow:hidden}
 aside{width:214px;flex:none;padding:18px 12px 14px;display:flex;flex-direction:column;gap:16px;background:var(--cream2);border-right:1px solid var(--line)}
@@ -80,68 +81,104 @@ h2{font-size:17px;font-weight:600;margin:16px 0 8px}
 .tag.done{color:var(--green)}.tag.soon{color:#c46a00;background:#fde7cb}
 .fly{position:absolute;top:0;left:50%;width:38px;height:28px;color:var(--ink);transform-origin:0 0;z-index:5}
 
-/* ---------- desktop (inside the laptop, and the macro shots) */
+/* ---------- desktop (inside the laptop, and the macro shots): light, like lilmate.in */
 .desk{position:absolute;left:0;top:0;width:1440px;overflow:hidden;
   background:
-    radial-gradient(60% 45% at 78% 78%,rgba(247,147,30,.62),transparent 70%),
-    radial-gradient(55% 40% at 12% 22%,rgba(91,115,151,.55),transparent 70%),
-    radial-gradient(70% 50% at 45% 105%,rgba(255,214,170,.35),transparent 70%),
-    radial-gradient(40% 30% at 60% 30%,rgba(196,106,0,.25),transparent 70%),
-    linear-gradient(160deg,#2a1c17,#170e0b 55%,#24140d)}
-.win{position:absolute;left:90px;top:150px;width:760px;height:520px;border-radius:14px;background:rgba(20,14,12,.92);
-  box-shadow:0 30px 70px -20px rgba(0,0,0,.7),inset 0 0 0 1px rgba(255,255,255,.06);overflow:hidden}
-.win .bar{height:34px;display:flex;align-items:center;gap:8px;padding:0 14px;background:rgba(255,255,255,.04)}
-.win .bar i{width:11px;height:11px;border-radius:50%;background:#5a4a42}
+    radial-gradient(55% 42% at 14% 18%,#cfe6ea,transparent 72%),
+    radial-gradient(50% 40% at 88% 82%,#f6d9b5,transparent 72%),
+    radial-gradient(35% 28% at 72% 22%,rgba(247,147,30,.16),transparent 72%),
+    radial-gradient(45% 35% at 30% 95%,rgba(214,167,230,.22),transparent 72%),
+    linear-gradient(160deg,#e8f1ef,#fbf3e7 55%,#f5e4cf)}
+.win{position:absolute;left:90px;top:150px;width:760px;height:520px;border-radius:14px;background:rgba(255,255,255,.88);
+  box-shadow:0 30px 60px -24px rgba(36,19,15,.28),0 0 0 1px rgba(36,19,15,.06);overflow:hidden}
+.win .bar{height:34px;display:flex;align-items:center;gap:8px;padding:0 14px;background:rgba(36,19,15,.035)}
+.win .bar i{width:11px;height:11px;border-radius:50%;background:#e6d8c6}
 .win .code{padding:22px 26px;display:flex;flex-direction:column;gap:11px}
 .win .code u{display:block;height:9px;border-radius:5px;text-decoration:none}
 .win2{left:900px;top:420px;width:440px;height:330px}
+.win .doc{padding:34px 48px;display:flex;flex-direction:column;gap:13px}
+.win .doc u{display:block;height:10px;border-radius:5px;background:#e3d6c6;text-decoration:none}
+.win .doc u.t{height:22px;width:46%;background:#3a2a24;opacity:.8;margin-bottom:10px}
+.win .doc u.gap{background:none;height:6px}
+.win .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+.win .tiles i{height:128px;border-radius:10px;display:block}
 .dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:12px;padding:10px 14px;border-radius:22px;
-  background:rgba(255,248,238,.12);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+  background:rgba(255,255,255,.55);box-shadow:0 10px 30px -12px rgba(36,19,15,.25),inset 0 0 0 1px rgba(255,255,255,.7)}
 .dock i{width:46px;height:46px;border-radius:12px;display:block}
-.cursor{position:absolute;left:0;top:0;width:26px;height:38px;transform-origin:3px 3px;z-index:20;filter:drop-shadow(0 3px 5px rgba(0,0,0,.45))}
+.cursor{position:absolute;left:0;top:0;width:26px;height:38px;transform-origin:3px 3px;z-index:20;filter:drop-shadow(0 3px 5px rgba(36,19,15,.35))}
 
-/* ---------- laptop shot (CSS 3D) */
+/* ---------- the buddy (Boxy render from lilmate.in) with eyes on its screen */
+.buddy{position:absolute}
+.buddy img{display:block;width:100%;height:100%}
+.oled{position:absolute;left:29.3%;top:36.4%;width:42.3%;height:21.6%;border-radius:12% / 22%;background:#0b0b0d;box-shadow:inset 0 0 0 2px #1d1d21}
+.beyes{position:absolute;left:29.3%;top:36.4%;width:42.3%;height:21.6%;overflow:visible}
+.beyes *{fill:#fff;stroke:#fff}
+.beyes .glow{filter:drop-shadow(0 0 4px rgba(255,255,255,.75)) drop-shadow(0 0 10px rgba(255,255,255,.35))}
+
+/* ---------- laptop shot (CSS 3D), a bright desk */
 #sLaptop{perspective:1800px;perspective-origin:540px 960px;
-  background:radial-gradient(70% 38% at 50% 44%,#3a2117 0%,#1a0f0b 45%,#070403 100%)}
+  background:radial-gradient(60% 34% at 50% 40%,#fffaf2 0%,#f7ebda 55%,#ead8bf 100%)}
+.wallblob{position:absolute;border-radius:120px;filter:blur(38px)}
 #rig{position:absolute;left:540px;top:960px;width:0;height:0;transform-style:preserve-3d}
 #rig>*{position:absolute}
 .lid{left:-480px;top:-620px;width:960px;height:620px;transform-origin:50% 100%;transform:rotateX(8deg);border-radius:26px 26px 8px 8px;
-  background:#0a0a0b;box-shadow:inset 0 0 0 2px #3b3a3f,inset 0 0 0 4px #121214;padding:26px 30px 32px}
+  background:#0d0d0f;box-shadow:inset 0 0 0 2px #6d6c72,inset 0 0 0 4px #1a1a1d;padding:26px 30px 32px}
 .screen{position:relative;width:900px;height:562px;overflow:hidden;border-radius:4px;background:#000}
 .screen .desk{height:900px;transform:scale(.625);transform-origin:0 0}
-.glare{position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.07) 0%,rgba(255,255,255,0) 38%,rgba(255,255,255,0) 70%,rgba(255,255,255,.03) 100%);pointer-events:none}
+.glare{position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.10) 0%,rgba(255,255,255,0) 36%,rgba(255,255,255,0) 72%,rgba(255,255,255,.05) 100%);pointer-events:none}
 .base{left:-500px;top:0;width:1000px;height:660px;transform-origin:50% 0;transform:rotateX(90deg);border-radius:6px 6px 28px 28px;
-  background:linear-gradient(#2b2a2f,#1f1e22 60%,#18171a)}
-.kbd{position:absolute;left:96px;top:60px;width:808px;height:300px;border-radius:12px;background:#0f0f11;
-  background-image:repeating-linear-gradient(90deg,transparent 0 6px,#232226 6px 54px,transparent 54px 60px),repeating-linear-gradient(0deg,transparent 0 6px,rgba(0,0,0,.0) 6px 44px,#0f0f11 44px 50px)}
-.pad{position:absolute;left:330px;top:395px;width:340px;height:220px;border-radius:16px;background:#26252a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.05)}
-.baseglow{position:absolute;inset:0;border-radius:inherit;background:radial-gradient(70% 55% at 50% 0%,rgba(255,190,120,.16),transparent 70%)}
-.front{left:-500px;top:0;width:1000px;height:16px;transform:translateZ(660px);border-radius:0 0 14px 14px;background:linear-gradient(#3a393e,#141316)}
+  background:linear-gradient(#8e8d93,#7a797f 55%,#6c6b71)}
+.kbd{position:absolute;left:96px;top:60px;width:808px;height:300px;border-radius:12px;background:#2a292e;
+  background-image:repeating-linear-gradient(90deg,transparent 0 6px,#3a393f 6px 54px,transparent 54px 60px),repeating-linear-gradient(0deg,transparent 0 6px,rgba(0,0,0,0) 6px 44px,#2a292e 44px 50px)}
+.pad{position:absolute;left:330px;top:395px;width:340px;height:220px;border-radius:16px;background:#85848a;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.baseglow{position:absolute;inset:0;border-radius:inherit;background:radial-gradient(70% 55% at 50% 0%,rgba(255,255,255,.18),transparent 70%)}
+.front{left:-500px;top:0;width:1000px;height:16px;transform:translateZ(660px);border-radius:0 0 14px 14px;background:linear-gradient(#a3a2a8,#5d5c62)}
 .table{left:-2200px;top:16px;width:4400px;height:3200px;transform-origin:50% 0;transform:translateZ(-1400px) rotateX(90deg);
-  background:radial-gradient(18% 14% at 50% 46%,rgba(255,170,90,.22),transparent 70%),linear-gradient(#120a07,#2a1810 45%,#1a0e09)}
+  background:radial-gradient(30% 22% at 50% 50%,rgba(255,255,255,.35),transparent 70%),linear-gradient(#e6d2b4,#ead9c0 45%,#dcc39f)}
+.lshadow{left:-640px;top:12px;width:1280px;height:820px;transform-origin:50% 0;transform:translateZ(-40px) rotateX(90deg);
+  background:radial-gradient(closest-side,rgba(70,40,20,.42),rgba(70,40,20,.18) 60%,transparent)}
+.bshadow{left:480px;top:12px;width:330px;height:190px;transform-origin:50% 0;transform:translateZ(150px) rotateX(90deg);
+  background:radial-gradient(closest-side,rgba(70,40,20,.45),transparent)}
+.buddy3d{left:505px;top:-262px;width:270px;height:276px;transform-origin:50% 100%;transform:translateZ(230px) rotateY(-12deg)}
 
 /* ---------- macro shots: the top of the screen, very close */
-#sMacro{background:#050303}
+#sMacro{background:#f3e5d0}
 #mcam{position:absolute;left:540px;top:0;width:0;height:0;transform-origin:0 0}
-.mroom{position:absolute;left:-3000px;top:-3000px;width:6000px;height:2962px;background:radial-gradient(40% 30% at 50% 100%,#2a1913,#060403 70%)}
-.medge{position:absolute;left:-3000px;top:-40px;width:6000px;height:4px;background:linear-gradient(90deg,transparent,#5a585e 30%,#77757b 50%,#5a585e 70%,transparent)}
-.mbezel{position:absolute;left:-3000px;top:-36px;width:6000px;height:36px;background:#0a0a0b}
-.mcam{position:absolute;left:-5px;top:-23px;width:10px;height:10px;border-radius:50%;background:#16161a;box-shadow:inset 0 0 0 2px #222128}
+.mroom{position:absolute;left:-3000px;top:-3000px;width:6000px;height:2962px;background:radial-gradient(30% 22% at 50% 100%,#fffaf2,#f1e2cb 60%,#e6d1b3)}
+.medge{position:absolute;left:-3000px;top:-40px;width:6000px;height:4px;background:linear-gradient(90deg,transparent,#8d8c92 30%,#b4b3b9 50%,#8d8c92 70%,transparent)}
+.mbezel{position:absolute;left:-3000px;top:-36px;width:6000px;height:36px;background:#0d0d0f}
+.mcam{position:absolute;left:-5px;top:-23px;width:10px;height:10px;border-radius:50%;background:#1b1b20;box-shadow:inset 0 0 0 2px #2a2930}
 .mdesk{position:absolute;left:-720px;top:0}
 .mdesk .desk{height:1800px;width:1440px}
-.mscreen{position:absolute;left:-3000px;top:0;width:6000px;height:4000px;background:#170e0b}
+.mscreen{position:absolute;left:-3000px;top:0;width:6000px;height:4000px;background:#f5ebdd}
 
-/* ---------- title / logo / end */
-#sTitle{background:radial-gradient(60% 40% at 50% 50%,#1c110c,#050302 80%)}
-#sLogo{background:radial-gradient(55% 35% at 50% 47%,#24150f,#050302 80%)}
-#sEnd{background:radial-gradient(70% 45% at 50% 45%,#fffaf2,#f6ead8 90%)}
-.cap{position:absolute;left:0;width:1080px;text-align:center;color:var(--cream);font-weight:600;letter-spacing:-.025em;line-height:1.06}
+/* ---------- hero / logo / end: the lilmate.in look */
+#sTitle,#sLogo,#sEnd{background:radial-gradient(70% 45% at 50% 45%,#fffaf2,#fff8ee 60%,#f6ead8)}
+.blob{position:absolute;border-radius:96px}
+.chip{position:absolute;display:flex;align-items:center;gap:12px;background:#fff;border-radius:999px;padding:14px 26px;font:700 30px/1 Nunito,sans-serif;color:var(--ink);
+  box-shadow:0 14px 30px -12px rgba(36,19,15,.25),0 0 0 1px rgba(36,19,15,.05);white-space:nowrap}
+.chip b{font:700 30px/1 Nunito,sans-serif}.chip .h{color:#ef5d7a}.chip .o{color:var(--orange)}
+.eyebrow{position:absolute;left:50%;display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.7);border:2px solid rgba(36,19,15,.07);border-radius:999px;
+  padding:10px 26px 10px 12px;font:700 29px/1 Nunito,sans-serif;color:var(--soft);white-space:nowrap}
+.badge{width:84px;height:44px;border-radius:999px;background:#0b0b0d;display:grid;place-items:center}
+.badge svg{width:56px;height:24px;stroke:#fff;stroke-width:3.2}
+.spark3{position:absolute;overflow:visible}
+.spark3 path{stroke:var(--orange);stroke-width:5;stroke-linecap:round;fill:none}
+.cap{position:absolute;left:0;width:1080px;text-align:center;color:var(--ink);font-weight:600;letter-spacing:-.025em;line-height:1.04}
 .cap i{font-style:normal;color:var(--orange)}
-.cap.dark{color:var(--ink)}
-.cap.small{font-family:Nunito,system-ui,sans-serif;font-weight:700;letter-spacing:0}
-#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(75% 60% at 50% 50%,transparent 55%,rgba(0,0,0,.5))}
-#grain{position:absolute;inset:0;width:1080px;height:1920px;pointer-events:none;mix-blend-mode:overlay;opacity:.07}
-#fade{position:absolute;inset:0;background:#000;pointer-events:none}
+.cap .eb{display:block;font:700 26px/1 ui-monospace,SFMono-Regular,Menlo,"DejaVu Sans Mono",monospace;letter-spacing:.24em;color:var(--orange);margin-bottom:22px}
+.cap.small{font-family:Nunito,system-ui,sans-serif;font-weight:700;letter-spacing:0;color:var(--soft)}
+.cta{position:absolute;left:0;width:1080px;display:flex;justify-content:center;gap:20px}
+.cta span{display:flex;align-items:center;gap:16px;border-radius:999px;padding:22px 40px;font:700 34px/1 Nunito,sans-serif;white-space:nowrap}
+.cta .fill{background:var(--ink);color:var(--cream);padding-right:16px}
+.cta .fill i{width:52px;height:52px;border-radius:50%;background:rgba(255,248,238,.16);display:grid;place-items:center;font-style:normal}
+.cta .line{border:2.5px solid rgba(36,19,15,.16);color:var(--ink)}
+.logoRow{position:absolute;left:0;width:1080px;display:flex;justify-content:center;align-items:flex-end;gap:22px}
+.logoRow .mark{width:150px;height:106px;color:var(--ink)}
+.logoRow .word{font-size:120px;color:var(--ink)}
+#vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 62% at 50% 50%,transparent 60%,rgba(120,80,40,.16))}
+#grain{position:absolute;inset:0;width:1080px;height:1920px;pointer-events:none;mix-blend-mode:overlay;opacity:.05}
+#fade{position:absolute;inset:0;background:#fff8ee;pointer-events:none}
 </style>
 </head>
 <body>
@@ -149,11 +186,15 @@ h2{font-size:17px;font-weight:600;margin:16px 0 8px}
   <div class="shot" id="sTitle"></div>
   <div class="shot" id="sLogo"><svg class="mark" id="bigMark" viewBox="0 -18 88 62"></svg></div>
   <div class="shot" id="sLaptop">
+    <div class="wallblob" style="left:40px;top:330px;width:420px;height:480px;background:#cfe6ea;opacity:.8"></div>
+    <div class="wallblob" style="left:650px;top:420px;width:380px;height:420px;background:#f1d7b4;opacity:.8"></div>
     <div id="rig">
       <div class="table"></div>
+      <div class="lshadow"></div><div class="bshadow"></div>
       <div class="base"><div class="kbd"></div><div class="pad"></div><div class="baseglow"></div></div>
       <div class="front"></div>
       <div class="lid"><div class="screen" id="lapScreen"></div><div class="glare"></div></div>
+      <div class="buddy buddy3d" id="lapBuddy"></div>
     </div>
   </div>
   <div class="shot" id="sMacro">
@@ -163,8 +204,10 @@ h2{font-size:17px;font-weight:600;margin:16px 0 8px}
       <div class="mdesk" id="macroDesk"></div>
       <div class="mbezel"></div><div class="medge"></div><div class="mcam"></div>
     </div>
+    <div class="chip" id="mC1"><b class="o">+1</b> glass of water</div>
+    <div class="chip" id="mC2"><b class="o">●</b> or hold your buddy</div>
   </div>
-  <div class="shot" id="sEnd"><svg class="mark" id="endMark" viewBox="0 -18 88 62"></svg></div>
+  <div class="shot" id="sEnd"><div class="logoRow" id="endLogo"><svg class="mark" id="endMark" viewBox="0 -18 88 62"></svg><span class="word">lil<i>.</i>mate</span></div><div class="cta" id="endCta"><span class="fill">Pre-order yours <i>→</i></span><span class="line">lilmate.in</span></div></div>
   <div id="caps"></div>
   <div id="vig"></div>
   <canvas id="grain" width="540" height="960"></canvas>
@@ -224,16 +267,16 @@ const ISLAND = `
 <div class="island">
   <div class="pill"><svg class="mark pf" viewBox="0 -18 88 62"></svg><span class="pillText">lil.mate</span><span class="dot ok"></span></div>
   <div class="ask">
-    <div class="askHead"><svg class="mark af" viewBox="0 -18 88 62"></svg><div><b>Claude wants to run</b><small>lilmate · terminal 2</small></div></div>
-    <code class="askCmd">npm run build &amp;&amp; npm test</code>
-    <div class="askRow"><button class="btn allow">Allow</button><button class="btn2">Deny</button><span class="hint">or hold lil.mate</span></div>
+    <div class="askHead"><svg class="mark af" viewBox="0 -18 88 62"></svg><div><b>Team standup in 5 minutes</b><small>From your calendar · 10:30 – 10:45</small></div></div>
+    <div class="askCmd"><em>10:30</em>Weekly plan · video call</div>
+    <div class="askRow"><button class="btn allow">Got it</button><button class="btn2">Snooze 5 min</button><span class="hint">or hold lil.mate</span></div>
     <div class="ttl"><i></i></div>
   </div>
   <div class="panel">
     <aside>
       <div class="me"><div class="brand"><svg class="mark bf" viewBox="0 -18 88 62"></svg><span class="word">lil<i>.</i>mate</span></div>
         <small><span class="dot ok"></span> connected · happy</small></div>
-      <nav>${nav('home', 'Today', '', 'on')}${nav('ag', 'AI helpers', '1')}${nav('tk', 'Tasks', '3')}${nav('hb', 'Habits')}${nav('td', 'Tidy')}${nav('tm', 'Team')}${nav('st', 'Settings')}</nav>
+      <nav>${nav('home', 'Today', '', 'on')}${nav('ag', 'AI helpers')}${nav('tk', 'Tasks', '3')}${nav('hb', 'Habits')}${nav('td', 'Tidy')}${nav('tm', 'Team')}${nav('st', 'Settings')}</nav>
       <span class="pin">Keep open</span>
     </aside>
     <main>
@@ -248,8 +291,8 @@ const ISLAND = `
       <div class="chips"><span>Focus 25 min</span><span>Breathe 1 min</span><span>Timer 5 min</span><span>Pat</span><span>★ Star Catcher</span></div>
       <h2>Right now</h2>
       <ul class="list">
-        <li><span>Claude Code finished the build</span><em class="tag done">done</em></li>
-        <li><span>Standup in 25 min</span><em class="tag soon">10:30</em></li>
+        <li><span>Team standup</span><em class="tag soon">10:30</em></li>
+        <li><span>Stretch break</span><em class="tag">in 20 min</em></li>
         <li class="water"><i class="ck"></i><span>Drink a glass of water</span><small>habit</small></li>
       </ul>
     </main>
@@ -257,11 +300,11 @@ const ISLAND = `
   <svg class="mark fly" viewBox="0 -18 88 62"></svg>
 </div>`;
 const DESK = h => `<div class="desk" style="height:${h}px">
-  <div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="code">${
-    [[38, '#f7931e'], [62, '#e9d8c4'], [48, '#8fa6c8'], [70, '#e9d8c4'], [30, '#6fbf8c'], [55, '#e9d8c4'], [44, '#f7931e'], [66, '#8fa6c8'], [36, '#e9d8c4'], [58, '#e9d8c4'], [28, '#6fbf8c'], [50, '#8fa6c8'], [64, '#e9d8c4'], [40, '#e9d8c4']]
-      .map(([w, c], i) => `<u style="width:${w}%;margin-left:${(i % 4) * 22}px;background:${c};opacity:.55"></u>`).join('')}</div></div>
-  <div class="win win2"><div class="bar"><i></i><i></i><i></i></div><div class="code">${
-    [[70, '#6fbf8c'], [45, '#e9d8c4'], [60, '#e9d8c4'], [35, '#f7931e'], [52, '#e9d8c4']].map(([w, c]) => `<u style="width:${w}%;background:${c};opacity:.5"></u>`).join('')}</div></div>
+  <div class="win"><div class="bar"><i></i><i></i><i></i></div><div class="doc"><u class="t"></u>${
+    [96, 100, 92, 70, 'g', 100, 94, 98, 60, 'g', 88, 100, 76].map(w => w === 'g' ? '<u class="gap"></u>' : `<u style="width:${w}%"></u>`).join('')}</div></div>
+  <div class="win win2"><div class="bar"><i></i><i></i><i></i></div><div class="tiles">${
+    ['linear-gradient(160deg,#cfe6ea,#9cc3cf)', 'linear-gradient(160deg,#f6d9b5,#eab27a)', 'linear-gradient(160deg,#e7d3ef,#c9a6dc)',
+     'linear-gradient(160deg,#d8ead1,#a9cf9c)', 'linear-gradient(160deg,#fde7cb,#f7b45e)', 'linear-gradient(160deg,#efdfc6,#cdb08a)'].map(g => `<i style="background:${g}"></i>`).join('')}</div></div>
   <div class="dock">${['#f7931e', '#5b7397', '#3f9b63', '#fff8ee', '#c46a00', '#8fa6c8', '#24130f'].map(c => `<i style="background:${c};opacity:.8"></i>`).join('')}</div>
 </div>`;
 const CURSOR = '<svg class="cursor" viewBox="0 0 26 38" style="width:26px;height:38px"><path d="M3 3 L3 30 L10 23.5 L14.5 34 L19 32 L14.6 21.8 L23.5 21.6 Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/></svg>';
@@ -276,6 +319,24 @@ function buildIsland(host, x0) {
     stag: [...$$('nav a, .pin', wrap), ...$$('main > *', wrap)].slice(0, 15) };
   face(I.pf, 'happy'); face(I.bf, 'happy'); face(I.af, 'alert'); face(I.fly, 'happy');
   return I;
+}
+
+// ------------------------------------------------------------ the buddy: Minimo's render from lilmate.in, its screen painted black with eyes (372 x 194 px)
+function buildBuddy(host) {
+  host.innerHTML = '<img src="assets/minimo.png"><div class="oled"></div><svg class="beyes" viewBox="0 0 372 194"><g class="glow"></g></svg>';
+  return $('.glow', host);
+}
+// mode: open | happy · blink 0..1 (1 = shut) · dx, dy = where it looks
+function buddyEyes(g, mode, blink = 0, dx = 0, dy = 0) {
+  const key = [mode, blink.toFixed(2), dx.toFixed(1), dy.toFixed(1)].join();
+  if (g.dataset.k === key) return; g.dataset.k = key;
+  const eye = cx => {
+    const x = cx + dx, y = 102 + dy;
+    if (mode === 'happy') return `<path d="M${x - 27} ${y + 14}Q${x} ${y - 30} ${x + 27} ${y + 14}" style="fill:none;stroke-width:15;stroke-linecap:round"/>`;
+    const h = Math.max(7, 70 * (1 - blink));
+    return `<rect x="${x - 31}" y="${y - h / 2}" width="62" height="${h}" rx="${Math.min(19, h / 2)}" style="stroke:none"/>`;
+  };
+  g.innerHTML = eye(136) + eye(236);
 }
 
 // ------------------------------------------------------------ springs (same as app.js)
@@ -346,7 +407,7 @@ function drawIsland(I, t) {
 
   // pill text through the story
   let txt = 'lil.mate', col = '', dot = 'dot ok', eye = 'happy';
-  if (t >= T.askClose && t < T.focus) { txt = '✓ Allowed'; col = 'var(--green)'; }
+  if (t >= T.askClose && t < T.focus) { txt = '✓ See you at 10:30'; col = 'var(--green)'; }
   if (t >= T.focus) { const left = 25 * 60 - Math.floor((t - T.focus) * 1.0); txt = `Focus · ${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`; col = '#c46a00'; dot = 'dot attn'; eye = 'focus'; }
   if (I.pillText.textContent !== txt) I.pillText.textContent = txt;
   I.pillText.style.color = col; I.pillDot.className = dot; face(I.pf, eye);
@@ -378,14 +439,15 @@ function drawCursor(I, t, s) {
 // ------------------------------------------------------------ captions
 const CAPS = [
   // [in, out, html, y(centre), size, class]
-  [0.35, 1.72, 'Your desk<br>has a mate.', 960, 118],
-  [1.86, 3.0, 'Now your <i>screen</i><br>does too.', 960, 118],
-  [5.75, 9.25, 'Lives at the top<br>of your screen.', 1530, 70],
-  [9.95, 12.45, 'Your whole day,<br>at a glance.', 1440, 70],
-  [13.55, 15.35, 'Knows when your<br>AI needs you.', 1330, 70],
-  [16.15, 18.45, 'Keeps you<br>in the flow.', 1270, 70],
-  [19.25, 22.5, 'Your buddy, now on your screen.', 1268, 44, 'dark small'],
-  [19.75, 22.5, 'lilmate.in', 1400, 46, 'dark'],
+  [0.3, 2.05, 'A <i>lil mate</i><br>for your desk.', 560, 120],
+  [2.12, 3.2, 'Now one for<br>your <i>screen</i>.', 560, 120],
+  [5.75, 7.4, '<span class="eb">LIL.MATE DESK</span>Lives at the top<br>of your <i>screen</i>.', 1580, 72],
+  [9.95, 12.45, '<span class="eb">TODAY</span>Your whole day,<br>at a <i>glance</i>.', 1480, 72],
+  [13.55, 15.35, '<span class="eb">HEADS-UPS</span>Never miss<br>a <i>meeting</i>.', 1360, 72],
+  [16.15, 18.45, '<span class="eb">FOCUS</span>Keeps you<br>in the <i>flow</i>.', 1300, 72],
+  [19.15, 22.5, 'A lil mate<br>for your <i>screen</i>.', 1000, 108],
+  [19.55, 22.5, 'lil.mate Desk · the desktop app for your buddy', 1212, 36, 'small'],
+  [20.3, 22.5, 'Designed &amp; 3D-printed in India', 1500, 28, 'small'],
 ];
 const capEls = CAPS.map(([, , html, y, size, cls]) => { const d = document.createElement('div'); d.className = 'cap ' + (cls || ''); d.innerHTML = html;
   d.style.fontSize = size + 'px'; d.dataset.y = y; $('#caps').appendChild(d); return d; });
@@ -396,26 +458,25 @@ function drawCaps(t) {
     el.style.filter = `blur(${(16 * (1 - p) + 10 * q).toFixed(2)}px)`;
     el.style.transform = `translateY(${(+el.dataset.y - el.offsetHeight / 2 + 26 * (1 - p) - 6 * q).toFixed(2)}px) scale(${1 + .015 * q})`;
   });
-  capEls[capEls.length - 1].style.color = '#c46a00';
-}
+  }
 
 // ------------------------------------------------------------ shots
 function show(id, o, extra = '') { const el = $(id); el.style.opacity = o; el.style.visibility = o > .001 ? 'visible' : 'hidden'; if (extra !== null) el.style.filter = extra; return el; }
 let LAP, MAC, headLen = 0;
 
 function drawLogo(t) {
-  const o = seg(t, 2.85, 3.25) * (1 - seg(t, 5.0, 5.45, eIO));
-  const el = show('#sLogo', o, `blur(${(14 * seg(t, 5.0, 5.45, eIO)).toFixed(2)}px)`);
+  const o = seg(t, 3.0, 3.4) * (1 - seg(t, 5.05, 5.45, eIO));
+  show('#sLogo', o, `blur(${(14 * seg(t, 5.05, 5.45, eIO)).toFixed(2)}px)`);
   if (o <= 0) return;
-  const m = $('#bigMark'), s = 1 + .07 * seg(t, 2.9, 5.45, eSoft) + .25 * seg(t, 5.0, 5.45, eIO);
-  Object.assign(m.style, { position: 'absolute', left: '320px', top: '640px', width: '440px', height: '310px', color: 'var(--cream)', transform: `scale(${s})`, transformOrigin: '50% 60%' });
-  face(m, t < 4.62 ? 'open' : t < 4.74 ? 'sleepy' : 'happy');
-  const head = $('.head', m); head.style.strokeDasharray = headLen; head.style.strokeDashoffset = headLen * (1 - seg(t, 3.05, 3.95, eIO));
-  const ep = seg(t, 3.85, 4.15, ePop); $('.eyes', m).style.opacity = clamp(ep * 3); $$('.eyes path', m).forEach(p => p.style.transform = `scaleY(${Math.max(.01, ep)})`);
-  sparkPop(m, (t - 4.05) / .45);
+  const m = $('#bigMark'), s = 1 + .06 * seg(t, 3.0, 5.45, eSoft) + .2 * seg(t, 5.05, 5.45, eIO);
+  Object.assign(m.style, { position: 'absolute', left: '320px', top: '620px', width: '440px', height: '310px', color: 'var(--ink)', transform: `scale(${s})`, transformOrigin: '50% 60%' });
+  face(m, t < 4.85 ? 'open' : t < 4.97 ? 'sleepy' : 'happy');
+  const head = $('.head', m); head.style.strokeDasharray = headLen; head.style.strokeDashoffset = headLen * (1 - seg(t, 3.3, 4.15, eIO));
+  const ep = seg(t, 4.1, 4.4, ePop); $('.eyes', m).style.opacity = clamp(ep * 3); $$('.eyes path', m).forEach(p => p.style.transform = `scaleY(${Math.max(.01, ep)})`);
+  sparkPop(m, (t - 4.3) / .45);
   let w = $('#sLogo .wm'); if (!w) { w = document.createElement('div'); w.className = 'cap wm'; w.innerHTML = '<span class="word">lil<i>.</i>mate</span> Desk'; $('#sLogo').appendChild(w); }
-  const wp = eOut(seg(t, 4.2, 4.95));
-  Object.assign(w.style, { fontSize: '112px', top: '1090px', opacity: wp, filter: `blur(${14 * (1 - wp)}px)`, transform: `translateY(${24 * (1 - wp)}px) scale(${s * .98})` });
+  const wp = eOut(seg(t, 4.4, 5.05));
+  Object.assign(w.style, { fontSize: '112px', top: '1075px', opacity: wp, filter: `blur(${14 * (1 - wp)}px)`, transform: `translateY(${24 * (1 - wp)}px) scale(${s * .98})` });
 }
 
 function drawLaptop(t) {
@@ -425,9 +486,11 @@ function drawLaptop(t) {
   if (o <= 0) return;
   el.style.transform = `scale(${1 + .14 * z})`;
   const p = seg(t, 5.05, 9.7, bez(.42, 0, .35, 1));
-  const Z = lerp(-900, 640, p), Y = lerp(200, 575, p), A = lerp(16, 5, p), B = lerp(-11, 0, p), X = lerp(40, 0, p);
+  const Z = lerp(-900, 640, p), Y = lerp(200, 575, p), A = lerp(16, 5, p), B = lerp(-11, 0, p), X = lerp(-150, 0, p);
   $('#rig').style.transform = `translate3d(${X}px, ${Y}px, ${Z}px) rotateX(${-A}deg) rotateY(${B}deg)`;
   drawIsland(LAP, t); drawCursor(LAP, t, 1);
+  const blink = t > 6.55 && t < 6.71 ? Math.sin(Math.PI * (t - 6.55) / .16) : 0, look = eOut(seg(t, 6.8, 7.1));
+  buddyEyes(LAP.buddy, t > 7.4 && t < 8.6 ? 'happy' : 'open', blink, -34 * look, -14 * look);
   LAP.cur.style.opacity = seg(t, 5.9, 6.3);
 }
 
@@ -445,21 +508,58 @@ function drawMacro(t) {
   $('#mcam').style.transform = `translate(0px, ${y}px) scale(${s})`;
   $('#macroDesk').style.filter = `blur(${(5 + 3 * s).toFixed(1)}px)`;   // shallow depth of field: the closer, the softer the screen behind
   drawIsland(MAC, t); drawCursor(MAC, t, s * .55);
+  const F = ([x, yy]) => [540 + s * x, y + s * yy];
+  const [c1x, c1y] = F([290, 568]), c1 = $('#mC1');
+  c1.style.left = c1x + 'px'; c1.style.top = c1y + 'px'; pop(c1, t, T.tick + .1, `translate(-50%,-50%) translateY(${4 * Math.sin(t * 2.5)}px)`);
+  if (t > 12.3) c1.style.opacity = 1 - seg(t, 12.3, 12.6);
+  const [c2x, c2y] = F([150, 200]), c2 = $('#mC2');
+  c2.style.left = c2x + 'px'; c2.style.top = c2y + 'px'; pop(c2, t, 13.85, `translate(-50%,-50%) translateY(${4 * Math.sin(t * 2.5)}px)`);
+  if (t > 14.7) c2.style.opacity = 1 - seg(t, 14.7, 15.0);
 }
 
-function drawTitle(t) { show('#sTitle', 1 - seg(t, 2.9, 3.2), null); }
+// the lilmate.in hero: eyebrow, headline, Boxy on its blobs, little label chips
+let HERO;
+function buildHero() {
+  const h = $('#sTitle');
+  h.innerHTML = `<div id="heroIn" style="position:absolute;inset:0;transform-origin:50% 62%">
+    <div class="eyebrow" id="hEb"><span class="badge"><svg viewBox="0 0 56 24"><path d="M10 17Q15 8 20 17M36 17Q41 8 46 17" fill="none" stroke-linecap="round"/></svg></span>Desk buddies with feelings</div>
+    <div class="blob" id="hB2" style="left:560px;top:960px;width:420px;height:560px;background:#f4e7d4"></div>
+    <div class="blob" id="hB1" style="left:190px;top:860px;width:580px;height:660px;background:#f2dcc0"></div>
+    <svg class="spark3" id="hSp" viewBox="0 0 40 32" style="left:770px;top:800px;width:110px;height:88px"><path d="M14 4L11 15"/><path d="M30 9L21 18"/><path d="M36 25L25 28"/></svg>
+    <div class="buddy" id="hBuddy" style="left:215px;top:880px;width:650px;height:665px"></div>
+    <div class="chip" id="hC1"><b class="h">♥</b> heart eyes</div>
+    <div class="chip" id="hC2"><b class="o">z z</b> naps too</div>
+    <div class="chip" id="hC3"><b class="o">●</b> tap my head</div>
+  </div>`;
+  HERO = { eyes: buildBuddy($('#hBuddy')) };
+  [['#hC1', 90, 930], ['#hC2', 720, 1180], ['#hC3', 80, 1480]].forEach(([id, x, y]) => Object.assign($(id).style, { left: x + 'px', top: y + 'px' }));
+}
+function pop(el, t, a, extra = '') { const p = seg(t, a, a + .55, ePop), o = seg(t, a, a + .25); el.style.opacity = o; el.style.transform = `${extra} scale(${lerp(.6, 1, p)})`; }
+function drawTitle(t) {
+  const out = seg(t, 2.95, 3.4, eIO);
+  show('#sTitle', 1 - out, `blur(${(14 * out).toFixed(2)}px)`);
+  if (out >= 1) return;
+  $('#heroIn').style.transform = `scale(${1 + .03 * seg(t, 0, 3.4, eSoft) + .06 * out})`;
+  const eb = $('#hEb'), ep = eOut(seg(t, .15, .75));
+  eb.style.top = '330px'; eb.style.opacity = ep; eb.style.transform = `translateX(-50%) translateY(${16 * (1 - ep)}px)`; eb.style.filter = `blur(${8 * (1 - ep)}px)`;
+  for (const [id, a, r] of [['#hB1', .35, -7], ['#hB2', .5, 9]]) { const p = eOut(seg(t, a, a + .9)); const el = $(id);
+    el.style.opacity = seg(t, a, a + .3); el.style.transform = `rotate(${r * p}deg) scale(${lerp(.82, 1, p)})`; }
+  const bp = eOut(seg(t, .55, 1.35)), bob = 4 * Math.sin(t * 2.2);
+  Object.assign($('#hBuddy').style, { opacity: seg(t, .55, .85), transform: `translateY(${90 * (1 - bp) + bob}px)`, filter: 'drop-shadow(0 30px 30px rgba(36,19,15,.25))' });
+  pop($('#hSp'), t, 1.25);
+  pop($('#hC1'), t, 1.3, `translateY(${5 * Math.sin(t * 2.6)}px)`); pop($('#hC2'), t, 1.45, `translateY(${5 * Math.sin(t * 2.3 + 1)}px)`); pop($('#hC3'), t, 1.6, `translateY(${5 * Math.sin(t * 2.0 + 2)}px)`);
+  const blink = t > 1.62 && t < 1.78 ? Math.sin(Math.PI * (t - 1.62) / .16) : 0, look = eOut(seg(t, 2.05, 2.4));
+  buddyEyes(HERO.eyes, t > 2.55 ? 'happy' : 'open', blink, 0, -26 * look);
+}
 
 function drawEnd(t) {
   const o = seg(t, 18.5, 19.0, eSoft);
   show('#sEnd', o, null); if (o <= 0) return;
-  const m = $('#endMark'), p = eOut(seg(t, 18.75, 19.5));
-  Object.assign(m.style, { position: 'absolute', left: '400px', top: '700px', width: '280px', height: '197px', color: 'var(--ink)', opacity: p,
-    transform: `translateY(${30 * (1 - p)}px) scale(${.92 + .08 * p})`, filter: `blur(${10 * (1 - p)}px)` });
-  face(m, t < 20.55 ? 'open' : t < 20.68 ? 'sleepy' : 'happy');
-  sparkPop(m, (t - 20.7) / .45);
-  let w = $('#sEnd .wm'); if (!w) { w = document.createElement('div'); w.className = 'cap dark wm'; w.innerHTML = '<span class="word">lil<i>.</i>mate</span> Desk'; $('#sEnd').appendChild(w); }
-  const wp = eOut(seg(t, 19.0, 19.7));
-  Object.assign(w.style, { fontSize: '104px', top: '1010px', opacity: wp, filter: `blur(${12 * (1 - wp)}px)`, transform: `translateY(${22 * (1 - wp)}px)` });
+  const L = $('#endLogo'), p = eOut(seg(t, 18.75, 19.5));
+  Object.assign(L.style, { top: '640px', opacity: p, transform: `translateY(${30 * (1 - p)}px) scale(${.94 + .06 * p})`, filter: `blur(${10 * (1 - p)}px)` });
+  const m = $('#endMark'); face(m, t < 20.75 ? 'open' : t < 20.88 ? 'sleepy' : 'happy'); sparkPop(m, (t - 20.9) / .45);
+  const c = $('#endCta'), cp = eOut(seg(t, 19.95, 20.6));
+  Object.assign(c.style, { top: '1310px', opacity: cp, transform: `translateY(${24 * (1 - cp)}px)`, filter: `blur(${8 * (1 - cp)}px)` });
 }
 
 // ------------------------------------------------------------ film grain + vignette
@@ -475,15 +575,16 @@ function makeGrain() {
 window.render = t => {
   drawTitle(t); drawLogo(t); drawLaptop(t); drawMacro(t); drawEnd(t); drawCaps(t);
   const g = $('#grain').getContext('2d'); g.drawImage(grains[Math.floor(t * 30) % grains.length], 0, 0);
-  $('#grain').style.opacity = t > 18.7 ? .045 : .075;
-  $('#vig').style.opacity = 1 - .7 * seg(t, 18.5, 19.0);
-  $('#fade').style.opacity = 1 - seg(t, 0, .35);
+  $('#fade').style.opacity = 1 - seg(t, 0, .3);
 };
 
 window.setup = async () => {
   await document.fonts.ready;
+  await Promise.all(['assets/minimo.png'].map(src => new Promise(r => { const i = new Image(); i.onload = r; i.src = src; })));
   $('#lapScreen').innerHTML = DESK(900).replace('<div class="desk"', '<div class="desk" id="lapDesk"');
   LAP = buildIsland($('#lapDesk'), 720);
+  LAP.buddy = buildBuddy($('#lapBuddy'));
+  buildHero();
   $('#macroDesk').innerHTML = DESK(1800);
   MAC = buildIsland($('#mcam'), 0);
   $('#mcam').appendChild(MAC.wrap);

@@ -12,3 +12,7 @@
 software/lilmate_desk/node_modules/
 software/lilmate_desk/dist/
 software/lilmate_os/build/
+
+# over GitHub's 100 MB limit: kept on disk, backed up as .zip next to them
+elephant/3d/output/ELLIE_V3_FINAL.step
+pengu_chubby/3d/output/pengu_v3_body_upright.stl
