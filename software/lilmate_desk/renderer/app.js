@@ -347,7 +347,7 @@ async function loadSettings() {
   $('#setConn').textContent = S.offline || !S.conn ? 'Not connected' : `${({ usb: 'USB cable', ble: 'Bluetooth', wifi: 'Wi-Fi' }[S.conn.kind] || 'Wi-Fi')} · ${S.conn.where || ''}`;
 }
 $('#hostSave').onclick = async () => { await lil.setSettings({ host: $('#host').value.trim() }); toast('Saved. Connecting…'); };
-$('#wifiSave').onclick = async () => { const r = await lil.setWifi($('#ssid').value.trim(), $('#wpass').value); toast(r.ok ? 'Sent. lil.mate restarts and joins Wi-Fi.' : r.error); if (r.ok) { $('#wpass').value = ''; $('#wpass').type = 'password'; $('.eye').classList.toggle('on', false); } };
+$('#wifiSave').onclick = async () => { const r = await lil.setWifi($('#ssid').value.trim(), $('#wpass').value); toast(r.ok ? 'Sent. lil.mate restarts and joins Wi-Fi.' : r.error); if (r.ok) { $('#wpass').value = ''; $('#wpass').type = 'password'; $('#wpass').nextElementSibling.classList.toggle('on', false); } };
 $('#icsSave').onclick = async () => {
   const r = await lil.setSettings({ ics: $('#ics').value.trim() }); $('#ics').value = '';
   toast(r.ok ? (r.meetings ? `Calendar connected · ${r.meetings.length} meeting(s) in the next 36 h` : 'Calendar removed') : r.error); loadSettings();
@@ -392,6 +392,29 @@ $('#pairBtn').onclick = async () => {
   } finally { b.disabled = false; b.textContent = 'Pair'; }
 };
 $('#pairCode').onkeydown = e => { if (e.key === 'Enter') $('#pairBtn').click(); };
+// set up a new / reset buddy over Bluetooth (it shows SET ME UP)
+const bars = r => r > -55 ? '▂▄▆█' : r > -67 ? '▂▄▆' : r > -78 ? '▂▄' : '▂';
+async function suScan() {
+  const msg = $('#suMsg'); msg.textContent = 'Looking for lil.mate and the Wi-Fi it can see…'; $('#suGo').disabled = true;
+  const r = await lil.setupScan();
+  if (!r.ok) { msg.textContent = r.error; return; }
+  $('#suWho').textContent = `Connected to ${r.name}. Only 2.4 GHz Wi-Fi shows up (lil.mate can't use 5 GHz).`;
+  setHtml($('#suNet'), r.list.length ? r.list.map(n => `<option value="${esc(n.s)}">${esc(n.s)}  ${bars(n.r)}${n.l ? ' 🔒' : ''}</option>`).join('') : '<option value="">no Wi-Fi found</option>');
+  msg.textContent = ''; $('#suGo').disabled = false;
+}
+$('#suStart').onclick = () => { $('#suBox').hidden = false; $('#suStart').disabled = true; suScan(); };
+$('#suRescan').onclick = suScan;
+$('#suCancel').onclick = () => { lil.setupCancel(); $('#suBox').hidden = true; $('#suStart').disabled = false; $('#suPass').value = ''; };
+$('#suGo').onclick = async () => {
+  const ssid = $('#suSsid').value.trim() || $('#suNet').value, msg = $('#suMsg');
+  if (!ssid) return msg.textContent = 'Pick or type a Wi-Fi network';
+  $('#suGo').disabled = true; msg.textContent = 'lil.mate is trying the Wi-Fi…';
+  const r = await lil.setupGo({ ssid, pass: $('#suPass').value, owner: $('#suName').value.trim() });
+  $('#suGo').disabled = false;
+  if (!r.ok) return msg.textContent = r.error;
+  toast(`lil.mate is on ${r.ssid} and paired with this computer ✓`);
+  $('#suBox').hidden = true; $('#suStart').disabled = false; $('#suPass').value = ''; $('#suSsid').value = '';
+};
 $('#openDash').onclick = () => lil.openDashboard();
 $('#factoryReset').onclick = () => {
   if (S.offline) return toast('Connect lil.mate first');

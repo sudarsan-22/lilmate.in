@@ -227,7 +227,8 @@ void bleStart() {
   // "lil.mate Sudarsan 8b64": a friendly name for the web updater's list, the id so lil.mate Desk finds *its* buddy.
   // While pairing: "lil.mate pair 8b64", so Desk's "Add a lil.mate" finds the one waiting for a computer.
   char name[30];
-  if (pairing()) snprintf(name, sizeof(name), "lil.mate pair %s", buddyId());
+  if (apMode) snprintf(name, sizeof(name), "lil.mate setup %s", buddyId());   // setup page / Desk "Set up a new lil.mate"
+  else if (pairing()) snprintf(name, sizeof(name), "lil.mate pair %s", buddyId());
   else snprintf(name, sizeof(name), "lil.mate %.14s %s", S.owner, buddyId());
   if (!bleRx) bleRx = xStreamBufferCreate(2048, 1);
   BLEDevice::init(name);
@@ -396,7 +397,7 @@ void updTick(uint32_t now) {
   // Wi-Fi gone for 10 s (office, router off) or not found since boot, or never given Wi-Fi at all: Bluetooth on, so
   // lil.mate Desk switches to it within seconds and a phone can still update the buddy
   bool wifiGone = S.ssid[0] && !apMode && !wifiUp && (offlineMode || (wifiLostAt && now - wifiLostAt > 10000));
-  if (bl.st == B_OFF && (wifiGone || (apMode && !S.ssid[0] && now - bootAt > 60000))) { bleStart(); bleIdleMs = 30000; }
+  if (bl.st == B_OFF && (wifiGone || apMode)) { bleStart(); bleIdleMs = 30000; }
   // lil.mate Desk was checking in over Wi-Fi and went quiet for 12 s (its laptop lost Wi-Fi, or left): Bluetooth on for
   // 3 min so it can carry on over Bluetooth. Once per silence; if the laptop just went to sleep, it goes off again.
   if (bl.st == B_OFF && wifiUp && deskSeenAt && since(deskSeenAt) > 12000) { deskSeenAt = 0; bleStart(); bleIdleMs = 180000; Serial.println("[ble] Desk went quiet on Wi-Fi: Bluetooth on for 3 min"); }

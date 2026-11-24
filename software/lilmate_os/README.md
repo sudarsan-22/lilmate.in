@@ -80,6 +80,15 @@ remind me in 1 hour 30 min to call   remind me to stretch at 6pm
 USB only: /wifi SSID|password   /sim tap|double|triple|long|vlong   /state
 ```
 
+### First setup (new or reset buddy)
+The screen cycles three pages:
+1. **SET ME UP** QR -> `https://lilmate.in/setup#<id>` (page source: `software/web_setup/index.html`, host it at lilmate.in/setup).
+   Android Chrome or a computer with Chrome/Edge: Connect -> pick Wi-Fi (signal + lock shown, 2.4 GHz only) -> password (eye) + name -> lil.mate tries it and says ok / wrong password / not found. The phone stays on its own Wi-Fi.
+2-3. **iPhone**: join the `Lilmate-XXXX` hotspot, open 192.168.4.1 (Safari has no Web Bluetooth).
+
+lil.mate Desk can do the same: Settings > Add a lil.mate > *Set up a new lil.mate*; that computer is paired at once.
+Bluetooth lines (setup mode only): `@scan`, `@setup {"ssid","pass","owner","city","tz"}`, `@setupst` (returns the link key once joined).
+
 ### Pair a computer without the cable
 On the buddy: double-tap to the Info screen, tap until *hold: pair computer*, hold. A 6-digit code shows for 2 minutes.
 In lil.mate Desk: Settings > Add a lil.mate > type the code. Works over Bluetooth (office, no Wi-Fi) or the same Wi-Fi.

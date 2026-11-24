@@ -120,6 +120,14 @@
         <div class="set">
           <div><b>Add a lil.mate</b><small>No cable needed. On lil.mate: double-tap to the Info screen, tap until "pair computer", then hold. Type the 6-digit code it shows.</small></div>
           <div class="row"><input id="pairCode" inputmode="numeric" maxlength="7" placeholder="6-digit code" autocomplete="off"><button class="btn2" id="pairBtn">Pair</button></div>
+          <div class="row"><small style="flex:1">New or reset lil.mate (its screen says SET ME UP)? Put it on Wi-Fi from here, over Bluetooth.</small><button class="btn2" id="suStart">Set up a new lil.mate…</button></div>
+          <div id="suBox" hidden>
+            <small id="suWho"></small>
+            <div class="row"><select id="suNet"></select><button class="btn2" id="suRescan">Look again</button></div>
+            <div class="row"><input id="suSsid" placeholder="or type the network name" autocomplete="off"></div>
+            <div class="row"><span class="pw"><input id="suPass" type="password" placeholder="Wi-Fi password" autocomplete="off"><button type="button" class="eye" title="Show password" aria-label="Show password"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><path class="sl" d="M3 3l18 18"/></svg></button></span><input id="suName" maxlength="15" placeholder="owner's name"></div>
+            <div class="row"><small id="suMsg" style="flex:1"></small><button class="btn2" id="suCancel">Cancel</button><button class="btn" id="suGo">Connect</button></div>
+          </div>
         </div>
         <div class="set">
           <div><b>Wi-Fi for lil.mate</b><small>Over the USB cable, no QR needed. Use the 2.4 GHz network (not the one ending in 5G).</small></div>

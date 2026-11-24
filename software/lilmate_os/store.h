@@ -91,7 +91,7 @@ String asciiOnly(const String &in) {
 void settingsDefaults() {
   memset(&S, 0, sizeof(S));
   S.magic = SET_MAGIC;
-  copyStr(S.owner, "Sudarsan", sizeof(S.owner));
+  copyStr(S.owner, "friend", sizeof(S.owner));   // "Hi friend!" until setup gives a name
   copyStr(S.tz, "IST-5:30", sizeof(S.tz));
   S.focusMin = 25; S.breakMin = 5;
   S.sleepFrom = 23; S.sleepTo = 7;

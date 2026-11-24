@@ -25,7 +25,7 @@ String mdnsHost() { return String(HOSTNAME "-") + buddyId(); }
 
 // Setup page: the password is tried before it is saved, so the page can say "connected" (with the address) or what went wrong.
 // st: 0 idle, 1 trying, 2 ok, 3 wrong password, 4 network not found, 5 failed
-struct { volatile uint8_t st = 0; uint32_t at = 0, shownAt = 0; char ssid[33], pass[65], owner[16], city[32]; String ip; } wsTry;
+struct { volatile uint8_t st = 0; uint32_t at = 0, shownAt = 0; char ssid[33], pass[65], owner[16], city[32], tz[48]; String ip; } wsTry;
 volatile uint8_t wsReason = 0;   // last Wi-Fi disconnect reason (from the event task)
 uint32_t welcomeUntil = 0;       // "I'm online!" screen after a fresh setup
 
@@ -73,8 +73,30 @@ void tgReply(const char *chat, const String &text, bool kb = false) {
 }
 
 // ------------------------------------------------------------ Wi-Fi
+void bleStop();
+// Setup (hotspot page or Bluetooth): try the Wi-Fi first, save only if it works (see wifiLoop)
+void setupTry(const char *ssid, const char *pass, const char *owner, const char *city, const char *tz) {
+  copyStr(wsTry.ssid, ssid, sizeof(wsTry.ssid)); copyStr(wsTry.pass, pass, sizeof(wsTry.pass));
+  copyStr(wsTry.owner, owner, sizeof(wsTry.owner)); copyStr(wsTry.city, city, sizeof(wsTry.city)); copyStr(wsTry.tz, tz, sizeof(wsTry.tz));
+  wsReason = 0; wsTry.ip = ""; wsTry.at = millis(); wsTry.st = 1;
+  WiFi.disconnect(false); WiFi.begin(wsTry.ssid, wsTry.pass);
+}
+const char *setupState() { static const char *ST[] = { "idle", "trying", "ok", "badpass", "nonet", "fail" }; return ST[wsTry.st < 6 ? wsTry.st : 0]; }
+// networks the buddy can see, strongest first, one entry per name: [{"s":name,"r":rssi,"l":locked}]
+void scanJson(JsonArray a) {
+  int n = WiFi.scanNetworks();
+  for (int i = 0; i < n && a.size() < 15; i++) {
+    int best = -1;
+    for (int j = 0; j < n; j++) { if (!WiFi.SSID(j).length()) continue; bool taken = false; for (JsonObject o : a) if (WiFi.SSID(j) == o["s"].as<const char *>()) taken = true;
+      if (!taken && (best < 0 || WiFi.RSSI(j) > WiFi.RSSI(best))) best = j; }
+    if (best < 0) break;
+    JsonObject o = a.add<JsonObject>(); o["s"] = WiFi.SSID(best); o["r"] = WiFi.RSSI(best); o["l"] = WiFi.encryptionType(best) != WIFI_AUTH_OPEN;
+  }
+  WiFi.scanDelete();
+}
 void startAP() {
   apMode = true; apStartAt = millis();
+  bleStop();   // Bluetooth comes back as "lil.mate setup <id>" (updTick) for the setup page and Desk
   uint8_t mac[6]; WiFi.macAddress(mac);
   char nm[20]; snprintf(nm, sizeof(nm), "Lilmate-%02X%02X", mac[4], mac[5]);
   apName = nm;
@@ -122,6 +144,7 @@ void wifiLoop() {
         copyStr(S.ssid, wsTry.ssid, sizeof(S.ssid)); copyStr(S.pass, wsTry.pass, sizeof(S.pass));
         if (wsTry.owner[0]) copyStr(S.owner, wsTry.owner, sizeof(S.owner));
         if (wsTry.city[0]) { copyStr(S.city, wsTry.city, sizeof(S.city)); S.lat = S.lon = 0; }
+        if (wsTry.tz[0]) copyStr(S.tz, wsTry.tz, sizeof(S.tz));   // from the phone: right time before the weather knows the city
         markDirty(D_SET); storeFlush(); prefs.putUChar("hello", 1);
         Serial.printf("[wifi] setup: joined %s as %s, restarting in 20 s\n", S.ssid, wsTry.ip.c_str());
         diagRestart(SW_WIFI_SAVE); restartAt = millis() + 20000;   // time for the page to show the address

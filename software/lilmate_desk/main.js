@@ -206,6 +206,7 @@ async function pollState() {
 }
 async function pollOnce() {
   if (link && link.updating) return;
+  if (setupS) return;   // setting up a new buddy over Bluetooth: it has the one Bluetooth connection
   // on Bluetooth and the cable just got plugged in: switch to the cable (faster, and it charges)
   if (link && link.kind === 'ble' && !connecting && !settings.forceWifi && await device.findUsbPort()) { link.close(); link = null; }
   // on Bluetooth and the same buddy is back on Wi-Fi (checked every 30 s): move to Wi-Fi, so the buddy can switch its
@@ -488,6 +489,48 @@ ipcMain.handle('settings:set', async (_e, patch) => {
   return { ok: true };
 });
 const calTick = () => gameOn ? null : calendarTick().catch(() => {});
+// "Set up a new lil.mate": a new or reset buddy in setup mode ("lil.mate setup <id>"). Desk lists the Wi-Fi it sees,
+// sends the network + password + name + time zone, and gets the link key back when it joined: set up and paired at once.
+let setupS = null;
+function closeSetup() { if (setupS) { try { setupS.close(); } catch (e) {} setupS = null; } }
+const posixTz = () => { const m = -new Date().getTimezoneOffset(), a = Math.abs(m); return 'UTC' + (m > 0 ? '-' : '+') + Math.floor(a / 60) + (a % 60 ? ':' + String(a % 60).padStart(2, '0') : ''); };
+ipcMain.handle('setup:scan', async () => {
+  try {
+    if (!setupS || !setupS.alive) {
+      closeSetup();
+      if (link) { try { link.close(); } catch (x) {} link = null; send('link', { kind: 'none' }); }   // Bluetooth has one connection
+      setupS = await device.bleSession('*setup');
+    }
+    const list = JSON.parse(await setupS.ask('@scan', '@scan ', 15000));
+    return { ok: true, name: setupS.name, list };
+  } catch (e) {
+    closeSetup(); log('setup: ' + e.message);
+    return { ok: false, error: e.message === 'not found' ? 'No lil.mate in setup mode nearby. A new or reset lil.mate shows SET ME UP; keep it close.' : e.message };
+  }
+});
+ipcMain.handle('setup:go', async (_e, w) => {
+  if (!setupS || !setupS.alive) return { ok: false, error: 'Connect to lil.mate first' };
+  try {
+    await setupS.ask('@setup ' + JSON.stringify({ ssid: w.ssid, pass: w.pass || '', owner: w.owner || '', tz: posixTz() }), '@setup ', 8000);
+    const t0 = Date.now();
+    for (;;) {
+      await new Promise(r => setTimeout(r, 1500));
+      const s = JSON.parse(await setupS.ask('@setupst', '@setupst ', 6000));
+      if (s.st === 'ok') {
+        settings.buddies = settings.buddies || {};
+        settings.buddies[s.id] = { ...(settings.buddies[s.id] || {}), key: s.key, name: s.name || '', ssid: s.ssid || '', ip: s.ip || '' };
+        settings.lastBuddy = s.id; if (s.ip) settings.host = s.ip; device.hint.text = ''; saveSettings();
+        log(`setup: ${s.id} joined ${s.ssid} as ${s.ip}, paired`);
+        closeSetup(); setTimeout(pollState, 25000);   // it restarts onto the Wi-Fi; link again after
+        return { ok: true, id: s.id, ip: s.ip, host: s.host, ssid: s.ssid };
+      }
+      if (s.st === 'badpass') return { ok: false, error: "That password didn't work. Check it and try again." };
+      if (s.st === 'nonet') return { ok: false, error: `lil.mate can't see “${w.ssid}”. Is it 2.4 GHz and in range?` };
+      if (s.st === 'fail' || Date.now() - t0 > 40000) return { ok: false, error: "lil.mate couldn't join that Wi-Fi. Move it closer to the router and try again." };
+    }
+  } catch (e) { log('setup: ' + e.message); return { ok: false, error: e.message }; }
+});
+ipcMain.handle('setup:cancel', () => { closeSetup(); setTimeout(pollState, 500); });
 ipcMain.handle('buddy:pair', async (_e, code) => {
   try {
     if (link) { try { link.close(); } catch (x) {} link = null; send('link', { kind: 'none' }); }   // Bluetooth has one connection

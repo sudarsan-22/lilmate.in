@@ -19,8 +19,8 @@ function ensureWindow() {
     if (!pick) { pick = { callback, timer: setTimeout(() => { const p = pick; pick = null; if (p) p.callback(''); }, 9000) }; }
     else pick.callback = callback;
     const named = x => (x.deviceName || '').toLowerCase();
-    // '*pair': any buddy waiting to pair ("lil.mate pair <id>"); otherwise one of ours by its id
-    const d = devices.find(x => wanted.some(id => id === '*pair' ? named(x).startsWith('lil.mate pair ') : named(x).endsWith(' ' + id)));
+    // '*pair' / '*setup': any buddy waiting to pair or to be set up ("lil.mate pair <id>", "lil.mate setup <id>"); else one of ours by id
+    const d = devices.find(x => wanted.some(id => id === '*pair' ? named(x).startsWith('lil.mate pair ') : id === '*setup' ? named(x).startsWith('lil.mate setup ') : named(x).endsWith(' ' + id)));
     if (d) { clearTimeout(pick.timer); const p = pick; pick = null; p.callback(d.deviceId); }
   });
   // its page crashed: forget the window, the next connect makes a fresh one (and the link reports itself lost)

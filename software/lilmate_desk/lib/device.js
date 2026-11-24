@@ -352,27 +352,41 @@ async function pair(code, settings) {
   log(`pair: ${r.id} added over ${via}`);
   return r;
 }
-async function pairBle(code) {
+// A plain Bluetooth session with one buddy picked by name ('*pair', '*setup'): ask(line, replyPrefix, ms) -> reply text
+async function bleSession(match) {
   const ble = require('./ble');
   let opened;
-  try { opened = await Promise.race([ble.open(['*pair']), new Promise((_, j) => setTimeout(() => j(new Error('timeout')), 20000))]); }
-  catch (e) { ble.close(); throw new Error('No lil.mate is waiting to pair. On lil.mate: Info screen, tap to "pair computer", hold.'); }
-  const gen = opened.gen;
-  return new Promise((resolve, reject) => {
-    let buf = '';
-    const done = () => { clearTimeout(t); ble.bus.off('data', onData); ble.close(); };
-    const t = setTimeout(() => { done(); reject(new Error('lil.mate did not answer')); }, 8000);
-    const onData = (g, text) => {
-      if (g !== gen) return;
-      buf += text; let i;
-      while ((i = buf.indexOf('\n')) >= 0) {
-        const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
-        if (line.startsWith('@pair ')) { done(); try { resolve(JSON.parse(line.slice(6))); } catch (e) { reject(new Error('lil.mate answered oddly')); } }
-      }
-    };
-    ble.bus.on('data', onData);
-    ble.write('@pair ' + code + '\n');
-  });
+  try { opened = await Promise.race([ble.open([match]), new Promise((_, j) => setTimeout(() => j(new Error('timeout')), 20000))]); }
+  catch (e) { ble.close(); throw new Error('not found'); }
+  const gen = opened.gen; let buf = '', waiters = [], gone = false;
+  const onData = (g, text) => {
+    if (g !== gen) return;
+    buf += text; let i;
+    while ((i = buf.indexOf('\n')) >= 0) {
+      const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+      const w = waiters.find(w => line.startsWith(w.prefix));
+      if (w) { waiters = waiters.filter(x => x !== w); clearTimeout(w.t); w.resolve(line.slice(w.prefix.length)); }
+    }
+  };
+  const onGone = g => { if (g === gen || g === -1) { gone = true; waiters.forEach(w => { clearTimeout(w.t); w.reject(new Error('lil.mate went away')); }); waiters = []; } };
+  ble.bus.on('data', onData); ble.bus.on('gone', onGone);
+  return {
+    name: opened.name,
+    get alive() { return !gone; },
+    ask(line, prefix, ms) {
+      if (gone) return Promise.reject(new Error('lil.mate went away'));
+      return new Promise((resolve, reject) => {
+        const w = { prefix, resolve, reject, t: setTimeout(() => { waiters = waiters.filter(x => x !== w); reject(new Error('lil.mate did not answer')); }, ms) };
+        waiters.push(w); ble.write(line + '\n');
+      });
+    },
+    close() { ble.bus.off('data', onData); ble.bus.off('gone', onGone); ble.close(); },
+  };
+}
+async function pairBle(code) {
+  let s;
+  try { s = await bleSession('*pair'); } catch (e) { throw new Error('No lil.mate is waiting to pair. On lil.mate: Info screen, tap to "pair computer", hold.'); }
+  try { return JSON.parse(await s.ask('@pair ' + code, '@pair ', 8000)); } finally { s.close(); }
 }
 
-module.exports = { connect, learn, findWifi, setLog, hint, findUsbPort, UsbLink, BleLink, WifiLink, pair, ownership };
+module.exports = { connect, learn, findWifi, setLog, hint, findUsbPort, UsbLink, BleLink, WifiLink, pair, ownership, bleSession };

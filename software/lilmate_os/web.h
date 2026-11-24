@@ -246,7 +246,8 @@ static const char SETUP[] PROGMEM = R"HTML(<!doctype html><html lang=en><head><m
 <script>const $=s=>document.querySelector(s);
 function eye(b){const i=b.previousElementSibling,show=i.type=='password';i.type=show?'text':'password';b.classList.toggle('on',show);b.setAttribute('aria-label',show?'Hide password':'Show password')}
 fetch('/api/scan').then(r=>r.json()).then(l=>{$('#ss').innerHTML='<option value="">Choose a network…</option>'+l.map(n=>'<option>'+n.replace(/</g,'&lt;')+'</option>').join('')});
-async function save(){const b=new URLSearchParams({ssid:$('#ssid').value,pass:$('#pw').value,owner:$('#ow').value,city:$('#ct').value});
+function ptz(){const m=-new Date().getTimezoneOffset(),a=Math.abs(m);return 'UTC'+(m>0?'-':'+')+Math.floor(a/60)+(a%60?':'+String(a%60).padStart(2,'0'):'')}
+async function save(){const b=new URLSearchParams({ssid:$('#ssid').value,pass:$('#pw').value,owner:$('#ow').value,city:$('#ct').value,tz:ptz()});
 if(!b.get('ssid'))return say('Pick your Wi-Fi first');say('Joining “'+b.get('ssid')+'”… (your phone may blink off this page for a moment)');
 try{await fetch('/api/wifi',{method:'POST',body:b})}catch(e){}const t0=Date.now();
 while(Date.now()-t0<40000){await new Promise(r=>setTimeout(r,1200));let s;try{s=await(await fetch('/api/wifi/status')).json()}catch(e){continue}
@@ -340,27 +341,18 @@ void handleWifi() {
     markDirty(D_SET); storeFlush(); server.send(200, "text/plain; charset=utf-8", "Saved. Restarting onto the new Wi-Fi.");
     diagRestart(SW_WIFI_SAVE); restartAt = millis() + 1500; return;
   }
-  copyStr(wsTry.ssid, server.arg("ssid").c_str(), sizeof(wsTry.ssid)); copyStr(wsTry.pass, server.arg("pass").c_str(), sizeof(wsTry.pass));
-  copyStr(wsTry.owner, server.arg("owner").c_str(), sizeof(wsTry.owner)); copyStr(wsTry.city, server.arg("city").c_str(), sizeof(wsTry.city));
-  wsReason = 0; wsTry.ip = ""; wsTry.at = millis(); wsTry.st = 1;
-  WiFi.disconnect(false); WiFi.begin(wsTry.ssid, wsTry.pass);
+  setupTry(server.arg("ssid").c_str(), server.arg("pass").c_str(), server.arg("owner").c_str(), server.arg("city").c_str(), server.arg("tz").c_str());
   server.send(200, "application/json", "{\"st\":\"trying\"}");
 }
 void handleWifiStatus() {
-  static const char *ST[] = { "idle", "trying", "ok", "badpass", "nonet", "fail" };
-  String j = String("{\"st\":\"") + ST[wsTry.st] + "\",\"ssid\":\"" + wsTry.ssid + "\",\"ip\":\"" + wsTry.ip + "\",\"host\":\"" + mdnsHost() + ".local\"}";
+  String j = String("{\"st\":\"") + setupState() + "\",\"ssid\":\"" + wsTry.ssid + "\",\"ip\":\"" + wsTry.ip + "\",\"host\":\"" + mdnsHost() + ".local\"}";
   server.send(200, "application/json", j);
 }
 
-void handleScan() {
-  int n = WiFi.scanNetworks();
+void handleScan() {   // names only (the hotspot page's list), strongest first
+  JsonDocument t; scanJson(t.to<JsonArray>());
   JsonDocument d; JsonArray a = d.to<JsonArray>();
-  for (int i = 0; i < n; i++) {
-    String s = WiFi.SSID(i); if (!s.length()) continue;
-    bool dup = false; for (JsonVariant v : a) if (s == v.as<const char *>()) dup = true;
-    if (!dup) a.add(s);
-  }
-  WiFi.scanDelete();
+  for (JsonObject o : t.as<JsonArray>()) a.add(o["s"].as<const char *>());
   sendJson(d);
 }
 

@@ -159,6 +159,24 @@ void bleLineLoop() {
         Serial.printf("[ble] Desk %s\n", bl.authed ? "linked" : "wrong key");
         continue;
       }
+      // setup over Bluetooth, only while the buddy is in setup mode (new, reset, or "Wi-Fi setup" chosen on it):
+      // the same trust as its open setup hotspot. "@scan" lists networks, "@setup {json}" tries one, "@setupst" reports;
+      // when it worked, the answer carries the link key, so the computer that set it up is paired too.
+      if (apMode && line == "@scan") {
+        JsonDocument d; scanJson(d.to<JsonArray>()); String o; serializeJson(d, o);
+        bleOut.print("@scan "); bleOut.println(o); continue;
+      }
+      if (apMode && line.startsWith("@setup ")) {
+        JsonDocument d;
+        if (deserializeJson(d, line.substring(7)) || !(d["ssid"] | "")[0]) { bleOut.println("@setup {\"st\":\"bad\"}"); continue; }
+        setupTry(d["ssid"] | "", d["pass"] | "", d["owner"] | "", d["city"] | "", d["tz"] | "");
+        bleOut.println("@setup {\"st\":\"trying\"}"); continue;
+      }
+      if (line == "@setupst") {
+        JsonDocument d; d["st"] = setupState(); d["ssid"] = wsTry.ssid; d["ip"] = wsTry.ip; d["host"] = mdnsHost() + ".local"; d["id"] = buddyId();
+        if (wsTry.st == 2) { d["key"] = linkKey; d["name"] = wsTry.owner[0] ? wsTry.owner : S.owner; bl.authed = true; }
+        String o; serializeJson(d, o); bleOut.print("@setupst "); bleOut.println(o); continue;
+      }
       if (line.startsWith("@pair ")) {         // "Add a lil.mate" in Desk: the code on the buddy's screen gives the key
         int r = pairTry(line.substring(6));
         if (r == 1) bl.authed = true;

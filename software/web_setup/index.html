@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#fff8ee">
+<title>Set up lil.mate</title>
+<meta name="description" content="Put your lil.mate on your Wi-Fi over Bluetooth, from your phone or computer.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fff8ee;--cream2:#f7ecdb;--cream3:#efdfc6;--ink:#24130f;--soft:#6b5a4f;--orange:#f7931e;--green:#3f9b63;--red:#c0392b;--white:#fff;--line:rgba(36,19,15,.08);--sh:0 10px 30px -12px rgba(36,19,15,.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--cream);color:var(--ink);font:600 16px/1.5 Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,.word{font-family:Fredoka,system-ui,sans-serif;font-weight:600;letter-spacing:-.02em}
+main{max-width:560px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;justify-content:space-between;background:#ffffffc0;border:1px solid var(--line);border-radius:999px;padding:8px 10px 8px 18px;box-shadow:var(--sh)}
+.brand{display:flex;align-items:flex-end;gap:8px;color:var(--ink);text-decoration:none}
+.brand svg{width:34px;height:24px;overflow:visible;fill:none;stroke:currentColor;stroke-linecap:round}
+.word{font-size:24px;line-height:1}.word i{font-style:normal;color:var(--orange)}
+header a.site{color:var(--soft);text-decoration:none;font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px}
+.hero{padding:30px 4px 14px}
+h1{font-size:clamp(30px,8vw,40px);line-height:1.08}
+h1 em{font-style:normal;color:var(--orange)}
+.lead{color:var(--soft);margin-top:10px}
+.card{background:var(--white);border:1px solid var(--line);border-radius:24px;padding:20px;margin-top:14px;box-shadow:var(--sh)}
+h2{font-size:21px;line-height:1.2;margin-bottom:6px}
+.soft{color:var(--soft);font-size:14px}
+.btn{display:flex;width:100%;justify-content:space-between;align-items:center;background:var(--ink);color:var(--cream);border:0;border-radius:999px;padding:14px 22px;font:800 16px Nunito,sans-serif;cursor:pointer;margin-top:16px;text-decoration:none}
+.btn:hover:not(:disabled){background:var(--orange);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn2{background:none;border:1.5px solid rgba(36,19,15,.15);color:var(--ink);border-radius:999px;padding:9px 16px;font:800 14px Nunito,sans-serif;cursor:pointer}
+label{display:block;font-size:13px;font-weight:800;color:var(--soft);margin:14px 0 6px}
+input{width:100%;background:var(--cream);border:2px solid var(--cream2);color:var(--ink);border-radius:16px;padding:12px 14px;font:700 16px Nunito,sans-serif;outline:none}
+input:focus{border-color:var(--orange)}
+.pw{position:relative}.pw input{padding-right:50px}
+.eye{position:absolute;right:6px;top:0;bottom:0;margin:auto 0;height:40px;background:none;border:0;padding:8px;color:var(--soft);display:flex;cursor:pointer}
+.eye svg{width:22px;height:22px}.eye .sl{display:none}.eye.on .sl{display:inline}
+.nets{display:flex;flex-direction:column;gap:6px;margin-top:8px;max-height:310px;overflow:auto}
+.net{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--cream);border:2px solid transparent;border-radius:16px;padding:11px 14px;font:700 16px Nunito,sans-serif;color:var(--ink);cursor:pointer}
+.net.on{border-color:var(--orange);background:#fff3e2}
+.net span{flex:1;min-width:0;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bars{display:flex;align-items:flex-end;gap:2px;height:16px}.bars i{width:4px;border-radius:2px;background:var(--cream3)}.bars i.f{background:var(--ink)}
+.lock{width:14px;height:14px;fill:none;stroke:var(--soft);stroke-width:2.4}
+.msg{margin-top:12px;font-size:14px;font-weight:800;min-height:1em}
+.msg.bad{color:var(--red)}.msg.ok{color:var(--green)}
+.steps{margin:10px 0 0 20px}.steps li{margin:6px 0}
+.spin{width:22px;height:22px;border-radius:50%;border:3px solid var(--cream3);border-top-color:var(--orange);animation:sp .8s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.big{font:600 30px Fredoka,sans-serif;color:var(--green)}
+code{background:var(--cream2);border-radius:8px;padding:1px 7px;font:800 14px ui-monospace,monospace}
+[hidden]{display:none!important}
+.foot{text-align:center;color:var(--soft);font-size:13px;margin-top:26px}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <a class="brand" href="https://lilmate.in" aria-label="lil.mate home">
+    <svg viewBox="0 -18 88 62"><path stroke-width="5" d="M6 40C6 18 18 6 32 6C46 6 58 18 58 40"/><path stroke-width="4" d="M21 31Q24.5 25 28 31M36 31Q39.5 25 43 31"/><g transform="translate(56 -16) scale(.7)" stroke="#f7931e" stroke-width="5"><path d="M14 4L11 15M30 9L21 18M36 25L25 28"/></g></svg>
+    <span class="word">lil<i>.</i>mate</span>
+  </a>
+  <a class="site" href="https://lilmate.in">lilmate.in</a>
+</header>
+
+<div class="hero">
+  <h1>Let's get your <em>lil mate</em> online.</h1>
+  <p class="lead">Over Bluetooth: your phone stays on its own Wi-Fi. About a minute.</p>
+</div>
+
+<!-- 1. connect -->
+<section class="card" id="sConnect">
+  <h2>1. Connect to lil.mate</h2>
+  <p class="soft" id="who">Keep lil.mate switched on and close by. Its screen says <b>SET ME UP</b>.</p>
+  <button class="btn" id="connect">Connect <span>→</span></button>
+  <p class="msg" id="cMsg"></p>
+</section>
+
+<!-- no Web Bluetooth (iPhone, Firefox, Safari) -->
+<section class="card" id="sNoBle" hidden>
+  <h2>Set up with Wi-Fi instead</h2>
+  <p class="soft" id="noBleWhy">This browser can't use Bluetooth. That's normal on iPhone. Use lil.mate's own Wi-Fi:</p>
+  <ol class="steps">
+    <li>Open <b>Settings → Wi-Fi</b> and join <code>Lilmate-XXXX</code> (the name is on lil.mate's screen).</li>
+    <li>The setup page opens by itself. If it doesn't, open <code>192.168.4.1</code> in Safari.</li>
+    <li>Pick your Wi-Fi, type the password, tap <b>Connect</b>.</li>
+    <li>Switch your phone back to your usual Wi-Fi.</li>
+  </ol>
+  <p class="soft" style="margin-top:12px">On Android or a computer? Open this page in <b>Chrome</b> or <b>Edge</b> for the Bluetooth way.</p>
+</section>
+
+<!-- 2. Wi-Fi -->
+<section class="card" id="sWifi" hidden>
+  <h2>2. Pick your Wi-Fi</h2>
+  <p class="soft">Only 2.4 GHz networks show up: lil.mate can't use 5 GHz ones (often named “…5G”).</p>
+  <div class="nets" id="nets"></div>
+  <div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" id="rescan">Look again</button><button class="btn2" id="other">Other network…</button></div>
+  <div id="otherBox" hidden><label for="ssid">Network name</label><input id="ssid" autocomplete="off" autocapitalize="off" spellcheck="false"></div>
+  <label for="pw">Password</label>
+  <div class="pw"><input id="pw" type="password" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="eye" id="eye" aria-label="Show password"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/><path class="sl" d="M3 3l18 18"/></svg></button></div>
+  <label for="nm">Your name <span style="font-weight:600">(lil.mate says hi with it)</span></label>
+  <input id="nm" maxlength="15" autocomplete="given-name" placeholder="e.g. Priya">
+  <button class="btn" id="go" disabled>Connect lil.mate <span>→</span></button>
+  <p class="msg" id="wMsg"></p>
+</section>
+
+<!-- 3. done -->
+<section class="card" id="sDone" hidden>
+  <p class="big">✓ lil.mate is online!</p>
+  <p class="soft" style="margin-top:6px">It's on <b id="dSsid"></b> and restarts in a few seconds.</p>
+  <p style="margin-top:14px">Its page, from any phone or computer on that Wi-Fi:<br><b id="dHost"></b> &nbsp;or&nbsp; <b id="dIp"></b></p>
+  <a class="btn" id="open" href="#">Open lil.mate <span>→</span></a>
+  <p class="soft" style="margin-top:14px">On a computer? Get <b>lil.mate Desk</b> for AI-helper alerts, games from the keyboard and Bluetooth in the office.</p>
+</section>
+
+<p class="foot">Designed &amp; 3D-printed in India</p>
+</main>
+
+<script>
+'use strict';
+const SVC = '6c696c6d-6174-6501-8000-00805f9b34fb';
+const LRX = '6c696c6d-6174-6505-8000-00805f9b34fb';   // we write lines here
+const LTX = '6c696c6d-6174-6506-8000-00805f9b34fb';   // replies come back as notifications
+const $ = s => document.querySelector(s);
+const show = (id, on = true) => { $(id).hidden = !on; };
+const id = (location.hash.slice(1).match(/^[0-9a-f]{4}$/i) || [''])[0].toLowerCase();   // the QR on lil.mate adds its id
+if (id) $('#who').innerHTML = `Looking for <b>lil.mate ${id}</b>. Keep it switched on and close by; its screen says <b>SET ME UP</b>.`;
+
+// ---------------------------------------------------------------- Bluetooth line link (same lines as lil.mate Desk)
+let dev = null, rx = null, buf = '', waiters = [], chain = Promise.resolve();
+const dec = new TextDecoder(), enc = new TextEncoder();
+function onValue(e) {
+  buf += dec.decode(e.target.value); let i;
+  while ((i = buf.indexOf('\n')) >= 0) {
+    const line = buf.slice(0, i).trim(); buf = buf.slice(i + 1);
+    const w = waiters.find(w => line.startsWith(w.prefix));
+    if (w) { waiters = waiters.filter(x => x !== w); clearTimeout(w.t); w.resolve(line.slice(w.prefix.length)); }
+  }
+}
+function write(text) {
+  const bytes = enc.encode(text);
+  chain = chain.then(async () => { for (let o = 0; o < bytes.length; o += 180) await rx.writeValueWithResponse(bytes.subarray(o, o + 180)); });
+  return chain;
+}
+function ask(line, prefix, ms) {
+  return new Promise((resolve, reject) => {
+    const w = { prefix, resolve, t: setTimeout(() => { waiters = waiters.filter(x => x !== w); reject(new Error('lil.mate did not answer')); }, ms) };
+    waiters.push(w);
+    write(line + '\n').catch(e => { clearTimeout(w.t); waiters = waiters.filter(x => x !== w); reject(e); });
+  });
+}
+async function connect() {
+  const filters = id ? [{ name: 'lil.mate setup ' + id }] : [{ namePrefix: 'lil.mate setup' }];
+  dev = await navigator.bluetooth.requestDevice({ filters, optionalServices: [SVC] });
+  const gatt = await dev.gatt.connect();
+  const svc = await gatt.getPrimaryService(SVC);
+  rx = await svc.getCharacteristic(LRX);
+  const tx = await svc.getCharacteristic(LTX);
+  tx.addEventListener('characteristicvaluechanged', onValue);
+  await tx.startNotifications();
+}
+
+// ---------------------------------------------------------------- the steps
+let chosen = '';
+function bars(r) { const n = r > -55 ? 4 : r > -67 ? 3 : r > -78 ? 2 : 1; return '<span class="bars">' + [6, 9, 12, 16].map((h, i) => `<i style="height:${h}px" class="${i < n ? 'f' : ''}"></i>`).join('') + '</span>'; }
+const LOCK = '<svg class="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function ready() { $('#go').disabled = !(chosen || $('#ssid').value.trim()); }
+
+async function scan() {
+  $('#nets').innerHTML = '<p class="soft"><span class="spin"></span>Looking for Wi-Fi…</p>';
+  try {
+    const list = JSON.parse(await ask('@scan', '@scan ', 15000));
+    if (!list.length) { $('#nets').innerHTML = '<p class="soft">No Wi-Fi found. Is the router on? Tap “Look again”, or type the name with “Other network…”.</p>'; return; }
+    $('#nets').innerHTML = list.map(n => `<button class="net" data-s="${esc(n.s)}">${bars(n.r)}<span>${esc(n.s)}</span>${n.l ? LOCK : ''}</button>`).join('');
+    $('#nets').querySelectorAll('.net').forEach(b => b.onclick = () => {
+      $('#nets').querySelectorAll('.net').forEach(x => x.classList.remove('on')); b.classList.add('on');
+      chosen = b.dataset.s; show('#otherBox', false); $('#ssid').value = ''; ready(); $('#pw').focus();
+    });
+  } catch (e) { $('#nets').innerHTML = `<p class="msg bad">${esc(e.message)}. Tap “Look again”.</p>`; }
+}
+
+// the phone's time zone in the form lil.mate uses (POSIX: India = "UTC-5:30"), so its clock is right at once
+function ptz() { const m = -new Date().getTimezoneOffset(), a = Math.abs(m); return 'UTC' + (m > 0 ? '-' : '+') + Math.floor(a / 60) + (a % 60 ? ':' + String(a % 60).padStart(2, '0') : ''); }
+
+async function go() {
+  const ssid = chosen || $('#ssid').value.trim(), msg = $('#wMsg');
+  $('#go').disabled = true; msg.className = 'msg'; msg.innerHTML = '<span class="spin"></span>lil.mate is trying your Wi-Fi…';
+  try {
+    await ask('@setup ' + JSON.stringify({ ssid, pass: $('#pw').value, owner: $('#nm').value.trim(), tz: ptz() }), '@setup ', 8000);
+    const t0 = Date.now();
+    for (;;) {
+      await new Promise(r => setTimeout(r, 1500));
+      const s = JSON.parse(await ask('@setupst', '@setupst ', 6000));
+      if (s.st === 'ok') return done(s);
+      if (s.st === 'badpass') throw new Error("That password didn't work. Check it (tap the eye to see it) and try again.");
+      if (s.st === 'nonet') throw new Error(`lil.mate can't see “${ssid}”. Is it a 2.4 GHz network, and in range?`);
+      if (s.st === 'fail' || Date.now() - t0 > 40000) throw new Error("lil.mate couldn't join that Wi-Fi. Move it closer to the router and try again.");
+    }
+  } catch (e) { msg.className = 'msg bad'; msg.textContent = e.message; ready(); }
+}
+function done(s) {
+  show('#sWifi', false); show('#sDone');
+  $('#dSsid').textContent = s.ssid; $('#dHost').textContent = s.host; $('#dIp').textContent = s.ip;
+  $('#open').href = 'http://' + s.ip;
+  try { dev && dev.gatt.disconnect(); } catch (e) {}
+}
+
+if (!navigator.bluetooth) {
+  show('#sConnect', false); show('#sNoBle');
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) $('#noBleWhy').textContent = "This browser can't use Bluetooth. Open this page in Chrome or Edge, or use lil.mate's own Wi-Fi:";
+}
+$('#connect').onclick = async () => {
+  const b = $('#connect'), msg = $('#cMsg'); b.disabled = true; msg.className = 'msg'; msg.innerHTML = '<span class="spin"></span>Connecting…';
+  try {
+    await connect();
+    show('#sConnect', false); show('#sWifi'); scan();
+  } catch (e) {
+    msg.className = 'msg bad';
+    msg.textContent = e.name === 'NotFoundError' ? "No lil.mate picked. Make sure its screen says SET ME UP, then try again." : 'Could not connect: ' + e.message;
+  }
+  b.disabled = false;
+};
+$('#rescan').onclick = scan;
+$('#other').onclick = () => { chosen = ''; $('#nets').querySelectorAll('.net').forEach(x => x.classList.remove('on')); show('#otherBox'); $('#ssid').focus(); ready(); };
+$('#ssid').oninput = ready;
+$('#eye').onclick = () => { const i = $('#pw'), on = i.type === 'password'; i.type = on ? 'text' : 'password'; $('#eye').classList.toggle('on', on); $('#eye').setAttribute('aria-label', on ? 'Hide password' : 'Show password'); };
+$('#go').onclick = go;
+</script>
+</body>
+</html>

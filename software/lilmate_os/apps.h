@@ -422,11 +422,24 @@ void drawSetup(uint32_t now) {
     centerStr(56, u8g2_font_5x7_tr, wsTry.st == 1 ? "one moment" : wsTry.st == 2 ? "restarting in a moment" : "try again on your phone");
     return;
   }
-  bool showUrl = (now / 8000) % 2;
+  // three pages, 7 s each: the Bluetooth setup page (Android phones, computers), then the hotspot way for iPhones
+  int page = (now / 7000) % 3;
+  oled.setFont(u8g2_font_5x7_tr);
+  if (page == 0) {
+    qrBuild(String(SETUP_URL "#") + buddyId());
+    qrDraw(0, 0);
+    oled.drawStr(62, 8, "SET ME UP");
+    oled.drawStr(62, 22, "scan with");
+    oled.drawStr(62, 31, "your phone");
+    oled.drawStr(62, 45, "Android or");
+    oled.drawStr(62, 54, "computer");
+    oled.drawStr(62, 63, "iPhone: wait");
+    return;
+  }
+  bool showUrl = page == 2;
   qrBuild(showUrl ? String("http://192.168.4.1") : "WIFI:T:nopass;S:" + apName + ";;");
   qrDraw(0, 0);
-  oled.setFont(u8g2_font_5x7_tr);
-  oled.drawStr(62, 8, "WI-FI SETUP");
+  oled.drawStr(62, 8, "IPHONE SETUP");
   oled.drawStr(62, 20, showUrl ? "2. open page" : "1. join Wi-Fi");
   oled.drawStr(62, 30, showUrl ? "192.168.4.1" : apName.c_str());
   oled.drawStr(62, 44, "scan the QR");

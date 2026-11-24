@@ -5,7 +5,8 @@
 #include <Arduino.h>
 
 #define FW_NAME     "Lilmate OS"
-#define FW_VERSION  "0.3.6"
+#define FW_VERSION  "0.3.7"
+#define SETUP_URL   "https://lilmate.in/setup"   // Bluetooth setup page (Android / computers); the buddy adds #<id>
 #define HOSTNAME    "lilmate"
 
 // ---- Pins (same wiring as minimo_bear / elephant / pengu_chubby) ----
